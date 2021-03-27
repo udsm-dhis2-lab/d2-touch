@@ -7,52 +7,41 @@ Different styles of text have been used to highlight important parts of
 the text or particular types of text, such as source code. Each of the
 conventions used in the document are explained below.
 
-> **Note**
->
-> A note contains additional information which should be considered or a
-> reference to more information which may be helpful.
+:::note
 
-> **Tip**
->
-> A tip can be a useful piece of advice, such as how to perform a
-> particular task more efficiently.
+A note contains additional information which should be considered or a
+reference to more information which may be helpful.
 
-> **Important**
->
-> Important information should not be ignored, and usually indicates
-> something which is required by the application.
+:::
 
-> **Caution**
->
-> Information contained in these sections should be carefully
-> considered, and if not heeded, could result in unexpected results in
-> analysis, performance, or functionality.
+:::tip
 
-> **Warning**
->
-> Information contained in these sections, if not heeded, could result
-> in permanent data loss or affect the overall usability of the system.
+A tip can be a useful piece of advice, such as how to perform a
+particular task more efficiently.
 
-> **Complete**
->
-> Information contained in these sections, will indicate that these 
-> are issues that have been fully implemented.
+:::
 
-> **Incomplete**
->
-> Information contained in these sections, will indicate that these 
-> are issues that are not implemented and will be ignored.
+:::important
 
-> **Not_applicable**
->
-> Information contained in these sections, will indicate that these 
-> are issues not applicable.
+Important information should not be ignored, and usually indicates
+something which is required by the application.
 
-> **Work_in_progress**
->
-> Information contained in these sections, will indicate that these 
-> are issues or features not completely implemented or with unexpected
-> behaviour already reported.
+:::
+
+:::caution
+
+Information contained in these sections should be carefully
+considered, and if not heeded, could result in unexpected results in
+analysis, performance, or functionality.
+
+:::
+
+:::warning
+
+Information contained in these sections, if not heeded, could result
+in permanent data loss or affect the overall usability of the system.
+
+:::
 
     Program listings usually contain some type of computer code.
     They will be displayed with a shaded background and a different font.

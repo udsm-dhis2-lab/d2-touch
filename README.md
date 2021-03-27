@@ -12,4 +12,4 @@ Main goals:
 
 ## Documentation
 
-Developer-oriented documentation can be found in [Documentation section](https://docs.dhis2.org/master/en/dhis2_android_sdk_developer_guide/about-this-guide.html) in DHIS2 web. It is intended to be used by developers.
+Developer-oriented documentation can be found in [Documentation section](https://interactive-apps.github.io/dhis2-flutter-sdk/) in DHIS2 web. It is intended to be used by developers.
