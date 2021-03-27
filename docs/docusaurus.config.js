@@ -1,6 +1,6 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: "D2Flutter",
+  title: "DHIS2 Flutter SDK",
   url: "https://your-docusaurus-test-site.com",
   baseUrl: "/",
   onBrokenLinks: "throw",
@@ -10,9 +10,9 @@ module.exports = {
   projectName: "dhis2-flutter-sdk",
   themeConfig: {
     navbar: {
-      title: "D2Flutter",
+      title: "DHIS2 Flutter SDK",
       logo: {
-        alt: "D2Flutter",
+        alt: "DHIS2 Flutter SDK",
         src: "img/logo.svg",
       },
       items: [
