@@ -2,7 +2,7 @@
 module.exports = {
   title: "DHIS2 Flutter SDK",
   url: "https://interactive-apps.github.io",
-  baseUrl: "/dhis2-flutter-sdk",
+  baseUrl: "/dhis2-flutter-sdk/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
