@@ -1,8 +1,8 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: "DHIS2 Flutter SDK",
-  url: "https://your-docusaurus-test-site.com",
-  baseUrl: "/",
+  url: "https://interactive-apps.github.io",
+  baseUrl: "/dhis2-flutter-sdk",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
