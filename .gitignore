@@ -75,3 +75,4 @@ build/
 
 #Docusaurus
 docs/.docusaurus
+docs/node_modules
