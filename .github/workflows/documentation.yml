@@ -2,14 +2,16 @@ name: documentation
 
 on:
   pull_request:
-    branches: [feature/documentation]
+    branches: [develop]
   push:
-    branches: [feature/documentation]
+    branches: [develop]
 
 jobs:
   checks:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
+    env:
+        working-directory: ./docs
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -25,9 +27,12 @@ jobs:
           npm i
           fi
           npm run build
+        working-directory: ${{env.working-directory}}
   gh-release:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    env:
+        working-directory: ./docs
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -51,3 +56,4 @@ jobs:
           npm i
           fi
           npm run deploy
+        working-directory: ${{env.working-directory}}
