@@ -1,5 +1,9 @@
 library dhis2_flutter_sdk;
 
-class D2 {
-  int addOne(int value) => value + 1;
+import 'package:dhis2_flutter_sdk/modules/metadata/dashboard/entities/dashboard.entity.dart';
+
+class D2Touch {
+  static dynamic program() {
+    return Dashboard(id: '')
+  }
 }
