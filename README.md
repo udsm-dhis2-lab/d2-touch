@@ -1,14 +1,15 @@
-# dhis2_flutter_sdk
+# DHIS2 Flutter SDK
 
-DHIS2 Flutter SDK
+## Introduction
 
-## Getting Started
+DHIS2 Flutter SDK is a library that abstracts the complexity of interacting with DHIS2 web api. It aims to be an starting point to build Flutter apps for DHIS2, covering some tasks that any Flutter app should implement, like metadata and data synchronization.
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+Main goals:
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+- **Abstract DHIS2 web api**. There is no need to perform api queries against the server. The SDK includes methods to interact with the web api.
+- **Work offline**. It implements a simplified version of DHIS2 model that is persisted in a local database (SQLite). It ensures that all the metadata required to perform data entry tasks is available at any time to build the data entry forms. Data is saved locally and upload to the server when connectivity is available.
+- **Ensure DHIS2 compatibility**. It encapsulates the changes between DHIS2 versions so the app does not have to care about them. In case the SDK introduces some changes to accommodate a new DHIS2 version, the app can safely detect these changes at compile-time.
+
+## Documentation
+
+Developer-oriented documentation can be found in [Documentation section](https://docs.dhis2.org/master/en/dhis2_android_sdk_developer_guide/about-this-guide.html) in DHIS2 web. It is intended to be used by developers.
