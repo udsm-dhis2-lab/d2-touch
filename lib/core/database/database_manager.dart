@@ -1,13 +1,20 @@
 import 'package:async/async.dart';
+import 'package:sqflite/sqflite.dart';
+import 'dart:async';
+import 'dart:io';
 
-import 'database_config.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DatabaseManager {
+  final int version = 1;
   final String databaseName = 'flutter_database.db';
+
   static final DatabaseManager _databaseInstance =
       new DatabaseManager._internal();
-  static AppDatabaseConfig _database;
-  final _initDatabaseMemoizer = AsyncMemoizer<AppDatabaseConfig>();
+
+  static Database _database;
+  final _initDatabaseMemoizer = AsyncMemoizer<Database>();
 
   factory DatabaseManager() {
     return _databaseInstance;
@@ -17,15 +24,25 @@ class DatabaseManager {
 
   static DatabaseManager get instance => _databaseInstance;
 
-  Future<AppDatabaseConfig> get database async {
+  Future<Database> get database async {
     if (_database != null) {
       return _database;
     }
 
     return await _initDatabaseMemoizer.runOnce(() async {
-      return await $FloorAppDatabaseConfig
-          .databaseBuilder(this.databaseName)
-          .build();
+      return await initializeDatabase();
     });
   }
+
+  initializeDatabase() async {
+    Directory documentDirectory = await getApplicationDocumentsDirectory();
+
+    String path = join(documentDirectory.path, databaseName + '.db');
+
+    var database =
+        await openDatabase(path, version: version, onCreate: _createDatabase);
+    return database;
+  }
+
+  void _createDatabase(Database database, int version) async {}
 }
