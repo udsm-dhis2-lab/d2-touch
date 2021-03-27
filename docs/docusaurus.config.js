@@ -6,8 +6,8 @@ module.exports = {
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
-  organizationName: "facebook", // Usually your GitHub org/user name.
-  projectName: "docusaurus", // Usually your repo name.
+  organizationName: "interactive-apps",
+  projectName: "dhis2-flutter-sdk",
   themeConfig: {
     navbar: {
       title: "D2Flutter",
@@ -42,7 +42,6 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
           editUrl:
             "https://github.com/interactive-apps/dhis2-flutter-sdk/edit/develop/docs/",
         },
