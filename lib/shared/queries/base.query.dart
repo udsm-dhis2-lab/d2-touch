@@ -2,6 +2,7 @@ import 'package:dhis2_flutter_sdk/core/annotations/column.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/relation.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
+import 'package:dhis2_flutter_sdk/core/repository.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -9,6 +10,8 @@ abstract class BaseQuery<T> {
   dynamic data;
   List<String> fields;
   String id;
+
+  BaseQuery() {}
 
   String get resourceName {
     throw ('Not implemented');
@@ -39,7 +42,8 @@ abstract class BaseQuery<T> {
 
   Future get() async {
     print(getTableColumnDefinitions<T>());
-    return await this.database;
+    final repository = Repository<T>();
+    // return await this.database;
   }
 
   Future save() async {

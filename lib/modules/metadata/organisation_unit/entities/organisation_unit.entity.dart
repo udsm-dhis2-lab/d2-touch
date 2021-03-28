@@ -8,10 +8,7 @@ import 'package:flutter/foundation.dart';
 @AnnotationReflectable
 @Entity(tableName: 'organisationunit')
 class OrganisationUnit extends BaseEntity {
-  @Column()
-  String href;
-
-  @Column()
+  @Column(type: ColumnType.INTEGER)
   int level;
 
   @Column()
@@ -29,10 +26,10 @@ class OrganisationUnit extends BaseEntity {
   @Column()
   String openingDate;
 
-  @Column()
+  @Column(nullable: true)
   Geometry geometry;
 
-  @Column()
+  @Column(name: 'parent', nullable: true)
   OrganisationUnit parent;
 
   OrganisationUnit(
@@ -43,7 +40,6 @@ class OrganisationUnit extends BaseEntity {
       String shortName,
       String code,
       String displayName,
-      this.href,
       this.level,
       this.leaf,
       this.path,
@@ -65,7 +61,6 @@ class OrganisationUnit extends BaseEntity {
     return OrganisationUnit(
         id: json['id'],
         name: json['name'],
-        href: json['href'],
         level: json['level'],
         created: json['created'],
         shortName: json['shortName'],
@@ -90,7 +85,6 @@ class OrganisationUnit extends BaseEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['lastUpdated'] = this.lastUpdated;
     data['id'] = this.id;
-    data['href'] = this.href;
     data['level'] = this.level;
     data['created'] = this.created;
     data['name'] = this.name;
