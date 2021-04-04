@@ -9,7 +9,7 @@ void main() {
   final repository = Repository<OrganisationUnit>();
 
   final columns =
-      repository.getTableColumns().map((column) => column.columnQueryExpresion);
+      repository.columns.map((column) => column.columnQueryExpresion);
 
   test('should return columns based on entity definition', () {
     expect(columns, [
@@ -27,8 +27,14 @@ void main() {
       'favorite BOOLEAN NOT NULL',
       'externalAccess BOOLEAN NOT NULL',
       'openingDate TEXT NOT NULL',
-      'geometry TEXT NOT NULL',
+      'geometry TEXT',
       'parent TEXT',
     ]);
+  });
+
+  test(
+      'should return table name based on what has been passed on entity definition',
+      () {
+    expect(repository.tableName, 'organisationunit');
   });
 }

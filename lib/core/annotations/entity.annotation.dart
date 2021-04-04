@@ -3,6 +3,8 @@ import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reflectable/reflectable.dart';
 
+import '../query_expression.dart';
+
 class EntityOptions {
   final String name;
   final String engine;
@@ -22,6 +24,20 @@ class Entity {
   final String tableName;
   final EntityOptions options;
   const Entity({@required this.tableName, this.options});
+
+  String get createTableQueryExpresion =>
+      QueryExpression.getCreateTableExpression(tableName: this.tableName);
+
+  static String getTableName(ClassMirror entityClassMirror) {
+    Entity entity = entityClassMirror.metadata != null &&
+            entityClassMirror.metadata[1] is Entity
+        ? entityClassMirror.metadata[1]
+        : null;
+
+    return entity != null && entity.tableName != null
+        ? entity.tableName
+        : entityClassMirror.simpleName;
+  }
 
   static List<Column> getEntityColumns(ClassMirror entityClassMirror) {
     List<Column> columns = [];

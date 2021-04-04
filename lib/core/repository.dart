@@ -1,9 +1,12 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'annotations/reflectable.annotation.dart';
 
 abstract class BaseRepository<T> {
-  List<dynamic> get columns;
+  List<Column> get columns;
+  String get tableName;
+  Future<dynamic> create(Database database);
   Future<T> findOne();
   Future<T> findById(String id);
   Future<List<T>> findAll();
@@ -106,11 +109,17 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  // TODO: implement columns
-  List get columns => throw UnimplementedError();
+  List<Column> get columns =>
+      Entity.getEntityColumns(AnnotationReflectable.reflectType(T));
 
   @override
-  List<Column> getTableColumns({Type type}) {
-    return Entity.getEntityColumns(AnnotationReflectable.reflectType(T));
+  Future create(Database database) {
+    return database.execute('');
+  }
+
+  @override
+  // TODO: implement tableName
+  String get tableName {
+    return Entity.getTableName(AnnotationReflectable.reflectType(T));
   }
 }

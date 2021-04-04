@@ -84,7 +84,6 @@ class Column {
     dynamic variableElement = variableMirror.metadata[0];
 
     if (variableElement is Column || variableElement is PrimaryColumn) {
-      print('ENTITY $columnName ${variableElement.name}');
       Column column = variableElement;
       return Column(
           type: column.type != null
