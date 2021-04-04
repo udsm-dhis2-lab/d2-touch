@@ -5,7 +5,7 @@ import 'annotations/reflectable.annotation.dart';
 
 abstract class BaseRepository<T> {
   List<Column> get columns;
-  String get tableName;
+  Entity get entity;
   Future<dynamic> create(Database database);
   Future<T> findOne();
   Future<T> findById(String id);
@@ -118,8 +118,7 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  // TODO: implement tableName
-  String get tableName {
-    return Entity.getTableName(AnnotationReflectable.reflectType(T));
+  Entity get entity {
+    return Entity.getEntityDefinition(AnnotationReflectable.reflectType(T));
   }
 }

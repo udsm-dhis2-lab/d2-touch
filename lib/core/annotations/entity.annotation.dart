@@ -28,15 +28,17 @@ class Entity {
   String get createTableQueryExpresion =>
       QueryExpression.getCreateTableExpression(tableName: this.tableName);
 
-  static String getTableName(ClassMirror entityClassMirror) {
+  static Entity getEntityDefinition(ClassMirror entityClassMirror) {
     Entity entity = entityClassMirror.metadata != null &&
             entityClassMirror.metadata[1] is Entity
         ? entityClassMirror.metadata[1]
         : null;
 
-    return entity != null && entity.tableName != null
-        ? entity.tableName
-        : entityClassMirror.simpleName;
+    return Entity(
+        tableName: entity != null && entity.tableName != null
+            ? entity.tableName
+            : entityClassMirror.simpleName,
+        options: entity != null ? entity.options : null);
   }
 
   static List<Column> getEntityColumns(ClassMirror entityClassMirror) {

@@ -35,6 +35,6 @@ void main() {
   test(
       'should return table name based on what has been passed on entity definition',
       () {
-    expect(repository.tableName, 'organisationunit');
+    expect(repository.entity.tableName, 'organisationunit');
   });
 }
