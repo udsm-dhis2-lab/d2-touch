@@ -6,7 +6,7 @@ class BaseEntity {
   @PrimaryColumn()
   final String id;
 
-  @Column(name: 'name', nullable: false)
+  @Column(name: 'name')
   final String name;
 
   @Column(name: 'displayname', nullable: true)
@@ -24,7 +24,7 @@ class BaseEntity {
   @Column(name: 'code', nullable: true)
   final String code;
 
-  @Column(name: 'dirty', nullable: false)
+  @Column(name: 'dirty')
   final bool dirty;
 
   BaseEntity(
@@ -35,5 +35,5 @@ class BaseEntity {
       this.lastUpdated,
       this.created,
       this.code,
-      this.dirty});
+      @required this.dirty});
 }

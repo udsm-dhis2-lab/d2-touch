@@ -12,15 +12,9 @@ class OrganisationUnit extends BaseEntity {
   int level;
 
   @Column()
-  bool leaf;
-
-  @Column()
   String path;
 
-  @Column()
-  bool favorite;
-
-  @Column()
+  @Column(nullable: true)
   bool externalAccess;
 
   @Column()
@@ -36,18 +30,17 @@ class OrganisationUnit extends BaseEntity {
       {@required String id,
       String created,
       String lastUpdated,
-      String name,
-      String shortName,
+      @required String name,
+      @required String shortName,
       String code,
       String displayName,
-      this.level,
-      this.leaf,
-      this.path,
-      this.favorite,
+      @required this.level,
+      @required this.path,
       this.externalAccess,
-      this.openingDate,
+      @required this.openingDate,
       this.parent,
-      this.geometry})
+      this.geometry,
+      @required dirty})
       : super(
             id: id,
             name: name,
@@ -55,7 +48,8 @@ class OrganisationUnit extends BaseEntity {
             displayName: displayName,
             code: code,
             created: created,
-            lastUpdated: lastUpdated);
+            lastUpdated: lastUpdated,
+            dirty: dirty);
 
   factory OrganisationUnit.fromJson(Map<String, dynamic> json) {
     return OrganisationUnit(
@@ -65,12 +59,11 @@ class OrganisationUnit extends BaseEntity {
         created: json['created'],
         shortName: json['shortName'],
         code: json['code'],
-        leaf: json['leaf'],
         path: json['path'],
-        favorite: json['favorite'],
         displayName: json['displayName'],
         externalAccess: json['externalAccess'],
         openingDate: json['openingDate'],
+        dirty: json['dirty'],
         geometry: json['geometry'] != null
             ? Geometry.fromJson(json['geometry'])
             : null,
@@ -90,12 +83,11 @@ class OrganisationUnit extends BaseEntity {
     data['name'] = this.name;
     data['shortName'] = this.shortName;
     data['code'] = this.code;
-    data['leaf'] = this.leaf;
     data['path'] = this.path;
-    data['favorite'] = this.favorite;
     data['displayName'] = this.displayName;
     data['externalAccess'] = this.externalAccess;
     data['openingDate'] = this.openingDate;
+    data['dirty'] = this.dirty;
     if (this.parent != null) {
       data['parent'] = this.parent.toJson();
     }

@@ -17,9 +17,7 @@ class DatabaseManager {
   static Database _database;
   final _initDatabaseMemoizer = AsyncMemoizer<Database>();
 
-  factory DatabaseManager() {
-    return _databaseInstance;
-  }
+  factory DatabaseManager() => _databaseInstance;
 
   DatabaseManager._internal();
 

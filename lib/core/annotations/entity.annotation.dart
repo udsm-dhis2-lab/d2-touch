@@ -25,9 +25,6 @@ class Entity {
   final EntityOptions options;
   const Entity({@required this.tableName, this.options});
 
-  String get createTableQueryExpresion =>
-      QueryExpression.getCreateTableExpression(tableName: this.tableName);
-
   static Entity getEntityDefinition(ClassMirror entityClassMirror) {
     Entity entity = entityClassMirror.metadata != null &&
             entityClassMirror.metadata[1] is Entity

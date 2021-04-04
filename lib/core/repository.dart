@@ -1,17 +1,23 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'annotations/reflectable.annotation.dart';
+import 'query_expression.dart';
 
 abstract class BaseRepository<T> {
   List<Column> get columns;
   Entity get entity;
-  Future<dynamic> create(Database database);
+  String get createQuery;
+  Future<Database> get database;
+  Future<dynamic> create({Database database});
   Future<T> findOne();
   Future<T> findById(String id);
   Future<List<T>> findAll();
   Future<List<T>> findByIds(List<String> ids);
-  Future<T> insertOne(T entity);
+  Future<int> insertOne(
+      {@required Map<String, dynamic> entity, Database database});
   Future<T> insertMany(List<T> entity);
   Future<T> updateOne(T entity);
   Future<T> updateMany(List<T> entity);
@@ -24,6 +30,9 @@ abstract class BaseRepository<T> {
 }
 
 class Repository<T> extends BaseRepository<T> {
+  @override
+  Future<Database> get database => DatabaseManager.instance.database;
+
   @override
   Future<void> clear() {
     // TODO: implement clear
@@ -61,9 +70,18 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<T> insertOne(T entity) {
-    // TODO: implement insertOne
-    throw UnimplementedError();
+  Future<int> insertOne(
+      {@required Map<String, dynamic> entity, Database database}) {
+    Map<String, dynamic> data = new Map();
+    for (String key in entity.keys) {
+      if (entity[key] is bool) {
+        data[key] = entity[key] == true ? 1 : 0;
+      } else {
+        data[key] = entity[key];
+      }
+    }
+    final Database db = database != null ? database : this.database;
+    return db.insert(this.entity.tableName, data);
   }
 
   @override
@@ -113,8 +131,13 @@ class Repository<T> extends BaseRepository<T> {
       Entity.getEntityColumns(AnnotationReflectable.reflectType(T));
 
   @override
-  Future create(Database database) {
-    return database.execute('');
+  String get createQuery => QueryExpression.getCreateTableExpression(
+      this.entity.tableName, this.columns);
+
+  @override
+  Future create({Database database}) {
+    final Database db = database != null ? database : this.database;
+    return db.execute(this.createQuery);
   }
 
   @override
