@@ -36,4 +36,9 @@ class BaseEntity {
       this.created,
       this.code,
       @required this.dirty});
+
+  fromJson(Map<String, dynamic> json) {
+    // TODO: implement findOne
+    throw UnimplementedError();
+  }
 }

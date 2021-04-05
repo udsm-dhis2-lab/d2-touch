@@ -62,13 +62,23 @@ void main() async {
   var insertResult = await repository.insertOne(
       entity: organisationUnit.toJson(), database: db);
 
-  test('should return success if save is successful', () {
+  test('should return success if data is inserted into the database', () {
     expect(insertResult, 1);
   });
 
-  var result = await db.query(repository.entity.tableName);
+  var result = await repository.findById(id: 'test1', database: db);
 
-  print(result);
+  test('should return saved details', () {
+    expect(result['id'], 'test1');
+    expect(result['name'], 'Test 1');
+  });
+
+  var updateResult = await repository.updateOne(
+      entity: organisationUnit.toJson(), database: db);
+
+  test('should return success if data is updated into the database', () {
+    expect(updateResult, 1);
+  });
 
   await db.close();
 }

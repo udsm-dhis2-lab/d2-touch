@@ -1,5 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
+import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -13,13 +14,15 @@ abstract class BaseRepository<T> {
   Future<Database> get database;
   Future<dynamic> create({Database database});
   Future<T> findOne();
-  Future<T> findById(String id);
-  Future<List<T>> findAll();
+  Future<Map<String, dynamic>> findById(
+      {@required String id, Database database});
+  Future<List<Map<String, dynamic>>> findAll();
   Future<List<T>> findByIds(List<String> ids);
   Future<int> insertOne(
       {@required Map<String, dynamic> entity, Database database});
   Future<T> insertMany(List<T> entity);
-  Future<T> updateOne(T entity);
+  Future<int> updateOne(
+      {@required Map<String, dynamic> entity, Database database});
   Future<T> updateMany(List<T> entity);
   Future<T> saveMany(List<T> entities);
   Future<T> saveOne(T entity);
@@ -27,6 +30,7 @@ abstract class BaseRepository<T> {
   Future<T> deleteByIds(List<String> ids);
   Future<T> deleteAll(List<String> ids);
   Future<void> clear();
+  Map<String, dynamic> _sanitizeIncomingData(Map<String, dynamic> entity);
 }
 
 class Repository<T> extends BaseRepository<T> {
@@ -46,9 +50,9 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<List<T>> findAll() {
-    // TODO: implement findMany
-    throw UnimplementedError();
+  Future<List<Map<String, dynamic>>> findAll({Database database}) {
+    final Database db = database != null ? database : this.database;
+    return db.query(this.entity.tableName);
   }
 
   @override
@@ -58,9 +62,14 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<T> findById(String id) {
-    // TODO: implement findById
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> findById(
+      {@required String id, Database database}) async {
+    final Database db = database != null ? database : this.database;
+
+    var results = await db
+        .rawQuery('SELECT * FROM ${this.entity.tableName} WHERE id = "$id"');
+
+    return results[0];
   }
 
   @override
@@ -72,14 +81,7 @@ class Repository<T> extends BaseRepository<T> {
   @override
   Future<int> insertOne(
       {@required Map<String, dynamic> entity, Database database}) {
-    Map<String, dynamic> data = new Map();
-    for (String key in entity.keys) {
-      if (entity[key] is bool) {
-        data[key] = entity[key] == true ? 1 : 0;
-      } else {
-        data[key] = entity[key];
-      }
-    }
+    Map<String, dynamic> data = this._sanitizeIncomingData(entity);
     final Database db = database != null ? database : this.database;
     return db.insert(this.entity.tableName, data);
   }
@@ -115,9 +117,16 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<T> updateOne(T entity) {
-    // TODO: implement updateOne
-    throw UnimplementedError();
+  Future<int> updateOne(
+      {@required Map<String, dynamic> entity, Database database}) {
+    Map<String, dynamic> data = this._sanitizeIncomingData(entity);
+    final Database db = database != null ? database : this.database;
+    return db.update(
+      this.entity.tableName,
+      data,
+      where: "id = ?",
+      whereArgs: [data['id']],
+    );
   }
 
   @override
@@ -143,5 +152,19 @@ class Repository<T> extends BaseRepository<T> {
   @override
   Entity get entity {
     return Entity.getEntityDefinition(AnnotationReflectable.reflectType(T));
+  }
+
+  @override
+  Map<String, dynamic> _sanitizeIncomingData(Map<String, dynamic> entity) {
+    Map<String, dynamic> data = new Map();
+    for (String key in entity.keys) {
+      if (entity[key] is bool) {
+        data[key] = entity[key] == true ? 1 : 0;
+      } else {
+        data[key] = entity[key];
+      }
+    }
+
+    return data;
   }
 }
