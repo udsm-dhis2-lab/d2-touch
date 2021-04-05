@@ -107,5 +107,19 @@ void main() async {
     expect(deletedResult, null);
   });
 
+  var savedResponse =
+      await repository.saveOne(entity: organisationUnit.toJson(), database: db);
+
+  test('should return save success', () {
+    expect(savedResponse, 1);
+  });
+
+  var savedResult = await repository.findById(id: 'test1', database: db);
+
+  test('should return saved result', () {
+    expect(savedResult['id'], 'test1');
+    expect(savedResult['name'], 'Test 1');
+  });
+
   await db.close();
 }

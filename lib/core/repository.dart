@@ -12,7 +12,7 @@ abstract class BaseRepository<T> {
   String get createQuery;
   Future<Database> get database;
   Future<dynamic> create({Database database});
-  Future<T> findOne();
+  Future<List<Map<String, dynamic>>> find({String id, Database database});
   Future<Map<String, dynamic>> findById(
       {@required String id, Database database});
   Future<List<Map<String, dynamic>>> findAll();
@@ -24,7 +24,8 @@ abstract class BaseRepository<T> {
       {@required Map<String, dynamic> entity, Database database});
   Future<T> updateMany(List<T> entity);
   Future<T> saveMany(List<T> entities);
-  Future<T> saveOne(T entity);
+  Future<int> saveOne(
+      {@required Map<String, dynamic> entity, Database database});
   Future<int> deleteById({@required String id, Database database});
   Future<T> deleteByIds(List<String> ids);
   Future<T> deleteAll(List<String> ids);
@@ -55,9 +56,14 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<T> findOne() {
-    // TODO: implement findOne
-    throw UnimplementedError();
+  Future<List<Map<String, dynamic>>> find({String id, Database database}) {
+    final Database db = database != null ? database : this.database;
+
+    if (id != null) {
+      return db.query(this.entity.tableName, where: 'id = ?', whereArgs: [id]);
+    }
+
+    return db.query(this.entity.tableName);
   }
 
   @override
@@ -107,9 +113,17 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<T> saveOne(T entity) {
-    // TODO: implement saveOne
-    throw UnimplementedError();
+  Future<int> saveOne(
+      {@required Map<String, dynamic> entity, Database database}) async {
+    final Database db = database != null ? database : this.database;
+
+    var result = await this.findById(id: entity['id'], database: db);
+
+    if (result != null) {
+      return this.updateOne(entity: entity, database: db);
+    }
+
+    return this.insertOne(entity: entity, database: db);
   }
 
   @override
