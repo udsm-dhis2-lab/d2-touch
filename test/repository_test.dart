@@ -73,11 +73,38 @@ void main() async {
     expect(result['name'], 'Test 1');
   });
 
+  final updatedOrganisationUnit = OrganisationUnit(
+      id: 'test1',
+      name: "Test 1 (updated)",
+      level: 1,
+      path: 'test1',
+      shortName: 'Test 1 (updated)',
+      openingDate: '20-01-2020',
+      dirty: false);
+
   var updateResult = await repository.updateOne(
-      entity: organisationUnit.toJson(), database: db);
+      entity: updatedOrganisationUnit.toJson(), database: db);
 
   test('should return success if data is updated into the database', () {
     expect(updateResult, 1);
+  });
+
+  var updatedResult = await repository.findById(id: 'test1', database: db);
+
+  test('should return updated details', () {
+    expect(updatedResult['id'], 'test1');
+    expect(updatedResult['name'], 'Test 1 (updated)');
+  });
+
+  var deleteResult = await repository.deleteById(id: 'test1', database: db);
+
+  test('should return delete success', () {
+    expect(deleteResult, 1);
+  });
+
+  var deletedResult = await repository.findById(id: 'test1', database: db);
+  test('should return null for deleted item', () {
+    expect(deletedResult, null);
   });
 
   await db.close();
