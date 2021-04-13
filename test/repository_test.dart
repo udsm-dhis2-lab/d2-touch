@@ -121,5 +121,50 @@ void main() async {
     expect(savedResult['name'], 'Test 1');
   });
 
+  final organisationUnitList = [
+    OrganisationUnit(
+            id: 'test2',
+            name: "Test 2",
+            level: 1,
+            path: 'test2',
+            shortName: 'Test 2',
+            openingDate: '20-01-2020',
+            dirty: false)
+        .toJson(),
+    OrganisationUnit(
+            id: 'test3',
+            name: "Test 3",
+            level: 1,
+            path: 'test3',
+            shortName: 'Test 3',
+            openingDate: '20-01-2020',
+            dirty: false)
+        .toJson()
+  ];
+
+  var saveManyResponse =
+      await repository.saveMany(entities: organisationUnitList, database: db);
+
+  test('should return save success for saved list', () {
+    expect(saveManyResponse, 1);
+  });
+
+  var savedManyResult1 = await repository.findById(id: 'test2', database: db);
+  var savedManyResult2 = await repository.findById(id: 'test3', database: db);
+
+  test('should return saved result', () {
+    expect(savedManyResult1['id'], 'test2');
+    expect(savedManyResult2['id'], 'test3');
+    expect(savedManyResult1['name'], 'Test 2');
+    expect(savedManyResult2['name'], 'Test 3');
+  });
+
+  var resultByIds =
+      await repository.findByIds(database: db, ids: ['test2', 'test3']);
+
+  test("should return saved results", () {
+    expect(resultByIds.length, 2);
+  });
+
   await db.close();
 }

@@ -16,20 +16,24 @@ abstract class BaseRepository<T> {
   Future<Map<String, dynamic>> findById(
       {@required String id, Database database});
   Future<List<Map<String, dynamic>>> findAll();
-  Future<List<T>> findByIds(List<String> ids);
+  Future<List<Map<String, Object>>> findByIds(
+      {@required List<String> ids, Database database});
   Future<int> insertOne(
       {@required Map<String, dynamic> entity, Database database});
-  Future<T> insertMany(List<T> entity);
+  Future<int> insertMany(
+      {@required List<Map<String, dynamic>> entities, Database database});
   Future<int> updateOne(
       {@required Map<String, dynamic> entity, Database database});
-  Future<T> updateMany(List<T> entity);
-  Future<T> saveMany(List<T> entities);
+  Future<int> updateMany(
+      {@required List<Map<String, dynamic>> entities, Database database});
+  Future<int> saveMany(
+      {@required List<Map<String, dynamic>> entities, Database database});
   Future<int> saveOne(
       {@required Map<String, dynamic> entity, Database database});
   Future<int> deleteById({@required String id, Database database});
-  Future<T> deleteByIds(List<String> ids);
-  Future<T> deleteAll(List<String> ids);
-  Future<void> clear();
+  Future<int> deleteByIds({List<String> ids, Database database});
+  Future<int> deleteAll({Database database});
+  Future<void> clear({Database database});
   Map<String, dynamic> sanitizeIncomingData(Map<String, dynamic> entity);
 }
 
@@ -38,15 +42,18 @@ class Repository<T> extends BaseRepository<T> {
   Future<Database> get database => DatabaseManager.instance.database;
 
   @override
-  Future<void> clear() {
-    // TODO: implement clear
-    throw UnimplementedError();
+  Future<void> clear({Database database}) {
+    final Database db = database != null ? database : this.database;
+    // return
   }
 
   @override
-  Future<List<T>> findByIds(List<String> ids) {
-    // TODO: implement findByIds
-    throw UnimplementedError();
+  Future<List<Map<String, Object>>> findByIds(
+      {@required List<String> ids, Database database}) {
+    final Database db = database != null ? database : this.database;
+
+    return db.query(this.entity.tableName,
+        where: 'id IN (${ids.map((id) => '"$id"').join(',')})');
   }
 
   @override
@@ -78,9 +85,15 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<T> insertMany(List<T> entity) {
-    // TODO: implement insertMany
-    throw UnimplementedError();
+  Future<int> insertMany(
+      {@required List<Map<String, dynamic>> entities,
+      Database database}) async {
+    final Database db = database != null ? database : this.database;
+
+    await Future.forEach(
+        entities, ((entity) => insertOne(entity: entity, database: db)));
+
+    return 1;
   }
 
   @override
@@ -92,9 +105,13 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<T> deleteByIds(List<String> ids) {
-    // TODO: implement removeMany
-    throw UnimplementedError();
+  Future<int> deleteByIds({List<String> ids, Database database}) async {
+    final Database db = database != null ? database : this.database;
+
+    await db.delete(this.entity.tableName,
+        where: 'id IN (?)', whereArgs: [ids.join(',')]);
+
+    return 1;
   }
 
   @override
@@ -107,9 +124,24 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<T> saveMany(List<T> entities) {
-    // TODO: implement saveMany
-    throw UnimplementedError();
+  Future<int> deleteAll({Database database}) async {
+    final Database db = database != null ? database : this.database;
+
+    await db.delete(this.entity.tableName);
+
+    return 1;
+  }
+
+  @override
+  Future<int> saveMany(
+      {@required List<Map<String, dynamic>> entities,
+      Database database}) async {
+    final Database db = database != null ? database : this.database;
+
+    await Future.forEach(
+        entities, ((entity) => saveOne(entity: entity, database: db)));
+
+    return 1;
   }
 
   @override
@@ -127,9 +159,15 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<T> updateMany(List<T> entity) {
-    // TODO: implement updateMany
-    throw UnimplementedError();
+  Future<int> updateMany(
+      {@required List<Map<String, dynamic>> entities,
+      Database database}) async {
+    final Database db = database != null ? database : this.database;
+
+    await Future.forEach(
+        entities, ((entity) => updateOne(entity: entity, database: db)));
+
+    return 1;
   }
 
   @override
@@ -143,12 +181,6 @@ class Repository<T> extends BaseRepository<T> {
       where: "id = ?",
       whereArgs: [data['id']],
     );
-  }
-
-  @override
-  Future<T> deleteAll(List<String> ids) {
-    // TODO: implement deleteAll
-    throw UnimplementedError();
   }
 
   @override
