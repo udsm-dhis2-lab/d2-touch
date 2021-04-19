@@ -3,8 +3,6 @@ import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reflectable/reflectable.dart';
 
-import '../query_expression.dart';
-
 class EntityOptions {
   final String name;
   final String engine;

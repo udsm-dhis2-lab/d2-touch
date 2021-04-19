@@ -1,5 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
+import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -18,18 +19,12 @@ abstract class BaseRepository<T> {
   Future<List<Map<String, dynamic>>> findAll();
   Future<List<Map<String, Object>>> findByIds(
       {@required List<String> ids, Database database});
-  Future<int> insertOne(
-      {@required Map<String, dynamic> entity, Database database});
-  Future<int> insertMany(
-      {@required List<Map<String, dynamic>> entities, Database database});
-  Future<int> updateOne(
-      {@required Map<String, dynamic> entity, Database database});
-  Future<int> updateMany(
-      {@required List<Map<String, dynamic>> entities, Database database});
-  Future<int> saveMany(
-      {@required List<Map<String, dynamic>> entities, Database database});
-  Future<int> saveOne(
-      {@required Map<String, dynamic> entity, Database database});
+  Future<int> insertOne({@required T entity, Database database});
+  Future<int> insertMany({@required List<T> entities, Database database});
+  Future<int> updateOne({@required T entity, Database database});
+  Future<int> updateMany({@required List<T> entities, Database database});
+  Future<int> saveMany({@required List<T> entities, Database database});
+  Future<int> saveOne({@required T entity, Database database});
   Future<int> deleteById({@required String id, Database database});
   Future<int> deleteByIds({List<String> ids, Database database});
   Future<int> deleteAll({Database database});
@@ -37,7 +32,7 @@ abstract class BaseRepository<T> {
   Map<String, dynamic> sanitizeIncomingData(Map<String, dynamic> entity);
 }
 
-class Repository<T> extends BaseRepository<T> {
+class Repository<T extends BaseEntity> extends BaseRepository<T> {
   @override
   Future<Database> get database => DatabaseManager.instance.database;
 
@@ -86,8 +81,7 @@ class Repository<T> extends BaseRepository<T> {
 
   @override
   Future<int> insertMany(
-      {@required List<Map<String, dynamic>> entities,
-      Database database}) async {
+      {@required List<T> entities, Database database}) async {
     final Database db = database != null ? database : this.database;
 
     await Future.forEach(
@@ -97,9 +91,8 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<int> insertOne(
-      {@required Map<String, dynamic> entity, Database database}) {
-    Map<String, dynamic> data = this.sanitizeIncomingData(entity);
+  Future<int> insertOne({@required T entity, Database database}) {
+    Map<String, dynamic> data = this.sanitizeIncomingData(entity.toJson());
     final Database db = database != null ? database : this.database;
     return db.insert(this.entity.tableName, data);
   }
@@ -133,9 +126,7 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<int> saveMany(
-      {@required List<Map<String, dynamic>> entities,
-      Database database}) async {
+  Future<int> saveMany({@required List<T> entities, Database database}) async {
     final Database db = database != null ? database : this.database;
 
     await Future.forEach(
@@ -145,11 +136,10 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<int> saveOne(
-      {@required Map<String, dynamic> entity, Database database}) async {
+  Future<int> saveOne({@required T entity, Database database}) async {
     final Database db = database != null ? database : this.database;
 
-    var result = await this.findById(id: entity['id'], database: db);
+    var result = await this.findById(id: entity.id, database: db);
 
     if (result != null) {
       return this.updateOne(entity: entity, database: db);
@@ -160,8 +150,7 @@ class Repository<T> extends BaseRepository<T> {
 
   @override
   Future<int> updateMany(
-      {@required List<Map<String, dynamic>> entities,
-      Database database}) async {
+      {@required List<T> entities, Database database}) async {
     final Database db = database != null ? database : this.database;
 
     await Future.forEach(
@@ -171,9 +160,8 @@ class Repository<T> extends BaseRepository<T> {
   }
 
   @override
-  Future<int> updateOne(
-      {@required Map<String, dynamic> entity, Database database}) {
-    Map<String, dynamic> data = this.sanitizeIncomingData(entity);
+  Future<int> updateOne({@required T entity, Database database}) {
+    Map<String, dynamic> data = this.sanitizeIncomingData(entity.toJson());
     final Database db = database != null ? database : this.database;
     return db.update(
       this.entity.tableName,

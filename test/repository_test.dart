@@ -59,8 +59,8 @@ void main() async {
       openingDate: '20-01-2020',
       dirty: false);
 
-  var insertResult = await repository.insertOne(
-      entity: organisationUnit.toJson(), database: db);
+  var insertResult =
+      await repository.insertOne(entity: organisationUnit, database: db);
 
   test('should return success if data is inserted into the database', () {
     expect(insertResult, 1);
@@ -82,8 +82,8 @@ void main() async {
       openingDate: '20-01-2020',
       dirty: false);
 
-  var updateResult = await repository.updateOne(
-      entity: updatedOrganisationUnit.toJson(), database: db);
+  var updateResult =
+      await repository.updateOne(entity: updatedOrganisationUnit, database: db);
 
   test('should return success if data is updated into the database', () {
     expect(updateResult, 1);
@@ -108,7 +108,7 @@ void main() async {
   });
 
   var savedResponse =
-      await repository.saveOne(entity: organisationUnit.toJson(), database: db);
+      await repository.saveOne(entity: organisationUnit, database: db);
 
   test('should return save success', () {
     expect(savedResponse, 1);
@@ -123,23 +123,21 @@ void main() async {
 
   final organisationUnitList = [
     OrganisationUnit(
-            id: 'test2',
-            name: "Test 2",
-            level: 1,
-            path: 'test2',
-            shortName: 'Test 2',
-            openingDate: '20-01-2020',
-            dirty: false)
-        .toJson(),
+        id: 'test2',
+        name: "Test 2",
+        level: 1,
+        path: 'test2',
+        shortName: 'Test 2',
+        openingDate: '20-01-2020',
+        dirty: false),
     OrganisationUnit(
-            id: 'test3',
-            name: "Test 3",
-            level: 1,
-            path: 'test3',
-            shortName: 'Test 3',
-            openingDate: '20-01-2020',
-            dirty: false)
-        .toJson()
+        id: 'test3',
+        name: "Test 3",
+        level: 1,
+        path: 'test3',
+        shortName: 'Test 3',
+        openingDate: '20-01-2020',
+        dirty: false)
   ];
 
   var saveManyResponse =
