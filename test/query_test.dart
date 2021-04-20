@@ -51,9 +51,17 @@ void main() async {
     OrganisationUnit(
         id: 'test3',
         name: "Test 3",
-        level: 1,
+        level: 2,
         path: 'test3',
         shortName: 'Test 3',
+        openingDate: '20-01-2020',
+        dirty: false),
+    OrganisationUnit(
+        id: 'test4',
+        name: "Test 4",
+        level: 3,
+        path: 'test4',
+        shortName: 'Test 4',
         openingDate: '20-01-2020',
         dirty: false)
   ];
@@ -106,7 +114,40 @@ void main() async {
 
   var resultByIds = await query.byIds(['test2', 'test3']).get();
 
-  test("should return saved results", () {
+  test("should return saved results based on passed ids", () {
     expect(resultByIds.length, 2);
+  });
+
+  final levelQuery = OrganisationUnitQuery(database: db);
+  var resultByLevel =
+      await levelQuery.where(attribute: 'level', value: 3).get();
+
+  test("should return saved result for level 3", () {
+    expect(resultByLevel[0]['id'], 'test4');
+  });
+
+  final lessThanQuery = OrganisationUnitQuery(database: db);
+  var lessThanResult =
+      await lessThanQuery.lessThan(attribute: 'level', value: 3).get();
+
+  test("should return saved result whose level are less than 3", () {
+    expect(lessThanResult.length, 2);
+  });
+
+  final lessThanEqualQuery = OrganisationUnitQuery(database: db);
+  var lessThanEqualResult = await lessThanEqualQuery
+      .lessThanOrEqual(attribute: 'level', value: 3)
+      .get();
+
+  test("should return saved result whose level are less than or equal to 3",
+      () {
+    expect(lessThanEqualResult.length, 3);
+  });
+
+  final allQuery = OrganisationUnitQuery(database: db);
+  var allResults = await allQuery.get();
+
+  test("should return all saved results", () {
+    expect(allResults.length, 3);
   });
 }

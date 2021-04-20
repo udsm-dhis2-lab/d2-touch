@@ -15,7 +15,7 @@ class QueryFilter {
       return null;
     }
 
-    return filters.map((filter) {
+    final whereParams = filters.map((filter) {
       switch (filter.condition) {
         case QueryCondition.In:
           final List<String> values =
@@ -24,25 +24,25 @@ class QueryFilter {
 
         case QueryCondition.Equal:
           return '${filter.attribute} = ${filter.value}';
-          break;
-        case QueryCondition.Ilike:
-          return '${filter.attribute} ILIKE ${filter.value}';
-          break;
+
+        case QueryCondition.Like:
+          return '${filter.attribute} LIKE ${filter.value}';
+
         case QueryCondition.LessThan:
           return '${filter.attribute} < ${filter.value}';
-          break;
+
         case QueryCondition.LessThanOrEqualTo:
-          // TODO: Handle this case.
-          break;
+          return '${filter.attribute} <= ${filter.value}';
         case QueryCondition.GreaterThan:
           return '${filter.attribute} > ${filter.value}';
-          break;
+
         case QueryCondition.GreaterThanOrEqualTo:
-          // TODO: Handle this case.
-          break;
+          return '${filter.attribute} >= ${filter.value}';
         default:
-          return '';
+          return null;
       }
-    }).join(' AND ');
+    }).where((filter) => filter != null);
+
+    return whereParams.length > 0 ? whereParams.join(' AND ') : null;
   }
 }

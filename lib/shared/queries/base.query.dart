@@ -17,7 +17,7 @@ class BaseQuery<T extends BaseEntity> {
   String resourceName;
   String singularResourceName;
   String id;
-  List<QueryFilter> filters;
+  List<QueryFilter> filters = [];
   Map<String, SortOrder> sortOrder;
   List<dynamic> relations;
 
@@ -66,9 +66,9 @@ class BaseQuery<T extends BaseEntity> {
     return this;
   }
 
-  ilike({@required String attribute, @required dynamic value}) {
+  like({@required String attribute, @required dynamic value}) {
     this.filters.add(QueryFilter(
-        attribute: attribute, condition: QueryCondition.Ilike, value: value));
+        attribute: attribute, condition: QueryCondition.Like, value: value));
     return this;
   }
 
@@ -96,7 +96,7 @@ class BaseQuery<T extends BaseEntity> {
     return this;
   }
 
-  lessThanOrEqualTo({@required String attribute, @required dynamic value}) {
+  lessThanOrEqual({@required String attribute, @required dynamic value}) {
     this.filters.add(QueryFilter(
         attribute: attribute,
         condition: QueryCondition.LessThanOrEqualTo,

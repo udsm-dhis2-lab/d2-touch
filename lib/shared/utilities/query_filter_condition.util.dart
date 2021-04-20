@@ -11,7 +11,7 @@
 enum QueryCondition {
   In,
   Equal,
-  Ilike,
+  Like,
   LessThan,
   LessThanOrEqualTo,
   GreaterThan,

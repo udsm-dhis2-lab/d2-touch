@@ -56,11 +56,20 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final Database db = database != null ? database : this.database;
 
     if (id != null) {
-      return db.query(this.entity.tableName, where: 'id = ?', whereArgs: [id]);
+      return db.query(
+        this.entity.tableName,
+        where: 'id = ?',
+        whereArgs: [id],
+      );
     }
 
-    return db.query(this.entity.tableName,
-        where: QueryFilter.getWhereParameters(filters));
+    final String whereParameters = QueryFilter.getWhereParameters(filters);
+
+    if (whereParameters == null) {
+      return db.query(this.entity.tableName);
+    }
+
+    return db.query(this.entity.tableName, where: whereParameters);
   }
 
   @override
