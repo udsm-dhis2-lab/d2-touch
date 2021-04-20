@@ -18,12 +18,15 @@ abstract class BaseRepository<T> {
   Future<List<Map<String, dynamic>>> find(
       {String id,
       List<QueryFilter> filters,
+      List<String> fields,
       Map<String, SortOrder> sortOrder,
       Database database});
   Future<Map<String, dynamic>> findById(
-      {@required String id, Database database});
+      {@required String id, List<String> fields, Database database});
   Future<List<Map<String, dynamic>>> findAll(
-      {List<QueryFilter> filters, Map<String, SortOrder> sortOrder});
+      {List<QueryFilter> filters,
+      List<String> fields,
+      Map<String, SortOrder> sortOrder});
   Future<int> insertOne({@required T entity, Database database});
   Future<int> insertMany({@required List<T> entities, Database database});
   Future<int> updateOne({@required T entity, Database database});
@@ -50,26 +53,26 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   @override
   Future<List<Map<String, dynamic>>> findAll(
       {List<QueryFilter> filters,
+      List<String> fields,
       Map<String, SortOrder> sortOrder,
       Database database}) {
     final Database db = database != null ? database : this.database;
-    return this.find(filters: filters, sortOrder: sortOrder, database: db);
+    return this.find(
+        filters: filters, fields: fields, sortOrder: sortOrder, database: db);
   }
 
   @override
   Future<List<Map<String, dynamic>>> find(
       {String id,
       List<QueryFilter> filters,
+      List<String> fields,
       Map<String, SortOrder> sortOrder,
       Database database}) {
     final Database db = database != null ? database : this.database;
 
     if (id != null) {
-      return db.query(
-        this.entity.tableName,
-        where: 'id = ?',
-        whereArgs: [id],
-      );
+      return db.query(this.entity.tableName,
+          where: 'id = ?', whereArgs: [id], columns: fields);
     }
 
     final String whereParameters = QueryFilter.getWhereParameters(filters);
@@ -77,19 +80,20 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         SortOrderUtil.getSortOrderParameters(sortOrder);
 
     if (whereParameters == null) {
-      return db.query(this.entity.tableName, orderBy: orderParameters);
+      return db.query(this.entity.tableName,
+          orderBy: orderParameters, columns: fields);
     }
 
     return db.query(this.entity.tableName,
-        where: whereParameters, orderBy: orderParameters);
+        where: whereParameters, orderBy: orderParameters, columns: fields);
   }
 
   @override
   Future<Map<String, dynamic>> findById(
-      {@required String id, Database database}) async {
+      {@required String id, List<String> fields, Database database}) async {
     final Database db = database != null ? database : this.database;
 
-    var results = await this.find(id: id, database: db);
+    var results = await this.find(id: id, fields: fields, database: db);
 
     return results.length > 0 ? results[0] : null;
   }

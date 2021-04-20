@@ -190,4 +190,13 @@ void main() async {
     expect(orderAscResult[1]['level'], 2);
     expect(orderAscResult[2]['level'], 3);
   });
+
+  var selectResult =
+      await orderByQuery.select(['id', 'name']).byId('test2').get();
+
+  test("should return only selected columns", () {
+    expect(selectResult['level'], null);
+    expect(selectResult['id'], 'test2');
+    expect(selectResult['name'], 'Test 2');
+  });
 }
