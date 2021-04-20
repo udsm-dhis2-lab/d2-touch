@@ -1,21 +1,31 @@
-import 'package:dhis2_flutter_sdk/core/annotations/column.annotation.dart';
-import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
-import 'package:dhis2_flutter_sdk/core/annotations/relation.annotation.dart';
-import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
-import 'package:reflectable/reflectable.dart';
+import 'package:dhis2_flutter_sdk/core/repository.dart';
+import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/query_model.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/save_option.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/sort_order.util.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
-abstract class BaseQuery<T> {
+class BaseQuery<T extends BaseEntity> {
+  Database database;
+  Repository repository;
   dynamic data;
   List<String> fields;
+  String tableName;
+  String resourceName;
+  String singularResourceName;
   String id;
+  List<QueryFilter> filters = [];
+  Map<String, SortOrder> sortOrder;
+  List<dynamic> relations;
 
-  String get resourceName {
-    throw ('Not implemented');
-  }
-
-  String get daoName {
-    throw ('Not implemented');
+  BaseQuery({Database database}) {
+    this.database = database;
+    this.repository = Repository<T>();
+    this.tableName = repository.entity.tableName;
+    this.fields = repository.columns.map((column) => column.name).toList();
   }
 
   select(List<String> fields) {
@@ -25,6 +35,77 @@ abstract class BaseQuery<T> {
 
   byId(String id) {
     this.id = id;
+    this.filters = null;
+    return this;
+  }
+
+  byIds(List<String> ids) {
+    this.id = null;
+    return this.whereIn(attribute: 'id', values: ids, merge: false);
+  }
+
+  whereIn(
+      {@required String attribute, @required List<String> values, bool merge}) {
+    if (merge) {
+      this.filters.add(QueryFilter(
+          attribute: attribute, condition: QueryCondition.In, value: values));
+    } else {
+      this.filters = [
+        QueryFilter(
+            attribute: attribute, condition: QueryCondition.In, value: values)
+      ];
+    }
+
+    return this;
+  }
+
+  where({@required String attribute, @required dynamic value}) {
+    this.filters.add(QueryFilter(
+        attribute: attribute, condition: QueryCondition.Equal, value: value));
+
+    return this;
+  }
+
+  like({@required String attribute, @required dynamic value}) {
+    this.filters.add(QueryFilter(
+        attribute: attribute, condition: QueryCondition.Like, value: value));
+    return this;
+  }
+
+  greaterThan({@required String attribute, @required dynamic value}) {
+    this.filters.add(QueryFilter(
+        attribute: attribute,
+        condition: QueryCondition.GreaterThan,
+        value: value));
+    return this;
+  }
+
+  greaterThanOrEqual({@required String attribute, @required dynamic value}) {
+    this.filters.add(QueryFilter(
+        attribute: attribute,
+        condition: QueryCondition.GreaterThanOrEqualTo,
+        value: value));
+    return this;
+  }
+
+  lessThan({@required String attribute, @required dynamic value}) {
+    this.filters.add(QueryFilter(
+        attribute: attribute,
+        condition: QueryCondition.LessThan,
+        value: value));
+    return this;
+  }
+
+  lessThanOrEqual({@required String attribute, @required dynamic value}) {
+    this.filters.add(QueryFilter(
+        attribute: attribute,
+        condition: QueryCondition.LessThanOrEqualTo,
+        value: value));
+    return this;
+  }
+
+  orderBy({@required String attribute, @required SortOrder order}) {
+    this.sortOrder[attribute] = order;
     return this;
   }
 
@@ -33,87 +114,51 @@ abstract class BaseQuery<T> {
     return this;
   }
 
-  Future<Database> get database {
-    return DatabaseManager.instance.database;
+  QueryModel getQuery() {
+    return QueryModel(
+        resourceName: this.resourceName,
+        tableName: this.tableName,
+        singularResourceName: this.singularResourceName,
+        fields: this.fields,
+        filters: this.filters,
+        relations: this.relations);
   }
 
   Future get() async {
-    print(getTableColumnDefinitions<T>());
-    return await this.database;
-  }
-
-  Future save() async {
-    // final dynamic database = await this.database;
-    // final dynamic dao = database[this.daoName];
-
-    // if (this.id != null) {
-    //   return dao.updateOne(this.data as T);
-    // }
-
-    // return dao.updateMany(this.data as List<T>);
-  }
-
-  // Future<List<dynamic>> downloadData(String url, String attribute) async {
-  //   final dynamic responseData = await HttpService.get(url);
-
-  //   if (this.id != null) {
-  //     return responseData;
-  //   }
-  //   return responseData[attribute];
-  // }
-
-  Future createTable(String name, columnsArray) async {
-    String columns = columnsArray.join(', ');
-    columns = columns.replaceAll("MAP", "BLOB");
-    final query = "CREATE TABLE IF NOT EXISTS $name ($columns)";
-    var dbClient = await database;
-    return await dbClient.execute(query);
-  }
-
-  Map<String, List<String>> getTableColumnDefinitions<T>({Type type}) {
-    ClassMirror classMirror;
-    if (type != null) {
-      classMirror = AnnotationReflectable.reflectType(type);
-    } else {
-      classMirror = AnnotationReflectable.reflectType(T);
+    if (this.id != null) {
+      return this.repository.findById(id: this.id, database: this.database);
     }
-    Map<String, List<String>> tables = {};
-    List<String> columns = [];
-    for (String key in classMirror.declarations.keys) {
-      var value = classMirror.declarations[key];
-      if (value is VariableMirror) {
-        VariableMirror variableMirror = value;
-        bool isPrimaryKey = false;
-        variableMirror.metadata.forEach((element) {
-          if (element is PrimaryColumn) {
-            columns.add('$key TEXT PRIMARY KEY');
-            isPrimaryKey = true;
-          }
-        });
-        if (!isPrimaryKey) {
-          if (variableMirror.reflectedType == String) {
-            columns.add('$key TEXT');
-          } else if (variableMirror.reflectedType == int) {
-            columns.add('$key INTEGER');
-          } else if (variableMirror.reflectedType == bool) {
-            columns.add('$key BOOLEAN');
-          } else {
-            variableMirror.metadata.forEach((element) {
-              if (element is Column) {
-                columns.add('$key TEXT');
-              } else if (element is OneToOne) {
-                Map<String, List<String>> tempTables =
-                    getTableColumnDefinitions(
-                        type: variableMirror.reflectedType);
-                tables.addAll(tempTables);
-              } else {}
-            });
-          }
-        }
-      }
+
+    return this
+        .repository
+        .findAll(database: this.database, filters: this.filters);
+  }
+
+  Future<int> save({SaveOptions saveOptions}) {
+    if (this.data is List) {
+      return this
+          .repository
+          .saveMany(entities: this.data as List<T>, database: this.database);
     }
-    columns.add('isdirty BOOLEAN');
-    tables[classMirror.simpleName.toLowerCase()] = columns;
-    return tables;
+
+    return this
+        .repository
+        .saveOne(entity: this.data as T, database: this.database);
+  }
+
+  Future delete() {
+    if (this.id != null) {
+      return this.repository.deleteById(id: this.id, database: this.database);
+    }
+
+    return this.repository.deleteAll();
+  }
+
+  Future count() {
+    throw UnimplementedError();
+  }
+
+  Future create() {
+    return this.repository.create(database: database);
   }
 }

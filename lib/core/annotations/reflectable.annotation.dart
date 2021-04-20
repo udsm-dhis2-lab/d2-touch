@@ -8,6 +8,7 @@ class AnnotationReflection extends Reflectable {
             reflectedTypeCapability,
             newInstanceCapability,
             metadataCapability,
+            typeRelationsCapability,
             typeCapability);
 }
 
