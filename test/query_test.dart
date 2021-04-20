@@ -144,6 +144,24 @@ void main() async {
     expect(lessThanEqualResult.length, 3);
   });
 
+  final greaterThanQuery = OrganisationUnitQuery(database: db);
+  var greaterThanResult =
+      await greaterThanQuery.greaterThan(attribute: 'level', value: 1).get();
+
+  test("should return saved result whose level are greater than 1", () {
+    expect(greaterThanResult.length, 2);
+  });
+
+  final greaterThanEqualQuery = OrganisationUnitQuery(database: db);
+  var greaterThanEqualResult = await greaterThanEqualQuery
+      .greaterThanOrEqual(attribute: 'level', value: 1)
+      .get();
+
+  test("should return saved result whose level are greater than or equal to 1",
+      () {
+    expect(greaterThanEqualResult.length, 3);
+  });
+
   final allQuery = OrganisationUnitQuery(database: db);
   var allResults = await allQuery.get();
 

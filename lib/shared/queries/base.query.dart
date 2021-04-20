@@ -80,7 +80,7 @@ class BaseQuery<T extends BaseEntity> {
     return this;
   }
 
-  greaterThanOrEqualTo({@required String attribute, @required dynamic value}) {
+  greaterThanOrEqual({@required String attribute, @required dynamic value}) {
     this.filters.add(QueryFilter(
         attribute: attribute,
         condition: QueryCondition.GreaterThanOrEqualTo,
