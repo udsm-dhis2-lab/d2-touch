@@ -48,15 +48,11 @@ class BaseQuery<T extends BaseEntity> {
       {@required String attribute, @required List<String> values, bool merge}) {
     if (merge) {
       this.filters.add(QueryFilter(
-          attribute: attribute,
-          condition: QueryFilterCondition.include(),
-          value: values));
+          attribute: attribute, condition: QueryCondition.In, value: values));
     } else {
       this.filters = [
         QueryFilter(
-            attribute: attribute,
-            condition: QueryFilterCondition.include(),
-            value: values)
+            attribute: attribute, condition: QueryCondition.In, value: values)
       ];
     }
 
@@ -65,25 +61,21 @@ class BaseQuery<T extends BaseEntity> {
 
   where({@required String attribute, @required dynamic value}) {
     this.filters.add(QueryFilter(
-        attribute: attribute,
-        condition: QueryFilterCondition.equal(),
-        value: value));
+        attribute: attribute, condition: QueryCondition.Equal, value: value));
 
     return this;
   }
 
   ilike({@required String attribute, @required dynamic value}) {
     this.filters.add(QueryFilter(
-        attribute: attribute,
-        condition: QueryFilterCondition.ilike(),
-        value: value));
+        attribute: attribute, condition: QueryCondition.Ilike, value: value));
     return this;
   }
 
   greaterThan({@required String attribute, @required dynamic value}) {
     this.filters.add(QueryFilter(
         attribute: attribute,
-        condition: QueryFilterCondition.greaterThan(),
+        condition: QueryCondition.GreaterThan,
         value: value));
     return this;
   }
@@ -91,7 +83,7 @@ class BaseQuery<T extends BaseEntity> {
   greaterThanOrEqualTo({@required String attribute, @required dynamic value}) {
     this.filters.add(QueryFilter(
         attribute: attribute,
-        condition: QueryFilterCondition.greaterThanOrEqualTo(),
+        condition: QueryCondition.GreaterThanOrEqualTo,
         value: value));
     return this;
   }
@@ -99,7 +91,7 @@ class BaseQuery<T extends BaseEntity> {
   lessThan({@required String attribute, @required dynamic value}) {
     this.filters.add(QueryFilter(
         attribute: attribute,
-        condition: QueryFilterCondition.lesstThan(),
+        condition: QueryCondition.LessThan,
         value: value));
     return this;
   }
@@ -107,7 +99,7 @@ class BaseQuery<T extends BaseEntity> {
   lessThanOrEqualTo({@required String attribute, @required dynamic value}) {
     this.filters.add(QueryFilter(
         attribute: attribute,
-        condition: QueryFilterCondition.lessThanOrEqualTo(),
+        condition: QueryCondition.LessThanOrEqualTo,
         value: value));
     return this;
   }
@@ -137,16 +129,9 @@ class BaseQuery<T extends BaseEntity> {
       return this.repository.findById(id: this.id, database: this.database);
     }
 
-    print('HERE WE ARE ${this.filters != null}');
-
-    if (this.filters != null) {
-      this.filters.forEach((element) {
-        print(element.value);
-      });
-      return this.repository.findAll(database: this.database);
-    }
-
-    return this.repository.findAll(database: this.database);
+    return this
+        .repository
+        .findAll(database: this.database, filters: this.filters);
   }
 
   Future<int> save({SaveOptions saveOptions}) {

@@ -1,6 +1,8 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -13,12 +15,11 @@ abstract class BaseRepository<T> {
   String get createQuery;
   Future<Database> get database;
   Future<dynamic> create({Database database});
-  Future<List<Map<String, dynamic>>> find({String id, Database database});
+  Future<List<Map<String, dynamic>>> find(
+      {String id, List<QueryFilter> filters, Database database});
   Future<Map<String, dynamic>> findById(
       {@required String id, Database database});
-  Future<List<Map<String, dynamic>>> findAll();
-  Future<List<Map<String, Object>>> findByIds(
-      {@required List<String> ids, Database database});
+  Future<List<Map<String, dynamic>>> findAll({List<QueryFilter> filters});
   Future<int> insertOne({@required T entity, Database database});
   Future<int> insertMany({@required List<T> entities, Database database});
   Future<int> updateOne({@required T entity, Database database});
@@ -43,29 +44,23 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   }
 
   @override
-  Future<List<Map<String, Object>>> findByIds(
-      {@required List<String> ids, Database database}) {
+  Future<List<Map<String, dynamic>>> findAll(
+      {List<QueryFilter> filters, Database database}) {
     final Database db = database != null ? database : this.database;
-
-    return db.query(this.entity.tableName,
-        where: 'id IN (${ids.map((id) => '"$id"').join(',')})');
+    return this.find(filters: filters, database: db);
   }
 
   @override
-  Future<List<Map<String, dynamic>>> findAll({Database database}) {
-    final Database db = database != null ? database : this.database;
-    return db.query(this.entity.tableName);
-  }
-
-  @override
-  Future<List<Map<String, dynamic>>> find({String id, Database database}) {
+  Future<List<Map<String, dynamic>>> find(
+      {String id, List<QueryFilter> filters, Database database}) {
     final Database db = database != null ? database : this.database;
 
     if (id != null) {
       return db.query(this.entity.tableName, where: 'id = ?', whereArgs: [id]);
     }
 
-    return db.query(this.entity.tableName);
+    return db.query(this.entity.tableName,
+        where: QueryFilter.getWhereParameters(filters));
   }
 
   @override
@@ -73,8 +68,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {@required String id, Database database}) async {
     final Database db = database != null ? database : this.database;
 
-    var results =
-        await db.query(this.entity.tableName, where: 'id = ?', whereArgs: [id]);
+    var results = await this.find(id: id, database: db);
 
     return results.length > 0 ? results[0] : null;
   }

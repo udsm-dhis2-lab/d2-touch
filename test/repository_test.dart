@@ -1,5 +1,7 @@
 import 'package:dhis2_flutter_sdk/core/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -157,8 +159,12 @@ void main() async {
     expect(savedManyResult2['name'], 'Test 3');
   });
 
-  var resultByIds =
-      await repository.findByIds(database: db, ids: ['test2', 'test3']);
+  var resultByIds = await repository.find(database: db, filters: [
+    QueryFilter(
+        attribute: 'id',
+        condition: QueryCondition.In,
+        value: ['test2', 'test3'])
+  ]);
 
   test("should return saved results", () {
     expect(resultByIds.length, 2);
