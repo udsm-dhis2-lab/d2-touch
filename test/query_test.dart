@@ -1,5 +1,6 @@
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/sort_order.util.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -167,5 +168,26 @@ void main() async {
 
   test("should return all saved results", () {
     expect(allResults.length, 3);
+  });
+
+  final orderByQuery = OrganisationUnitQuery(database: db);
+  var orderDescResult = await orderByQuery
+      .orderBy(attribute: 'level', order: SortOrder.DESC)
+      .get();
+
+  test("should return ordered by level in descending order", () {
+    expect(orderDescResult[0]['level'], 3);
+    expect(orderDescResult[1]['level'], 2);
+    expect(orderDescResult[2]['level'], 1);
+  });
+
+  var orderAscResult = await orderByQuery
+      .orderBy(attribute: 'level', order: SortOrder.ASC)
+      .get();
+
+  test("should return ordered by level in ascending order", () {
+    expect(orderAscResult[0]['level'], 1);
+    expect(orderAscResult[1]['level'], 2);
+    expect(orderAscResult[2]['level'], 3);
   });
 }

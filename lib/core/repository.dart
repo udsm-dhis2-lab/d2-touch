@@ -2,7 +2,7 @@ import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/sort_order.util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -16,10 +16,14 @@ abstract class BaseRepository<T> {
   Future<Database> get database;
   Future<dynamic> create({Database database});
   Future<List<Map<String, dynamic>>> find(
-      {String id, List<QueryFilter> filters, Database database});
+      {String id,
+      List<QueryFilter> filters,
+      Map<String, SortOrder> sortOrder,
+      Database database});
   Future<Map<String, dynamic>> findById(
       {@required String id, Database database});
-  Future<List<Map<String, dynamic>>> findAll({List<QueryFilter> filters});
+  Future<List<Map<String, dynamic>>> findAll(
+      {List<QueryFilter> filters, Map<String, SortOrder> sortOrder});
   Future<int> insertOne({@required T entity, Database database});
   Future<int> insertMany({@required List<T> entities, Database database});
   Future<int> updateOne({@required T entity, Database database});
@@ -45,14 +49,19 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<List<Map<String, dynamic>>> findAll(
-      {List<QueryFilter> filters, Database database}) {
+      {List<QueryFilter> filters,
+      Map<String, SortOrder> sortOrder,
+      Database database}) {
     final Database db = database != null ? database : this.database;
-    return this.find(filters: filters, database: db);
+    return this.find(filters: filters, sortOrder: sortOrder, database: db);
   }
 
   @override
   Future<List<Map<String, dynamic>>> find(
-      {String id, List<QueryFilter> filters, Database database}) {
+      {String id,
+      List<QueryFilter> filters,
+      Map<String, SortOrder> sortOrder,
+      Database database}) {
     final Database db = database != null ? database : this.database;
 
     if (id != null) {
@@ -64,12 +73,15 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     }
 
     final String whereParameters = QueryFilter.getWhereParameters(filters);
+    final String orderParameters =
+        SortOrderUtil.getSortOrderParameters(sortOrder);
 
     if (whereParameters == null) {
-      return db.query(this.entity.tableName);
+      return db.query(this.entity.tableName, orderBy: orderParameters);
     }
 
-    return db.query(this.entity.tableName, where: whereParameters);
+    return db.query(this.entity.tableName,
+        where: whereParameters, orderBy: orderParameters);
   }
 
   @override

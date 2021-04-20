@@ -18,7 +18,7 @@ class BaseQuery<T extends BaseEntity> {
   String singularResourceName;
   String id;
   List<QueryFilter> filters = [];
-  Map<String, SortOrder> sortOrder;
+  Map<String, SortOrder> sortOrder = {};
   List<dynamic> relations;
 
   BaseQuery({Database database}) {
@@ -129,9 +129,10 @@ class BaseQuery<T extends BaseEntity> {
       return this.repository.findById(id: this.id, database: this.database);
     }
 
-    return this
-        .repository
-        .findAll(database: this.database, filters: this.filters);
+    return this.repository.findAll(
+        database: this.database,
+        filters: this.filters,
+        sortOrder: this.sortOrder);
   }
 
   Future<int> save({SaveOptions saveOptions}) {
