@@ -18,7 +18,7 @@ class BaseQuery<T extends BaseEntity> {
   String singularResourceName;
   String id;
   List<QueryFilter> filters = [];
-  Map<String, SortOrder> sortOrder;
+  Map<String, SortOrder> sortOrder = {};
   List<dynamic> relations;
 
   BaseQuery({Database database}) {
@@ -126,12 +126,16 @@ class BaseQuery<T extends BaseEntity> {
 
   Future get() async {
     if (this.id != null) {
-      return this.repository.findById(id: this.id, database: this.database);
+      return this
+          .repository
+          .findById(id: this.id, fields: this.fields, database: this.database);
     }
 
-    return this
-        .repository
-        .findAll(database: this.database, filters: this.filters);
+    return this.repository.findAll(
+        database: this.database,
+        filters: this.filters,
+        fields: this.fields,
+        sortOrder: this.sortOrder);
   }
 
   Future<int> save({SaveOptions saveOptions}) {
