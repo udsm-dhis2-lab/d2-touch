@@ -71,8 +71,8 @@ void main() async {
   var result = await repository.findById(id: 'test1', database: db);
 
   test('should return saved details', () {
-    expect(result['id'], 'test1');
-    expect(result['name'], 'Test 1');
+    expect(result.id, 'test1');
+    expect(result.name, 'Test 1');
   });
 
   final updatedOrganisationUnit = OrganisationUnit(
@@ -94,8 +94,8 @@ void main() async {
   var updatedResult = await repository.findById(id: 'test1', database: db);
 
   test('should return updated details', () {
-    expect(updatedResult['id'], 'test1');
-    expect(updatedResult['name'], 'Test 1 (updated)');
+    expect(updatedResult.id, 'test1');
+    expect(updatedResult.name, 'Test 1 (updated)');
   });
 
   var deleteResult = await repository.deleteById(id: 'test1', database: db);
@@ -119,8 +119,8 @@ void main() async {
   var savedResult = await repository.findById(id: 'test1', database: db);
 
   test('should return saved result', () {
-    expect(savedResult['id'], 'test1');
-    expect(savedResult['name'], 'Test 1');
+    expect(savedResult.id, 'test1');
+    expect(savedResult.name, 'Test 1');
   });
 
   final organisationUnitList = [
@@ -153,10 +153,10 @@ void main() async {
   var savedManyResult2 = await repository.findById(id: 'test3', database: db);
 
   test('should return saved result', () {
-    expect(savedManyResult1['id'], 'test2');
-    expect(savedManyResult2['id'], 'test3');
-    expect(savedManyResult1['name'], 'Test 2');
-    expect(savedManyResult2['name'], 'Test 3');
+    expect(savedManyResult1.id, 'test2');
+    expect(savedManyResult2.id, 'test3');
+    expect(savedManyResult1.name, 'Test 2');
+    expect(savedManyResult2.name, 'Test 3');
   });
 
   var resultByIds = await repository.find(database: db, filters: [

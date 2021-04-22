@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:dhis2_flutter_sdk/core/annotations/column.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/entity.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
@@ -70,7 +72,7 @@ class OrganisationUnit extends BaseEntity {
         parent: json['parent'].runtimeType == String
             ? {"id": json['parent']}
             : json['parent'] != null
-                ? new OrganisationUnit.fromJson(json['parent'])
+                ? OrganisationUnit.fromJson(json['parent'])
                 : null);
   }
 

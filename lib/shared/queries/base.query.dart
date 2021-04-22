@@ -124,11 +124,11 @@ class BaseQuery<T extends BaseEntity> {
         relations: this.relations);
   }
 
-  Future get() async {
+  Future<List<T>> get() async {
     if (this.id != null) {
       return this
           .repository
-          .findById(id: this.id, fields: this.fields, database: this.database);
+          .find(id: this.id, fields: this.fields, database: this.database);
     }
 
     return this.repository.findAll(
@@ -136,6 +136,12 @@ class BaseQuery<T extends BaseEntity> {
         filters: this.filters,
         fields: this.fields,
         sortOrder: this.sortOrder);
+  }
+
+  Future<T> getOne() async {
+    List<T> results = await this.get();
+
+    return results.length > 0 ? results[0] : null;
   }
 
   Future<int> save({SaveOptions saveOptions}) {
