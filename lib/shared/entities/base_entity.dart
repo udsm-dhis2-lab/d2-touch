@@ -37,7 +37,7 @@ class BaseEntity {
       this.code,
       @required this.dirty});
 
-  fromJson(Map<String, dynamic> json) {
+  static fromJson(Map<String, dynamic> json) {
     throw UnimplementedError();
   }
 

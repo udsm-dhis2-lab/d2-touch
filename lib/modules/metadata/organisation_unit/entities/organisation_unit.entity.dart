@@ -57,12 +57,12 @@ class OrganisationUnit extends BaseEntity {
         name: json['name'],
         level: json['level'],
         created: json['created'],
-        shortName: json['shortName'],
+        shortName: json['shortname'],
         code: json['code'],
         path: json['path'],
-        displayName: json['displayName'],
-        externalAccess: json['externalAccess'],
-        openingDate: json['openingDate'],
+        displayName: json['displayname'],
+        externalAccess: json['externalaccess'],
+        openingDate: json['openingdate'],
         dirty: json['dirty'],
         geometry: json['geometry'] != null
             ? Geometry.fromJson(json['geometry'])
@@ -70,7 +70,7 @@ class OrganisationUnit extends BaseEntity {
         parent: json['parent'].runtimeType == String
             ? {"id": json['parent']}
             : json['parent'] != null
-                ? new OrganisationUnit.fromJson(json['parent'])
+                ? OrganisationUnit.fromJson(json['parent'])
                 : null);
   }
 

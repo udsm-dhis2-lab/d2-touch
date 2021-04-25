@@ -73,11 +73,11 @@ void main() async {
     expect(saveManyResponse, 1);
   });
 
-  var result = await query.byId('test1').get();
+  var result = await query.byId('test1').getOne();
 
   test('should return saved details', () {
-    expect(result['id'], 'test1');
-    expect(result['name'], 'Test 1');
+    expect(result.id, 'test1');
+    expect(result.name, 'Test 1');
   });
 
   final updatedOrganisationUnit = OrganisationUnit(
@@ -95,11 +95,11 @@ void main() async {
     expect(updateResult, 1);
   });
 
-  var updatedResult = await query.byId('test1').get();
+  var updatedResult = await query.byId('test1').getOne();
 
   test('should return updated details', () {
-    expect(updatedResult['id'], 'test1');
-    expect(updatedResult['name'], 'Test 1 (updated)');
+    expect(updatedResult.id, 'test1');
+    expect(updatedResult.name, 'Test 1 (updated)');
   });
 
   var deleteResult = await query.byId('test1').delete();
@@ -108,7 +108,7 @@ void main() async {
     expect(deleteResult, 1);
   });
 
-  var deletedResult = await query.byId('test1').get();
+  var deletedResult = await query.byId('test1').getOne();
   test('should return null for deleted item', () {
     expect(deletedResult, null);
   });
@@ -124,7 +124,7 @@ void main() async {
       await levelQuery.where(attribute: 'level', value: 3).get();
 
   test("should return saved result for level 3", () {
-    expect(resultByLevel[0]['id'], 'test4');
+    expect(resultByLevel[0].id, 'test4');
   });
 
   final lessThanQuery = OrganisationUnitQuery(database: db);
@@ -176,9 +176,9 @@ void main() async {
       .get();
 
   test("should return ordered by level in descending order", () {
-    expect(orderDescResult[0]['level'], 3);
-    expect(orderDescResult[1]['level'], 2);
-    expect(orderDescResult[2]['level'], 1);
+    expect(orderDescResult[0].level, 3);
+    expect(orderDescResult[1].level, 2);
+    expect(orderDescResult[2].level, 1);
   });
 
   var orderAscResult = await orderByQuery
@@ -186,17 +186,17 @@ void main() async {
       .get();
 
   test("should return ordered by level in ascending order", () {
-    expect(orderAscResult[0]['level'], 1);
-    expect(orderAscResult[1]['level'], 2);
-    expect(orderAscResult[2]['level'], 3);
+    expect(orderAscResult[0].level, 1);
+    expect(orderAscResult[1].level, 2);
+    expect(orderAscResult[2].level, 3);
   });
 
   var selectResult =
-      await orderByQuery.select(['id', 'name']).byId('test2').get();
+      await orderByQuery.select(['id', 'name']).byId('test2').getOne();
 
   test("should return only selected columns", () {
-    expect(selectResult['level'], null);
-    expect(selectResult['id'], 'test2');
-    expect(selectResult['name'], 'Test 2');
+    expect(selectResult.level, null);
+    expect(selectResult.id, 'test2');
+    expect(selectResult.name, 'Test 2');
   });
 }

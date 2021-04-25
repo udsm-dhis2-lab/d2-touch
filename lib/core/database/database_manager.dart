@@ -8,8 +8,9 @@ import 'package:path_provider/path_provider.dart';
 
 class DatabaseManager {
   final int version = 1;
-  final String databaseName = 'flutter_database.db';
+  String databaseName = 'flutter_database.db';
   bool inMemory = false;
+  DatabaseFactory databaseFactory;
 
   static final DatabaseManager _databaseInstance =
       new DatabaseManager._internal();
@@ -17,7 +18,20 @@ class DatabaseManager {
   static Database _database;
   final _initDatabaseMemoizer = AsyncMemoizer<Database>();
 
-  factory DatabaseManager() => _databaseInstance;
+  factory DatabaseManager(
+      {String databaseName, bool inMemory, DatabaseFactory databaseFactory}) {
+    if (databaseName != null) {
+      _databaseInstance.databaseName = databaseName;
+    }
+
+    if (inMemory != null) {
+      _databaseInstance.inMemory = inMemory;
+    }
+
+    _databaseInstance.databaseFactory = databaseFactory;
+
+    return _databaseInstance;
+  }
 
   DatabaseManager._internal();
 
@@ -34,6 +48,10 @@ class DatabaseManager {
   }
 
   initializeDatabase() async {
+    if (this.databaseFactory != null) {
+      return databaseFactory.openDatabase(inMemoryDatabasePath);
+    }
+
     Directory documentDirectory = await getApplicationDocumentsDirectory();
 
     String path = join(documentDirectory.path, databaseName + '.db');
