@@ -1,6 +1,7 @@
 library dhis2_flutter_sdk;
 
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/dataset/data_set.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/organisation_unit.module.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -19,10 +20,13 @@ class D2Touch {
     await DatabaseManager.instance.database;
     await OrganisationUnitModule.createTables();
     await DataElementModule.createTables();
+    await DataSetModule.createTables();
   }
 
   static OrganisationUnitModule organisationUnitModule =
       OrganisationUnitModule();
 
   static DataElementModule dataElementModule = DataElementModule();
+
+  static DataSetModule dataSetModule = DataSetModule();
 }
