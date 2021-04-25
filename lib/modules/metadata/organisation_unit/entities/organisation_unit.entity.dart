@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:dhis2_flutter_sdk/core/annotations/column.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/entity.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
@@ -59,12 +57,12 @@ class OrganisationUnit extends BaseEntity {
         name: json['name'],
         level: json['level'],
         created: json['created'],
-        shortName: json['shortName'],
+        shortName: json['shortname'],
         code: json['code'],
         path: json['path'],
-        displayName: json['displayName'],
-        externalAccess: json['externalAccess'],
-        openingDate: json['openingDate'],
+        displayName: json['displayname'],
+        externalAccess: json['externalaccess'],
+        openingDate: json['openingdate'],
         dirty: json['dirty'],
         geometry: json['geometry'] != null
             ? Geometry.fromJson(json['geometry'])

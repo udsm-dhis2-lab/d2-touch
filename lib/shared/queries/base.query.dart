@@ -164,6 +164,10 @@ class BaseQuery<T extends BaseEntity> {
     return this.repository.deleteAll();
   }
 
+  Future createTable() {
+    return this.repository.create(database: this.database);
+  }
+
   Future count() {
     throw UnimplementedError();
   }
