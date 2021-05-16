@@ -4,6 +4,8 @@ import 'package:dhis2_flutter_sdk/core/query_expression.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reflectable/reflectable.dart';
 
+import 'entity.annotation.dart';
+
 enum ColumnType { TEXT, INTEGER, BOOLEAN }
 
 enum RelationType { OneToMany, ManyToOne, OneToOne }
@@ -12,8 +14,14 @@ class ColumnRelation {
   final RelationType relationType;
   final String referencedTable;
   final String referencedColumn;
+  final Entity referencedEntity;
+  final List<Column> referencedEntityColumns;
   ColumnRelation(
-      {this.relationType, this.referencedTable, this.referencedColumn});
+      {this.relationType,
+      this.referencedTable,
+      this.referencedColumn,
+      this.referencedEntity,
+      this.referencedEntityColumns});
 }
 
 @AnnotationReflectable
@@ -29,6 +37,7 @@ class Column {
   final bool select;
   final bool generated;
   final ColumnRelation relation;
+  final String attributeName;
   const Column(
       {@required this.type,
       this.name,
@@ -40,7 +49,8 @@ class Column {
       this.primary = false,
       this.select = true,
       this.generated = false,
-      this.relation});
+      this.relation,
+      this.attributeName});
 
   String get columnType {
     return Column.getType(this.type);
@@ -90,6 +100,7 @@ class Column {
               ? column.type
               : Column.getColumnType(variableMirror.reflectedType),
           name: column.name != null ? column.name : columnName,
+          attributeName: columnName,
           primary: column.primary,
           nullable: column.nullable,
           length: column.length,
@@ -97,13 +108,21 @@ class Column {
           unique: column.unique);
     } else if (variableElement is ManyToOne) {
       ManyToOne manyToOneColumn = variableElement;
+
       return Column(
           type: ColumnType.TEXT,
           name: manyToOneColumn.joinColumnName,
+          attributeName: columnName,
           relation: ColumnRelation(
-              referencedColumn: '',
+              referencedColumn: 'id',
               referencedTable: manyToOneColumn.parentTable,
-              relationType: RelationType.ManyToOne));
+              relationType: RelationType.ManyToOne,
+              referencedEntity: Entity.getEntityDefinition(
+                  AnnotationReflectable.reflectType(
+                      variableMirror.reflectedType)),
+              referencedEntityColumns: Entity.getEntityColumns(
+                  AnnotationReflectable.reflectType(
+                      variableMirror.reflectedType))));
     } else if (variableElement is OneToOne) {}
 
     return null;

@@ -46,9 +46,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   Future<Database> get database => DatabaseManager.instance.database;
 
   @override
-  Future<void> clear({Database database}) {
-    final Database db = database != null ? database : this.database;
-    // return
+  Future<void> clear({Database database}) async {
+    final Database db = database != null ? database : await this.database;
   }
 
   @override
@@ -56,8 +55,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {List<QueryFilter> filters,
       List<String> fields,
       Map<String, SortOrder> sortOrder,
-      Database database}) {
-    final Database db = database != null ? database : this.database;
+      Database database}) async {
+    final Database db = database != null ? database : await this.database;
     return this.find(
         filters: filters, fields: fields, sortOrder: sortOrder, database: db);
   }
@@ -222,24 +221,31 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   @override
   Map<String, dynamic> sanitizeIncomingData(Map<String, dynamic> entity) {
     Map<String, dynamic> data = new Map();
-    for (String key in entity.keys) {
-      if (entity[key] is bool) {
-        data[key] = entity[key] == true ? 1 : 0;
+    this.columns.forEach((column) {
+      if (column.type == ColumnType.BOOLEAN) {
+        data[column.name] = entity[column.attributeName] == true ? 1 : 0;
+      } else if (column.relation != null) {
+        data[column.name] =
+            entity[column.attributeName][column.relation.referencedColumn];
+      } else if (entity[column.attributeName] is List) {
+        data[column.name] = entity[column.attributeName].toString();
       } else {
-        data[key] = entity[key];
+        data[column.name] = entity[column.attributeName];
       }
-    }
+    });
 
     return data;
   }
 
   T getObject<T>(Map<String, dynamic> objectMap) {
     Map<String, dynamic> resultMap = {};
+
     this.columns.forEach((column) {
       var value = objectMap[column.name];
-
       if (value.runtimeType == int && column.type == ColumnType.BOOLEAN) {
         resultMap[column.name] = value == 1 ? true : false;
+      } else if (value.runtimeType is List) {
+        resultMap[column.name] = '';
       } else {
         resultMap[column.name] = value;
       }
