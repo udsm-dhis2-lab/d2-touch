@@ -14,53 +14,65 @@ class Program extends BaseEntity {
   @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
   String description;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'withoutregistration')
+  @Column(type: ColumnType.BOOLEAN, name: 'withoutregistration', nullable: true)
   bool withoutRegistration;
 
   @Column(type: ColumnType.BOOLEAN, name: 'ignoreoverdueevents')
   bool ignoreOverdueEvents;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'capturecoordinates')
+  @Column(type: ColumnType.BOOLEAN, name: 'capturecoordinates', nullable: true)
   bool captureCoordinates;
 
   @Column(type: ColumnType.TEXT, name: 'featuretype')
   String featureType;
 
-  @Column(type: ColumnType.TEXT, name: 'enrollmentdatelabel')
+  @Column(type: ColumnType.TEXT, name: 'enrollmentdatelabel', nullable: true)
   String enrollmentDateLabel;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'onlyenrollonce')
+  @Column(type: ColumnType.BOOLEAN, name: 'onlyenrollonce', nullable: true)
   bool onlyEnrollOnce;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'selectincidentdatesinfuture')
+  @Column(
+      type: ColumnType.BOOLEAN,
+      name: 'selectincidentdatesinfuture',
+      nullable: true)
   bool selectIncidentDatesInFuture;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'selectenrollmentdatesinfuture')
+  @Column(
+      type: ColumnType.BOOLEAN,
+      name: 'selectenrollmentdatesinfuture',
+      nullable: true)
   bool selectEnrollmentDatesInFuture;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'usefirststageduringregistration')
+  @Column(
+      type: ColumnType.BOOLEAN,
+      name: 'usefirststageduringregistration',
+      nullable: true)
   bool useFirstStageDuringRegistration;
 
-  @Column(type: ColumnType.TEXT, name: 'incidentdatelabel')
+  @Column(type: ColumnType.TEXT, name: 'incidentdatelabel', nullable: true)
   String incidentDateLabel;
 
-  @Column(type: ColumnType.INTEGER, name: 'completeeventsexpirydays')
+  @Column(
+      type: ColumnType.INTEGER,
+      name: 'completeeventsexpirydays',
+      nullable: true)
   int completeEventsExpiryDays;
 
   @Column(
       type: ColumnType.BOOLEAN, name: 'displayfrontpagelist', nullable: true)
   bool displayFrontPageList;
 
-  @Column(type: ColumnType.TEXT, name: 'trackedentity')
+  @Column(type: ColumnType.TEXT, name: 'trackedentity', nullable: true)
   String trackedEntity;
 
-  @Column(type: ColumnType.TEXT, name: 'trackedentitytype')
+  @Column(type: ColumnType.TEXT, name: 'trackedentitytype', nullable: true)
   String trackedEntityType;
 
-  @Column(type: ColumnType.TEXT, name: 'organisationunits')
+  @Column(type: ColumnType.TEXT, name: 'organisationunits', nullable: true)
   String organisationUnits;
 
-  @Column(type: ColumnType.TEXT, name: 'programrulevariables')
+  @Column(type: ColumnType.TEXT, name: 'programrulevariables', nullable: true)
   String programRuleVariables;
 
   // @OneToMany(() => ProgramStageEntity, (programStage) => programStage.program, {
@@ -92,24 +104,24 @@ class Program extends BaseEntity {
       String code,
       String displayName,
       @required this.programType,
-      @required this.featureType,
-      @required this.captureCoordinates,
-      @required this.completeEventsExpiryDays,
+      this.featureType,
+      this.captureCoordinates,
+      this.completeEventsExpiryDays,
       this.displayFrontPageList,
-      @required this.displayIncidentDate,
-      @required this.enrollmentDateLabel,
-      @required this.ignoreOverdueEvents,
-      @required this.incidentDateLabel,
-      @required this.onlyEnrollOnce,
-      @required this.organisationUnits,
-      @required this.programRuleVariables,
-      @required this.selectEnrollmentDatesInFuture,
+      this.displayIncidentDate,
+      this.enrollmentDateLabel,
+      this.ignoreOverdueEvents,
+      this.incidentDateLabel,
+      this.onlyEnrollOnce,
+      this.organisationUnits,
+      this.programRuleVariables,
+      this.selectEnrollmentDatesInFuture,
       this.description,
-      @required this.selectIncidentDatesInFuture,
-      @required this.trackedEntity,
-      @required this.trackedEntityType,
-      @required this.useFirstStageDuringRegistration,
-      @required this.withoutRegistration,
+      this.selectIncidentDatesInFuture,
+      this.trackedEntity,
+      this.trackedEntityType,
+      this.useFirstStageDuringRegistration,
+      this.withoutRegistration,
       @required dirty})
       : super(
             id: id,

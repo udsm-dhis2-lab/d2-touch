@@ -29,6 +29,7 @@ class Column {
   final bool select;
   final bool generated;
   final ColumnRelation relation;
+  final String attributeName;
   const Column(
       {@required this.type,
       this.name,
@@ -40,7 +41,8 @@ class Column {
       this.primary = false,
       this.select = true,
       this.generated = false,
-      this.relation});
+      this.relation,
+      this.attributeName});
 
   String get columnType {
     return Column.getType(this.type);
@@ -90,6 +92,7 @@ class Column {
               ? column.type
               : Column.getColumnType(variableMirror.reflectedType),
           name: column.name != null ? column.name : columnName,
+          attributeName: columnName,
           primary: column.primary,
           nullable: column.nullable,
           length: column.length,
@@ -100,8 +103,9 @@ class Column {
       return Column(
           type: ColumnType.TEXT,
           name: manyToOneColumn.joinColumnName,
+          attributeName: columnName,
           relation: ColumnRelation(
-              referencedColumn: '',
+              referencedColumn: 'id',
               referencedTable: manyToOneColumn.parentTable,
               relationType: RelationType.ManyToOne));
     } else if (variableElement is OneToOne) {}

@@ -40,15 +40,14 @@ final _data = <r.Reflectable, r.ReflectorData>{
             7,
             0,
             const prefix0.AnnotationReflection(),
-            const <int>[0, 1, 2, 3, 4, 5, 29, 42, 43],
+            const <int>[0, 1, 2, 3, 4, 5, 30, 43, 44],
             const <int>[
-              44,
               45,
               46,
               47,
               48,
-              29,
               49,
+              30,
               50,
               51,
               52,
@@ -56,7 +55,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
               54,
               55,
               56,
-              30,
+              57,
               31,
               32,
               33,
@@ -67,7 +66,8 @@ final _data = <r.Reflectable, r.ReflectorData>{
               38,
               39,
               40,
-              41
+              41,
+              42
             ],
             const <int>[],
             3,
@@ -135,20 +135,20 @@ final _data = <r.Reflectable, r.ReflectorData>{
               22,
               23,
               24,
-              57,
+              25,
               58,
               59,
-              71,
-              72,
-              73
+              60,
+              73,
+              74,
+              75
             ],
             const <int>[
-              44,
               45,
               46,
               47,
               48,
-              60,
+              49,
               61,
               62,
               63,
@@ -160,9 +160,11 @@ final _data = <r.Reflectable, r.ReflectorData>{
               69,
               70,
               71,
-              72
+              72,
+              73,
+              74
             ],
-            const <int>[57, 58, 59],
+            const <int>[58, 59, 60],
             -1,
             {
               r'getType': () => prefix2.Column.getType,
@@ -182,9 +184,11 @@ final _data = <r.Reflectable, r.ReflectorData>{
                       primary = false,
                       select = true,
                       generated = false,
-                      relation}) =>
+                      relation,
+                      attributeName}) =>
                   b
                       ? prefix2.Column(
+                          attributeName: attributeName,
                           generated: generated,
                           length: length,
                           name: name,
@@ -209,14 +213,13 @@ final _data = <r.Reflectable, r.ReflectorData>{
             7,
             2,
             const prefix0.AnnotationReflection(),
-            const <int>[74],
+            const <int>[76],
             const <int>[
-              44,
               45,
               46,
               47,
               48,
-              60,
+              49,
               61,
               62,
               63,
@@ -228,7 +231,9 @@ final _data = <r.Reflectable, r.ReflectorData>{
               69,
               70,
               71,
-              72
+              72,
+              73,
+              74
             ],
             const <int>[],
             1,
@@ -249,9 +254,9 @@ final _data = <r.Reflectable, r.ReflectorData>{
             7,
             3,
             const prefix0.AnnotationReflection(),
-            const <int>[6, 7, 8, 9, 10, 11, 12, 13, 75, 76, 77],
-            const <int>[44, 45, 46, 47, 48, 76, 49, 50, 51, 52, 53, 54, 55, 56],
-            const <int>[75],
+            const <int>[6, 7, 8, 9, 10, 11, 12, 13, 77, 78, 79],
+            const <int>[45, 46, 47, 48, 49, 78, 50, 51, 52, 53, 54, 55, 56, 57],
+            const <int>[77],
             -1,
             {r'fromJson': () => prefix3.BaseEntity.fromJson},
             {},
@@ -288,9 +293,9 @@ final _data = <r.Reflectable, r.ReflectorData>{
             7,
             4,
             const prefix0.AnnotationReflection(),
-            const <int>[25, 26, 78, 79, 82],
-            const <int>[44, 45, 46, 47, 48, 80, 81],
-            const <int>[78, 79],
+            const <int>[26, 27, 80, 81, 84],
+            const <int>[45, 46, 47, 48, 49, 82, 83],
+            const <int>[80, 81],
             -1,
             {
               r'getEntityDefinition': () => prefix4.Entity.getEntityDefinition,
@@ -313,8 +318,8 @@ final _data = <r.Reflectable, r.ReflectorData>{
             7,
             5,
             const prefix0.AnnotationReflection(),
-            const <int>[83],
-            const <int>[44, 45, 46, 47, 48],
+            const <int>[85],
+            const <int>[45, 46, 47, 48, 49],
             const <int>[],
             -1,
             {},
@@ -331,8 +336,8 @@ final _data = <r.Reflectable, r.ReflectorData>{
             7,
             6,
             const prefix0.AnnotationReflection(),
-            const <int>[27, 28, 86],
-            const <int>[44, 45, 46, 47, 48, 84, 85],
+            const <int>[28, 29, 88],
+            const <int>[45, 46, 47, 48, 49, 86, 87],
             const <int>[],
             -1,
             {},
@@ -354,8 +359,8 @@ final _data = <r.Reflectable, r.ReflectorData>{
             7,
             7,
             const prefix0.AnnotationReflection(),
-            const <int>[87],
-            const <int>[44, 45, 46, 47, 48],
+            const <int>[89],
+            const <int>[45, 46, 47, 48, 49],
             const <int>[],
             -1,
             {},
@@ -597,6 +602,14 @@ final _data = <r.Reflectable, r.ReflectorData>{
             13,
             13, const <int>[], const []),
         r.VariableMirrorImpl(
+            r'attributeName',
+            33797,
+            1,
+            const prefix0.AnnotationReflection(),
+            -1,
+            9,
+            9, const <int>[], const []),
+        r.VariableMirrorImpl(
             r'tableName',
             33797,
             4,
@@ -630,18 +643,18 @@ final _data = <r.Reflectable, r.ReflectorData>{
             9, const <int>[], const []),
         r.MethodMirrorImpl(r'toJson', 4325378, 0, -1, 15, 16, null,
             const <int>[], const prefix0.AnnotationReflection(), const []),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 0, 30),
-        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 0, 31),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 1, 32),
-        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 1, 33),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 2, 34),
-        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 2, 35),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 3, 36),
-        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 3, 37),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 4, 38),
-        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 4, 39),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 5, 40),
-        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 5, 41),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 0, 31),
+        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 0, 32),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 1, 33),
+        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 1, 34),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 2, 35),
+        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 2, 36),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 3, 37),
+        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 3, 38),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 4, 39),
+        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 4, 40),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 5, 41),
+        r.ImplicitSetterMirrorImpl(const prefix0.AnnotationReflection(), 5, 42),
         r.MethodMirrorImpl(
             r'',
             0,
@@ -683,18 +696,18 @@ final _data = <r.Reflectable, r.ReflectorData>{
             const <int>[],
             const prefix0.AnnotationReflection(),
             const []),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 6, 49),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 7, 50),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 8, 51),
-        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 9, 52),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 6, 50),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 7, 51),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 8, 52),
+        r.ImplicitGetterMirrorImpl(const prefix0.AnnotationReflection(), 9, 53),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 10, 53),
+            const prefix0.AnnotationReflection(), 10, 54),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 11, 54),
+            const prefix0.AnnotationReflection(), 11, 55),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 12, 55),
+            const prefix0.AnnotationReflection(), 12, 56),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 13, 56),
+            const prefix0.AnnotationReflection(), 13, 57),
         r.MethodMirrorImpl(r'getType', 131090, 1, -1, 9, 9, const <int>[],
             const <int>[23], const prefix0.AnnotationReflection(), const []),
         r.MethodMirrorImpl(
@@ -720,27 +733,29 @@ final _data = <r.Reflectable, r.ReflectorData>{
             const prefix0.AnnotationReflection(),
             const []),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 14, 60),
+            const prefix0.AnnotationReflection(), 14, 61),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 15, 61),
+            const prefix0.AnnotationReflection(), 15, 62),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 16, 62),
+            const prefix0.AnnotationReflection(), 16, 63),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 17, 63),
+            const prefix0.AnnotationReflection(), 17, 64),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 18, 64),
+            const prefix0.AnnotationReflection(), 18, 65),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 19, 65),
+            const prefix0.AnnotationReflection(), 19, 66),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 20, 66),
+            const prefix0.AnnotationReflection(), 20, 67),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 21, 67),
+            const prefix0.AnnotationReflection(), 21, 68),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 22, 68),
+            const prefix0.AnnotationReflection(), 22, 69),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 23, 69),
+            const prefix0.AnnotationReflection(), 23, 70),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 24, 70),
+            const prefix0.AnnotationReflection(), 24, 71),
+        r.ImplicitGetterMirrorImpl(
+            const prefix0.AnnotationReflection(), 25, 72),
         r.MethodMirrorImpl(r'columnType', 131075, 1, -1, 9, 9, const <int>[],
             const <int>[], const prefix0.AnnotationReflection(), const []),
         r.MethodMirrorImpl(
@@ -762,13 +777,13 @@ final _data = <r.Reflectable, r.ReflectorData>{
             1,
             1,
             const <int>[],
-            const <int>[27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37],
+            const <int>[27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38],
             const prefix0.AnnotationReflection(),
             const []),
         r.MethodMirrorImpl(r'', 128, 2, -1, 2, 2, const <int>[],
-            const <int>[38], const prefix0.AnnotationReflection(), const []),
-        r.MethodMirrorImpl(r'fromJson', 65554, 3, -1, -1, -1, const <int>[],
             const <int>[39], const prefix0.AnnotationReflection(), const []),
+        r.MethodMirrorImpl(r'fromJson', 65554, 3, -1, -1, -1, const <int>[],
+            const <int>[40], const prefix0.AnnotationReflection(), const []),
         r.MethodMirrorImpl(r'toJson', 4325378, 3, -1, 15, 16, null,
             const <int>[], const prefix0.AnnotationReflection(), const []),
         r.MethodMirrorImpl(
@@ -779,7 +794,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
             3,
             3,
             const <int>[],
-            const <int>[40, 41, 42, 43, 44, 45, 46, 47],
+            const <int>[41, 42, 43, 44, 45, 46, 47, 48],
             const prefix0.AnnotationReflection(),
             const []),
         r.MethodMirrorImpl(
@@ -790,7 +805,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
             4,
             4,
             const <int>[],
-            const <int>[48],
+            const <int>[49],
             const prefix0.AnnotationReflection(),
             const []),
         r.MethodMirrorImpl(
@@ -801,13 +816,13 @@ final _data = <r.Reflectable, r.ReflectorData>{
             21,
             22,
             const <int>[1],
-            const <int>[49],
+            const <int>[50],
             const prefix0.AnnotationReflection(),
             const []),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 25, 80),
+            const prefix0.AnnotationReflection(), 26, 82),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 26, 81),
+            const prefix0.AnnotationReflection(), 27, 83),
         r.MethodMirrorImpl(
             r'',
             128,
@@ -816,15 +831,15 @@ final _data = <r.Reflectable, r.ReflectorData>{
             4,
             4,
             const <int>[],
-            const <int>[50, 51],
+            const <int>[51, 52],
             const prefix0.AnnotationReflection(),
             const []),
         r.MethodMirrorImpl(r'', 128, 5, -1, 5, 5, const <int>[], const <int>[],
             const prefix0.AnnotationReflection(), const []),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 27, 84),
+            const prefix0.AnnotationReflection(), 28, 86),
         r.ImplicitGetterMirrorImpl(
-            const prefix0.AnnotationReflection(), 28, 85),
+            const prefix0.AnnotationReflection(), 29, 87),
         r.MethodMirrorImpl(
             r'',
             128,
@@ -833,7 +848,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
             6,
             6,
             const <int>[],
-            const <int>[52, 53],
+            const <int>[53, 54],
             const prefix0.AnnotationReflection(),
             const []),
         r.MethodMirrorImpl(r'', 128, 7, -1, 7, 7, const <int>[], const <int>[],
@@ -843,7 +858,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'id',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -855,7 +870,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'created',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -867,7 +882,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'lastUpdated',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -879,7 +894,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'name',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -891,7 +906,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'shortName',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -903,7 +918,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'code',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -915,7 +930,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'displayName',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -927,7 +942,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'level',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             8,
@@ -939,7 +954,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'path',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -951,7 +966,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'externalAccess',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             10,
@@ -963,7 +978,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'openingDate',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -975,7 +990,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'parent',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             0,
             0,
@@ -987,7 +1002,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'geometry',
             45062,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             11,
@@ -999,7 +1014,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'dirty',
             28678,
-            42,
+            43,
             const prefix0.AnnotationReflection(),
             -1,
             -1,
@@ -1011,7 +1026,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'json',
             2129926,
-            43,
+            44,
             const prefix0.AnnotationReflection(),
             -1,
             15,
@@ -1023,7 +1038,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'_level',
             32870,
-            31,
+            32,
             const prefix0.AnnotationReflection(),
             -1,
             8,
@@ -1035,7 +1050,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'_path',
             32870,
-            33,
+            34,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1047,7 +1062,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'_externalAccess',
             32870,
-            35,
+            36,
             const prefix0.AnnotationReflection(),
             -1,
             10,
@@ -1059,7 +1074,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'_openingDate',
             32870,
-            37,
+            38,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1071,7 +1086,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'_geometry',
             32870,
-            39,
+            40,
             const prefix0.AnnotationReflection(),
             -1,
             11,
@@ -1083,7 +1098,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'_parent',
             32870,
-            41,
+            42,
             const prefix0.AnnotationReflection(),
             0,
             0,
@@ -1095,7 +1110,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'other',
             32774,
-            44,
+            45,
             const prefix0.AnnotationReflection(),
             -1,
             23,
@@ -1107,23 +1122,11 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'invocation',
             32774,
-            46,
+            47,
             const prefix0.AnnotationReflection(),
             -1,
             24,
             24,
-            const <int>[],
-            const [],
-            null,
-            null),
-        r.ParameterMirrorImpl(
-            r'type',
-            32774,
-            57,
-            const prefix0.AnnotationReflection(),
-            -1,
-            12,
-            12,
             const <int>[],
             const [],
             null,
@@ -1132,6 +1135,18 @@ final _data = <r.Reflectable, r.ReflectorData>{
             r'type',
             32774,
             58,
+            const prefix0.AnnotationReflection(),
+            -1,
+            12,
+            12,
+            const <int>[],
+            const [],
+            null,
+            null),
+        r.ParameterMirrorImpl(
+            r'type',
+            32774,
+            59,
             const prefix0.AnnotationReflection(),
             -1,
             25,
@@ -1143,7 +1158,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'variableMirror',
             32774,
-            59,
+            60,
             const prefix0.AnnotationReflection(),
             -1,
             26,
@@ -1155,7 +1170,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'columnName',
             32774,
-            59,
+            60,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1167,7 +1182,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'type',
             45062,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             12,
@@ -1179,7 +1194,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'name',
             45062,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1191,7 +1206,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'length',
             47110,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             8,
@@ -1203,7 +1218,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'width',
             45062,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             8,
@@ -1215,7 +1230,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'nullable',
             47110,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             10,
@@ -1227,7 +1242,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'readonly',
             47110,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             10,
@@ -1239,7 +1254,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'unique',
             47110,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             10,
@@ -1251,7 +1266,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'primary',
             47110,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             10,
@@ -1263,7 +1278,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'select',
             47110,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             10,
@@ -1275,7 +1290,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'generated',
             47110,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             10,
@@ -1287,7 +1302,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'relation',
             45062,
-            73,
+            75,
             const prefix0.AnnotationReflection(),
             -1,
             13,
@@ -1297,9 +1312,21 @@ final _data = <r.Reflectable, r.ReflectorData>{
             null,
             #relation),
         r.ParameterMirrorImpl(
+            r'attributeName',
+            45062,
+            75,
+            const prefix0.AnnotationReflection(),
+            -1,
+            9,
+            9,
+            const <int>[],
+            const [],
+            null,
+            #attributeName),
+        r.ParameterMirrorImpl(
             r'type',
             45062,
-            74,
+            76,
             const prefix0.AnnotationReflection(),
             -1,
             12,
@@ -1311,7 +1338,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'json',
             2129926,
-            75,
+            77,
             const prefix0.AnnotationReflection(),
             -1,
             15,
@@ -1323,7 +1350,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'id',
             45062,
-            77,
+            79,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1335,7 +1362,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'name',
             45062,
-            77,
+            79,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1347,7 +1374,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'displayName',
             45062,
-            77,
+            79,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1359,7 +1386,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'shortName',
             45062,
-            77,
+            79,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1371,7 +1398,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'lastUpdated',
             45062,
-            77,
+            79,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1383,7 +1410,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'created',
             45062,
-            77,
+            79,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1395,7 +1422,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'code',
             45062,
-            77,
+            79,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1407,7 +1434,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'dirty',
             45062,
-            77,
+            79,
             const prefix0.AnnotationReflection(),
             -1,
             10,
@@ -1419,7 +1446,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'entityClassMirror',
             32774,
-            78,
+            80,
             const prefix0.AnnotationReflection(),
             -1,
             27,
@@ -1431,7 +1458,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'entityClassMirror',
             32774,
-            79,
+            81,
             const prefix0.AnnotationReflection(),
             -1,
             27,
@@ -1443,7 +1470,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'tableName',
             45062,
-            82,
+            84,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1455,7 +1482,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'options',
             45062,
-            82,
+            84,
             const prefix0.AnnotationReflection(),
             -1,
             14,
@@ -1467,7 +1494,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'parentTable',
             45062,
-            86,
+            88,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1479,7 +1506,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r.ParameterMirrorImpl(
             r'joinColumnName',
             45062,
-            86,
+            88,
             const prefix0.AnnotationReflection(),
             -1,
             9,
@@ -1551,6 +1578,7 @@ final _data = <r.Reflectable, r.ReflectorData>{
         r'select': (dynamic instance) => instance.select,
         r'generated': (dynamic instance) => instance.generated,
         r'relation': (dynamic instance) => instance.relation,
+        r'attributeName': (dynamic instance) => instance.attributeName,
         r'columnType': (dynamic instance) => instance.columnType,
         r'columnQueryExpresion': (dynamic instance) =>
             instance.columnQueryExpresion,
