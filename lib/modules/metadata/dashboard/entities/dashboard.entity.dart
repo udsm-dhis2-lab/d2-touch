@@ -8,7 +8,7 @@ class Dashboard extends BaseEntity {
   @Column(type: ColumnType.TEXT, name: 'formname', nullable: true)
   String formName;
 
-  @Column(type: ColumnType.TEXT, name: 'itemcount', nullable: true)
+  @Column(type: ColumnType.INTEGER, name: 'itemcount', nullable: true)
   int itemCount;
 
   Dashboard(
