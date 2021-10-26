@@ -6,6 +6,7 @@ import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/organisatio
 import 'package:dhis2_flutter_sdk/modules/metadata/program/program.module.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
 
 class D2Touch {
@@ -23,6 +24,7 @@ class D2Touch {
     await DataElementModule.createTables();
     await DataSetModule.createTables();
     await ProgramModule.createTables();
+    await DashboardModule.createTables();
   }
 
   static OrganisationUnitModule organisationUnitModule =
@@ -33,4 +35,6 @@ class D2Touch {
   static DataSetModule dataSetModule = DataSetModule();
 
   static ProgramModule programModule = ProgramModule();
+
+  static DashboardModule dashboardModule = DashboardModule();
 }
