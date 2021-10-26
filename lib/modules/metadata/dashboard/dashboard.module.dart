@@ -7,6 +7,6 @@ class DashboardModule {
     await DashboardItemQuery().createTable();
   }
 
-  DashboardQuery dashboardQuery = DashboardQuery();
-  DashboardItemQuery dashboardItemQuery = DashboardItemQuery();
+  DashboardQuery dashboard = DashboardQuery();
+  DashboardItemQuery dashboardItem = DashboardItemQuery();
 }
