@@ -1,3 +1,4 @@
+import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/repository.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
@@ -19,7 +20,7 @@ class BaseQuery<T extends BaseEntity> {
   String id;
   List<QueryFilter> filters = [];
   Map<String, SortOrder> sortOrder = {};
-  List<dynamic> relations;
+  List<ColumnRelation> relations = [];
 
   BaseQuery({Database database}) {
     this.database = database;
@@ -128,14 +129,14 @@ class BaseQuery<T extends BaseEntity> {
     if (this.id != null) {
       return this
           .repository
-          .find(id: this.id, fields: this.fields, database: this.database);
+          .find(id: this.id, fields: this.fields, database: this.database, relations: this.relations);
     }
 
     return this.repository.findAll(
         database: this.database,
         filters: this.filters,
         fields: this.fields,
-        sortOrder: this.sortOrder);
+        sortOrder: this.sortOrder, relations: this.relations);
   }
 
   Future<T> getOne() async {

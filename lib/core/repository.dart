@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
@@ -55,10 +57,15 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {List<QueryFilter> filters,
       List<String> fields,
       Map<String, SortOrder> sortOrder,
-      Database database}) async {
+      Database database,
+      List<ColumnRelation> relations}) async {
     final Database db = database != null ? database : await this.database;
     return this.find(
-        filters: filters, fields: fields, sortOrder: sortOrder, database: db);
+        filters: filters,
+        fields: fields,
+        sortOrder: sortOrder,
+        database: db,
+        relations: relations);
   }
 
   @override
@@ -67,15 +74,44 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       List<QueryFilter> filters,
       List<String> fields,
       Map<String, SortOrder> sortOrder,
-      Database database}) async {
+      Database database,
+      List<ColumnRelation> relations}) async {
     final Database db = database != null ? database : await this.database;
 
     if (id != null) {
-      return (await db.query(this.entity.tableName,
-              where: 'id = ?', whereArgs: [id], columns: fields))
-          .map((e) {
-        return getObject<T>(e);
+      // print(QueryExpression.getSelectExpression(entity: this.entity, columns: fields));
+      // List custom = await db
+      //     .rawQuery(QueryExpression.getSelectExpression(entity: this.entity));
+
+      final queryResult = (await db.query(this.entity.tableName,
+          where: 'id = ?', whereArgs: [id], columns: fields));
+
+      final relationResults = await this.findRelations(
+          database: db,
+          relations: relations,
+          data: queryResult.length > 0 ? queryResult[0] : null);
+
+      final dataResult = queryResult.map((result) {
+        Map<String, dynamic> resultMap = {...result};
+
+        result.keys.forEach((key) {
+          final relationElement =
+              (relationResults != null ? relationResults : [])
+                  .where((relationResult) => relationResult['attribute'] == key)
+                  .toList();
+
+          if (relationElement.length > 0) {
+            resultMap[relationElement[0]['attribute']] =
+                relationElement[0]['data'];
+          } else {
+            resultMap[key] = result[key];
+          }
+        });
+
+        return getObject<T>(resultMap);
       }).toList();
+
+      return dataResult;
     }
 
     final String whereParameters = QueryFilter.getWhereParameters(filters);
@@ -90,6 +126,51 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       }).toList();
     }
 
+    return findWhere(
+        database: db,
+        whereParameters: whereParameters,
+        orderParameters: orderParameters);
+  }
+
+  Future<List> findRelations(
+      {Database database, List<ColumnRelation> relations, dynamic data}) async {
+    if (relations == null || relations?.length == 0 || data == null) {
+      return null;
+    }
+
+    return Future.wait(relations.map((relation) async {
+      final referencedValue = data[relation.attributeName];
+      final Database db = database != null ? database : await this.database;
+
+      final whereParameters =
+          '${relation.referencedColumn} = "$referencedValue"';
+
+      final relationResult = (await db.query(
+              relation?.referencedEntity?.tableName,
+              where: whereParameters))
+          .toList();
+
+      Map<String, dynamic> resultMap = {};
+      resultMap['attribute'] = relation.attributeName;
+
+      final dataResult = (relation.relationType == RelationType.ManyToOne
+          ? relationResult.length > 0
+              ? relationResult[0]
+              : null
+          : relationResult);
+      resultMap['data'] = dataResult;
+
+      return resultMap;
+    }));
+  }
+
+  Future<List<T>> findWhere({
+    Database database,
+    String whereParameters,
+    String orderParameters,
+    List<String> fields,
+  }) async {
+    final Database db = database != null ? database : await this.database;
     return (await db.query(this.entity.tableName,
             where: whereParameters, orderBy: orderParameters, columns: fields))
         .map((e) {
@@ -99,7 +180,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<T> findById(
-      {@required String id, List<String> fields, Database database}) async {
+      {@required String id,
+      List<String> fields,
+      Database database,
+      List<ColumnRelation> relations}) async {
     final Database db = database != null ? database : await this.database;
 
     var results = await this.find(id: id, fields: fields, database: db);
@@ -112,6 +196,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {@required List<T> entities, Database database}) async {
     final Database db = database != null ? database : await this.database;
 
+// TODO
     await Future.forEach(
         entities, ((entity) => insertOne(entity: entity, database: db)));
 
@@ -157,6 +242,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   Future<int> saveMany({@required List<T> entities, Database database}) async {
     final Database db = database != null ? database : await this.database;
 
+//TODO
     await Future.forEach(
         entities, ((entity) => saveOne(entity: entity, database: db)));
 
@@ -181,6 +267,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {@required List<T> entities, Database database}) async {
     final Database db = database != null ? database : await this.database;
 
+//TODO
     await Future.forEach(
         entities, ((entity) => updateOne(entity: entity, database: db)));
 
@@ -244,13 +331,37 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       var value = objectMap[column.name];
       if (value.runtimeType == int && column.type == ColumnType.BOOLEAN) {
         resultMap[column.name] = value == 1 ? true : false;
-      } else if (value.runtimeType is List) {
-        resultMap[column.name] = '';
+      } else if (column.relation != null) {
+        resultMap[column.name] =
+            getRelationObject(relation: column.relation, value: value);
       } else {
         resultMap[column.name] = value;
       }
     });
     ClassMirror classMirror = AnnotationReflectable.reflectType(T);
     return classMirror.newInstance('fromJson', [resultMap]);
+  }
+
+  getRelationObject({ColumnRelation relation, dynamic value}) {
+    switch (relation.relationType) {
+      case RelationType.ManyToOne:
+        Map<String, dynamic> relationMap = {};
+
+        relation.referencedEntityColumns.forEach((column) {
+          var relationValue = value[column.name];
+          if (relationValue.runtimeType == int &&
+              column.type == ColumnType.BOOLEAN) {
+            relationMap[column.name] = relationValue == 1 ? true : false;
+          } else {
+            relationMap[column.name] = relationValue;
+          }
+        });
+
+        return relation?.referencedEntity?.classMirror
+            ?.newInstance('fromJson', [relationMap]);
+
+      default:
+        return null;
+    }
   }
 }

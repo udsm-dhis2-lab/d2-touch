@@ -16,12 +16,14 @@ class ColumnRelation {
   final String referencedColumn;
   final Entity referencedEntity;
   final List<Column> referencedEntityColumns;
+  final String attributeName;
   ColumnRelation(
       {this.relationType,
       this.referencedTable,
       this.referencedColumn,
       this.referencedEntity,
-      this.referencedEntityColumns});
+      this.referencedEntityColumns,
+      this.attributeName});
 }
 
 @AnnotationReflectable
@@ -115,6 +117,7 @@ class Column {
           attributeName: columnName,
           relation: ColumnRelation(
               referencedColumn: 'id',
+              attributeName: columnName,
               referencedTable: manyToOneColumn.parentTable,
               relationType: RelationType.ManyToOne,
               referencedEntity: Entity.getEntityDefinition(
