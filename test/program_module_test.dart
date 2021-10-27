@@ -19,8 +19,6 @@ void main() async {
   ProgramQuery programQuery = D2Touch.programModule.program;
   ProgramStageQuery programStageQuery = D2Touch.programModule.programStage;
 
-  final programs = await programQuery.get();
-
   final program = Program(
     id: 'test1',
     name: "Test 1",
@@ -77,12 +75,7 @@ void main() async {
       generatedByEnrollmentDate: false,
       hideDueDate: false,
       minDaysFromStart: 3,
-      program: Program(
-          id: 'program1',
-          name: 'Program 1',
-          shortName: 'Program1',
-          dirty: false,
-          programType: 'TRACKER'),
+      program: program,
       programStageDataElements: [],
       programStageSections: [],
       repeatable: false,
@@ -94,5 +87,14 @@ void main() async {
   test('should return success if program stage is inserted into the database',
       () {
     expect(insertProgramStageResult, 1);
+  });
+
+  var programStageResult =
+      await programStageQuery.byId('programstage1').withProgram().getOne();
+
+  test('should return saved program stage details', () {
+    expect(programStageResult.id, 'programstage1');
+    expect(programStageResult.name, 'Program Stage 1');
+    expect(programStageResult.shortName, 'Program Stage 1');
   });
 }
