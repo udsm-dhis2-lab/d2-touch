@@ -1,5 +1,5 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/core/repository.dart';
+import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
@@ -14,6 +14,7 @@ class BaseQuery<T extends BaseEntity> {
   Repository repository;
   dynamic data;
   List<String> fields;
+  Column primaryKey;
   String tableName;
   String resourceName;
   String singularResourceName;
@@ -26,7 +27,13 @@ class BaseQuery<T extends BaseEntity> {
     this.database = database;
     this.repository = Repository<T>();
     this.tableName = repository.entity.tableName;
-    this.fields = repository.columns.map((column) => column.name).toList();
+    this.fields = repository.columns
+        .where((column) =>
+            column.relation == null ||
+            column.relation?.relationType != RelationType.OneToMany)
+        .map((column) => column?.name)
+        .toList();
+    this.primaryKey = repository.columns.firstWhere((column) => column.primary);
   }
 
   select(List<String> fields) {
@@ -127,16 +134,19 @@ class BaseQuery<T extends BaseEntity> {
 
   Future<List<T>> get() async {
     if (this.id != null) {
-      return this
-          .repository
-          .find(id: this.id, fields: this.fields, database: this.database, relations: this.relations);
+      return this.repository.find(
+          id: this.id,
+          fields: this.fields,
+          database: this.database,
+          relations: this.relations);
     }
 
     return this.repository.findAll(
         database: this.database,
         filters: this.filters,
         fields: this.fields,
-        sortOrder: this.sortOrder, relations: this.relations);
+        sortOrder: this.sortOrder,
+        relations: this.relations);
   }
 
   Future<T> getOne() async {

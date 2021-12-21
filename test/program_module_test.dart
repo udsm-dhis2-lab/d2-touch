@@ -97,4 +97,15 @@ void main() async {
     expect(programStageResult.name, 'Program Stage 1');
     expect(programStageResult.shortName, 'Program Stage 1');
   });
+
+  var programWithStages =
+      await programQuery.byId('test1').withProgramStages().getOne();
+
+  test('should return program with stage information', () {
+    expect(result.id, 'test1');
+    expect(result.name, 'Test 1');
+    expect(result.shortName, 'Test 1');
+    expect(result.programType, 'EVENT');
+    expect(result.captureCoordinates, true);
+  });
 }

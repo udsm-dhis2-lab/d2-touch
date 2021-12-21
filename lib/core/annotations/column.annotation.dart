@@ -1,6 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/relation.annotation.dart';
-import 'package:dhis2_flutter_sdk/core/query_expression.dart';
+import 'package:dhis2_flutter_sdk/core/utilities/query_expression.dart';
 import 'package:flutter/foundation.dart';
 import 'package:reflectable/reflectable.dart';
 
@@ -17,13 +17,15 @@ class ColumnRelation {
   final Entity referencedEntity;
   final List<Column> referencedEntityColumns;
   final String attributeName;
+  final String primaryKey;
   ColumnRelation(
       {this.relationType,
       this.referencedTable,
       this.referencedColumn,
       this.referencedEntity,
       this.referencedEntityColumns,
-      this.attributeName});
+      this.attributeName,
+      this.primaryKey});
 }
 
 @AnnotationReflectable
@@ -126,6 +128,15 @@ class Column {
               referencedEntityColumns: Entity.getEntityColumns(
                   AnnotationReflectable.reflectType(
                       variableMirror.reflectedType))));
+    } else if (variableElement is OneToMany) {
+      return Column(
+          type: ColumnType.TEXT,
+          name: columnName,
+          attributeName: columnName,
+          relation: ColumnRelation(
+              referencedColumn: 'id',
+              attributeName: columnName,
+              relationType: RelationType.OneToMany));
     } else if (variableElement is OneToOne) {}
 
     return null;

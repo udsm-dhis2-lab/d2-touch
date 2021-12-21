@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'annotations/reflectable.annotation.dart';
+import '../annotations/reflectable.annotation.dart';
 import 'query_expression.dart';
 
 abstract class BaseRepository<T extends BaseEntity> {
@@ -79,10 +79,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final Database db = database != null ? database : await this.database;
 
     if (id != null) {
-      // print(QueryExpression.getSelectExpression(entity: this.entity, columns: fields));
-      // List custom = await db
-      //     .rawQuery(QueryExpression.getSelectExpression(entity: this.entity));
-
       final queryResult = (await db.query(this.entity.tableName,
           where: 'id = ?', whereArgs: [id], columns: fields));
 
@@ -94,7 +90,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       final dataResult = queryResult.map((result) {
         Map<String, dynamic> resultMap = {...result};
 
-        result.keys.forEach((key) {
+        this.columns.forEach((column) {
+          final key = column.name;
           final relationElement =
               (relationResults != null ? relationResults : [])
                   .where((relationResult) => relationResult['attribute'] == key)
@@ -139,7 +136,11 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     }
 
     return Future.wait(relations.map((relation) async {
-      final referencedValue = data[relation.attributeName];
+      // TODO Find best way to deal with other relationships;
+      final referencedValue = data[
+          relation?.relationType == RelationType.OneToMany
+              ? relation.primaryKey
+              : relation.attributeName];
       final Database db = database != null ? database : await this.database;
 
       final whereParameters =
@@ -312,8 +313,12 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       if (column.type == ColumnType.BOOLEAN) {
         data[column.name] = entity[column.attributeName] == true ? 1 : 0;
       } else if (column.relation != null) {
-        data[column.name] =
-            entity[column.attributeName][column.relation.referencedColumn];
+        final entityByAttribute = entity[column.attributeName];
+
+        if (entityByAttribute != null) {
+          data[column.name] =
+              entityByAttribute[column.relation.referencedColumn];
+        }
       } else if (entity[column.attributeName] is List) {
         data[column.name] = entity[column.attributeName].toString();
       } else {
@@ -343,6 +348,9 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   }
 
   getRelationObject({ColumnRelation relation, dynamic value}) {
+    if (value == null) {
+      return null;
+    }
     switch (relation.relationType) {
       case RelationType.ManyToOne:
         Map<String, dynamic> relationMap = {};
@@ -359,6 +367,24 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
         return relation?.referencedEntity?.classMirror
             ?.newInstance('fromJson', [relationMap]);
+
+      case RelationType.OneToMany:
+        return value.toList().map((valueItem) {
+          Map<String, dynamic> relationMap = {};
+
+          // relation.referencedEntityColumns.forEach((column) {
+          //   var relationValue = value[column.name];
+          //   if (relationValue.runtimeType == int &&
+          //       column.type == ColumnType.BOOLEAN) {
+          //     relationMap[column.name] = relationValue == 1 ? true : false;
+          //   } else {
+          //     relationMap[column.name] = relationValue;
+          //   }
+          // });
+
+          return relation?.referencedEntity?.classMirror
+              ?.newInstance('fromJson', [value]);
+        });
 
       default:
         return null;

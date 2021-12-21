@@ -1,4 +1,4 @@
-import 'package:dhis2_flutter_sdk/core/repository.dart';
+import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
