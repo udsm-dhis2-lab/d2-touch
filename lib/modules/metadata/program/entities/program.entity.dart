@@ -1,4 +1,5 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:flutter/foundation.dart';
 
@@ -95,6 +96,9 @@ class Program extends BaseEntity {
   // @OneToMany(() => ProgramRuleEntity, (programRule) => programRule.program)
   // programRules: ProgramRuleEntity[];
 
+  @OneToMany()
+  List<ProgramStage> programStages;
+
   Program(
       {@required String id,
       String created,
@@ -115,6 +119,7 @@ class Program extends BaseEntity {
       this.onlyEnrollOnce,
       this.organisationUnits,
       this.programRuleVariables,
+      this.programStages,
       this.selectEnrollmentDatesInFuture,
       this.description,
       this.selectIncidentDatesInFuture,
@@ -134,6 +139,7 @@ class Program extends BaseEntity {
             dirty: dirty);
 
   factory Program.fromJson(Map<String, dynamic> json) {
+
     return Program(
       id: json['id'],
       name: json['name'],

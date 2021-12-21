@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
@@ -98,32 +100,33 @@ class ProgramStage extends BaseEntity {
             lastUpdated: lastUpdated,
             dirty: dirty);
 
-  factory ProgramStage.fromJson(Map<String, dynamic> json) {
+  factory ProgramStage.fromJson(Map<String, dynamic> jsonData) {
     return ProgramStage(
-      id: json['id'],
-      name: json['name'],
-      created: json['created'],
-      shortName: json['shortname'],
-      code: json['code'],
-      displayName: json['displayname'],
-      description: json['description'],
-      dirty: json['dirty'],
-      captureCoordinates: json['capturecoordinates'],
-      featureType: json['featuretype'],
-      allowGenerateNextVisit: json['allowgeneratenextvisit'],
-      autoGenerateEvent: json['autogenerateevent'],
-      blockEntryForm: json['blockentryform'],
-      dueDateLabel: json['duedatelabel'],
-      executionDateLabel: json['executiondatelabel'],
-      formType: json['formtype'],
-      generatedByEnrollmentDate: json['generatedbyenrollmentdate'],
-      hideDueDate: json['hideduedate'],
-      minDaysFromStart: json['mindaysfromstart'],
-      program: json['program'],
-      programStageDataElements: json['programstagedataelements'],
-      programStageSections: json['programstagesections'],
-      repeatable: json['repeatable'],
-      sortOrder: json['sortorder'],
+      id: jsonData['id'],
+      name: jsonData['name'],
+      created: jsonData['created'],
+      shortName: jsonData['shortname'],
+      code: jsonData['code'],
+      displayName: jsonData['displayname'],
+      description: jsonData['description'],
+      dirty: jsonData['dirty'],
+      captureCoordinates: jsonData['capturecoordinates'],
+      featureType: jsonData['featuretype'],
+      allowGenerateNextVisit: jsonData['allowgeneratenextvisit'],
+      autoGenerateEvent: jsonData['autogenerateevent'],
+      blockEntryForm: jsonData['blockentryform'],
+      dueDateLabel: jsonData['duedatelabel'],
+      executionDateLabel: jsonData['executiondatelabel'],
+      formType: jsonData['formtype'],
+      generatedByEnrollmentDate: jsonData['generatedbyenrollmentdate'],
+      hideDueDate: jsonData['hideduedate'],
+      minDaysFromStart: int.parse(jsonData['mindaysfromstart']),
+      program: jsonData['program'],
+      programStageDataElements:
+          json.decode(jsonData['programstagedataelements']),
+      programStageSections: json.decode(jsonData['programstagesections']),
+      repeatable: jsonData['repeatable'],
+      sortOrder: jsonData['sortorder'],
     );
   }
 

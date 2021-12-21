@@ -1,4 +1,7 @@
-import 'annotations/column.annotation.dart';
+import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:flutter/foundation.dart';
+
+import '../annotations/column.annotation.dart';
 
 class QueryExpression {
   static String getColumnExpression(
@@ -12,8 +15,12 @@ class QueryExpression {
     List<String> referencedCreateTableExpressions = [];
     List<String> foreignKeyContraints = [];
     columns.forEach((column) {
-      columnsQueryExpressions.add(column.columnQueryExpresion);
-      if (column.relation != null) {
+      if (column?.relation?.relationType != RelationType.OneToMany) {
+        columnsQueryExpressions.add(column.columnQueryExpresion);
+      }
+
+      if (column.relation != null &&
+          column.relation.relationType == RelationType.ManyToOne) {
         referencedCreateTableExpressions.add(
             QueryExpression.getCreateTableExpression(
                 column.relation.referencedEntity.tableName,
@@ -42,5 +49,18 @@ class QueryExpression {
   static String getForeignKeyConstrainExpression(
       {String foreignColumn, String referencedTable, String referencedColumn}) {
     return 'FOREIGN KEY ($foreignColumn) REFERENCES $referencedTable ($referencedColumn)';
+  }
+
+  static getSelectExpression({@required Entity entity, List<String> columns}) {
+    final String columnExpression =
+        QueryExpression.getSelectColumnExpression(columns);
+
+    return 'SELECT $columnExpression FROM ${entity.tableName}';
+  }
+
+  static getSelectColumnExpression(List<String> columns) {
+    return columns != null && columns.length > 0
+        ? columns.join(',').toString()
+        : '*';
   }
 }

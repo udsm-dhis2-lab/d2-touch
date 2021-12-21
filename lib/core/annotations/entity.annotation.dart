@@ -21,7 +21,8 @@ class EntityOptions {
 class Entity {
   final String tableName;
   final EntityOptions options;
-  const Entity({@required this.tableName, this.options});
+  final ClassMirror classMirror;
+  const Entity({@required this.tableName, this.options, this.classMirror});
 
   static Entity getEntityDefinition(ClassMirror entityClassMirror) {
     Entity entity = entityClassMirror.metadata != null &&
@@ -33,6 +34,7 @@ class Entity {
         tableName: entity != null && entity.tableName != null
             ? entity.tableName
             : entityClassMirror.simpleName,
+        classMirror: entityClassMirror,
         options: entity != null ? entity.options : null);
   }
 
