@@ -67,9 +67,9 @@ class User extends BaseEntity {
         surname: json['surname'],
         name: json['name'],
         teiSearchOrganisationUnits:
-            json['teiSearchorganisationUnits'].toString(),
+            json['teiSearchOrganisationUnits'].toString(),
         organisationUnits: json['organisationUnits'].toString(),
-        dataViewOrganisationUnits: json['dataVieworganisationUnits'].toString(),
+        dataViewOrganisationUnits: json['dataViewOrganisationUnits'].toString(),
         authorities: json['authorities'].toString(),
         programs: json['programs'].toString(),
         dataSets: json['datasets'].toString(),
@@ -88,7 +88,7 @@ class User extends BaseEntity {
     data['password'] = this.password;
     data['teiSearchOrganisationUnits'] = this.teiSearchOrganisationUnits;
     data['organisationUnits'] = this.organisationUnits;
-    data['dataVieworganisationUnits'] = this.dataViewOrganisationUnits;
+    data['dataViewOrganisationUnits'] = this.dataViewOrganisationUnits;
     data['authorities'] = this.authorities;
     data['programs'] = this.programs;
     data['isLoggedIn'] = this.isLoggedIn;
