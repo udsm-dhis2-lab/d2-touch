@@ -21,7 +21,7 @@ class D2Touch {
       {String databaseName,
       bool inMemory,
       DatabaseFactory databaseFactory}) async {
-    final newDatabaseName = databaseName ?? await UserModule.getDatabaseName();
+    final newDatabaseName = databaseName ?? await D2Touch.getDatabaseName();
     if (newDatabaseName != null) {
       DatabaseManager(
           databaseName: newDatabaseName,
@@ -36,6 +36,34 @@ class D2Touch {
       await ProgramModule.createTables();
       await DashboardModule.createTables();
     }
+  }
+
+  static Future<bool> isAuthenticated(
+      {Future<SharedPreferences> sharedPreferenceInstance}) async {
+    final databaseName = await D2Touch.getDatabaseName(
+        sharedPreferenceInstance: sharedPreferenceInstance);
+
+    if (databaseName == null) {
+      return false;
+    }
+
+    User user = await D2Touch.userModule.user.getOne();
+    return user.isLoggedIn;
+  }
+
+  static Future<String> getDatabaseName(
+      {Future<SharedPreferences> sharedPreferenceInstance}) async {
+    SharedPreferences prefs =
+        await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
+    return prefs.getString('databaseName');
+  }
+
+  static Future<bool> setDatabaseName(
+      {@required String databaseName,
+      Future<SharedPreferences> sharedPreferenceInstance}) async {
+    SharedPreferences prefs =
+        await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
+    return prefs.setString('databaseName', databaseName);
   }
 
   static Future<LoginResponseStatus> logIn(
@@ -54,7 +82,7 @@ class D2Touch {
 
     final uri = Uri.parse(url).host;
     final String databaseName = '${username}_$uri';
-    await UserModule.setDatabaseName(
+    await D2Touch.setDatabaseName(
         databaseName: databaseName,
         sharedPreferenceInstance:
             sharedPreferenceInstance ?? SharedPreferences.getInstance());
@@ -69,10 +97,26 @@ class D2Touch {
     Map<String, dynamic> userData = userReponse.body;
     userData['password'] = password;
     userData['isLoggedIn'] = true;
+    userData['username'] = username;
     final user = User.fromJson(userData);
     await userQuery.setData(user).save();
 
     return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
+  }
+
+  static Future<bool> logOut() async {
+    bool logOutSuccess = false;
+    try {
+      User currentUser = await D2Touch.userModule.user.getOne();
+
+      Map<String, dynamic> userObject = currentUser.toJson();
+      userObject['isLoggedIn'] = false;
+      final user = User.fromJson(userObject);
+
+      await D2Touch.userModule.user.setData(user).save();
+      logOutSuccess = true;
+    } catch (e) {}
+    return logOutSuccess;
   }
 
   static UserModule userModule = UserModule();

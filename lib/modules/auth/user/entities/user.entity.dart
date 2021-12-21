@@ -5,37 +5,37 @@ import 'package:flutter/foundation.dart';
 @AnnotationReflectable
 @Entity(tableName: 'user')
 class User extends BaseEntity {
-  @Column(name: 'username')
+  @Column()
   final String username;
 
-  @Column(name: 'password')
+  @Column()
   final String password;
 
-  @Column(name: 'firstname')
+  @Column()
   final String firstName;
 
-  @Column(name: 'surname')
+  @Column()
   final String surname;
 
-  @Column(name: 'teisearchorganisationunits', nullable: true)
+  @Column(nullable: true)
   final String teiSearchOrganisationUnits;
 
-  @Column(name: 'organisationunits', nullable: true)
+  @Column(nullable: true)
   final String organisationUnits;
 
-  @Column(name: 'datavieworganisationunits', nullable: true)
+  @Column(nullable: true)
   final String dataViewOrganisationUnits;
 
-  @Column(name: 'authorities', nullable: true)
+  @Column(nullable: true)
   final String authorities;
 
-  @Column(name: 'programs', nullable: true)
+  @Column(nullable: true)
   final String programs;
 
-  @Column(name: 'datasets', nullable: true)
+  @Column(nullable: true)
   final String dataSets;
 
-  @Column(name: 'isloggedin')
+  @Column()
   final bool isLoggedIn;
 
   User(
@@ -61,7 +61,7 @@ class User extends BaseEntity {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
         id: json['id'],
-        username: json['userCredentials']['username'],
+        username: json['username'],
         password: json['password'],
         firstName: json['firstName'],
         surname: json['surname'],

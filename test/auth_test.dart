@@ -33,14 +33,14 @@ void main() async {
     expect(users, null);
   });
 
-  final isAuthenticated = await UserModule.isAuthenticated(
+  final isAuthenticated = await D2Touch.isAuthenticated(
       sharedPreferenceInstance: SharedPreferences.getInstance());
 
   test('should not be authenticated if database is not set', () {
     expect(isAuthenticated, false);
   });
 
-  final loggingIn = await D2Touch.logIn(
+  final onlineLogIn = await D2Touch.logIn(
     username: 'admin',
     password: 'district',
     url: 'https://play.dhis2.org/2.35.9',
@@ -48,6 +48,16 @@ void main() async {
   );
 
   test('should successfully authenticate user on online login', () {
-    expect(loggingIn, LoginResponseStatus.ONLINE_LOGIN_SUCCESS);
+    expect(onlineLogIn, LoginResponseStatus.ONLINE_LOGIN_SUCCESS);
+  });
+
+  final logOutResponse = await D2Touch.logOut();
+
+  final isAuthenticatedAfterLogout = await D2Touch.isAuthenticated(
+      sharedPreferenceInstance: SharedPreferences.getInstance());
+
+  test('should successfully log out user', () {
+    expect(logOutResponse, true);
+    expect(isAuthenticatedAfterLogout, false);
   });
 }
