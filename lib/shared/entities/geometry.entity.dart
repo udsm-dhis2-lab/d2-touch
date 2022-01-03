@@ -1,6 +1,6 @@
 class Geometry {
-  String type;
-  List<dynamic> coordinates;
+  String? type;
+  List<dynamic>? coordinates;
 
   Geometry({this.type, this.coordinates});
 
@@ -18,16 +18,17 @@ class Geometry {
     return data;
   }
 
-  double get latitude {
+  double? get latitude {
     if (type == 'Point') {
-      return coordinates.elementAt(1);
+      return coordinates?.elementAt(1);
     }
+
     return null;
   }
 
-  double get longitude {
+  double? get longitude {
     if (type == 'Point') {
-      return coordinates.elementAt(0);
+      return coordinates?.elementAt(0);
     }
     return null;
   }

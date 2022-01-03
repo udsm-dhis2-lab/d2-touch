@@ -5,7 +5,7 @@ homepage:
 repository: https://github.com/dhis2-club-tanzania/dhis2-flutter-sdk
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
@@ -13,9 +13,9 @@ dependencies:
     sdk: flutter
   http: ^0.13.4
   sqflite: ^2.0.1
-  reflectable: ^3.0.1
+  reflectable: ^3.0.4
   path_provider: ^2.0.8
-  sqflite_common_ffi: ^2.0.0
+  sqflite_common_ffi: ^2.1.0
   shared_preferences: ^2.0.11
   async: ^2.8.2
   path: ^1.8.0

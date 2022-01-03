@@ -33,10 +33,10 @@ void main() async {
     expect(insertResult, 1);
   });
 
-  DataSet result = await dataSetQuery.byId('test1').getOne();
+  DataSet? result = await dataSetQuery.byId('test1').getOne();
 
   test('should return saved details', () {
-    expect(result.id, 'test1');
+    expect(result!.id, 'test1');
     expect(result.name, 'Test 1');
     expect(result.shortName, 'Test 1');
     expect(result.timelyDays, 15);

@@ -3,5 +3,5 @@ import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:sqflite/sqflite.dart';
 
 class UserQuery extends BaseQuery<User> {
-  UserQuery({Database database}) : super(database: database);
+  UserQuery({Database? database}) : super(database: database);
 }

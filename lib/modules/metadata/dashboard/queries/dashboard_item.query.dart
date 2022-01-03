@@ -3,5 +3,5 @@ import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DashboardItemQuery extends BaseQuery<DashboardItem> {
-  DashboardItemQuery({Database database}) : super(database: database);
+  DashboardItemQuery({Database? database}) : super(database: database);
 }

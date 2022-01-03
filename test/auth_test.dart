@@ -24,7 +24,7 @@ void main() async {
 
   UserQuery userQuery = UserQuery(database: db);
 
-  List<User> users;
+  List<User?>? users;
   try {
     users = await userQuery.get();
   } catch (e) {}

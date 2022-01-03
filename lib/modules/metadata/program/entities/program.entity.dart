@@ -10,71 +10,71 @@ class Program extends BaseEntity {
   String programType;
 
   @Column(type: ColumnType.TEXT, name: 'displayincidentdate', nullable: true)
-  String displayIncidentDate;
+  String? displayIncidentDate;
 
   @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
-  String description;
+  String? description;
 
   @Column(type: ColumnType.BOOLEAN, name: 'withoutregistration', nullable: true)
-  bool withoutRegistration;
+  bool? withoutRegistration;
 
   @Column(type: ColumnType.BOOLEAN, name: 'ignoreoverdueevents')
   bool ignoreOverdueEvents;
 
   @Column(type: ColumnType.BOOLEAN, name: 'capturecoordinates', nullable: true)
-  bool captureCoordinates;
+  bool? captureCoordinates;
 
-  @Column(type: ColumnType.TEXT, name: 'featuretype')
-  String featureType;
+  @Column(type: ColumnType.TEXT, name: 'featuretype', nullable: true)
+  String? featureType;
 
   @Column(type: ColumnType.TEXT, name: 'enrollmentdatelabel', nullable: true)
-  String enrollmentDateLabel;
+  String? enrollmentDateLabel;
 
   @Column(type: ColumnType.BOOLEAN, name: 'onlyenrollonce', nullable: true)
-  bool onlyEnrollOnce;
+  bool? onlyEnrollOnce;
 
   @Column(
       type: ColumnType.BOOLEAN,
       name: 'selectincidentdatesinfuture',
       nullable: true)
-  bool selectIncidentDatesInFuture;
+  bool? selectIncidentDatesInFuture;
 
   @Column(
       type: ColumnType.BOOLEAN,
       name: 'selectenrollmentdatesinfuture',
       nullable: true)
-  bool selectEnrollmentDatesInFuture;
+  bool? selectEnrollmentDatesInFuture;
 
   @Column(
       type: ColumnType.BOOLEAN,
       name: 'usefirststageduringregistration',
       nullable: true)
-  bool useFirstStageDuringRegistration;
+  bool? useFirstStageDuringRegistration;
 
   @Column(type: ColumnType.TEXT, name: 'incidentdatelabel', nullable: true)
-  String incidentDateLabel;
+  String? incidentDateLabel;
 
   @Column(
       type: ColumnType.INTEGER,
       name: 'completeeventsexpirydays',
       nullable: true)
-  int completeEventsExpiryDays;
+  int? completeEventsExpiryDays;
 
   @Column(
       type: ColumnType.BOOLEAN, name: 'displayfrontpagelist', nullable: true)
-  bool displayFrontPageList;
+  bool? displayFrontPageList;
 
   @Column(type: ColumnType.TEXT, name: 'trackedentity', nullable: true)
-  String trackedEntity;
+  String? trackedEntity;
 
   @Column(type: ColumnType.TEXT, name: 'trackedentitytype', nullable: true)
-  String trackedEntityType;
+  String? trackedEntityType;
 
   @Column(type: ColumnType.TEXT, name: 'organisationunits', nullable: true)
-  String organisationUnits;
+  String? organisationUnits;
 
   @Column(type: ColumnType.TEXT, name: 'programrulevariables', nullable: true)
-  String programRuleVariables;
+  String? programRuleVariables;
 
   // @OneToMany(() => ProgramStageEntity, (programStage) => programStage.program, {
   //   cascade: true,
@@ -97,24 +97,24 @@ class Program extends BaseEntity {
   // programRules: ProgramRuleEntity[];
 
   @OneToMany()
-  List<ProgramStage> programStages;
+  List<ProgramStage>? programStages;
 
   Program(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      @required String name,
-      @required String shortName,
-      String code,
-      String displayName,
-      @required this.programType,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      required String name,
+      required String shortName,
+      String? code,
+      String? displayName,
+      required this.programType,
       this.featureType,
       this.captureCoordinates,
       this.completeEventsExpiryDays,
       this.displayFrontPageList,
       this.displayIncidentDate,
       this.enrollmentDateLabel,
-      this.ignoreOverdueEvents,
+      required this.ignoreOverdueEvents,
       this.incidentDateLabel,
       this.onlyEnrollOnce,
       this.organisationUnits,
@@ -139,14 +139,13 @@ class Program extends BaseEntity {
             dirty: dirty);
 
   factory Program.fromJson(Map<String, dynamic> json) {
-
     return Program(
       id: json['id'],
       name: json['name'],
       created: json['created'],
-      shortName: json['shortname'],
+      shortName: json['shortName'],
       code: json['code'],
-      displayName: json['displayname'],
+      displayName: json['displayName'],
       description: json['description'],
       dirty: json['dirty'],
       captureCoordinates: json['capturecoordinates'],

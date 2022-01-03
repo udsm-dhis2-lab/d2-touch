@@ -6,20 +6,20 @@ import 'package:flutter/foundation.dart';
 @Entity(tableName: 'dashboard')
 class Dashboard extends BaseEntity {
   @Column(type: ColumnType.TEXT, name: 'formname', nullable: true)
-  String formName;
+  String? formName;
 
   @Column(type: ColumnType.INTEGER, name: 'itemcount', nullable: true)
-  int itemCount;
+  int? itemCount;
 
   Dashboard(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      String displayName,
-      @required String name,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      String? displayName,
+      required String name,
       this.formName,
       this.itemCount,
-      @required dirty})
+      required dirty})
       : super(
             id: id,
             name: name,
@@ -33,7 +33,7 @@ class Dashboard extends BaseEntity {
         id: json['id'],
         name: json['name'],
         created: json['created'],
-        displayName: json['displayname'],
+        displayName: json['displayName'],
         dirty: json['dirty']);
   }
 

@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 class HttpResponse {
-  int statusCode;
-  dynamic body;
-  HttpResponse({@required int statusCode, @required dynamic body}) {
+  late int statusCode;
+  late dynamic body;
+  HttpResponse({required int statusCode, required dynamic body}) {
     this.statusCode = statusCode;
     this.body = body;
   }
@@ -32,7 +31,7 @@ class HttpClient {
   }
 
   static Future<HttpResponse> get(String url,
-      {String username, String password}) async {
+      {required String username, required String password}) async {
     final authToken =
         HttpClient.setToken(username: username, password: password);
 
@@ -61,7 +60,7 @@ class HttpClient {
     return response;
   }
 
-  static setToken({String username, String password}) {
+  static setToken({required String username, required String password}) {
     return base64Encode(utf8.encode('$username:$password'));
   }
 }

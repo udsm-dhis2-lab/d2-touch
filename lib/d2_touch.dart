@@ -5,7 +5,6 @@ import 'package:dhis2_flutter_sdk/modules/metadata/dataset/data_set.module.dart'
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/organisation_unit.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/program.module.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -18,9 +17,9 @@ import 'modules/metadata/data_element/data_element.module.dart';
 
 class D2Touch {
   static Future<void> initialize(
-      {String databaseName,
-      bool inMemory,
-      DatabaseFactory databaseFactory}) async {
+      {String? databaseName,
+      bool? inMemory,
+      DatabaseFactory? databaseFactory}) async {
     final newDatabaseName = databaseName ?? await D2Touch.getDatabaseName();
     if (newDatabaseName != null) {
       DatabaseManager(
@@ -39,7 +38,7 @@ class D2Touch {
   }
 
   static Future<bool> isAuthenticated(
-      {Future<SharedPreferences> sharedPreferenceInstance}) async {
+      {Future<SharedPreferences>? sharedPreferenceInstance}) async {
     final databaseName = await D2Touch.getDatabaseName(
         sharedPreferenceInstance: sharedPreferenceInstance);
 
@@ -47,32 +46,32 @@ class D2Touch {
       return false;
     }
 
-    User user = await D2Touch.userModule.user.getOne();
-    return user.isLoggedIn;
+    User? user = await D2Touch.userModule.user.getOne();
+    return user!.isLoggedIn;
   }
 
-  static Future<String> getDatabaseName(
-      {Future<SharedPreferences> sharedPreferenceInstance}) async {
+  static Future<String?> getDatabaseName(
+      {Future<SharedPreferences>? sharedPreferenceInstance}) async {
     SharedPreferences prefs =
         await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
     return prefs.getString('databaseName');
   }
 
   static Future<bool> setDatabaseName(
-      {@required String databaseName,
-      Future<SharedPreferences> sharedPreferenceInstance}) async {
+      {required String databaseName,
+      Future<SharedPreferences>? sharedPreferenceInstance}) async {
     SharedPreferences prefs =
         await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
     return prefs.setString('databaseName', databaseName);
   }
 
   static Future<LoginResponseStatus> logIn(
-      {@required String username,
-      @required String password,
-      @required String url,
-      Future<SharedPreferences> sharedPreferenceInstance,
-      bool inMemory,
-      DatabaseFactory databaseFactory}) async {
+      {required String username,
+      required String password,
+      required String url,
+      Future<SharedPreferences>? sharedPreferenceInstance,
+      bool? inMemory,
+      DatabaseFactory? databaseFactory}) async {
     HttpResponse userReponse = await HttpClient.get('$url/api/me.json',
         username: username, password: password);
 
@@ -107,9 +106,9 @@ class D2Touch {
   static Future<bool> logOut() async {
     bool logOutSuccess = false;
     try {
-      User currentUser = await D2Touch.userModule.user.getOne();
+      User? currentUser = await D2Touch.userModule.user.getOne();
 
-      Map<String, dynamic> userObject = currentUser.toJson();
+      Map<String, dynamic> userObject = currentUser!.toJson();
       userObject['isLoggedIn'] = false;
       final user = User.fromJson(userObject);
 
