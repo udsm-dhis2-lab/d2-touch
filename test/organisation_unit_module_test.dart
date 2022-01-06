@@ -35,7 +35,7 @@ void main() async {
   var result = await orgUnitQuery.byId('test1').getOne();
 
   test('should return saved details', () {
-    expect(result.id, 'test1');
-    expect(result.name, 'Test 1');
+    expect(result!.id, 'test1');
+    expect(result!.name, 'Test 1');
   });
 }

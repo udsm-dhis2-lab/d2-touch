@@ -10,16 +10,18 @@ class DatabaseManager {
   final int version = 1;
   String databaseName = 'flutter_database.db';
   bool inMemory = false;
-  DatabaseFactory databaseFactory;
+  DatabaseFactory? databaseFactory;
 
   static final DatabaseManager _databaseInstance =
       new DatabaseManager._internal();
 
-  static Database _database;
+  static Database? _database;
   final _initDatabaseMemoizer = AsyncMemoizer<Database>();
 
   factory DatabaseManager(
-      {String databaseName, bool inMemory, DatabaseFactory databaseFactory}) {
+      {String? databaseName,
+      bool? inMemory,
+      DatabaseFactory? databaseFactory}) {
     if (databaseName != null) {
       _databaseInstance.databaseName = databaseName;
     }
@@ -39,7 +41,7 @@ class DatabaseManager {
 
   Future<Database> get database async {
     if (_database != null) {
-      return _database;
+      return _database as Database;
     }
 
     return await _initDatabaseMemoizer.runOnce(() async {
@@ -49,7 +51,7 @@ class DatabaseManager {
 
   initializeDatabase() async {
     if (this.databaseFactory != null) {
-      return databaseFactory.openDatabase(inMemoryDatabasePath);
+      return databaseFactory?.openDatabase(inMemoryDatabasePath);
     }
 
     Directory documentDirectory = await getApplicationDocumentsDirectory();

@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 @Entity(tableName: 'dataelement')
 class DataElement extends BaseEntity {
   @Column(type: ColumnType.TEXT, name: 'formname', nullable: true)
-  String formName;
+  String? formName;
 
   @Column(type: ColumnType.TEXT, name: 'valuetype', length: 50)
   String valueType;
@@ -15,21 +15,21 @@ class DataElement extends BaseEntity {
   String aggregationType;
 
   @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
-  String description;
+  String? description;
 
   DataElement(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      @required String name,
-      @required String shortName,
-      String code,
-      String displayName,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      required String name,
+      required String shortName,
+      String? code,
+      String? displayName,
       this.formName,
-      @required this.aggregationType,
+      required this.aggregationType,
       this.description,
-      @required this.valueType,
-      @required dirty})
+      required this.valueType,
+      required dirty})
       : super(
             id: id,
             name: name,
@@ -45,9 +45,9 @@ class DataElement extends BaseEntity {
         id: json['id'],
         name: json['name'],
         created: json['created'],
-        shortName: json['shortname'],
+        shortName: json['shortName'],
         code: json['code'],
-        displayName: json['displayname'],
+        displayName: json['displayName'],
         valueType: json['valuetype'],
         aggregationType: json['aggregationtype'],
         description: json['description'],

@@ -1,6 +1,5 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'dataset')
@@ -12,7 +11,7 @@ class DataSet extends BaseEntity {
   String formType;
 
   @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
-  String description;
+  String? description;
 
   @Column(type: ColumnType.TEXT, name: 'periodtype')
   String periodType;
@@ -24,37 +23,37 @@ class DataSet extends BaseEntity {
   int expiryDays;
 
   @Column(type: ColumnType.BOOLEAN, name: 'renderhorizontally', nullable: true)
-  bool renderHorizontally;
+  bool? renderHorizontally;
 
   @Column(type: ColumnType.BOOLEAN, name: 'renderastabs', nullable: true)
-  bool renderAsTabs;
+  bool? renderAsTabs;
 
   @Column(
       type: ColumnType.BOOLEAN, name: 'fieldcombitionrequired', nullable: true)
-  bool fieldCombinationRequired;
+  bool? fieldCombinationRequired;
 
   // @Column("simple-json") categoryCombo: any;
   // @Column("simple-json") dataSetElements: any;
   // @Column("simple-json") organisationUnits: any;
 
   DataSet(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      @required String name,
-      @required String shortName,
-      String code,
-      String displayName,
-      @required this.timelyDays,
-      @required this.formType,
-      @required this.periodType,
-      @required this.openFuturePeriods,
-      @required this.expiryDays,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      required String name,
+      required String shortName,
+      String? code,
+      String? displayName,
+      required this.timelyDays,
+      required this.formType,
+      required this.periodType,
+      required this.openFuturePeriods,
+      required this.expiryDays,
       this.renderHorizontally,
       this.renderAsTabs,
       this.description,
       this.fieldCombinationRequired,
-      @required dirty})
+      required dirty})
       : super(
             id: id,
             name: name,
@@ -70,9 +69,9 @@ class DataSet extends BaseEntity {
       id: json['id'],
       name: json['name'],
       created: json['created'],
-      shortName: json['shortname'],
+      shortName: json['shortName'],
       code: json['code'],
-      displayName: json['displayname'],
+      displayName: json['displayName'],
       timelyDays: json['timelydays'],
       formType: json['formtype'],
       description: json['description'],

@@ -1,7 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/relation.annotation.dart';
-import 'package:dhis2_flutter_sdk/core/query_expression.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dhis2_flutter_sdk/core/utilities/query_expression.dart';
 import 'package:reflectable/reflectable.dart';
 
 import 'entity.annotation.dart';
@@ -11,37 +10,39 @@ enum ColumnType { TEXT, INTEGER, BOOLEAN }
 enum RelationType { OneToMany, ManyToOne, OneToOne }
 
 class ColumnRelation {
-  final RelationType relationType;
-  final String referencedTable;
-  final String referencedColumn;
-  final Entity referencedEntity;
-  final List<Column> referencedEntityColumns;
-  final String attributeName;
+  final RelationType? relationType;
+  final String? referencedTable;
+  final String? referencedColumn;
+  final Entity? referencedEntity;
+  final List<Column?>? referencedEntityColumns;
+  final String? attributeName;
+  final String? primaryKey;
   ColumnRelation(
       {this.relationType,
       this.referencedTable,
       this.referencedColumn,
       this.referencedEntity,
       this.referencedEntityColumns,
-      this.attributeName});
+      this.attributeName,
+      this.primaryKey});
 }
 
 @AnnotationReflectable
 class Column {
-  final ColumnType type;
-  final String name;
+  final ColumnType? type;
+  final String? name;
   final int length;
-  final int width;
+  final int? width;
   final bool nullable;
   final bool readonly;
   final bool unique;
   final bool primary;
   final bool select;
   final bool generated;
-  final ColumnRelation relation;
-  final String attributeName;
+  final ColumnRelation? relation;
+  final String? attributeName;
   const Column(
-      {@required this.type,
+      {this.type,
       this.name,
       this.length = 255,
       this.width,
@@ -60,13 +61,13 @@ class Column {
 
   String get columnQueryExpresion {
     return QueryExpression.getColumnExpression(
-        name: this.name,
+        name: this.name as String,
         type: this.columnType,
         primary: this.primary,
         nullable: this.nullable);
   }
 
-  static String getType(ColumnType type) {
+  static String getType(ColumnType? type) {
     switch (type) {
       case ColumnType.TEXT:
         return 'TEXT';
@@ -92,7 +93,7 @@ class Column {
     }
   }
 
-  static Column getColumn(VariableMirror variableMirror, String columnName) {
+  static Column? getColumn(VariableMirror variableMirror, String columnName) {
     dynamic variableElement = variableMirror.metadata[0];
 
     if (variableElement is Column || variableElement is PrimaryColumn) {
@@ -122,10 +123,19 @@ class Column {
               relationType: RelationType.ManyToOne,
               referencedEntity: Entity.getEntityDefinition(
                   AnnotationReflectable.reflectType(
-                      variableMirror.reflectedType)),
+                      variableMirror.reflectedType) as ClassMirror),
               referencedEntityColumns: Entity.getEntityColumns(
                   AnnotationReflectable.reflectType(
-                      variableMirror.reflectedType))));
+                      variableMirror.reflectedType) as ClassMirror)));
+    } else if (variableElement is OneToMany) {
+      return Column(
+          type: ColumnType.TEXT,
+          name: columnName,
+          attributeName: columnName,
+          relation: ColumnRelation(
+              referencedColumn: 'id',
+              attributeName: columnName,
+              relationType: RelationType.OneToMany));
     } else if (variableElement is OneToOne) {}
 
     return null;
@@ -134,6 +144,5 @@ class Column {
 
 @AnnotationReflectable
 class PrimaryColumn extends Column {
-  const PrimaryColumn({@required ColumnType type})
-      : super(type: type, primary: true);
+  const PrimaryColumn({ColumnType? type}) : super(type: type, primary: true);
 }

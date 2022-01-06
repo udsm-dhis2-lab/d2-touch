@@ -1,11 +1,11 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:flutter/foundation.dart';
-
-import 'annotations/column.annotation.dart';
 
 class QueryExpression {
   static String getColumnExpression(
-      {String name, String type, bool primary, bool nullable}) {
+      {required String name,
+      required String type,
+      required bool primary,
+      required bool nullable}) {
     return '$name $type${primary ? ' PRIMARY KEY' : ''}${nullable ? '' : ' NOT NULL'}';
   }
 
@@ -15,18 +15,22 @@ class QueryExpression {
     List<String> referencedCreateTableExpressions = [];
     List<String> foreignKeyContraints = [];
     columns.forEach((column) {
-      columnsQueryExpressions.add(column.columnQueryExpresion);
-      if (column.relation != null) {
+      if (column.relation?.relationType != RelationType.OneToMany) {
+        columnsQueryExpressions.add(column.columnQueryExpresion);
+      }
+
+      if (column.relation != null &&
+          column.relation?.relationType == RelationType.ManyToOne) {
         referencedCreateTableExpressions.add(
             QueryExpression.getCreateTableExpression(
-                column.relation.referencedEntity.tableName,
-                column.relation.referencedEntityColumns));
+                column.relation!.referencedEntity!.tableName,
+                column.relation!.referencedEntityColumns as List<Column>));
 
         foreignKeyContraints.add(
             QueryExpression.getForeignKeyConstrainExpression(
-                foreignColumn: column.name,
-                referencedColumn: column.relation.referencedColumn,
-                referencedTable: column.relation.referencedEntity.tableName));
+                foreignColumn: column.name as String,
+                referencedColumn: column.relation!.referencedColumn as String,
+                referencedTable: column.relation!.referencedEntity!.tableName));
       }
     });
 
@@ -43,11 +47,14 @@ class QueryExpression {
   }
 
   static String getForeignKeyConstrainExpression(
-      {String foreignColumn, String referencedTable, String referencedColumn}) {
+      {required String foreignColumn,
+      required String referencedTable,
+      required String referencedColumn}) {
     return 'FOREIGN KEY ($foreignColumn) REFERENCES $referencedTable ($referencedColumn)';
   }
 
-  static getSelectExpression({@required Entity entity, List<String> columns}) {
+  static getSelectExpression(
+      {required Entity entity, required List<String> columns}) {
     final String columnExpression =
         QueryExpression.getSelectColumnExpression(columns);
 
@@ -55,6 +62,6 @@ class QueryExpression {
   }
 
   static getSelectColumnExpression(List<String> columns) {
-    return columns != null && columns.length > 0 ? columns.join(',').toString() : '*';
+    return columns.length > 0 ? columns.join(',').toString() : '*';
   }
 }

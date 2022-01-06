@@ -2,5 +2,6 @@ class SaveOptions {
   bool preferExisting;
   bool throwConflictOnExist;
 
-  SaveOptions({this.preferExisting, this.throwConflictOnExist});
+  SaveOptions(
+      {required this.preferExisting, required this.throwConflictOnExist});
 }

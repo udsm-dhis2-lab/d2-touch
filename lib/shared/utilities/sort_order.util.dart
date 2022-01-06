@@ -1,13 +1,13 @@
 enum SortOrder { DESC, ASC }
 
 class SortOrderUtil {
-  static String getSortOrderParameters(Map<String, SortOrder> sortOrder) {
+  static String? getSortOrderParameters(Map<String, SortOrder>? sortOrder) {
     if (sortOrder == null || sortOrder == {}) {
       return null;
     }
 
     final sortParams = sortOrder.keys.map((key) {
-      SortOrder order = sortOrder[key];
+      SortOrder? order = sortOrder[key];
       switch (order) {
         case SortOrder.ASC:
           return '$key ASC';

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'programstage')
@@ -15,7 +14,7 @@ class ProgramStage extends BaseEntity {
   String executionDateLabel;
 
   @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
-  String description;
+  String? description;
 
   @Column(type: ColumnType.TEXT, name: 'formtype')
   String formType;
@@ -65,31 +64,31 @@ class ProgramStage extends BaseEntity {
   // events: EventEntity[];
 
   ProgramStage(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      @required String name,
-      @required String shortName,
-      String code,
-      String displayName,
-      @required this.featureType,
-      @required this.captureCoordinates,
-      @required this.sortOrder,
-      @required this.allowGenerateNextVisit,
-      @required this.autoGenerateEvent,
-      @required this.blockEntryForm,
-      @required this.dueDateLabel,
-      @required this.executionDateLabel,
-      @required this.formType,
-      @required this.generatedByEnrollmentDate,
-      @required this.hideDueDate,
-      @required this.minDaysFromStart,
-      @required this.program,
-      @required this.programStageDataElements,
-      @required this.programStageSections,
-      @required this.repeatable,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      required String name,
+      required String shortName,
+      String? code,
+      String? displayName,
+      required this.featureType,
+      required this.captureCoordinates,
+      required this.sortOrder,
+      required this.allowGenerateNextVisit,
+      required this.autoGenerateEvent,
+      required this.blockEntryForm,
+      required this.dueDateLabel,
+      required this.executionDateLabel,
+      required this.formType,
+      required this.generatedByEnrollmentDate,
+      required this.hideDueDate,
+      required this.minDaysFromStart,
+      required this.program,
+      required this.programStageDataElements,
+      required this.programStageSections,
+      required this.repeatable,
       this.description,
-      @required dirty})
+      required dirty})
       : super(
             id: id,
             name: name,
@@ -105,9 +104,9 @@ class ProgramStage extends BaseEntity {
       id: jsonData['id'],
       name: jsonData['name'],
       created: jsonData['created'],
-      shortName: jsonData['shortname'],
+      shortName: jsonData['shortName'],
       code: jsonData['code'],
-      displayName: jsonData['displayname'],
+      displayName: jsonData['displayName'],
       description: jsonData['description'],
       dirty: jsonData['dirty'],
       captureCoordinates: jsonData['capturecoordinates'],

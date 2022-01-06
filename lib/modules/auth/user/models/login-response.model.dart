@@ -1,0 +1,5 @@
+enum LoginResponseStatus {
+  ONLINE_LOGIN_SUCCESS,
+  OFFLINE_LOGIN_SUCCESS,
+  WRONG_CREDENTIALS,
+}

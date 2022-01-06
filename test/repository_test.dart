@@ -1,4 +1,4 @@
-import 'package:dhis2_flutter_sdk/core/repository.dart';
+import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
@@ -24,9 +24,9 @@ void main() async {
     expect(columns, [
       'id TEXT PRIMARY KEY NOT NULL',
       'name TEXT NOT NULL',
-      'displayname TEXT',
-      'shortname TEXT',
-      'lastupdated TEXT',
+      'displayName TEXT',
+      'shortName TEXT',
+      'lastUpdated TEXT',
       'created TEXT',
       'code TEXT',
       'dirty BOOLEAN NOT NULL',
@@ -47,7 +47,7 @@ void main() async {
 
   test('should return create query expression', () {
     expect(repository.createQuery,
-        'CREATE TABLE IF NOT EXISTS organisationunit (id TEXT PRIMARY KEY NOT NULL, name TEXT NOT NULL, displayname TEXT, shortname TEXT, lastupdated TEXT, created TEXT, code TEXT, dirty BOOLEAN NOT NULL, level INTEGER NOT NULL, path TEXT NOT NULL, externalAccess BOOLEAN, openingDate TEXT NOT NULL, geometry TEXT, parent TEXT)');
+        'CREATE TABLE IF NOT EXISTS organisationunit (id TEXT PRIMARY KEY NOT NULL, name TEXT NOT NULL, displayName TEXT, shortName TEXT, lastUpdated TEXT, created TEXT, code TEXT, dirty BOOLEAN NOT NULL, level INTEGER NOT NULL, path TEXT NOT NULL, externalAccess BOOLEAN, openingDate TEXT NOT NULL, geometry TEXT, parent TEXT)');
   });
 
   await repository.create(database: db);
@@ -71,7 +71,7 @@ void main() async {
   var result = await repository.findById(id: 'test1', database: db);
 
   test('should return saved details', () {
-    expect(result.id, 'test1');
+    expect(result!.id, 'test1');
     expect(result.name, 'Test 1');
   });
 
@@ -94,7 +94,7 @@ void main() async {
   var updatedResult = await repository.findById(id: 'test1', database: db);
 
   test('should return updated details', () {
-    expect(updatedResult.id, 'test1');
+    expect(updatedResult!.id, 'test1');
     expect(updatedResult.name, 'Test 1 (updated)');
   });
 
@@ -119,7 +119,7 @@ void main() async {
   var savedResult = await repository.findById(id: 'test1', database: db);
 
   test('should return saved result', () {
-    expect(savedResult.id, 'test1');
+    expect(savedResult!.id, 'test1');
     expect(savedResult.name, 'Test 1');
   });
 
@@ -153,8 +153,8 @@ void main() async {
   var savedManyResult2 = await repository.findById(id: 'test3', database: db);
 
   test('should return saved result', () {
-    expect(savedManyResult1.id, 'test2');
-    expect(savedManyResult2.id, 'test3');
+    expect(savedManyResult1!.id, 'test2');
+    expect(savedManyResult2!.id, 'test3');
     expect(savedManyResult1.name, 'Test 2');
     expect(savedManyResult2.name, 'Test 3');
   });

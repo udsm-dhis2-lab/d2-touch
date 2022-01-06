@@ -9,10 +9,10 @@ class OneToOne {
 @AnnotationReflectable
 class ManyToOne {
   final String joinColumnName;
-  final String parentTable;
+  final String? parentTable;
   const ManyToOne({
-    @required this.parentTable,
-    this.joinColumnName,
+    this.parentTable,
+    required this.joinColumnName,
   });
 }
 

@@ -3,5 +3,5 @@ import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:sqflite/sqflite.dart';
 
 class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
-  OrganisationUnitQuery({Database database}) : super(database: database);
+  OrganisationUnitQuery({Database? database}) : super(database: database);
 }
