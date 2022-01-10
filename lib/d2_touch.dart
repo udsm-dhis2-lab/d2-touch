@@ -13,6 +13,7 @@ import 'core/database/database_manager.dart';
 import 'modules/auth/user/entities/user.entity.dart';
 import 'modules/auth/user/models/login-response.model.dart';
 import 'modules/auth/user/queries/user.query.dart';
+import 'modules/engines/program_rule/program_rule_engine.module.dart';
 import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
 
@@ -144,4 +145,7 @@ class D2Touch {
   static ProgramModule programModule = ProgramModule();
 
   static DashboardModule dashboardModule = DashboardModule();
+
+  static ProgramRuleEngineModule programRuleExecution =
+      ProgramRuleEngineModule();
 }
