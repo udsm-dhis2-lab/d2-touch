@@ -32,7 +32,17 @@ class ProgramRuleExecution {
       return eventData;
     }
 
+    final List orderedProgramRules = orderProgramRulesByPriority(programRules);
+    print(orderedProgramRules);
+
     print(eventData['dataValues']);
     return 'done';
+  }
+
+  List orderProgramRulesByPriority(programRules) {
+    return programRules.sort((a, b) =>
+        a.containsKey('priority') && b.containsKey('priority')
+            ? (a['priority'] as int).compareTo(b['priority'] as int)
+            : -1);
   }
 }
