@@ -2,7 +2,7 @@ import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'user')
+@Entity(tableName: 'user', apiResourceName: 'users')
 class User extends BaseEntity {
   @Column()
   final String username;

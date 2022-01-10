@@ -5,7 +5,7 @@ import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/geometry.entity.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'organisationunit')
+@Entity(tableName: 'organisationunit', apiResourceName: 'organisationUnits')
 class OrganisationUnit extends BaseEntity {
   @Column(type: ColumnType.INTEGER)
   int? level;

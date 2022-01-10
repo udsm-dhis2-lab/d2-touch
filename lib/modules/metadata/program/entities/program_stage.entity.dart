@@ -5,7 +5,7 @@ import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.enti
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'programstage')
+@Entity(tableName: 'programstage', apiResourceName: 'programStages')
 class ProgramStage extends BaseEntity {
   @Column(type: ColumnType.INTEGER, name: 'sortorder')
   int sortOrder;

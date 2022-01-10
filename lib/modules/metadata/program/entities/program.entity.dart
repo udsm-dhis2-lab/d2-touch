@@ -4,7 +4,7 @@ import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'program')
+@Entity(tableName: 'program', apiResourceName: 'programs')
 class Program extends BaseEntity {
   @Column(type: ColumnType.TEXT, name: 'programtype')
   String programType;

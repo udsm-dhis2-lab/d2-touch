@@ -19,9 +19,14 @@ class EntityOptions {
 @AnnotationReflectable
 class Entity {
   final String tableName;
+  final String apiResourceName;
   final EntityOptions? options;
   final ClassMirror? classMirror;
-  const Entity({required this.tableName, this.options, this.classMirror});
+  const Entity(
+      {required this.tableName,
+      required this.apiResourceName,
+      this.options,
+      this.classMirror});
 
   static Entity getEntityDefinition(ClassMirror entityClassMirror) {
     Entity? entity = entityClassMirror.metadata != null &&
@@ -32,6 +37,9 @@ class Entity {
     return Entity(
         tableName: entity != null && entity.tableName != null
             ? entity.tableName
+            : entityClassMirror.simpleName,
+        apiResourceName: entity != null && entity.apiResourceName != null
+            ? entity.apiResourceName
             : entityClassMirror.simpleName,
         classMirror: entityClassMirror,
         options: entity != null ? entity.options : null);

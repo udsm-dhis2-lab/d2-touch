@@ -2,7 +2,7 @@ import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'dataset')
+@Entity(tableName: 'dataset', apiResourceName: 'dataSets')
 class DataSet extends BaseEntity {
   @Column(type: ColumnType.INTEGER, name: 'timelydays')
   int timelyDays;

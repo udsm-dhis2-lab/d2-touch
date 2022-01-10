@@ -43,7 +43,7 @@ void main() async {
   final onlineLogIn = await D2Touch.logIn(
     username: 'admin',
     password: 'district',
-    url: 'https://play.dhis2.org/2.35.9',
+    url: 'https://play.dhis2.org/2.36.6',
     databaseFactory: databaseFactoryFfi,
   );
 

@@ -3,7 +3,7 @@ import 'package:dhis2_flutter_sdk/modules/metadata/dashboard/entities/dashboard.
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'dashboarditem')
+@Entity(tableName: 'dashboarditem', apiResourceName: 'dashboardItems')
 class DashboardItem extends BaseEntity {
   @Column(type: ColumnType.TEXT, nullable: true)
   String? type;
