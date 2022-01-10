@@ -6,15 +6,16 @@ class DhisUrlGenerator {
     if (query == null) {
       return '';
     }
+
+    print(query.relations);
     final relations = DhisUrlGenerator.getRelationFields([]);
 
     final filters = getFilterParams([]);
 
-    // return `${query.resourceName}.json?fields=${[
-    //   ...query.fields,
-    //   ...relations,
-    // ].join(',')}${filters !== '' ? '&' + filters : ''}&paging=false`;
-    return '';
+    return '${query.resourceName}.json?fields=${[
+      ...?query.fields,
+      ...relations,
+    ].join(',')}${filters != '' ? '&' + filters : ''}&paging=false';
   }
 
   static getRelationFields(List<QueryModel> relations) {

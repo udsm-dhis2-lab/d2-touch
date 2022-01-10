@@ -1,5 +1,4 @@
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
-import 'package:flutter/foundation.dart';
 
 class QueryFilter {
   String attribute;

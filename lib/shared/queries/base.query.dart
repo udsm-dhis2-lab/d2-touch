@@ -27,7 +27,6 @@ class BaseQuery<T extends BaseEntity> {
     this.repository = Repository<T>();
     this.tableName = repository.entity.tableName;
     this.apiResourceName = repository.entity.apiResourceName;
-    print('RESOURCE NAME:: ${repository.entity.apiResourceName}');
 
     Iterable<Column> newColumns = repository.columns.where((column) =>
         column.relation == null ||
@@ -125,17 +124,14 @@ class BaseQuery<T extends BaseEntity> {
     return this;
   }
 
-  QueryModel getQuery() {
-    print(this.apiResourceName);
-    final queryModel = QueryModel(
+  QueryModel get query {
+    return QueryModel(
         resourceName: this.apiResourceName as String,
         tableName: this.tableName as String,
         singularResourceName: this.singularResourceName,
         fields: this.fields as List<String>,
         filters: this.filters,
         relations: this.relations);
-
-    return queryModel;
   }
 
   Future<List<T>> get() async {

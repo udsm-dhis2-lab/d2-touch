@@ -1,3 +1,4 @@
+import 'package:dhis2_flutter_sdk/modules/sync/utilities/dhis-url-generator.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_model.util.dart';
 
 import 'query-resource.model.dart';
@@ -9,30 +10,24 @@ class QueryRequest {
   String? loadedMessage;
 
   QueryRequest(
-      {required query,
-      required String resourceName,
-      required String loadingMessage,
-      required String loadedMessage});
+      {required this.query,
+      required this.resourceName,
+      this.loadingMessage,
+      this.loadedMessage}) {
+    print('URL:: ${this.url}');
+  }
 
   String get url {
-    return '';
+    return DhisUrlGenerator.generate(this.query);
   }
 
   static List<QueryRequest> getQueryRequests(
       List<QueryResource> queryResources) {
-    print(queryResources);
     return queryResources
-        .map((QueryResource queryResources) => QueryRequest(
-            query: '', resourceName: '', loadingMessage: '', loadedMessage: ''))
+        .map((QueryResource queryResource) => QueryRequest(
+              query: queryResource.query,
+              resourceName: queryResource.name,
+            ))
         .toList();
-
-    // return queryResources.map((queryResource: QueryResource) => {
-    //   return {
-    //     url: generateUrl(queryResource.query),
-    //     resourceName: queryResource.name,
-    //     loadingMessage: "",
-    //     loadedMessage: "",
-    //   };
-    // });
   }
 }
