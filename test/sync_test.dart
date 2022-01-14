@@ -512,10 +512,15 @@ void main() async {
   userData['password'] = 'district';
   userData['isLoggedIn'] = true;
   userData['username'] = 'admin';
+  userData['baseUrl'] = 'https://play.dhis2.org/2.36.6';
   final user = User.fromJson(userData);
   await userQuery.setData(user).save();
 
-  final downloadResult = await Sync().download(database: db);
+  await Sync().download(
+      database: db,
+      callback: (progress, complete, error) {
+        print(progress);
+      });
 
   // test('should download needed metadata and provide appropriated response', () {
   //   expect(downloadResult, '');

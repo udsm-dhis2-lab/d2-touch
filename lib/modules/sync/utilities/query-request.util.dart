@@ -1,7 +1,6 @@
 import 'package:dhis2_flutter_sdk/modules/sync/utilities/dhis-url-generator.util.dart';
+import 'package:dhis2_flutter_sdk/modules/sync/utilities/query-resource.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_model.util.dart';
-
-import 'query-resource.model.dart';
 
 class QueryRequest {
   QueryModel? query;
@@ -13,9 +12,7 @@ class QueryRequest {
       {required this.query,
       required this.resourceName,
       this.loadingMessage,
-      this.loadedMessage}) {
-    print('URL:: ${this.url}');
-  }
+      this.loadedMessage});
 
   String get url {
     return DhisUrlGenerator.generate(this.query);
@@ -23,11 +20,6 @@ class QueryRequest {
 
   static List<QueryRequest> getQueryRequests(
       List<QueryResource> queryResources) {
-    return queryResources
-        .map((QueryResource queryResource) => QueryRequest(
-              query: queryResource.query,
-              resourceName: queryResource.name,
-            ))
-        .toList();
+    return [];
   }
 }

@@ -84,8 +84,8 @@ class D2Touch {
       bool? inMemory,
       DatabaseFactory? databaseFactory}) async {
     WidgetsFlutterBinding.ensureInitialized();
-    HttpResponse userReponse = await HttpClient.get('$url/api/me.json',
-        username: username, password: password);
+    HttpResponse userReponse = await HttpClient.get('me.json',
+        baseUrl: url, username: username, password: password);
 
     if (userReponse.statusCode == 401) {
       return LoginResponseStatus.WRONG_CREDENTIALS;
@@ -110,6 +110,7 @@ class D2Touch {
     userData['password'] = password;
     userData['isLoggedIn'] = true;
     userData['username'] = username;
+    userData['baseUrl'] = url;
     final user = User.fromJson(userData);
     await userQuery.setData(user).save();
 

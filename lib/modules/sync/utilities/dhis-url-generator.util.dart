@@ -7,24 +7,18 @@ class DhisUrlGenerator {
       return '';
     }
 
-    print(query.relations);
-    final relations = DhisUrlGenerator.getRelationFields([]);
-
     final filters = getFilterParams([]);
 
-    return '${query.resourceName}.json?fields=${[
-      ...?query.fields,
-      ...relations,
-    ].join(',')}${filters != '' ? '&' + filters : ''}&paging=false';
+    return '${query.resourceName}.json?fields=${query.fields?.join(',')}${filters != '' ? '&' + filters : ''}&paging=true';
   }
 
-  static getRelationFields(List<QueryModel> relations) {
-    return relations.map((QueryModel relation) => {
-          // return `${relation.resourceName}[${[
-          //   ...relation.fields,
-          //   ...getRelationFields(relation.relations),
-          // ].join(',')}]`;
-        });
+  static getRelationFields(relations) {
+    return relations.map((relation) {
+      // return `${relation.resourceName}[${[
+      //   ...relation.fields,
+      //   ...getRelationFields(relation.relations),
+      // ].join(',')}]`;
+    });
   }
 
   static getFilterParams(List<QueryFilter> queryFilters) {

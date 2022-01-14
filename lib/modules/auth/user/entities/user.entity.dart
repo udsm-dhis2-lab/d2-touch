@@ -16,6 +16,9 @@ class User extends BaseEntity {
   @Column()
   final String surname;
 
+  @Column()
+  final String baseUrl;
+
   @Column(nullable: true)
   final String? teiSearchOrganisationUnits;
 
@@ -44,6 +47,7 @@ class User extends BaseEntity {
       required this.firstName,
       required this.surname,
       required String name,
+      required this.baseUrl,
       String? shortName,
       String? displayName,
       String? code,
@@ -65,6 +69,7 @@ class User extends BaseEntity {
         firstName: json['firstName'],
         surname: json['surname'],
         name: json['name'],
+        baseUrl: json['baseUrl'],
         teiSearchOrganisationUnits:
             json['teiSearchOrganisationUnits'].toString(),
         organisationUnits: json['organisationUnits'].toString(),
@@ -91,6 +96,7 @@ class User extends BaseEntity {
     data['authorities'] = this.authorities;
     data['programs'] = this.programs;
     data['isLoggedIn'] = this.isLoggedIn;
+    data['baseUrl'] = this.baseUrl;
 
     return data;
   }

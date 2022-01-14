@@ -1,5 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
+import 'package:dhis2_flutter_sdk/modules/sync/utilities/dhis-url-generator.util.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
@@ -189,5 +190,9 @@ class BaseQuery<T extends BaseEntity> {
 
   Future create() {
     return this.repository.create(database: database);
+  }
+
+  String get dhisUrl {
+    return DhisUrlGenerator.generate(this.query);
   }
 }

@@ -1,7 +1,14 @@
 class RequestProgress {
-  late String resourceName;
-  late String message;
+  String resourceName;
+  String message;
   String? serverMessage;
-  late String status;
-  late num percentage;
+  String status;
+  num percentage;
+
+  RequestProgress(
+      {required this.resourceName,
+      required this.message,
+      required this.status,
+      required this.percentage,
+      this.serverMessage});
 }
