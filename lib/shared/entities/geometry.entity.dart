@@ -4,11 +4,12 @@ class Geometry {
 
   Geometry({this.type, this.coordinates});
 
-  Geometry.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    if (json['coordinates'] != null) {
-      coordinates = List<dynamic>.from(json['coordinates']);
-    }
+  factory Geometry.fromJson(Map<String, dynamic> json) {
+    return Geometry(
+        type: json['type'],
+        coordinates: json['coordinates'] != null
+            ? List<dynamic>.from(json['coordinates'])
+            : null);
   }
 
   Map<String, dynamic> toJson() {

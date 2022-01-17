@@ -1,7 +1,9 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
-import 'package:dhis2_flutter_sdk/modules/sync/utilities/dhis-url-generator.util.dart';
+import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/dhis-url-generator.util.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_model.util.dart';
@@ -191,6 +193,62 @@ class BaseQuery<T extends BaseEntity> {
   Future create() {
     return this.repository.create(database: database);
   }
+
+  Future<List<T>?> download(
+    Function(RequestProgress, bool) callback,
+  ) async {
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Downloading ${this.apiResourceName?.toUpperCase()} from the server....',
+            status: '',
+            percentage: 0),
+        false);
+
+    final response =
+        await HttpClient.get(this.dhisUrl, database: this.database);
+
+    List data = response.body[this.apiResourceName]?.toList();
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                '${data.length} ${this.apiResourceName?.toUpperCase()} downloaded successfully',
+            status: '',
+            percentage: 50),
+        false);
+
+    this.data = data.map((dataItem) {
+      dataItem['dirty'] = false;
+      return this.repository.getObject<T>(dataItem);
+    }).toList();
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Saving ${data.length} ${this.apiResourceName?.toUpperCase()} into phone database...',
+            status: '',
+            percentage: 51),
+        false);
+
+    final saveResponse = await this.save();
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                '${data.length} ${this.apiResourceName?.toUpperCase()} successifully saved into the database',
+            status: '',
+            percentage: 100),
+        false);
+
+    return this.data;
+  }
+
+  upload() {}
 
   String get dhisUrl {
     return DhisUrlGenerator.generate(this.query);

@@ -1,13 +1,13 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/sync/utilities/sync.util.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 import 'sync_test.reflectable.dart';
 
@@ -515,14 +515,16 @@ void main() async {
   userData['baseUrl'] = 'https://play.dhis2.org/2.36.6';
   final user = User.fromJson(userData);
   await userQuery.setData(user).save();
+  final organisationUnitQuery = OrganisationUnitQuery(database: db);
 
-  await Sync().download(
-      database: db,
-      callback: (progress, complete, error) {
-        print(progress);
-      });
+  List<OrganisationUnit>? organisationUnits =
+      await organisationUnitQuery.download((progress, complete) {
+    print(progress.message);
+  });
 
-  // test('should download needed metadata and provide appropriated response', () {
-  //   expect(downloadResult, '');
-  // });
+  List<OrganisationUnit> orgUnits = await organisationUnitQuery.get();
+
+  test('should all incoming metadata', () {
+    expect(orgUnits.length, 50);
+  });
 }

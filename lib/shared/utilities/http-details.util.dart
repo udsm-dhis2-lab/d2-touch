@@ -25,7 +25,6 @@ class HttpDetails {
     }
 
     final User? user = await UserQuery(database: database).getOne();
-    print('BASE URL:: ${user?.baseUrl}');
     this.username = user?.username;
     this.password = user?.password;
     this.baseUrl = user?.baseUrl;

@@ -1,7 +1,7 @@
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
 import 'package:dhis2_flutter_sdk/modules/sync/models/error_message.model.dart';
-import 'package:dhis2_flutter_sdk/modules/sync/models/request_progress.model.dart';
+import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/modules/sync/utilities/query-resource.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
 import 'package:queue/queue.dart';
@@ -44,8 +44,6 @@ class Sync {
         });
 
         final complete = await queue.onComplete;
-
-        print('COMPLETED:: ${complete}');
 
         callback(requestProgresses, false, null);
       } catch (e) {

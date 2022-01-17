@@ -20,7 +20,7 @@ class OrganisationUnit extends BaseEntity {
   String openingDate;
 
   @Column(nullable: true)
-  Geometry? geometry;
+  Object? geometry;
 
   @Column(name: 'parent', nullable: true)
   Object? parent;
@@ -63,10 +63,8 @@ class OrganisationUnit extends BaseEntity {
         externalAccess: json['externalAccess'],
         openingDate: json['openingDate'],
         dirty: json['dirty'],
-        geometry: json['geometry'] != null
-            ? Geometry.fromJson(json['geometry'])
-            : null,
-        parent: json['parent']);
+        geometry: json['geometry']?.toString() ?? null,
+        parent: json['parent']?.toString() ?? null);
   }
 
   Map<String, dynamic> toJson() {
@@ -83,12 +81,11 @@ class OrganisationUnit extends BaseEntity {
     data['externalAccess'] = this.externalAccess;
     data['openingDate'] = this.openingDate;
     data['dirty'] = this.dirty;
+    data['geometry'] = this.geometry;
     if (this.parent != null) {
       data['parent'] = this.parent;
     }
-    if (this.geometry != null) {
-      data['geometry'] = this.geometry!.toJson();
-    }
+
     return data;
   }
 }
