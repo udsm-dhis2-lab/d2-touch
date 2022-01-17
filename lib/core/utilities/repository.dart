@@ -3,6 +3,7 @@ import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/sort_order.util.dart';
+import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -239,12 +240,17 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   }
 
   @override
-  Future<int> saveMany({required List<T> entities, Database? database}) async {
+  Future<int> saveMany(
+      {required List<T> entities, Database? database, int? chunk}) async {
     final Database db = database != null ? database : await this.database;
 
-//TODO
-    await Future.forEach(
-        entities, ((T entity) => saveOne(entity: entity, database: db)));
+    final queue = Queue(parallel: chunk ?? 50);
+
+    entities.forEach((T entity) {
+      queue.add(() => saveOne(entity: entity, database: db));
+    });
+
+    await queue.onComplete;
 
     return 1;
   }
@@ -264,12 +270,16 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<int> updateMany(
-      {required List<T> entities, Database? database}) async {
+      {required List<T> entities, Database? database, int? chunk}) async {
     final Database db = database != null ? database : await this.database;
 
-//TODO
-    await Future.forEach(
-        entities, ((T entity) => updateOne(entity: entity, database: db)));
+    final queue = Queue(parallel: chunk ?? 50);
+
+    entities.forEach((T entity) {
+      queue.add(() => updateOne(entity: entity, database: db));
+    });
+
+    await queue.onComplete;
 
     return 1;
   }

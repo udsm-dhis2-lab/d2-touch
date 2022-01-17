@@ -524,7 +524,7 @@ void main() async {
 
   List<OrganisationUnit> orgUnits = await organisationUnitQuery.get();
 
-  test('should all incoming metadata', () {
+  test('should store all incoming organisation unit metadata', () {
     expect(orgUnits.length, 50);
   });
 }
