@@ -1,15 +1,15 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'orgunit_sync_test.reflectable.dart';
+import 'program_sync_test.reflectable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -515,16 +515,16 @@ void main() async {
   userData['baseUrl'] = 'https://play.dhis2.org/2.36.6';
   final user = User.fromJson(userData);
   await userQuery.setData(user).save();
-  final organisationUnitQuery = OrganisationUnitQuery(database: db);
+  final programQuery = ProgramQuery(database: db);
 
-  List<OrganisationUnit>? organisationUnits =
-      await organisationUnitQuery.download((progress, complete) {
+  List<Program>? programDownload =
+      await programQuery.download((progress, complete) {
     print(progress.message);
   });
 
-  List<OrganisationUnit> orgUnits = await organisationUnitQuery.get();
+  List<Program> programs = await programQuery.get();
 
-  test('should store all incoming organisation unit metadata', () {
-    expect(orgUnits.length, 50);
+  test('should store all incoming program metadata', () {
+    expect(programs.length, 14);
   });
 }

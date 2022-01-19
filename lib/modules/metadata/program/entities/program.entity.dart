@@ -9,8 +9,8 @@ class Program extends BaseEntity {
   @Column(type: ColumnType.TEXT)
   String programType;
 
-  @Column(type: ColumnType.TEXT, nullable: true)
-  String? displayIncidentDate;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? displayIncidentDate;
 
   @Column(type: ColumnType.TEXT, nullable: true)
   String? description;
@@ -54,14 +54,14 @@ class Program extends BaseEntity {
   @Column(type: ColumnType.TEXT, nullable: true)
   String? trackedEntity;
 
-  @Column(type: ColumnType.TEXT, nullable: true)
-  String? trackedEntityType;
+  @Column(nullable: true)
+  Object? trackedEntityType;
 
-  @Column(type: ColumnType.TEXT, nullable: true)
-  String? organisationUnits;
+  @Column(nullable: true)
+  Object? organisationUnits;
 
-  @Column(type: ColumnType.TEXT, nullable: true)
-  String? programRuleVariables;
+  @Column(nullable: true)
+  Object? programRuleVariables;
 
   // @OneToMany(() => ProgramStageEntity, (programStage) => programStage.program, {
   //   cascade: true,
@@ -144,13 +144,13 @@ class Program extends BaseEntity {
       ignoreOverdueEvents: json['ignoreOverdueEvents'],
       incidentDateLabel: json['incidentDateLabel'],
       onlyEnrollOnce: json['onlyEnrollOnce'],
-      organisationUnits: json['organisationUnits'],
+      organisationUnits: json['organisationUnits']?.toString() ?? null,
       programRuleVariables: json['programRuleVariables'],
       programType: json['programType'],
       selectEnrollmentDatesInFuture: json['selectEnrollmentDatesInFuture'],
       selectIncidentDatesInFuture: json['selectIncidentDatesInFuture'],
       trackedEntity: json['trackedEntity'],
-      trackedEntityType: json['trackedEntityType'],
+      trackedEntityType: json['trackedEntityType']?.toString() ?? null,
       useFirstStageDuringRegistration: json['useFirstStageDuringRegistration'],
       withoutRegistration: json['withoutRegistration'],
     );
