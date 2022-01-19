@@ -4,32 +4,31 @@ import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 @AnnotationReflectable
 @Entity(tableName: 'dataset', apiResourceName: 'dataSets')
 class DataSet extends BaseEntity {
-  @Column(type: ColumnType.INTEGER, name: 'timelydays')
+  @Column(type: ColumnType.INTEGER)
   int timelyDays;
 
-  @Column(type: ColumnType.TEXT, name: 'formtype')
+  @Column(type: ColumnType.TEXT)
   String formType;
 
-  @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
+  @Column(type: ColumnType.TEXT, nullable: true)
   String? description;
 
-  @Column(type: ColumnType.TEXT, name: 'periodtype')
+  @Column(type: ColumnType.TEXT)
   String periodType;
 
-  @Column(type: ColumnType.INTEGER, name: 'openfutureperiods')
+  @Column(type: ColumnType.INTEGER)
   int openFuturePeriods;
 
-  @Column(type: ColumnType.INTEGER, name: 'expirydays')
+  @Column(type: ColumnType.INTEGER)
   int expiryDays;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'renderhorizontally', nullable: true)
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
   bool? renderHorizontally;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'renderastabs', nullable: true)
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
   bool? renderAsTabs;
 
-  @Column(
-      type: ColumnType.BOOLEAN, name: 'fieldcombitionrequired', nullable: true)
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
   bool? fieldCombinationRequired;
 
   // @Column("simple-json") categoryCombo: any;
@@ -72,13 +71,13 @@ class DataSet extends BaseEntity {
       shortName: json['shortName'],
       code: json['code'],
       displayName: json['displayName'],
-      timelyDays: json['timelydays'],
-      formType: json['formtype'],
+      timelyDays: json['timelyDays'],
+      formType: json['formType'],
       description: json['description'],
       dirty: json['dirty'],
-      expiryDays: json['expirydays'],
-      openFuturePeriods: json['openfutureperiods'],
-      periodType: json['periodtype'],
+      expiryDays: json['expiryDays'],
+      openFuturePeriods: json['openFuturePeriods'],
+      periodType: json['periodType'],
     );
   }
 

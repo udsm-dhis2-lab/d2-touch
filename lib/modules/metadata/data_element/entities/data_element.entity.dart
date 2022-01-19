@@ -1,6 +1,5 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'dataelement', apiResourceName: 'dataElements')
