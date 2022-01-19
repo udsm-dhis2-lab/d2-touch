@@ -5,16 +5,16 @@ import 'package:flutter/foundation.dart';
 @AnnotationReflectable
 @Entity(tableName: 'dataelement', apiResourceName: 'dataElements')
 class DataElement extends BaseEntity {
-  @Column(type: ColumnType.TEXT, name: 'formname', nullable: true)
+  @Column(type: ColumnType.TEXT, nullable: true)
   String? formName;
 
-  @Column(type: ColumnType.TEXT, name: 'valuetype', length: 50)
+  @Column(type: ColumnType.TEXT, length: 50)
   String valueType;
 
-  @Column(type: ColumnType.TEXT, name: 'aggregationtype', length: 50)
+  @Column(type: ColumnType.TEXT, length: 50)
   String aggregationType;
 
-  @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
+  @Column(type: ColumnType.TEXT, nullable: true)
   String? description;
 
   DataElement(
@@ -48,8 +48,8 @@ class DataElement extends BaseEntity {
         shortName: json['shortName'],
         code: json['code'],
         displayName: json['displayName'],
-        valueType: json['valuetype'],
-        aggregationType: json['aggregationtype'],
+        valueType: json['valueType'],
+        aggregationType: json['aggregationType'],
         description: json['description'],
         dirty: json['dirty']);
   }

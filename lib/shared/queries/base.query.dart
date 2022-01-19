@@ -243,7 +243,7 @@ class BaseQuery<T extends BaseEntity> {
                 '${data.length} ${this.apiResourceName?.toUpperCase()} successifully saved into the database',
             status: '',
             percentage: 100),
-        false);
+        true);
 
     return this.data;
   }
