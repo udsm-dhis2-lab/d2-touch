@@ -1,1 +1,27 @@
-// @flow
+abstract class ProgramRulesConstants {
+  static typeKeys() {
+    return {
+      "TEXT": "TEXT",
+      "LONG_TEXT": "LONG_TEXT",
+      "LETTER": "LETTER",
+      "PHONE_NUMBER": "PHONE_NUMBER",
+      "EMAIL": "EMAIL",
+      "BOOLEAN": "BOOLEAN",
+      "TRUE_ONLY": "TRUE_ONLY",
+      "DATE": "DATE",
+      "DATETIME": "DATETIME",
+      "TIME": "TIME",
+      "NUMBER": "NUMBER",
+      "INTEGER": "INTEGER",
+      "INTEGER_POSITIVE": "INTEGER_POSITIVE",
+      "INTEGER_NEGATIVE": "INTEGER_NEGATIVE",
+      "INTEGER_ZERO_OR_POSITIVE": "INTEGER_ZERO_OR_POSITIVE",
+      "PERCENTAGE": "PERCENTAGE",
+      "URL": "URL",
+      "AGE": "AGE",
+      "ORGANISATION_UNIT": "ORGANISATION_UNIT",
+      "COORDINATE": "COORDINATE",
+      "USERNAME": "USERNAME"
+    };
+  }
+}

@@ -1,3 +1,5 @@
+import '../utilities/variables.dart';
+
 class ProgramRuleExecution {
   dynamic executeProgramRule(
       Map<String, Object> eventData,
@@ -32,10 +34,11 @@ class ProgramRuleExecution {
       return eventData;
     }
 
-    final List orderedProgramRules = orderProgramRulesByPriority(programRules);
-    print(orderedProgramRules);
+    final List orderedProgramRules = programRules;
+    // print(orderedProgramRules);
 
-    print(eventData['dataValues']);
+    // print(eventData['dataValues']);
+    final dynamic variables = VariablesUtil.getVariables(eventData, programRules, programRuleVariables, dataElements, optionSets);
     return 'done';
   }
 
