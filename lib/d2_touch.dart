@@ -5,6 +5,7 @@ import 'package:dhis2_flutter_sdk/modules/metadata/dataset/data_set.module.dart'
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/organisation_unit.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/program.module.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -82,10 +83,14 @@ class D2Touch {
       required String url,
       Future<SharedPreferences>? sharedPreferenceInstance,
       bool? inMemory,
-      DatabaseFactory? databaseFactory}) async {
+      DatabaseFactory? databaseFactory,
+      Dio? dioTestClient}) async {
     WidgetsFlutterBinding.ensureInitialized();
     HttpResponse userReponse = await HttpClient.get('me.json',
-        baseUrl: url, username: username, password: password);
+        baseUrl: url,
+        username: username,
+        password: password,
+        dioTestClient: dioTestClient);
 
     if (userReponse.statusCode == 401) {
       return LoginResponseStatus.WRONG_CREDENTIALS;
