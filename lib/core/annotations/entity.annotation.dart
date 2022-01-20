@@ -29,18 +29,14 @@ class Entity {
       this.classMirror});
 
   static Entity getEntityDefinition(ClassMirror entityClassMirror) {
-    Entity? entity = entityClassMirror.metadata != null &&
-            entityClassMirror.metadata[1] is Entity
+    Entity? entity = entityClassMirror.metadata[1] is Entity
         ? entityClassMirror.metadata[1] as Entity
         : null;
 
     return Entity(
-        tableName: entity != null && entity.tableName != null
-            ? entity.tableName
-            : entityClassMirror.simpleName,
-        apiResourceName: entity != null && entity.apiResourceName != null
-            ? entity.apiResourceName
-            : entityClassMirror.simpleName,
+        tableName: entity?.tableName ?? entityClassMirror.simpleName,
+        apiResourceName:
+            entity?.apiResourceName ?? entityClassMirror.simpleName,
         classMirror: entityClassMirror,
         options: entity != null ? entity.options : null);
   }

@@ -122,11 +122,11 @@ class Column {
               referencedTable: manyToOneColumn.parentTable,
               relationType: RelationType.ManyToOne,
               referencedEntity: Entity.getEntityDefinition(
-                  AnnotationReflectable.reflectType(
-                      variableMirror.reflectedType) as ClassMirror),
+                  AnnotationReflectable.reflectType(manyToOneColumn.table)
+                      as ClassMirror),
               referencedEntityColumns: Entity.getEntityColumns(
-                  AnnotationReflectable.reflectType(
-                      variableMirror.reflectedType) as ClassMirror)));
+                  AnnotationReflectable.reflectType(manyToOneColumn.table)
+                      as ClassMirror)));
     } else if (variableElement is OneToMany) {
       return Column(
           type: ColumnType.TEXT,

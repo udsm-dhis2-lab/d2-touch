@@ -348,14 +348,18 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       if (value.runtimeType == int && column.type == ColumnType.BOOLEAN) {
         resultMap[column.name as String] = value == 1 ? true : false;
       } else if (column.relation != null) {
-        resultMap[column.name as String] = getRelationObject(
-            relation: column.relation as ColumnRelation, value: value);
+        resultMap[column.name as String] =
+            column.relation?.relationType == RelationType.OneToMany
+                ? getRelationObject(
+                    relation: column.relation as ColumnRelation, value: value)
+                : value;
       } else {
         resultMap[column.name as String] = value;
       }
     });
     ClassMirror classMirror =
         AnnotationReflectable.reflectType(T) as ClassMirror;
+
     return classMirror.newInstance('fromJson', [resultMap]) as T;
   }
 

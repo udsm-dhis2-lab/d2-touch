@@ -9,6 +9,7 @@ import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.d
 import 'package:dhis2_flutter_sdk/shared/utilities/query_model.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/save_option.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/sort_order.util.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -194,9 +195,8 @@ class BaseQuery<T extends BaseEntity> {
     return this.repository.create(database: database);
   }
 
-  Future<List<T>?> download(
-    Function(RequestProgress, bool) callback,
-  ) async {
+  Future<List<T>?> download(Function(RequestProgress, bool) callback,
+      {Dio? dioTestClient}) async {
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -206,8 +206,8 @@ class BaseQuery<T extends BaseEntity> {
             percentage: 0),
         false);
 
-    final response =
-        await HttpClient.get(this.dhisUrl, database: this.database);
+    final response = await HttpClient.get(this.dhisUrl,
+        database: this.database, dioTestClient: dioTestClient);
 
     List data = response.body[this.apiResourceName]?.toList();
 

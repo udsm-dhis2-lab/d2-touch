@@ -23,7 +23,7 @@ class DashboardItem extends BaseEntity {
   @Column(type: ColumnType.TEXT, nullable: true)
   String? report;
 
-  @ManyToOne(joinColumnName: 'dashboard')
+  @ManyToOne(joinColumnName: 'dashboard', table: Dashboard)
   Dashboard? dashboard;
 
   DashboardItem(

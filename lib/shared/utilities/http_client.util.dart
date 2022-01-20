@@ -37,7 +37,8 @@ class HttpClient {
       {String? baseUrl,
       String? username,
       String? password,
-      Database? database}) async {
+      Database? database,
+      Dio? dioTestClient}) async {
     HttpDetails httpDetails = await HttpDetails(
             baseUrl: baseUrl,
             username: username,
@@ -45,10 +46,13 @@ class HttpClient {
             database: database)
         .get();
 
-    final dioClient = Dio(
-        BaseOptions(connectTimeout: 100000, receiveTimeout: 100000, headers: {
-      HttpHeaders.authorizationHeader: 'Basic ${httpDetails.authToken}',
-    }));
+    final dioClient = dioTestClient ??
+        Dio(BaseOptions(
+            connectTimeout: 100000,
+            receiveTimeout: 100000,
+            headers: {
+              HttpHeaders.authorizationHeader: 'Basic ${httpDetails.authToken}',
+            }));
 
     try {
       final Response<dynamic> response =
