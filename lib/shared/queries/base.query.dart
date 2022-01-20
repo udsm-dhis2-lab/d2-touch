@@ -206,6 +206,8 @@ class BaseQuery<T extends BaseEntity> {
             percentage: 0),
         false);
 
+    print(this.dhisUrl);
+
     final response = await HttpClient.get(this.dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
