@@ -75,7 +75,7 @@ void main() async {
       generatedByEnrollmentDate: false,
       hideDueDate: false,
       minDaysFromStart: 3,
-      program: program.id,
+      program: {"id": "test1"},
       programStageDataElements: [],
       programStageSections: [],
       repeatable: false,

@@ -24,7 +24,7 @@ void main() async {
       path: 'test1',
       shortName: 'Test 1',
       openingDate: '20-01-2020',
-      parent: {"id": "qtr8GGlm4gg"},
+      parent: "{id: qtr8GGlm4gg}",
       dirty: false);
 
   var insertResult = await orgUnitQuery.setData(organisationUnit).save();
@@ -38,6 +38,6 @@ void main() async {
   test('should return saved details', () {
     expect(result!.id, 'test1');
     expect(result!.name, 'Test 1');
-    expect(result!.parent, 'qtr8GGlm4gg');
+    expect(result!.parent, '{id: qtr8GGlm4gg}');
   });
 }

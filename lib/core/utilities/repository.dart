@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
