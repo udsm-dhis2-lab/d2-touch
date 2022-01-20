@@ -56,8 +56,6 @@ void main() async {
 
   List<DataElement> dataElms = await dataElementQuery.get();
 
-  print(dataElms.length);
-
   test('should store all incoming data element metadata', () {
     expect(dataElms.length, 50);
   });
