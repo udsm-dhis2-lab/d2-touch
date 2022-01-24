@@ -277,10 +277,10 @@ final _data = <r.Reflectable, r.ReflectorData>{
                           created: created,
                           displayName: displayName,
                           lastUpdated: lastUpdated,
+                          name: name,
                           shortName: shortName,
                           dirty: dirty,
-                          id: id,
-                          name: name)
+                          id: id)
                       : null
             },
             -1,
@@ -565,8 +565,8 @@ final _data = <r.Reflectable, r.ReflectorData>{
             3,
             const prefix0.AnnotationReflection(),
             -1,
-            10,
-            10,
+            13,
+            13,
             const <int>[],
             const <Object>[const prefix2.Column()]),
         r.VariableMirrorImpl(
@@ -1685,12 +1685,12 @@ final _data = <r.Reflectable, r.ReflectorData>{
             #id),
         r.ParameterMirrorImpl(
             r'name',
-            41990,
+            46086,
             94,
             const prefix0.AnnotationReflection(),
             -1,
-            10,
-            10,
+            13,
+            13,
             const <int>[],
             const [],
             null,

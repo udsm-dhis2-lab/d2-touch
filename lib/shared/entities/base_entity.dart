@@ -6,7 +6,7 @@ class BaseEntity {
   final String id;
 
   @Column()
-  final String name;
+  final String? name;
 
   @Column(nullable: true)
   final String? displayName;
@@ -28,7 +28,7 @@ class BaseEntity {
 
   BaseEntity(
       {required this.id,
-      required this.name,
+      this.name,
       this.displayName,
       this.shortName,
       this.lastUpdated,
