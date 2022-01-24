@@ -6,14 +6,15 @@ import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ProgramStageQuery extends BaseQuery<ProgramStage> {
-  ProgramStageQuery({Database database}) : super(database: database);
+  ProgramStageQuery({Database? database}) : super(database: database);
 
   ProgramStageQuery withProgram() {
     final program = Repository<Program>();
     final Column relationColumn = this.repository.columns.firstWhere((column) =>
-        column.relation?.referencedEntity?.tableName == program.entity?.tableName);
+        column.relation?.referencedEntity?.tableName ==
+        program.entity.tableName);
 
-    this.relations.add(relationColumn.relation);
+    this.relations.add(relationColumn.relation as ColumnRelation);
     return this;
   }
 }

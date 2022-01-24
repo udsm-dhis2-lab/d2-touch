@@ -191,8 +191,10 @@ void main() async {
     expect(orderAscResult[2].level, 3);
   });
 
-  var selectResult =
-      await orderByQuery.select(['id', 'name']).byId('test2').getOne();
+  var selectResult = await orderByQuery
+      .select(['id', 'name', 'shortName', 'path', 'openingDate', 'dirty'])
+      .byId('test2')
+      .getOne();
 
   test("should return only selected columns", () {
     expect(selectResult.level, null);

@@ -1,12 +1,12 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: "DHIS2 Flutter SDK",
-  url: "https://interactive-apps.github.io",
+  url: "https://dhis2-club-tanzania.github.io",
   baseUrl: "/dhis2-flutter-sdk/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
-  organizationName: "interactive-apps",
+  organizationName: "dhis2-club-tanzania",
   projectName: "dhis2-flutter-sdk",
   themeConfig: {
     navbar: {
@@ -23,8 +23,7 @@ module.exports = {
           position: "left",
         },
         {
-          href:
-            "https://github.com/interactive-apps/dhis2-flutter-sdk/tree/develop/docs/",
+          href: "https://github.com/dhis2-club-tanzania/dhis2-flutter-sdk/tree/develop/docs/",
           label: "GitHub",
           position: "right",
         },
@@ -43,7 +42,7 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl:
-            "https://github.com/interactive-apps/dhis2-flutter-sdk/edit/develop/docs/",
+            "https://github.com/dhis2-club-tanzania/dhis2-flutter-sdk/edit/develop/docs/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),

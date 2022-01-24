@@ -1,14 +1,15 @@
 class Geometry {
-  String type;
-  List<dynamic> coordinates;
+  String? type;
+  List<dynamic>? coordinates;
 
   Geometry({this.type, this.coordinates});
 
-  Geometry.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    if (json['coordinates'] != null) {
-      coordinates = List<dynamic>.from(json['coordinates']);
-    }
+  factory Geometry.fromJson(Map<String, dynamic> json) {
+    return Geometry(
+        type: json['type'],
+        coordinates: json['coordinates'] != null
+            ? List<dynamic>.from(json['coordinates'])
+            : null);
   }
 
   Map<String, dynamic> toJson() {
@@ -18,16 +19,17 @@ class Geometry {
     return data;
   }
 
-  double get latitude {
+  double? get latitude {
     if (type == 'Point') {
-      return coordinates.elementAt(1);
+      return coordinates?.elementAt(1);
     }
+
     return null;
   }
 
-  double get longitude {
+  double? get longitude {
     if (type == 'Point') {
-      return coordinates.elementAt(0);
+      return coordinates?.elementAt(0);
     }
     return null;
   }

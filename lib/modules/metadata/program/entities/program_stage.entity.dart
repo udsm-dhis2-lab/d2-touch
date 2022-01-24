@@ -3,61 +3,60 @@ import 'dart:convert';
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'programstage')
+@Entity(tableName: 'programstage', apiResourceName: 'programStages')
 class ProgramStage extends BaseEntity {
-  @Column(type: ColumnType.INTEGER, name: 'sortorder')
+  @Column(type: ColumnType.INTEGER)
   int sortOrder;
 
-  @Column(type: ColumnType.TEXT, name: 'executiondatelabel')
-  String executionDateLabel;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? executionDateLabel;
 
-  @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
-  String description;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? description;
 
-  @Column(type: ColumnType.TEXT, name: 'formtype')
+  @Column(type: ColumnType.TEXT)
   String formType;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'blockentryform')
+  @Column(type: ColumnType.BOOLEAN)
   bool blockEntryForm;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'hideduedate')
+  @Column(type: ColumnType.BOOLEAN)
   bool hideDueDate;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'repeatable')
+  @Column(type: ColumnType.BOOLEAN)
   bool repeatable;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'allowgeneratenextvisit')
+  @Column(type: ColumnType.BOOLEAN)
   bool allowGenerateNextVisit;
 
-  @Column(type: ColumnType.TEXT, name: 'mindaysfromstart')
-  int minDaysFromStart;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  int? minDaysFromStart;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'generatedbyenrollmentdate')
-  bool generatedByEnrollmentDate;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? generatedByEnrollmentDate;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'autogenerateevent')
-  bool autoGenerateEvent;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? autoGenerateEvent;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'capturecoordinates')
-  bool captureCoordinates;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? captureCoordinates;
 
-  @Column(type: ColumnType.TEXT, name: 'featuretype')
+  @Column(type: ColumnType.TEXT)
   String featureType;
 
-  @Column(type: ColumnType.TEXT, name: 'duedatelabel')
-  String dueDateLabel;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? dueDateLabel;
 
-  @Column(type: ColumnType.TEXT, name: 'programstagesections')
-  List<dynamic> programStageSections;
+  @Column(type: ColumnType.TEXT)
+  Object programStageSections;
 
-  @Column(type: ColumnType.TEXT, name: 'programstagedataelements')
-  List<dynamic> programStageDataElements;
+  @Column(type: ColumnType.TEXT)
+  Object programStageDataElements;
 
-  @ManyToOne(joinColumnName: 'program')
-  Program program;
+  @ManyToOne(joinColumnName: 'program', table: Program)
+  dynamic program;
 
   // @OneToMany(() => EventEntity, (event) => event.programStage, {
   //   cascade: true,
@@ -65,31 +64,31 @@ class ProgramStage extends BaseEntity {
   // events: EventEntity[];
 
   ProgramStage(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      @required String name,
-      @required String shortName,
-      String code,
-      String displayName,
-      @required this.featureType,
-      @required this.captureCoordinates,
-      @required this.sortOrder,
-      @required this.allowGenerateNextVisit,
-      @required this.autoGenerateEvent,
-      @required this.blockEntryForm,
-      @required this.dueDateLabel,
-      @required this.executionDateLabel,
-      @required this.formType,
-      @required this.generatedByEnrollmentDate,
-      @required this.hideDueDate,
-      @required this.minDaysFromStart,
-      @required this.program,
-      @required this.programStageDataElements,
-      @required this.programStageSections,
-      @required this.repeatable,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      required String name,
+      String? shortName,
+      String? code,
+      String? displayName,
+      required this.featureType,
+      required this.captureCoordinates,
+      required this.sortOrder,
+      required this.allowGenerateNextVisit,
+      required this.autoGenerateEvent,
+      required this.blockEntryForm,
+      this.dueDateLabel,
+      this.executionDateLabel,
+      required this.formType,
+      required this.generatedByEnrollmentDate,
+      required this.hideDueDate,
+      required this.minDaysFromStart,
+      required this.program,
+      required this.programStageDataElements,
+      required this.programStageSections,
+      required this.repeatable,
       this.description,
-      @required dirty})
+      required dirty})
       : super(
             id: id,
             name: name,
@@ -105,28 +104,27 @@ class ProgramStage extends BaseEntity {
       id: jsonData['id'],
       name: jsonData['name'],
       created: jsonData['created'],
-      shortName: jsonData['shortname'],
+      shortName: jsonData['shortName'],
       code: jsonData['code'],
-      displayName: jsonData['displayname'],
+      displayName: jsonData['displayName'],
       description: jsonData['description'],
       dirty: jsonData['dirty'],
-      captureCoordinates: jsonData['capturecoordinates'],
-      featureType: jsonData['featuretype'],
-      allowGenerateNextVisit: jsonData['allowgeneratenextvisit'],
-      autoGenerateEvent: jsonData['autogenerateevent'],
-      blockEntryForm: jsonData['blockentryform'],
-      dueDateLabel: jsonData['duedatelabel'],
-      executionDateLabel: jsonData['executiondatelabel'],
-      formType: jsonData['formtype'],
-      generatedByEnrollmentDate: jsonData['generatedbyenrollmentdate'],
-      hideDueDate: jsonData['hideduedate'],
-      minDaysFromStart: int.parse(jsonData['mindaysfromstart']),
+      captureCoordinates: jsonData['captureCoordinates'],
+      featureType: jsonData['featureType'],
+      allowGenerateNextVisit: jsonData['allowGenerateNextVisit'],
+      autoGenerateEvent: jsonData['autoGenerateEvent'],
+      blockEntryForm: jsonData['blockEntryForm'],
+      dueDateLabel: jsonData['dueDateLabel'],
+      executionDateLabel: jsonData['executionDateLabel'],
+      formType: jsonData['formType'],
+      generatedByEnrollmentDate: jsonData['generatedByEnrollmentDate'],
+      hideDueDate: jsonData['hideDueDate'],
+      minDaysFromStart: int.parse(jsonData['minDaysFromStart'].toString()),
       program: jsonData['program'],
-      programStageDataElements:
-          json.decode(jsonData['programstagedataelements']),
-      programStageSections: json.decode(jsonData['programstagesections']),
+      programStageDataElements: jsonData['programStageDataElements'],
+      programStageSections: jsonData['programStageSections'],
       repeatable: jsonData['repeatable'],
-      sortOrder: jsonData['sortorder'],
+      sortOrder: jsonData['sortOrder'],
     );
   }
 
@@ -146,7 +144,6 @@ class ProgramStage extends BaseEntity {
     data['allowGenerateNextVisit'] = this.allowGenerateNextVisit;
     data['autoGenerateEvent'] = this.autoGenerateEvent;
     data['blockEntryForm'] = this.blockEntryForm;
-    data['captureCoordinates'] = this.captureCoordinates;
     data['dueDateLabel'] = this.dueDateLabel;
     data['executionDateLabel'] = this.executionDateLabel;
     data['featureType'] = this.featureType;
@@ -154,7 +151,7 @@ class ProgramStage extends BaseEntity {
     data['generatedByEnrollmentDate'] = this.generatedByEnrollmentDate;
     data['hideDueDate'] = this.hideDueDate;
     data['minDaysFromStart'] = this.minDaysFromStart;
-    data['program'] = this.program.toJson();
+    data['program'] = this.program;
     data['programStageDataElements'] = this.programStageDataElements;
     data['programStageSections'] = this.programStageSections;
     data['repeatable'] = this.repeatable;

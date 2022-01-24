@@ -4,77 +4,64 @@ import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'program')
+@Entity(tableName: 'program', apiResourceName: 'programs')
 class Program extends BaseEntity {
-  @Column(type: ColumnType.TEXT, name: 'programtype')
+  @Column(type: ColumnType.TEXT)
   String programType;
 
-  @Column(type: ColumnType.TEXT, name: 'displayincidentdate', nullable: true)
-  String displayIncidentDate;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? displayIncidentDate;
 
-  @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
-  String description;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? description;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'withoutregistration', nullable: true)
-  bool withoutRegistration;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? withoutRegistration;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'ignoreoverdueevents')
+  @Column(type: ColumnType.BOOLEAN)
   bool ignoreOverdueEvents;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'capturecoordinates', nullable: true)
-  bool captureCoordinates;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? captureCoordinates;
 
-  @Column(type: ColumnType.TEXT, name: 'featuretype')
-  String featureType;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? featureType;
 
-  @Column(type: ColumnType.TEXT, name: 'enrollmentdatelabel', nullable: true)
-  String enrollmentDateLabel;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? enrollmentDateLabel;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'onlyenrollonce', nullable: true)
-  bool onlyEnrollOnce;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? onlyEnrollOnce;
 
-  @Column(
-      type: ColumnType.BOOLEAN,
-      name: 'selectincidentdatesinfuture',
-      nullable: true)
-  bool selectIncidentDatesInFuture;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? selectIncidentDatesInFuture;
 
-  @Column(
-      type: ColumnType.BOOLEAN,
-      name: 'selectenrollmentdatesinfuture',
-      nullable: true)
-  bool selectEnrollmentDatesInFuture;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? selectEnrollmentDatesInFuture;
 
-  @Column(
-      type: ColumnType.BOOLEAN,
-      name: 'usefirststageduringregistration',
-      nullable: true)
-  bool useFirstStageDuringRegistration;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? useFirstStageDuringRegistration;
 
-  @Column(type: ColumnType.TEXT, name: 'incidentdatelabel', nullable: true)
-  String incidentDateLabel;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? incidentDateLabel;
 
-  @Column(
-      type: ColumnType.INTEGER,
-      name: 'completeeventsexpirydays',
-      nullable: true)
-  int completeEventsExpiryDays;
+  @Column(type: ColumnType.INTEGER, nullable: true)
+  int? completeEventsExpiryDays;
 
-  @Column(
-      type: ColumnType.BOOLEAN, name: 'displayfrontpagelist', nullable: true)
-  bool displayFrontPageList;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? displayFrontPageList;
 
-  @Column(type: ColumnType.TEXT, name: 'trackedentity', nullable: true)
-  String trackedEntity;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? trackedEntity;
 
-  @Column(type: ColumnType.TEXT, name: 'trackedentitytype', nullable: true)
-  String trackedEntityType;
+  @Column(nullable: true)
+  Object? trackedEntityType;
 
-  @Column(type: ColumnType.TEXT, name: 'organisationunits', nullable: true)
-  String organisationUnits;
+  @Column(nullable: true)
+  Object? organisationUnits;
 
-  @Column(type: ColumnType.TEXT, name: 'programrulevariables', nullable: true)
-  String programRuleVariables;
+  @Column(nullable: true)
+  Object? programRuleVariables;
 
   // @OneToMany(() => ProgramStageEntity, (programStage) => programStage.program, {
   //   cascade: true,
@@ -97,24 +84,24 @@ class Program extends BaseEntity {
   // programRules: ProgramRuleEntity[];
 
   @OneToMany()
-  List<ProgramStage> programStages;
+  List<ProgramStage>? programStages;
 
   Program(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      @required String name,
-      @required String shortName,
-      String code,
-      String displayName,
-      @required this.programType,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      required String name,
+      required String shortName,
+      String? code,
+      String? displayName,
+      required this.programType,
       this.featureType,
       this.captureCoordinates,
       this.completeEventsExpiryDays,
       this.displayFrontPageList,
       this.displayIncidentDate,
       this.enrollmentDateLabel,
-      this.ignoreOverdueEvents,
+      required this.ignoreOverdueEvents,
       this.incidentDateLabel,
       this.onlyEnrollOnce,
       this.organisationUnits,
@@ -139,34 +126,33 @@ class Program extends BaseEntity {
             dirty: dirty);
 
   factory Program.fromJson(Map<String, dynamic> json) {
-
     return Program(
       id: json['id'],
       name: json['name'],
       created: json['created'],
-      shortName: json['shortname'],
+      shortName: json['shortName'],
       code: json['code'],
-      displayName: json['displayname'],
+      displayName: json['displayName'],
       description: json['description'],
       dirty: json['dirty'],
-      captureCoordinates: json['capturecoordinates'],
-      completeEventsExpiryDays: json['completeeventsexpirydays'],
-      displayFrontPageList: json['displayfrontpagelist'],
-      displayIncidentDate: json['displayincidentdate'],
-      enrollmentDateLabel: json['enrollmentdatelabel'],
-      featureType: json['featuretype'],
-      ignoreOverdueEvents: json['ignoreoverdueevents'],
-      incidentDateLabel: json['incidentdatelabel'],
-      onlyEnrollOnce: json['onlyenrollonce'],
-      organisationUnits: json['organisationunits'],
-      programRuleVariables: json['programrulevariables'],
-      programType: json['programtype'],
-      selectEnrollmentDatesInFuture: json['selectenrollmentdatesinfuture'],
-      selectIncidentDatesInFuture: json['selectincidentdatesinfuture'],
-      trackedEntity: json['trackedentity'],
-      trackedEntityType: json['trackedentitytype'],
-      useFirstStageDuringRegistration: json['usefirststageduringregistration'],
-      withoutRegistration: json['withoutregistration'],
+      captureCoordinates: json['captureCoordinates'],
+      completeEventsExpiryDays: json['completeEventsExpiryDays'],
+      displayFrontPageList: json['displayFrontPageList'],
+      displayIncidentDate: json['displayIncidentDate'],
+      enrollmentDateLabel: json['enrollmentDateLabel'],
+      featureType: json['featureType'],
+      ignoreOverdueEvents: json['ignoreOverdueEvents'],
+      incidentDateLabel: json['incidentDateLabel'],
+      onlyEnrollOnce: json['onlyEnrollOnce'],
+      organisationUnits: json['organisationUnits']?.toString() ?? null,
+      programRuleVariables: json['programRuleVariables'],
+      programType: json['programType'],
+      selectEnrollmentDatesInFuture: json['selectEnrollmentDatesInFuture'],
+      selectIncidentDatesInFuture: json['selectIncidentDatesInFuture'],
+      trackedEntity: json['trackedEntity'],
+      trackedEntityType: json['trackedEntityType']?.toString() ?? null,
+      useFirstStageDuringRegistration: json['useFirstStageDuringRegistration'],
+      withoutRegistration: json['withoutRegistration'],
     );
   }
 

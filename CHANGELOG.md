@@ -1,3 +1,7 @@
-## [0.0.1] - TODO: Add release date.
+## [1.0.0-alpha.1] - 06/01/2022
 
-* TODO: Describe initial release.
+- Support for online authenitication
+
+## [1.0.0-alpha.2] - 17/01/2022
+
+- Support for downloading metadata

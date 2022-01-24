@@ -1,35 +1,34 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'dataelement')
+@Entity(tableName: 'dataelement', apiResourceName: 'dataElements')
 class DataElement extends BaseEntity {
-  @Column(type: ColumnType.TEXT, name: 'formname', nullable: true)
-  String formName;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? formName;
 
-  @Column(type: ColumnType.TEXT, name: 'valuetype', length: 50)
+  @Column(type: ColumnType.TEXT, length: 50)
   String valueType;
 
-  @Column(type: ColumnType.TEXT, name: 'aggregationtype', length: 50)
+  @Column(type: ColumnType.TEXT, length: 50)
   String aggregationType;
 
-  @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
-  String description;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? description;
 
   DataElement(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      @required String name,
-      @required String shortName,
-      String code,
-      String displayName,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      required String name,
+      required String shortName,
+      String? code,
+      String? displayName,
       this.formName,
-      @required this.aggregationType,
+      required this.aggregationType,
       this.description,
-      @required this.valueType,
-      @required dirty})
+      required this.valueType,
+      required dirty})
       : super(
             id: id,
             name: name,
@@ -45,11 +44,11 @@ class DataElement extends BaseEntity {
         id: json['id'],
         name: json['name'],
         created: json['created'],
-        shortName: json['shortname'],
+        shortName: json['shortName'],
         code: json['code'],
-        displayName: json['displayname'],
-        valueType: json['valuetype'],
-        aggregationType: json['aggregationtype'],
+        displayName: json['displayName'],
+        valueType: json['valueType'],
+        aggregationType: json['aggregationType'],
         description: json['description'],
         dirty: json['dirty']);
   }

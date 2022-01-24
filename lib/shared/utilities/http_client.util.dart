@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/http-details.util.dart';
+import 'package:dio/dio.dart';
+import 'package:sqflite/sqflite.dart';
 
 class HttpResponse {
-  int statusCode;
-  dynamic body;
-  HttpResponse({@required int statusCode, @required dynamic body}) {
+  late int statusCode;
+  late dynamic body;
+  HttpResponse({required int statusCode, required dynamic body}) {
     this.statusCode = statusCode;
     this.body = body;
   }
@@ -19,49 +21,73 @@ class HttpClient {
 
   update() {}
 
-  static Future<http.Response> create(String url, data) {
-    return http.post(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'title': data,
-      }),
-    );
-  }
+  // static Future<Response> create(String url, data) {
+  //   return http.post(
+  //     Uri.parse(url),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: jsonEncode(<String, String>{
+  //       'title': data,
+  //     }),
+  //   );
+  // }
 
-  static Future<HttpResponse> get(String url,
-      {String username, String password}) async {
-    final authToken =
-        HttpClient.setToken(username: username, password: password);
+  static Future<HttpResponse> get(String resourceUrl,
+      {String? baseUrl,
+      String? username,
+      String? password,
+      Database? database,
+      Dio? dioTestClient}) async {
+    HttpDetails httpDetails = await HttpDetails(
+            baseUrl: baseUrl,
+            username: username,
+            password: password,
+            database: database)
+        .get();
+
+    final dioClient = dioTestClient ??
+        Dio(BaseOptions(
+            connectTimeout: 100000,
+            receiveTimeout: 100000,
+            headers: {
+              HttpHeaders.authorizationHeader: 'Basic ${httpDetails.authToken}',
+            }));
 
     try {
-      final Response response = await http.get(
-        Uri.parse(url),
-        headers: {HttpHeaders.authorizationHeader: 'Basic $authToken'},
-      );
+      final Response<dynamic> response =
+          await dioClient.get('${httpDetails.baseUrl}/api/$resourceUrl');
 
       return HttpResponse(
-          statusCode: response.statusCode, body: json.decode(response.body));
+          statusCode: response.statusCode ?? 500, body: response.data);
     } catch (error) {
       throw Exception(error);
     }
   }
 
-  static Future<http.Response> delete(String id, String url) async {
-    final http.Response response = await http.delete(
-      Uri.parse('$url/$id'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Basic'
-      },
-    );
+  // static Future<http.Response> delete(String id, String url) async {
+  //   final http.Response response = await http.delete(
+  //     Uri.parse('$url/$id'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //       'Authorization': 'Basic'
+  //     },
+  //   );
 
-    return response;
-  }
+  //   return response;
+  // }
 
-  static setToken({String username, String password}) {
-    return base64Encode(utf8.encode('$username:$password'));
+  static Future<String> getHttpDetails(
+      {String? baseUrl,
+      String? username,
+      String? password,
+      Database? database}) async {
+    if (username != null && password != null) {
+      return base64Encode(utf8.encode('$username:$password'));
+    }
+
+    final User? user = await UserQuery(database: database).getOne();
+
+    return base64Encode(utf8.encode('${user?.username}:${user?.password}'));
   }
 }

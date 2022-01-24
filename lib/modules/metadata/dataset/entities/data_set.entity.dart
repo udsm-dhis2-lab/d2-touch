@@ -1,60 +1,58 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'dataset')
+@Entity(tableName: 'dataset', apiResourceName: 'dataSets')
 class DataSet extends BaseEntity {
-  @Column(type: ColumnType.INTEGER, name: 'timelydays')
+  @Column(type: ColumnType.INTEGER)
   int timelyDays;
 
-  @Column(type: ColumnType.TEXT, name: 'formtype')
+  @Column(type: ColumnType.TEXT)
   String formType;
 
-  @Column(type: ColumnType.TEXT, name: 'description', nullable: true)
-  String description;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? description;
 
-  @Column(type: ColumnType.TEXT, name: 'periodtype')
+  @Column(type: ColumnType.TEXT)
   String periodType;
 
-  @Column(type: ColumnType.INTEGER, name: 'openfutureperiods')
+  @Column(type: ColumnType.INTEGER)
   int openFuturePeriods;
 
-  @Column(type: ColumnType.INTEGER, name: 'expirydays')
+  @Column(type: ColumnType.INTEGER)
   int expiryDays;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'renderhorizontally', nullable: true)
-  bool renderHorizontally;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? renderHorizontally;
 
-  @Column(type: ColumnType.BOOLEAN, name: 'renderastabs', nullable: true)
-  bool renderAsTabs;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? renderAsTabs;
 
-  @Column(
-      type: ColumnType.BOOLEAN, name: 'fieldcombitionrequired', nullable: true)
-  bool fieldCombinationRequired;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? fieldCombinationRequired;
 
   // @Column("simple-json") categoryCombo: any;
   // @Column("simple-json") dataSetElements: any;
   // @Column("simple-json") organisationUnits: any;
 
   DataSet(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      @required String name,
-      @required String shortName,
-      String code,
-      String displayName,
-      @required this.timelyDays,
-      @required this.formType,
-      @required this.periodType,
-      @required this.openFuturePeriods,
-      @required this.expiryDays,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      required String name,
+      required String shortName,
+      String? code,
+      String? displayName,
+      required this.timelyDays,
+      required this.formType,
+      required this.periodType,
+      required this.openFuturePeriods,
+      required this.expiryDays,
       this.renderHorizontally,
       this.renderAsTabs,
       this.description,
       this.fieldCombinationRequired,
-      @required dirty})
+      required dirty})
       : super(
             id: id,
             name: name,
@@ -70,16 +68,16 @@ class DataSet extends BaseEntity {
       id: json['id'],
       name: json['name'],
       created: json['created'],
-      shortName: json['shortname'],
+      shortName: json['shortName'],
       code: json['code'],
-      displayName: json['displayname'],
-      timelyDays: json['timelydays'],
-      formType: json['formtype'],
+      displayName: json['displayName'],
+      timelyDays: json['timelyDays'],
+      formType: json['formType'],
       description: json['description'],
       dirty: json['dirty'],
-      expiryDays: json['expirydays'],
-      openFuturePeriods: json['openfutureperiods'],
-      periodType: json['periodtype'],
+      expiryDays: json['expiryDays'],
+      openFuturePeriods: json['openFuturePeriods'],
+      periodType: json['periodType'],
     );
   }
 

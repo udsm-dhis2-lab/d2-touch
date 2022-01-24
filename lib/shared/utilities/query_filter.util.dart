@@ -1,16 +1,13 @@
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
-import 'package:flutter/foundation.dart';
 
 class QueryFilter {
   String attribute;
   QueryCondition condition;
   dynamic value;
   QueryFilter(
-      {@required this.attribute,
-      @required this.condition,
-      @required this.value});
+      {required this.attribute, required this.condition, required this.value});
 
-  static String getWhereParameters(List<QueryFilter> filters) {
+  static String? getWhereParameters(List<QueryFilter>? filters) {
     if (filters == null) {
       return null;
     }

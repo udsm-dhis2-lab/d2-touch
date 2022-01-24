@@ -3,44 +3,43 @@ import 'package:dhis2_flutter_sdk/core/annotations/entity.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/geometry.entity.dart';
-import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'organisationunit')
+@Entity(tableName: 'organisationunit', apiResourceName: 'organisationUnits')
 class OrganisationUnit extends BaseEntity {
   @Column(type: ColumnType.INTEGER)
-  int level;
+  int? level;
 
   @Column()
   String path;
 
   @Column(nullable: true)
-  bool externalAccess;
+  bool? externalAccess;
 
   @Column()
   String openingDate;
 
   @Column(nullable: true)
-  Geometry geometry;
+  Object? geometry;
 
   @Column(name: 'parent', nullable: true)
-  OrganisationUnit parent;
+  Object? parent;
 
   OrganisationUnit(
-      {@required String id,
-      String created,
-      String lastUpdated,
-      @required String name,
-      @required String shortName,
-      String code,
-      String displayName,
-      @required this.level,
-      @required this.path,
+      {required String id,
+      String? created,
+      String? lastUpdated,
+      required String name,
+      required String shortName,
+      String? code,
+      String? displayName,
+      required this.level,
+      required this.path,
       this.externalAccess,
-      @required this.openingDate,
+      required this.openingDate,
       this.parent,
       this.geometry,
-      @required dirty})
+      required dirty})
       : super(
             id: id,
             name: name,
@@ -57,21 +56,15 @@ class OrganisationUnit extends BaseEntity {
         name: json['name'],
         level: json['level'],
         created: json['created'],
-        shortName: json['shortname'],
+        shortName: json['shortName'],
         code: json['code'],
         path: json['path'],
-        displayName: json['displayname'],
-        externalAccess: json['externalaccess'],
-        openingDate: json['openingdate'],
+        displayName: json['displayName'],
+        externalAccess: json['externalAccess'],
+        openingDate: json['openingDate'],
         dirty: json['dirty'],
-        geometry: json['geometry'] != null
-            ? Geometry.fromJson(json['geometry'])
-            : null,
-        parent: json['parent'].runtimeType == String
-            ? {"id": json['parent']}
-            : json['parent'] != null
-                ? OrganisationUnit.fromJson(json['parent'])
-                : null);
+        geometry: json['geometry']?.toString() ?? null,
+        parent: json['parent']?.toString() ?? null);
   }
 
   Map<String, dynamic> toJson() {
@@ -88,12 +81,11 @@ class OrganisationUnit extends BaseEntity {
     data['externalAccess'] = this.externalAccess;
     data['openingDate'] = this.openingDate;
     data['dirty'] = this.dirty;
+    data['geometry'] = this.geometry;
     if (this.parent != null) {
-      data['parent'] = this.parent.toJson();
+      data['parent'] = this.parent;
     }
-    if (this.geometry != null) {
-      data['geometry'] = this.geometry.toJson();
-    }
+
     return data;
   }
 }

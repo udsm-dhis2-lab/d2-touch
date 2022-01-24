@@ -1,9 +1,8 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:flutter/foundation.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'user')
+@Entity(tableName: 'user', apiResourceName: 'users')
 class User extends BaseEntity {
   @Column()
   final String username;
@@ -17,45 +16,49 @@ class User extends BaseEntity {
   @Column()
   final String surname;
 
-  @Column(nullable: true)
-  final String teiSearchOrganisationUnits;
+  @Column()
+  final String baseUrl;
 
   @Column(nullable: true)
-  final String organisationUnits;
+  final String? teiSearchOrganisationUnits;
 
   @Column(nullable: true)
-  final String dataViewOrganisationUnits;
+  final String? organisationUnits;
 
   @Column(nullable: true)
-  final String authorities;
+  final String? dataViewOrganisationUnits;
 
   @Column(nullable: true)
-  final String programs;
+  final String? authorities;
 
   @Column(nullable: true)
-  final String dataSets;
+  final String? programs;
+
+  @Column(nullable: true)
+  final String? dataSets;
 
   @Column()
   final bool isLoggedIn;
 
   User(
-      {@required String id,
-      @required this.username,
-      @required this.password,
-      @required this.firstName,
-      @required this.surname,
-      String name,
-      String shortName,
-      String displayName,
-      String code,
+      {required String id,
+      required this.username,
+      required this.password,
+      required this.firstName,
+      required this.surname,
+      required String name,
+      required this.baseUrl,
+      String? shortName,
+      String? displayName,
+      String? code,
       this.teiSearchOrganisationUnits,
       this.organisationUnits,
       this.dataViewOrganisationUnits,
       this.authorities,
       this.programs,
       this.dataSets,
-      this.isLoggedIn,
-      @required dirty})
+      required this.isLoggedIn,
+      required dirty})
       : super(id: id, name: name, dirty: dirty);
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -66,10 +69,11 @@ class User extends BaseEntity {
         firstName: json['firstName'],
         surname: json['surname'],
         name: json['name'],
+        baseUrl: json['baseUrl'],
         teiSearchOrganisationUnits:
-            json['teiSearchorganisationUnits'].toString(),
+            json['teiSearchOrganisationUnits'].toString(),
         organisationUnits: json['organisationUnits'].toString(),
-        dataViewOrganisationUnits: json['dataVieworganisationUnits'].toString(),
+        dataViewOrganisationUnits: json['dataViewOrganisationUnits'].toString(),
         authorities: json['authorities'].toString(),
         programs: json['programs'].toString(),
         dataSets: json['datasets'].toString(),
@@ -88,10 +92,11 @@ class User extends BaseEntity {
     data['password'] = this.password;
     data['teiSearchOrganisationUnits'] = this.teiSearchOrganisationUnits;
     data['organisationUnits'] = this.organisationUnits;
-    data['dataVieworganisationUnits'] = this.dataViewOrganisationUnits;
+    data['dataViewOrganisationUnits'] = this.dataViewOrganisationUnits;
     data['authorities'] = this.authorities;
     data['programs'] = this.programs;
     data['isLoggedIn'] = this.isLoggedIn;
+    data['baseUrl'] = this.baseUrl;
 
     return data;
   }
