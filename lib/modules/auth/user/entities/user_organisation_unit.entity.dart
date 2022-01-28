@@ -18,7 +18,7 @@ class UserOrganisationUnit extends BaseEntity {
 
   UserOrganisationUnit(
       {required String id,
-      String? name,
+      required String name,
       required this.orgUnit,
       required this.user,
       required this.type,

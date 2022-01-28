@@ -15,6 +15,7 @@ import 'core/database/database_manager.dart';
 import 'modules/auth/user/entities/user.entity.dart';
 import 'modules/auth/user/models/login-response.model.dart';
 import 'modules/auth/user/queries/user.query.dart';
+import 'modules/auth/user/queries/user_organisation_unit.query.dart';
 import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
 
@@ -118,8 +119,10 @@ class D2Touch {
     userData['isLoggedIn'] = true;
     userData['username'] = username;
     userData['baseUrl'] = url;
-    final user = User.fromJson(userData);
+    final user = User.fromApi(userData);
     await userQuery.setData(user).save();
+
+    await UserOrganisationUnitQuery().setData(user.organisationUnits).save();
 
     return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }

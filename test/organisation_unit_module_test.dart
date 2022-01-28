@@ -1,6 +1,5 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_organisation_unit.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user_organisation_unit.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
@@ -9,8 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'organisation_unit_module_test.reflectable.dart';
 import '../sample/current_user.sample.dart';
+import 'organisation_unit_module_test.reflectable.dart';
 
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +39,7 @@ void main() async {
       D2Touch.organisationUnitModule.organisationUnit;
 
   final organisationUnit = OrganisationUnit(
-      id: 'test1',
+      id: 'ImspTQPwCqd',
       name: "Test 1",
       level: 1,
       path: 'test1',
@@ -55,15 +54,18 @@ void main() async {
     expect(insertResult, 1);
   });
 
-  var result = await orgUnitQuery.byId('test1').getOne();
+  var result = await orgUnitQuery.byId('ImspTQPwCqd').getOne();
 
   test('should return saved details', () {
-    expect(result!.id, 'test1');
+    expect(result!.id, 'ImspTQPwCqd');
     expect(result!.name, 'Test 1');
     expect(result!.parent, '{id: qtr8GGlm4gg}');
   });
 
-  var userOrgUnits = await orgUnitQuery.getUserOrgUnits();
+  List<OrganisationUnit>? userOrgUnits = await orgUnitQuery.getUserOrgUnits();
 
-  print(userOrgUnits);
+  test('should return user organisation units', () {
+    expect(userOrgUnits?[0].id, 'ImspTQPwCqd');
+    expect(userOrgUnits?[0].name, 'Test 1');
+  });
 }

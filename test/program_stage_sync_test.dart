@@ -12,6 +12,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'program_stage_sync_test.reflectable.dart';
+import '../sample/current_user.sample.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,117 +28,6 @@ void main() async {
   var db = await databaseFactory.openDatabase(inMemoryDatabasePath);
 
   UserQuery userQuery = UserQuery(database: db);
-
-  Map<String, dynamic> userData = {
-    "lastUpdated": "2018-12-03T13:24:26.356",
-    "id": "xE7jOejl9FI",
-    "created": "2013-04-18T17:15:08.407",
-    "name": "John Traore",
-    "birthday": "1971-04-08T00:00:00.000",
-    "education": "Master of super using",
-    "gender": "gender_male",
-    "displayName": "John Traore",
-    "jobTitle": "Super user",
-    "externalAccess": false,
-    "skype": "john.traore",
-    "twitter": "john.traore",
-    "surname": "Traore",
-    "employer": "DHIS",
-    "facebookMessenger": "john.traore",
-    "introduction": "I am the super user of DHIS 2",
-    "email": "dummy@dhis2.org",
-    "whatsApp": "+123123123123",
-    "languages": "English",
-    "telegram": "john.traore",
-    "sharing": {"external": false, "users": {}, "userGroups": {}},
-    "lastCheckedInterpretations": "2016-10-13T11:51:34.317",
-    "firstName": "John",
-    "nationality": "Sierra Leone",
-    "interests": "Football, swimming, singing, dancing",
-    "favorite": false,
-    "access": {
-      "read": true,
-      "update": true,
-      "externalize": false,
-      "delete": true,
-      "write": true,
-      "manage": true
-    },
-    "userCredentials": {
-      "code": "admin",
-      "lastUpdated": "2022-01-10T12:20:35.060",
-      "id": "ZyjSDLHGPv4",
-      "created": "2013-04-18T17:15:08.401",
-      "name": "John Traore",
-      "lastLogin": "2022-01-10T12:20:35.059",
-      "displayName": "John Traore",
-      "externalAuth": false,
-      "externalAccess": false,
-      "disabled": false,
-      "twoFA": false,
-      "passwordLastUpdated": "2014-12-18T20:56:05.264",
-      "invitation": false,
-      "sharing": {"external": false, "users": {}, "userGroups": {}},
-      "selfRegistered": false,
-      "favorite": false,
-      "username": "admin",
-      "userInfo": {"id": "xE7jOejl9FI"},
-      "access": {
-        "read": true,
-        "update": true,
-        "externalize": false,
-        "delete": true,
-        "write": true,
-        "manage": true
-      },
-      "lastUpdatedBy": {
-        "displayName": "John Traore",
-        "name": "John Traore",
-        "id": "xE7jOejl9FI",
-        "username": "admin"
-      },
-      "createdBy": {
-        "displayName": "John Traore",
-        "name": "John Traore",
-        "id": "xE7jOejl9FI",
-        "username": "admin"
-      },
-      "user": {
-        "displayName": "John Traore",
-        "name": "John Traore",
-        "id": "xE7jOejl9FI",
-        "username": "admin"
-      },
-      "favorites": [],
-      "cogsDimensionConstraints": [],
-      "catDimensionConstraints": [],
-      "translations": [],
-      "userGroupAccesses": [],
-      "attributeValues": [],
-      "userRoles": [
-        {"id": "UYXOT4A7JMI"},
-        {"id": "Ufph3mGRmMo"}
-      ],
-      "userAccesses": []
-    },
-    "settings": {},
-    "favorites": [],
-    "teiSearchOrganisationUnits": [],
-    "translations": [],
-    "organisationUnits": [
-      {"id": "ImspTQPwCqd"}
-    ],
-    "dataViewOrganisationUnits": [],
-    "userGroupAccesses": [],
-    "attributeValues": [],
-    "userGroups": [
-      {"id": "Kk12LkEWtXp"},
-    ],
-    "userAccesses": [],
-    "authorities": [],
-    "programs": ["eBAyeGv0exc"],
-    "dataSets": ["Nyh6laLdBEJ"]
-  };
 
   final dhisProgramStages = {
     "pager": {"page": 1, "pageCount": 1, "total": 29, "pageSize": 50},
@@ -14818,7 +14708,7 @@ void main() async {
   userData['isLoggedIn'] = true;
   userData['username'] = 'admin';
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.11';
-  final user = User.fromJson(userData);
+  final user = User.fromApi(userData);
   await userQuery.setData(user).save();
   final programStageQuery = ProgramStageQuery(database: db);
 

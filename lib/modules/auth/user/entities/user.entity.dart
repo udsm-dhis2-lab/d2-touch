@@ -98,6 +98,7 @@ class User extends BaseEntity {
         organisationUnits: json['organisationUnits']
             .map<UserOrganisationUnit>((orgUnit) => UserOrganisationUnit(
                 id: '${json['id']}_${orgUnit['id']}',
+                name: '${json['id']}_${orgUnit['id']}',
                 orgUnit: orgUnit['id'],
                 user: json['id'],
                 type: 'DATA_VIEW',

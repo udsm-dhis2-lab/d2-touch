@@ -34,7 +34,7 @@ void main() async {
   userData['isLoggedIn'] = true;
   userData['username'] = 'admin';
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.11';
-  final user = User.fromJson(userData);
+  final user = User.fromApi(userData);
   await userQuery.setData(user).save();
   final organisationUnitQuery = OrganisationUnitQuery(database: db);
 
