@@ -5,7 +5,7 @@ final Map<String, dynamic> sampleDataElements = {
     "total": 1035,
     "pageSize": 50,
     "nextPage":
-        "https://play.dhis2.org/2.35.11/api/dataElements.json?page=2&paging=true&fields=id%2Cname%2CdisplayName%2CshortName%2ClastUpdated%2Ccreated%2Ccode%2Cdirty%2CformName%2CvalueType%2CaggregationType%2Cdescription"
+        "https://play.dhis2.org/2.35.11/api/dataElements.json?page=2&paging=false&fields=id%2Cname%2CdisplayName%2CshortName%2ClastUpdated%2Ccreated%2Ccode%2Cdirty%2CformName%2CvalueType%2CaggregationType%2Cdescription"
   },
   "dataElements": [
     {
