@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_organisation_unit.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
@@ -22,11 +25,11 @@ class User extends BaseEntity {
   @Column(nullable: true)
   final String? teiSearchOrganisationUnits;
 
-  @Column(nullable: true)
-  final String? organisationUnits;
+  @OneToMany(table: UserOrganisationUnit)
+  List<UserOrganisationUnit>? organisationUnits;
 
   @Column(nullable: true)
-  final String? dataViewOrganisationUnits;
+  final dynamic dataViewOrganisationUnits;
 
   @Column(nullable: true)
   final String? authorities;
@@ -72,8 +75,35 @@ class User extends BaseEntity {
         baseUrl: json['baseUrl'],
         teiSearchOrganisationUnits:
             json['teiSearchOrganisationUnits'].toString(),
-        organisationUnits: json['organisationUnits'].toString(),
-        dataViewOrganisationUnits: json['dataViewOrganisationUnits'].toString(),
+        organisationUnits: json['organisationUnits'],
+        dataViewOrganisationUnits: json['dataViewOrganisationUnits'],
+        authorities: json['authorities'].toString(),
+        programs: json['programs'].toString(),
+        dataSets: json['datasets'].toString(),
+        isLoggedIn: json['isLoggedIn'],
+        dirty: false);
+  }
+
+  factory User.fromApi(Map<String, dynamic> json) {
+    return User(
+        id: json['id'],
+        username: json['username'],
+        password: json['password'],
+        firstName: json['firstName'],
+        surname: json['surname'],
+        name: json['name'],
+        baseUrl: json['baseUrl'],
+        teiSearchOrganisationUnits:
+            json['teiSearchOrganisationUnits'].toString(),
+        organisationUnits: json['organisationUnits']
+            .map<UserOrganisationUnit>((orgUnit) => UserOrganisationUnit(
+                id: '${json['id']}_${orgUnit['id']}',
+                orgUnit: orgUnit['id'],
+                user: json['id'],
+                type: 'DATA_VIEW',
+                dirty: false))
+            .toList(),
+        dataViewOrganisationUnits: json['dataViewOrganisationUnits'],
         authorities: json['authorities'].toString(),
         programs: json['programs'].toString(),
         dataSets: json['datasets'].toString(),

@@ -83,7 +83,7 @@ class Program extends BaseEntity {
   // @OneToMany(() => ProgramRuleEntity, (programRule) => programRule.program)
   // programRules: ProgramRuleEntity[];
 
-  @OneToMany()
+  @OneToMany(table: ProgramStage)
   List<ProgramStage>? programStages;
 
   Program(

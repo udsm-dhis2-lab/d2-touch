@@ -326,16 +326,22 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         data[column.name as String] =
             entity[column.attributeName] == true ? 1 : 0;
       } else if (column.relation != null) {
-        final entityByAttribute = entity[column.attributeName];
+        if (column.relation?.relationType != RelationType.OneToMany) {
+          final entityByAttribute = entity[column.attributeName];
 
-        if (entityByAttribute != null) {
-          data[column.name as String] =
-              entityByAttribute[column.relation?.referencedColumn];
+          if (entityByAttribute != null) {
+            data[column.name as String] =
+                entityByAttribute.runtimeType == String
+                    ? entityByAttribute
+                    : entityByAttribute[column.relation?.referencedColumn];
+          }
         }
-      } else if (entity[column.attributeName] is List) {
-        data[column.name as String] = entity[column.attributeName].toString();
       } else {
-        data[column.name as String] = entity[column.attributeName];
+        if (entity[column.attributeName] is List) {
+          data[column.name as String] = entity[column.attributeName].toString();
+        } else {
+          data[column.name as String] = entity[column.attributeName];
+        }
       }
     });
 
@@ -347,6 +353,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
     this.columns.forEach((column) {
       var value = objectMap[column.name];
+
       if (value.runtimeType == int && column.type == ColumnType.BOOLEAN) {
         resultMap[column.name as String] = value == 1 ? true : false;
       } else if (column.relation != null) {
@@ -359,6 +366,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         resultMap[column.name as String] = value;
       }
     });
+
     ClassMirror classMirror =
         AnnotationReflectable.reflectType(T) as ClassMirror;
 
@@ -389,6 +397,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
       case RelationType.OneToMany:
         return value.toList().map((valueItem) {
+          print('REFERENCED ENTITY:: ${relation.referencedEntity?.tableName}');
           Map<String, dynamic> relationMap = {};
 
           // relation.referencedEntityColumns.forEach((column) {
@@ -402,7 +411,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
           // });
 
           return relation.referencedEntity?.classMirror!
-              .newInstance('fromJson', [value]);
+              .newInstance('fromJson', [valueItem]);
         });
 
       default:

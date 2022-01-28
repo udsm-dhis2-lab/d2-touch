@@ -43,7 +43,7 @@ class Event extends BaseEntity {
   @ManyToOne(joinColumnName: 'enrollment', table: Enrollment)
   dynamic enrollment;
 
-  @OneToMany()
+  @OneToMany(table: EventDataValue)
   List<EventDataValue>? dataValues;
 
   Event(

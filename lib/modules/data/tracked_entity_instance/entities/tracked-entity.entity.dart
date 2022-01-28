@@ -22,10 +22,10 @@ class TrackedEntityInstance extends BaseEntity {
   @Column()
   bool? inactive;
 
-  @OneToMany()
+  @OneToMany(table: TrackedEntityAttributeValue)
   List<TrackedEntityAttributeValue>? attributes;
 
-  @OneToMany()
+  @OneToMany(table: Enrollment)
   List<Enrollment>? enrollments;
 
   TrackedEntityInstance(
@@ -44,7 +44,7 @@ class TrackedEntityInstance extends BaseEntity {
 
   factory TrackedEntityInstance.fromJson(Map<String, dynamic> json) {
     return TrackedEntityInstance(
-        id: json['id'],
+        id: json['id'] ?? json['trackedEntityInstance'],
         orgUnit: json['orgUnit'],
         trackedEntityInstance: json['trackedEntityInstance'],
         trackedEntityType: json['trackedEntityType'],
@@ -57,7 +57,7 @@ class TrackedEntityInstance extends BaseEntity {
                 .toList()
             : null,
         attributes: json['attributes'] != null
-            ? List<dynamic>.from(json['attributes'])
+            ? List<Map<String, dynamic>>.from(json['attributes'])
                 .map((attribute) =>
                     TrackedEntityAttributeValue.fromJson(attribute))
                 .toList()

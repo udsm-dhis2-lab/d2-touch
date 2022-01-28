@@ -128,14 +128,20 @@ class Column {
                   AnnotationReflectable.reflectType(manyToOneColumn.table)
                       as ClassMirror)));
     } else if (variableElement is OneToMany) {
+      OneToMany oneToManyColumn = variableElement;
+
       return Column(
           type: ColumnType.TEXT,
           name: columnName,
           attributeName: columnName,
           relation: ColumnRelation(
-              referencedColumn: 'id',
-              attributeName: columnName,
-              relationType: RelationType.OneToMany));
+            referencedColumn: 'id',
+            attributeName: columnName,
+            relationType: RelationType.OneToMany,
+            referencedEntity: Entity.getEntityDefinition(
+                AnnotationReflectable.reflectType(oneToManyColumn.table)
+                    as ClassMirror),
+          ));
     } else if (variableElement is OneToOne) {}
 
     return null;

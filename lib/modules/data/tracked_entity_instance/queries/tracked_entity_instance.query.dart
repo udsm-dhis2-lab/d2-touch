@@ -56,13 +56,17 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return this;
   }
 
-  TrackedEntityInstanceQuery setOrgUnit(String orgUnit) {
+  TrackedEntityInstanceQuery byOrgUnit(String orgUnit) {
     this.orgUnit = orgUnit;
     return this;
   }
 
-  TrackedEntityInstanceQuery setProgram(String program) {
+  TrackedEntityInstanceQuery byProgram(String program) {
     this.program = program;
     return this;
+  }
+
+  String get dhisUrl {
+    return 'trackedEntityInstances.json?ou=${this.orgUnit}&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=lastUpdated:desc&fields=*';
   }
 }

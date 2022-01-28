@@ -24,7 +24,7 @@ class Enrollment extends BaseEntity {
   @Column()
   bool? synced;
 
-  @OneToMany()
+  @OneToMany(table: Event)
   List<Event>? events;
 
   @ManyToOne(
