@@ -397,7 +397,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
       case RelationType.OneToMany:
         return value.toList().map((valueItem) {
-          print('REFERENCED ENTITY:: ${relation.referencedEntity?.tableName}');
           Map<String, dynamic> relationMap = {};
 
           // relation.referencedEntityColumns.forEach((column) {

@@ -57,7 +57,7 @@ void main() async {
   List<TrackedEntityInstance> trackedEntityInstances =
       await trackedEntityInstanceQuery.get();
 
-  test('should store all incoming program metadata', () {
-    expect(trackedEntityInstances.length, 14);
+  test('should store all incoming tracked entity instances', () {
+    expect(trackedEntityInstances.length, 32);
   });
 }

@@ -48,7 +48,7 @@ class Enrollment extends BaseEntity {
 
   factory Enrollment.fromJson(Map<String, dynamic> json) {
     return Enrollment(
-        id: json['id'],
+        id: json['enrollment'],
         enrollment: json['enrollment'],
         incidentDate: json['incidentDate'],
         enrollmentDate: json['enrollmentDate'],
@@ -59,11 +59,11 @@ class Enrollment extends BaseEntity {
         synced: json['synced'],
         events: json['events'] != null
             ? List<dynamic>.from(json['events'])
-                .map((event) => Event.fromJson(event))
+                .map((event) => Event.fromJson({...event, 'dirty': false}))
                 .toList()
             : null,
         trackedEntityInstance: json['trackedEntityInstance'],
-        dirty: json['dirty']);
+        dirty: json['dirty'] ?? false);
   }
 
   Map<String, dynamic> toJson() {

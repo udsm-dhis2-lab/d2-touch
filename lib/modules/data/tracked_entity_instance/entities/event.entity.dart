@@ -70,7 +70,7 @@ class Event extends BaseEntity {
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-        id: json['id'],
+        id: json['event'],
         event: json['event'],
         orgUnit: json['orgUnit'],
         status: json['status'],
@@ -83,13 +83,17 @@ class Event extends BaseEntity {
         trackedEntityInstance: json['trackedEntityInstance'],
         attributeCategoryOptions: json['attributeCategoryOptions'],
         attributeOptionCombo: json['attributeOptionCombo'],
-        notes: json['notes'],
+        notes: json['notes'].toString(),
         eventType: json['eventType'],
         programStage: json['programStage'],
         enrollment: json['enrollment'],
         dataValues: json['dataValues'] != null
             ? List<dynamic>.from(json['dataValues'])
-                .map((event) => EventDataValue.fromJson(event))
+                .map((event) => EventDataValue.fromJson({
+                      ...event,
+                      "id": '${json['event']}_${event['dataElement']}',
+                      "dirty": false
+                    }))
                 .toList()
             : null,
         dirty: json['dirty']);

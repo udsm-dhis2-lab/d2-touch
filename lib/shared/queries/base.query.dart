@@ -11,6 +11,7 @@ import 'package:dhis2_flutter_sdk/shared/utilities/save_option.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/sort_order.util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:reflectable/mirrors.dart';
 import 'package:sqflite/sqflite.dart';
 
 class BaseQuery<T extends BaseEntity> {
@@ -222,7 +223,11 @@ class BaseQuery<T extends BaseEntity> {
 
     this.data = data.map((dataItem) {
       dataItem['dirty'] = false;
-      return this.repository.getObject<T>(dataItem);
+      ClassMirror classMirror =
+          AnnotationReflectable.reflectType(T) as ClassMirror;
+
+      return classMirror.newInstance('fromJson', [dataItem]) as T;
+      // return this.repository.getObject<T>(dataItem);
     }).toList();
 
     callback(
