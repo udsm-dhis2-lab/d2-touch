@@ -1,7 +1,7 @@
 library dhis2_flutter_sdk;
 
 import 'package:dhis2_flutter_sdk/modules/auth/user/user.module.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/tracked_entity_instance.module.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/tracked_entity_instance.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/dataset/data_set.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/organisation_unit.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/program.module.dart';

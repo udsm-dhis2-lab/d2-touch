@@ -1,8 +1,8 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/enrollment.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/tracked-entity.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:reflectable/mirrors.dart';
 import 'package:sqflite/sqflite.dart';

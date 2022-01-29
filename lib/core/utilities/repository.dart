@@ -220,16 +220,25 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     }
 
     final queue = Queue(parallel: 50);
+    num availableItemCount = 0;
 
     this.oneToManyColumns.forEach((Column column) {
       final List data = entity.toJson()[column.relation?.attributeName];
-      data.forEach((dataItem) {
-        queue.add(() => insertRelationData(
-            columnRelation: column.relation as ColumnRelation,
-            entity: dataItem,
-            database: db));
-      });
+      if (data.isNotEmpty) {
+        availableItemCount++;
+        data.forEach((dataItem) {
+          queue.add(() => insertRelationData(
+              columnRelation: column.relation as ColumnRelation,
+              entity: dataItem,
+              database: db));
+        });
+      }
     });
+
+    if (availableItemCount == 0) {
+      queue.cancel();
+      return saveDataResponse;
+    }
 
     await queue.onComplete;
     return saveDataResponse;
@@ -246,6 +255,40 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
     final saveDataResponse =
         db.insert(columnRelation.referencedEntity?.tableName as String, data);
+
+    final List<Column?>? oneToManyColumns = columnRelation
+        .referencedEntityColumns
+        ?.where((column) =>
+            column?.relation?.relationType == RelationType.OneToMany)
+        .toList();
+
+    if (oneToManyColumns!.isEmpty) {
+      return saveDataResponse;
+    }
+
+    final queue = Queue(parallel: 50);
+    num availableItemCount = 0;
+
+    oneToManyColumns.forEach((Column? column) {
+      final List data = entity.toJson()[column?.relation?.attributeName];
+      if (data.isNotEmpty) {
+        availableItemCount++;
+        data.forEach((dataItem) {
+          queue.add(() => insertRelationData(
+              columnRelation: column?.relation as ColumnRelation,
+              entity: dataItem,
+              database: db));
+        });
+      }
+    });
+
+    if (availableItemCount == 0) {
+      queue.cancel();
+      return saveDataResponse;
+    }
+
+    await queue.onComplete;
+
     return saveDataResponse;
   }
 

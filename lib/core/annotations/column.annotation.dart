@@ -145,12 +145,10 @@ class Column {
               referencedEntity: Entity.getEntityDefinition(
                   AnnotationReflectable.reflectType(oneToManyColumn.table)
                       as ClassMirror),
-              referencedEntityColumns: ignoreRelationColumns
-                  ? null
-                  : Entity.getEntityColumns(
-                      AnnotationReflectable.reflectType(oneToManyColumn.table)
-                          as ClassMirror,
-                      true)));
+              referencedEntityColumns: Entity.getEntityColumns(
+                  AnnotationReflectable.reflectType(oneToManyColumn.table)
+                      as ClassMirror,
+                  true)));
     } else if (variableElement is OneToOne) {}
 
     return null;

@@ -1,7 +1,7 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/event.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
+import 'event.entity.dart';
 import 'tracked-entity.entity.dart';
 
 @AnnotationReflectable
