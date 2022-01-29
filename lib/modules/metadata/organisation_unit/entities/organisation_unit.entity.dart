@@ -51,6 +51,7 @@ class OrganisationUnit extends BaseEntity {
             dirty: dirty);
 
   factory OrganisationUnit.fromJson(Map<String, dynamic> json) {
+    final parent = json['parent'];
     return OrganisationUnit(
         id: json['id'],
         name: json['name'],
@@ -64,7 +65,11 @@ class OrganisationUnit extends BaseEntity {
         openingDate: json['openingDate'],
         dirty: json['dirty'],
         geometry: json['geometry']?.toString() ?? null,
-        parent: json['parent']?.toString() ?? null);
+        parent: parent != null
+            ? parent is String
+                ? parent
+                : parent['id'] ?? parent
+            : null);
   }
 
   Map<String, dynamic> toJson() {

@@ -58,4 +58,12 @@ void main() async {
   test('should store all incoming organisation unit metadata', () {
     expect(orgUnits.length, 50);
   });
+
+  OrganisationUnit? childOrgUnit = await OrganisationUnitQuery()
+      .where(attribute: 'parent', value: 'qtr8GGlm4gg')
+      .getOne();
+
+  test('should return result given parent id is passed where clause', () {
+    expect(childOrgUnit?.parent, 'qtr8GGlm4gg');
+  });
 }
