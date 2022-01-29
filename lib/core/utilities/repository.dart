@@ -112,7 +112,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       return dataResult;
     }
 
-    final String? whereParameters = QueryFilter.getWhereParameters(filters);
+    final String? whereParameters =
+        QueryFilter.getWhereParameters(this.columns, filters);
     final String? orderParameters =
         SortOrderUtil.getSortOrderParameters(sortOrder);
 

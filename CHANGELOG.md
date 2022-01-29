@@ -1,4 +1,8 @@
-## [1.0.0-alpha.3] - 17/01/2022
+## [1.0.0-alpha.4] - 29/01/2022
+
+- Support to save tracked entity instances together with their attributes and enrollment details
+
+## [1.0.0-alpha.3] - 28/01/2022
 
 - Support to fetch user organisation unit
 
