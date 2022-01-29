@@ -92,4 +92,44 @@ void main() async {
   test('should store all incoming event data values', () {
     expect(eventDataValues.length, 442);
   });
+
+  List<TrackedEntityInstance>? trackedEntityInstanceSecondDownload =
+      await trackedEntityInstanceQuery
+          .byOrgUnit('DiszpKrYNg8')
+          .byProgram('IpHINAT79UW')
+          .download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  List<TrackedEntityInstance> secondTrackedEntityInstances =
+      await TrackedEntityInstanceQuery().get();
+  test('should updated all incoming tracked entity instances', () {
+    expect(secondTrackedEntityInstances.length, 32);
+  });
+
+  List<Enrollment> secondEnrollments =
+      await EnrollmentQuery(database: db).get();
+  test('should store all incoming enrollments', () {
+    expect(secondEnrollments.length, 34);
+  });
+
+  List<TrackedEntityAttributeValue> secondAttributes =
+      await TrackedEntityAttributeValueQuery(database: db).get();
+
+  test('should store all incoming attributes', () {
+    expect(secondAttributes.length, 98);
+  });
+
+  List<Event> secondEvents = await EventQuery(database: db).get();
+
+  test('should store all incoming events', () {
+    expect(secondEvents.length, 67);
+  });
+
+  List<EventDataValue> secondEventDataValues =
+      await EventDataValueQuery(database: db).get();
+
+  test('should store all incoming event data values', () {
+    expect(secondEventDataValues.length, 442);
+  });
 }
