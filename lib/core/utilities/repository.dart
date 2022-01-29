@@ -213,6 +213,11 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
     final saveDataResponse = db.insert(this.entity.tableName, data);
+
+    if (this.oneToManyColumns.isEmpty) {
+      return saveDataResponse;
+    }
+
     final queue = Queue(parallel: 50);
 
     this.oneToManyColumns.forEach((Column column) {

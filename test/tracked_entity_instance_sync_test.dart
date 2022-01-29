@@ -2,9 +2,11 @@ import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/enrollment.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/event.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/tracked-entity.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/queries/enrollment.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/queries/event.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/queries/tracked_entity_attribute_value.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/queries/tracked_entity_instance.query.dart';
 import 'package:dio/dio.dart';
@@ -74,5 +76,11 @@ void main() async {
 
   test('should store all incoming attributes', () {
     expect(attributes.length, 98);
+  });
+
+  List<Event> events = await EventQuery(database: db).get();
+
+  test('should store all incoming events', () {
+    expect(events.length, 98);
   });
 }
