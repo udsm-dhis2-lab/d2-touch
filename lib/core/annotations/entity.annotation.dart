@@ -41,14 +41,17 @@ class Entity {
         options: entity != null ? entity.options : null);
   }
 
-  static List<Column> getEntityColumns(ClassMirror entityClassMirror) {
+  static List<Column> getEntityColumns(
+      ClassMirror entityClassMirror, bool ignoreRelationColumns) {
     List<Column> columns = [];
     for (String key in entityClassMirror.superclass!.declarations.keys) {
       var value = entityClassMirror.superclass!.declarations[key];
 
       if (value is VariableMirror) {
         VariableMirror variableMirror = value;
-        Column column = Column.getColumn(variableMirror, key) as Column;
+        Column column =
+            Column.getColumn(variableMirror, key, ignoreRelationColumns)
+                as Column;
         columns.add(column);
       }
     }
@@ -57,7 +60,9 @@ class Entity {
       var value = entityClassMirror.declarations[key];
       if (value is VariableMirror) {
         VariableMirror variableMirror = value;
-        Column column = Column.getColumn(variableMirror, key) as Column;
+        Column column =
+            Column.getColumn(variableMirror, key, ignoreRelationColumns)
+                as Column;
         columns.add(column);
       }
     }

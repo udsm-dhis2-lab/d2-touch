@@ -33,6 +33,7 @@ class Enrollment extends BaseEntity {
 
   Enrollment(
       {required String id,
+      required String name,
       required this.enrollment,
       required this.incidentDate,
       required this.enrollmentDate,
@@ -44,12 +45,13 @@ class Enrollment extends BaseEntity {
       this.synced,
       this.events,
       this.trackedEntityInstance})
-      : super(id: id, dirty: dirty);
+      : super(id: id, name: name, dirty: dirty);
 
   factory Enrollment.fromJson(Map<String, dynamic> json) {
     return Enrollment(
         id: json['enrollment'],
         enrollment: json['enrollment'],
+        name: json['enrollment'],
         incidentDate: json['incidentDate'],
         enrollmentDate: json['enrollmentDate'],
         trackedEntityType: json['trackedEntityType'],
@@ -69,6 +71,7 @@ class Enrollment extends BaseEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['name'] = this.name;
     data['enrollment'] = this.enrollment;
     data['incidentDate'] = this.incidentDate;
     data['enrollmentDate'] = this.enrollmentDate;

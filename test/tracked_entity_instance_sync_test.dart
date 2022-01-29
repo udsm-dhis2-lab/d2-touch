@@ -1,7 +1,11 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/enrollment.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/tracked-entity.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/queries/enrollment.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/queries/tracked_entity_attribute_value.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/queries/tracked_entity_instance.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,8 +60,19 @@ void main() async {
 
   List<TrackedEntityInstance> trackedEntityInstances =
       await trackedEntityInstanceQuery.get();
-
   test('should store all incoming tracked entity instances', () {
     expect(trackedEntityInstances.length, 32);
+  });
+
+  List<Enrollment> enrollments = await EnrollmentQuery(database: db).get();
+  test('should store all incoming enrollments', () {
+    expect(enrollments.length, 34);
+  });
+
+  List<TrackedEntityAttributeValue> attributes =
+      await TrackedEntityAttributeValueQuery(database: db).get();
+
+  test('should store all incoming attributes', () {
+    expect(attributes.length, 98);
   });
 }

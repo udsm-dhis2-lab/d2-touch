@@ -27,7 +27,8 @@ class UserQuery extends BaseQuery<User> {
                   as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(UserOrganisationUnit)
-                  as ClassMirror));
+                  as ClassMirror,
+              false));
       this.relations.add(relation);
     }
 

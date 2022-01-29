@@ -227,7 +227,6 @@ class BaseQuery<T extends BaseEntity> {
           AnnotationReflectable.reflectType(T) as ClassMirror;
 
       return classMirror.newInstance('fromJson', [dataItem]) as T;
-      // return this.repository.getObject<T>(dataItem);
     }).toList();
 
     callback(

@@ -64,6 +64,7 @@ class TrackedEntityInstance extends BaseEntity {
                       ...attribute,
                       'id':
                           '${json['trackedEntityInstance']}_${attribute['attribute']}',
+                      'trackedEntityInstance': json['trackedEntityInstance'],
                       'dirty': false
                     }))
                 .toList()

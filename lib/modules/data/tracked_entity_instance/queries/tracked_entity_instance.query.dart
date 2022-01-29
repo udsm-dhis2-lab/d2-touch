@@ -28,7 +28,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
                   as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(TrackedEntityAttributeValue)
-                  as ClassMirror));
+                  as ClassMirror,
+              false));
       this.relations.add(relation);
     }
 
@@ -49,7 +50,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           referencedEntity: Entity.getEntityDefinition(
               AnnotationReflectable.reflectType(Enrollment) as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
-              AnnotationReflectable.reflectType(Enrollment) as ClassMirror));
+              AnnotationReflectable.reflectType(Enrollment) as ClassMirror,
+              false));
       this.relations.add(relation);
     }
 

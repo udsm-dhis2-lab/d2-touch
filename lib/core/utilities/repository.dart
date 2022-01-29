@@ -13,6 +13,7 @@ import 'query_expression.dart';
 
 abstract class BaseRepository<T extends BaseEntity> {
   List<Column> get columns;
+  List<Column> get oneToManyColumns;
   Entity get entity;
   String get createQuery;
   Future<Database> get database;
@@ -39,7 +40,8 @@ abstract class BaseRepository<T extends BaseEntity> {
   Future<int> deleteByIds({required List<String> ids, Database database});
   Future<int> deleteAll({Database database});
   Future<void> clear({Database database});
-  Map<String, dynamic> sanitizeIncomingData(Map<String, dynamic> entity);
+  Map<String, dynamic> sanitizeIncomingData(
+      {required Map<String, dynamic> entity, required List<Column> columns});
 }
 
 class Repository<T extends BaseEntity> extends BaseRepository<T> {
@@ -207,9 +209,38 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<int> insertOne({required T entity, Database? database}) async {
-    Map<String, dynamic> data = this.sanitizeIncomingData(entity.toJson());
+    Map<String, dynamic> data = this
+        .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
-    return db.insert(this.entity.tableName, data);
+    final saveDataResponse = db.insert(this.entity.tableName, data);
+    final queue = Queue(parallel: 50);
+
+    this.oneToManyColumns.forEach((Column column) {
+      final List data = entity.toJson()[column.relation?.attributeName];
+      data.forEach((dataItem) {
+        queue.add(() => insertRelationData(
+            columnRelation: column.relation as ColumnRelation,
+            entity: dataItem,
+            database: db));
+      });
+    });
+
+    await queue.onComplete;
+    return saveDataResponse;
+  }
+
+  Future insertRelationData(
+      {required ColumnRelation columnRelation,
+      required BaseEntity entity,
+      Database? database}) async {
+    Map<String, dynamic> data = this.sanitizeIncomingData(
+        entity: entity.toJson(),
+        columns: columnRelation.referencedEntityColumns as List<Column>);
+    final Database db = database != null ? database : await this.database;
+
+    final saveDataResponse =
+        db.insert(columnRelation.referencedEntity?.tableName as String, data);
+    return saveDataResponse;
   }
 
   @override
@@ -288,7 +319,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<int> updateOne({required T entity, Database? database}) async {
-    Map<String, dynamic> data = this.sanitizeIncomingData(entity.toJson());
+    Map<String, dynamic> data = this
+        .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
     return db.update(
       this.entity.tableName,
@@ -300,7 +332,14 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   List<Column> get columns => Entity.getEntityColumns(
-      AnnotationReflectable.reflectType(T) as ClassMirror);
+      AnnotationReflectable.reflectType(T) as ClassMirror, false);
+
+  @override
+  List<Column> get oneToManyColumns => this
+      .columns
+      .where(
+          (column) => column.relation?.relationType == RelationType.OneToMany)
+      .toList();
 
   @override
   String get createQuery => QueryExpression.getCreateTableExpression(
@@ -319,9 +358,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   }
 
   @override
-  Map<String, dynamic> sanitizeIncomingData(Map<String, dynamic> entity) {
+  Map<String, dynamic> sanitizeIncomingData(
+      {required Map<String, dynamic> entity, required List<Column> columns}) {
     Map<String, dynamic> data = new Map();
-    this.columns.forEach((column) {
+    columns.forEach((column) {
       if (column.type == ColumnType.BOOLEAN) {
         data[column.name as String] =
             entity[column.attributeName] == true ? 1 : 0;
@@ -397,18 +437,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
       case RelationType.OneToMany:
         return value.toList().map((valueItem) {
-          Map<String, dynamic> relationMap = {};
-
-          // relation.referencedEntityColumns.forEach((column) {
-          //   var relationValue = value[column.name];
-          //   if (relationValue.runtimeType == int &&
-          //       column.type == ColumnType.BOOLEAN) {
-          //     relationMap[column.name] = relationValue == 1 ? true : false;
-          //   } else {
-          //     relationMap[column.name] = relationValue;
-          //   }
-          // });
-
           return relation.referencedEntity?.classMirror!
               .newInstance('fromJson', [valueItem]);
         });

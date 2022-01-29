@@ -23,7 +23,8 @@ class ProgramQuery extends BaseQuery<Program> {
           referencedEntity: Entity.getEntityDefinition(
               AnnotationReflectable.reflectType(ProgramStage) as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
-              AnnotationReflectable.reflectType(ProgramStage) as ClassMirror));
+              AnnotationReflectable.reflectType(ProgramStage) as ClassMirror,
+              false));
       this.relations.add(relation);
     }
 

@@ -93,7 +93,8 @@ class Column {
     }
   }
 
-  static Column? getColumn(VariableMirror variableMirror, String columnName) {
+  static Column? getColumn(VariableMirror variableMirror, String columnName,
+      bool ignoreRelationColumns) {
     dynamic variableElement = variableMirror.metadata[0];
 
     if (variableElement is Column || variableElement is PrimaryColumn) {
@@ -124,9 +125,12 @@ class Column {
               referencedEntity: Entity.getEntityDefinition(
                   AnnotationReflectable.reflectType(manyToOneColumn.table)
                       as ClassMirror),
-              referencedEntityColumns: Entity.getEntityColumns(
-                  AnnotationReflectable.reflectType(manyToOneColumn.table)
-                      as ClassMirror)));
+              referencedEntityColumns: ignoreRelationColumns
+                  ? null
+                  : Entity.getEntityColumns(
+                      AnnotationReflectable.reflectType(manyToOneColumn.table)
+                          as ClassMirror,
+                      ignoreRelationColumns)));
     } else if (variableElement is OneToMany) {
       OneToMany oneToManyColumn = variableElement;
 
@@ -135,13 +139,18 @@ class Column {
           name: columnName,
           attributeName: columnName,
           relation: ColumnRelation(
-            referencedColumn: 'id',
-            attributeName: columnName,
-            relationType: RelationType.OneToMany,
-            referencedEntity: Entity.getEntityDefinition(
-                AnnotationReflectable.reflectType(oneToManyColumn.table)
-                    as ClassMirror),
-          ));
+              referencedColumn: 'id',
+              attributeName: columnName,
+              relationType: RelationType.OneToMany,
+              referencedEntity: Entity.getEntityDefinition(
+                  AnnotationReflectable.reflectType(oneToManyColumn.table)
+                      as ClassMirror),
+              referencedEntityColumns: ignoreRelationColumns
+                  ? null
+                  : Entity.getEntityColumns(
+                      AnnotationReflectable.reflectType(oneToManyColumn.table)
+                          as ClassMirror,
+                      true)));
     } else if (variableElement is OneToOne) {}
 
     return null;

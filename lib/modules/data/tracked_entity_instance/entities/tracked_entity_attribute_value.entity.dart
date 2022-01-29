@@ -16,18 +16,23 @@ class TrackedEntityAttributeValue extends BaseEntity {
   @ManyToOne(
       joinColumnName: 'trackedEntityInstance', table: TrackedEntityInstance)
   dynamic trackedEntityInstance;
+
   TrackedEntityAttributeValue(
       {required String id,
+      required String name,
       required bool dirty,
       required this.attribute,
+      required this.trackedEntityInstance,
       required this.value,
       this.synced})
-      : super(id: id, dirty: dirty);
+      : super(id: id, name: name, dirty: dirty);
 
   factory TrackedEntityAttributeValue.fromJson(Map<String, dynamic> json) {
     return TrackedEntityAttributeValue(
         id: json['id'],
+        name: json['id'],
         attribute: json['attribute'],
+        trackedEntityInstance: json['trackedEntityInstance'],
         value: json['value'],
         dirty: json['dirty']);
   }
@@ -35,8 +40,10 @@ class TrackedEntityAttributeValue extends BaseEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['name'] = this.name;
     data['attribute'] = this.attribute;
     data['value'] = this.value;
+    data['trackedEntityInstance'] = this.trackedEntityInstance;
     return data;
   }
 }
