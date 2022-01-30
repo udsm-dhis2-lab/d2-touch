@@ -1,9 +1,9 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/event_data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 import 'enrollment.entity.dart';
+import 'event_data_value.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'event', apiResourceName: 'events')
@@ -14,27 +14,27 @@ class Event extends BaseEntity {
   String orgUnit;
   @Column()
   String status;
-  @Column()
+  @Column(nullable: true)
   String? eventDate;
-  @Column()
+  @Column(nullable: true)
   String? dueDate;
-  @Column()
+  @Column(nullable: true)
   bool? deleted;
-  @Column()
+  @Column(nullable: true)
   bool? synced;
-  @Column()
+  @Column(nullable: true)
   String? storedBy;
-  @Column()
+  @Column(nullable: true)
   String? coordinate;
-  @Column()
+  @Column(nullable: true)
   String? trackedEntityInstance;
-  @Column()
+  @Column(nullable: true)
   String? attributeCategoryOptions;
-  @Column()
+  @Column(nullable: true)
   String? attributeOptionCombo;
-  @Column()
+  @Column(nullable: true)
   String? notes;
-  @Column()
+  @Column(nullable: true)
   String? eventType;
 
   @ManyToOne(joinColumnName: 'programStage', table: ProgramStage)
@@ -48,6 +48,7 @@ class Event extends BaseEntity {
 
   Event(
       {required String id,
+      required String name,
       required this.event,
       required this.orgUnit,
       required this.status,
@@ -66,11 +67,12 @@ class Event extends BaseEntity {
       required this.programStage,
       this.enrollment,
       this.dataValues})
-      : super(id: id, dirty: dirty);
+      : super(id: id, name: name, dirty: dirty);
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-        id: json['id'],
+        id: json['event'],
+        name: json['event'],
         event: json['event'],
         orgUnit: json['orgUnit'],
         status: json['status'],
@@ -83,13 +85,18 @@ class Event extends BaseEntity {
         trackedEntityInstance: json['trackedEntityInstance'],
         attributeCategoryOptions: json['attributeCategoryOptions'],
         attributeOptionCombo: json['attributeOptionCombo'],
-        notes: json['notes'],
+        notes: json['notes'].toString(),
         eventType: json['eventType'],
         programStage: json['programStage'],
         enrollment: json['enrollment'],
         dataValues: json['dataValues'] != null
             ? List<dynamic>.from(json['dataValues'])
-                .map((event) => EventDataValue.fromJson(event))
+                .map((event) => EventDataValue.fromJson({
+                      ...event,
+                      "id": '${json['event']}_${event['dataElement']}',
+                      "event": json['event'],
+                      "dirty": false
+                    }))
                 .toList()
             : null,
         dirty: json['dirty']);
@@ -98,6 +105,7 @@ class Event extends BaseEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['name'] = this.name;
     data['event'] = this.event;
     data['orgUnit'] = this.orgUnit;
     data['status'] = this.status;

@@ -45,7 +45,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/dataElements.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,formName,valueType,aggregationType,description&paging=true',
+    'https://play.dhis2.org/2.35.11/api/dataElements.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,formName,valueType,aggregationType,description&paging=false',
     (server) => server.reply(200, dhisDataElements),
   );
 

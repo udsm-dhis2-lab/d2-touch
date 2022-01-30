@@ -44,7 +44,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/organisationUnits.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,level,path,externalAccess,openingDate,geometry,parent&paging=true',
+    'https://play.dhis2.org/2.35.11/api/organisationUnits.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,level,path,externalAccess,openingDate,geometry,parent&paging=false',
     (server) => server.reply(200, dhisOrganisationUnits),
   );
 
@@ -57,5 +57,13 @@ void main() async {
 
   test('should store all incoming organisation unit metadata', () {
     expect(orgUnits.length, 50);
+  });
+
+  OrganisationUnit? childOrgUnit = await OrganisationUnitQuery()
+      .where(attribute: 'parent', value: 'qtr8GGlm4gg')
+      .getOne();
+
+  test('should return result given parent id is passed where clause', () {
+    expect(childOrgUnit?.parent, 'qtr8GGlm4gg');
   });
 }

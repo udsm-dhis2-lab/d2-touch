@@ -9,7 +9,7 @@ class DhisUrlGenerator {
 
     final filters = getFilterParams([]);
 
-    return '${query.resourceName}.json?fields=${query.fields?.join(',')}${filters != '' ? '&' + filters : ''}&paging=true';
+    return '${query.resourceName}.json?fields=${query.fields?.join(',')}${filters != '' ? '&' + filters : ''}&paging=false';
   }
 
   static getRelationFields(relations) {

@@ -5,7 +5,7 @@ final Map<String, dynamic> sampleOrganisationUnits = {
     "total": 1361,
     "pageSize": 50,
     "nextPage":
-        "https://play.dhis2.org/2.35.11/api/organisationUnits.json?page=2&paging=true&fields=id%2Cname%2CdisplayName%2CshortName%2ClastUpdated%2Ccreated%2Ccode%2Cdirty%2Clevel%2Cpath%2CexternalAccess%2CopeningDate%2Cgeometry%2Cparent"
+        "https://play.dhis2.org/2.35.11/api/organisationUnits.json?page=2&paging=false&fields=id%2Cname%2CdisplayName%2CshortName%2ClastUpdated%2Ccreated%2Ccode%2Cdirty%2Clevel%2Cpath%2CexternalAccess%2CopeningDate%2Cgeometry%2Cparent"
   },
   "organisationUnits": [
     {

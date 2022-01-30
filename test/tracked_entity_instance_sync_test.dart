@@ -1,8 +1,16 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/tracked-entity.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/queries/tracked_entity_instance.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event_data_value.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/enrollment.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event_data_value.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_instance.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -56,8 +64,72 @@ void main() async {
 
   List<TrackedEntityInstance> trackedEntityInstances =
       await trackedEntityInstanceQuery.get();
+  test('should store all incoming tracked entity instances', () {
+    expect(trackedEntityInstances.length, 32);
+  });
 
-  test('should store all incoming program metadata', () {
-    expect(trackedEntityInstances.length, 14);
+  List<Enrollment> enrollments = await EnrollmentQuery(database: db).get();
+  test('should store all incoming enrollments', () {
+    expect(enrollments.length, 34);
+  });
+
+  List<TrackedEntityAttributeValue> attributes =
+      await TrackedEntityAttributeValueQuery(database: db).get();
+
+  test('should store all incoming attributes', () {
+    expect(attributes.length, 98);
+  });
+
+  List<Event> events = await EventQuery(database: db).get();
+
+  test('should store all incoming events', () {
+    expect(events.length, 67);
+  });
+
+  List<EventDataValue> eventDataValues =
+      await EventDataValueQuery(database: db).get();
+
+  test('should store all incoming event data values', () {
+    expect(eventDataValues.length, 442);
+  });
+
+  List<TrackedEntityInstance>? trackedEntityInstanceSecondDownload =
+      await trackedEntityInstanceQuery
+          .byOrgUnit('DiszpKrYNg8')
+          .byProgram('IpHINAT79UW')
+          .download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  List<TrackedEntityInstance> secondTrackedEntityInstances =
+      await TrackedEntityInstanceQuery().get();
+  test('should updated all incoming tracked entity instances', () {
+    expect(secondTrackedEntityInstances.length, 32);
+  });
+
+  List<Enrollment> secondEnrollments =
+      await EnrollmentQuery(database: db).get();
+  test('should store all incoming enrollments', () {
+    expect(secondEnrollments.length, 34);
+  });
+
+  List<TrackedEntityAttributeValue> secondAttributes =
+      await TrackedEntityAttributeValueQuery(database: db).get();
+
+  test('should store all incoming attributes', () {
+    expect(secondAttributes.length, 98);
+  });
+
+  List<Event> secondEvents = await EventQuery(database: db).get();
+
+  test('should store all incoming events', () {
+    expect(secondEvents.length, 67);
+  });
+
+  List<EventDataValue> secondEventDataValues =
+      await EventDataValueQuery(database: db).get();
+
+  test('should store all incoming event data values', () {
+    expect(secondEventDataValues.length, 442);
   });
 }

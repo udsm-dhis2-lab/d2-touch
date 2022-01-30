@@ -1,7 +1,7 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracked_entity_instance/entities/event.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
+import 'event.entity.dart';
 import 'tracked-entity.entity.dart';
 
 @AnnotationReflectable
@@ -33,6 +33,7 @@ class Enrollment extends BaseEntity {
 
   Enrollment(
       {required String id,
+      required String name,
       required this.enrollment,
       required this.incidentDate,
       required this.enrollmentDate,
@@ -44,12 +45,13 @@ class Enrollment extends BaseEntity {
       this.synced,
       this.events,
       this.trackedEntityInstance})
-      : super(id: id, dirty: dirty);
+      : super(id: id, name: name, dirty: dirty);
 
   factory Enrollment.fromJson(Map<String, dynamic> json) {
     return Enrollment(
-        id: json['id'],
+        id: json['enrollment'],
         enrollment: json['enrollment'],
+        name: json['enrollment'],
         incidentDate: json['incidentDate'],
         enrollmentDate: json['enrollmentDate'],
         trackedEntityType: json['trackedEntityType'],
@@ -59,16 +61,17 @@ class Enrollment extends BaseEntity {
         synced: json['synced'],
         events: json['events'] != null
             ? List<dynamic>.from(json['events'])
-                .map((event) => Event.fromJson(event))
+                .map((event) => Event.fromJson({...event, 'dirty': false}))
                 .toList()
             : null,
         trackedEntityInstance: json['trackedEntityInstance'],
-        dirty: json['dirty']);
+        dirty: json['dirty'] ?? false);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['name'] = this.name;
     data['enrollment'] = this.enrollment;
     data['incidentDate'] = this.incidentDate;
     data['enrollmentDate'] = this.enrollmentDate;
