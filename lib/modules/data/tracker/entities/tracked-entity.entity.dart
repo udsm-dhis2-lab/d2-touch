@@ -43,6 +43,7 @@ class TrackedEntityInstance extends BaseEntity {
       : super(id: id, name: name, dirty: dirty);
 
   factory TrackedEntityInstance.fromJson(Map<String, dynamic> json) {
+    final attributes = json['attributes'];
     return TrackedEntityInstance(
         id: json['id'] ?? json['trackedEntityInstance'],
         name: json['trackedEntityInstance'],
@@ -58,14 +59,14 @@ class TrackedEntityInstance extends BaseEntity {
                     Enrollment.fromJson({...enrollment, 'dirty': false}))
                 .toList()
             : null,
-        attributes: json['attributes'] != null
-            ? List<Map<String, dynamic>>.from(json['attributes'])
+        attributes: attributes != null
+            ? List<Map<String, dynamic>>.from(attributes)
                 .map((attribute) => TrackedEntityAttributeValue.fromJson({
                       ...attribute,
-                      'id':
+                      'id': attribute['id'] ??
                           '${json['trackedEntityInstance']}_${attribute['attribute']}',
                       'trackedEntityInstance': json['trackedEntityInstance'],
-                      'dirty': false
+                      'dirty': attribute['dirty'] ?? false
                     }))
                 .toList()
             : null,

@@ -14,8 +14,10 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
   TrackedEntityInstanceQuery withAttributes() {
     final attributeValue = Repository<TrackedEntityAttributeValue>();
-    final Column? relationColumn = attributeValue.columns.firstWhere((column) =>
-        column.relation?.referencedEntity?.tableName == this.tableName);
+
+    final Column? relationColumn = attributeValue.columns.firstWhere((column) {
+      return column.relation?.referencedEntity?.tableName == this.tableName;
+    });
 
     if (relationColumn != null) {
       ColumnRelation relation = ColumnRelation(
@@ -30,6 +32,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
               AnnotationReflectable.reflectType(TrackedEntityAttributeValue)
                   as ClassMirror,
               false));
+
       this.relations.add(relation);
     }
 
@@ -52,6 +55,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(Enrollment) as ClassMirror,
               false));
+
       this.relations.add(relation);
     }
 

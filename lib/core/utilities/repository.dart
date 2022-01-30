@@ -61,6 +61,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       Database? database,
       List<ColumnRelation>? relations}) async {
     final Database db = database != null ? database : await this.database;
+
     return this.find(
         filters: filters,
         fields: fields,
@@ -120,8 +121,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     if (whereParameters == null) {
       return (await db.query(this.entity.tableName,
               orderBy: orderParameters, columns: fields))
-          .map((e) {
-        return getObject<T>(e);
+          .map((queryResult) {
+        return getObject<T>(queryResult);
       }).toList();
     }
 
@@ -486,8 +487,20 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
       case RelationType.OneToMany:
         return value.toList().map((valueItem) {
-          return relation.referencedEntity?.classMirror!
-              .newInstance('fromJson', [valueItem]);
+          Map<String, dynamic> relationMap = {};
+
+          relation.referencedEntityColumns?.forEach((column) {
+            var relationValue = valueItem[column!.name];
+            if (relationValue.runtimeType == int &&
+                column.type == ColumnType.BOOLEAN) {
+              relationMap[column.name as String] =
+                  relationValue == 1 ? true : false;
+            } else {
+              relationMap[column.name as String] = relationValue;
+            }
+          });
+
+          return relationMap;
         });
 
       default:
