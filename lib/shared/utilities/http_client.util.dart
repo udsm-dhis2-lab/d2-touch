@@ -33,6 +33,46 @@ class HttpClient {
   //   );
   // }
 
+  static Future<HttpResponse> post(String resourceUrl, dynamic data,
+      {String? baseUrl,
+      String? username,
+      String? password,
+      Database? database,
+      Dio? dioTestClient}) async {
+    HttpDetails httpDetails = await HttpDetails(
+            baseUrl: baseUrl,
+            username: username,
+            password: password,
+            database: database)
+        .get();
+
+    final dioClient = dioTestClient ??
+        Dio(BaseOptions(
+            connectTimeout: 100000,
+            receiveTimeout: 100000,
+            headers: {
+              HttpHeaders.authorizationHeader: 'Basic ${httpDetails.authToken}',
+              HttpHeaders.contentTypeHeader: 'application/json'
+            }));
+
+    try {
+      final Response<dynamic> response = await dioClient
+          .post('${httpDetails.baseUrl}/api/$resourceUrl', data: data);
+
+      return HttpResponse(
+          statusCode: response.statusCode ?? 500, body: response.data);
+    } on DioError catch (error) {
+      if (error.response != null) {
+        return HttpResponse(
+            statusCode: error.response?.statusCode ?? 500,
+            body: error.response?.data);
+      } else {
+        return HttpResponse(
+            statusCode: error.response?.statusCode ?? 500, body: error.message);
+      }
+    }
+  }
+
   static Future<HttpResponse> get(String resourceUrl,
       {String? baseUrl,
       String? username,

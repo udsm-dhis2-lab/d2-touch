@@ -46,4 +46,8 @@ class TrackedEntityAttributeValue extends BaseEntity {
     data['trackedEntityInstance'] = this.trackedEntityInstance;
     return data;
   }
+
+  static toUpload(TrackedEntityAttributeValue attribute) {
+    return {"attribute": attribute.attribute, "value": attribute.value};
+  }
 }

@@ -11,16 +11,30 @@ import 'tracked_entity_attribute_value.entity.dart';
 class TrackedEntityInstance extends BaseEntity {
   @Column()
   String orgUnit;
+
   @Column()
   String trackedEntityType;
+
   @Column()
   String trackedEntityInstance;
-  @Column()
+
+  @Column(nullable: true)
   bool? deleted;
-  @Column()
+
+  @Column(nullable: true)
   bool? synced;
-  @Column()
+
+  @Column(nullable: true)
   bool? inactive;
+
+  @Column(nullable: true)
+  bool? syncFailed;
+
+  @Column(nullable: true)
+  String? lastSyncSummary;
+
+  @Column(nullable: true)
+  String? lastSyncDate;
 
   @OneToMany(table: TrackedEntityAttributeValue)
   List<TrackedEntityAttributeValue>? attributes;
@@ -37,6 +51,9 @@ class TrackedEntityInstance extends BaseEntity {
       required this.trackedEntityInstance,
       this.deleted,
       this.synced,
+      this.syncFailed,
+      this.lastSyncSummary,
+      this.lastSyncDate,
       this.inactive,
       this.enrollments,
       this.attributes})
@@ -52,6 +69,9 @@ class TrackedEntityInstance extends BaseEntity {
         trackedEntityType: json['trackedEntityType'],
         deleted: json['deleted'],
         synced: json['synced'],
+        syncFailed: json['syncFailed'],
+        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncDate: json['lastSyncDate'],
         inactive: json['inactive'],
         enrollments: json['enrollments'] != null
             ? List<dynamic>.from(json['enrollments'])
@@ -82,10 +102,24 @@ class TrackedEntityInstance extends BaseEntity {
     data['trackedEntityType'] = this.trackedEntityType;
     data['deleted'] = this.deleted;
     data['synced'] = this.synced;
+    data['syncFailed'] = this.syncFailed;
+    data['lastSyncSummary'] = this.lastSyncSummary;
+    data['lastSyncDate'] = this.lastSyncDate;
     data['inactive'] = this.inactive;
     data['enrollments'] = this.enrollments;
     data['attributes'] = this.attributes;
     data['dirty'] = this.dirty;
     return data;
+  }
+
+  static toUpload(TrackedEntityInstance trackedEntityInstance) {
+    return {
+      "trackedEntityType": trackedEntityInstance.trackedEntityType,
+      "orgUnit": trackedEntityInstance.orgUnit,
+      "trackedEntityInstance": trackedEntityInstance.trackedEntityInstance,
+      "attributes": (trackedEntityInstance.attributes ?? [])
+          .map((attribute) => TrackedEntityAttributeValue.toUpload(attribute))
+          .toList()
+    };
   }
 }
