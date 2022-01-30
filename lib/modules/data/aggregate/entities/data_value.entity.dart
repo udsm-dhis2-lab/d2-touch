@@ -3,26 +3,30 @@ import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'datavalueset', apiResourceName: 'dataValueSets')
-class DataValueSet extends BaseEntity {
+class DataValue extends BaseEntity {
     @Column(type: ColumnType.TEXT)
-  String period;
+  String dataElement;
+
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? attributeOptionCombo;
 
   @Column(type: ColumnType.TEXT)
-  String orgUnit;
+  String categoryOptionCombo;
+
+  @Column(type: ColumnType.TEXT)
+  String value;
 
   @Column(type: ColumnType.BOOLEAN)
   bool synced;
 
-  @ManyToOne(joinColumnName: 'dataSet', table: DataSet)
-  dynamic dataSet;
+  @ManyToOne(joinColumnName: 'dataValueSet', table: DataValueSet)
+  dynamic dataValueSet;
 
-  @OneToMany(table: DataValue)
-  List<DataValue>? dataValues;
   // @Column("simple-json") categoryCombo: any;
   // @Column("simple-json") dataSetElements: any;
   // @Column("simple-json") organisationUnits: any;
 
-  DataValueSet(
+  DataValue(
       {required String id,
       String? created,
       String? lastUpdated,
@@ -30,11 +34,12 @@ class DataValueSet extends BaseEntity {
       required String shortName,
       String? code,
       String? displayName,
-      required this.period,
-      required this.orgUnit,
+      required this.dataElement,
+      required this.attributeOptionCombo,
+      required this.categoryOptionCombo,
+      required this.dataValueSet,
+      required this.value,
       required this.synced,
-      this.dataValues,
-      required this.dataSet,
       required dirty})
       : super(
             id: id,
@@ -46,8 +51,8 @@ class DataValueSet extends BaseEntity {
             lastUpdated: lastUpdated,
             dirty: dirty);
 
-  factory DataValueSet.fromJson(Map<String, dynamic> json) {
-    return DataValueSet(
+  factory DataValue.fromJson(Map<String, dynamic> json) {
+    return DataValue(
       id: json['id'],
       name: json['name'],
       created: json['created'],
@@ -56,11 +61,12 @@ class DataValueSet extends BaseEntity {
       displayName: json['displayName'],
       lastUpdated: json['lastUpdated'],
       dirty: json['dirty'],
-      synced: json['synced'],
-      period: json['period'],
-      orgUnit: json['orgUnit'],
-      dataSet: json['dataSet'],
-      dataValues: json['dataValues']
+      dataElement: json['dataElement'],
+      attributeOptionCombo: json['attributeOptionCombo'],
+      categoryOptionCombo: json['categoryOptionCombo'],
+      dataValueSet: json['dataValueSet'],
+      value: json['value'],
+      synced: json['synced']
     );
   }
 
@@ -74,11 +80,12 @@ class DataValueSet extends BaseEntity {
     data['code'] = this.code;
     data['displayName'] = this.displayName;
     data['dirty'] = this.dirty;
+    data['dataElement'] = this.dataElement;
+    data['attributeOptionCombo'] = this.attributeOptionCombo;
+    data['categoryOptionCombo'] = this.categoryOptionCombo;
+    data['dataValueSet'] = this.dataValueSet;
+    data['value'] = this.value;
     data['synced'] = this.synced;
-    data['period'] = this.period;
-    data['orgUnit'] = this.orgUnit;
-    data['dataSet'] = this.dataSet;
-    data['dataValues'] = this.dataValues;
 
     return data;
   }
