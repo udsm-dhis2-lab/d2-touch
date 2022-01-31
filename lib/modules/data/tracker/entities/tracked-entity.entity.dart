@@ -119,6 +119,9 @@ class TrackedEntityInstance extends BaseEntity {
       "trackedEntityInstance": trackedEntityInstance.trackedEntityInstance,
       "attributes": (trackedEntityInstance.attributes ?? [])
           .map((attribute) => TrackedEntityAttributeValue.toUpload(attribute))
+          .toList(),
+      "enrollments": (trackedEntityInstance.enrollments ?? [])
+          .map((enrollment) => Enrollment.toUpload(enrollment))
           .toList()
     };
   }

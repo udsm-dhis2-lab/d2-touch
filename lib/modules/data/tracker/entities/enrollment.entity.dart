@@ -9,20 +9,36 @@ import 'tracked-entity.entity.dart';
 class Enrollment extends BaseEntity {
   @Column()
   String enrollment;
+
   @Column()
   String incidentDate;
+
   @Column()
   String enrollmentDate;
+
   @Column()
   String trackedEntityType;
+
   @Column()
   String orgUnit;
+
   @Column()
   String program;
-  @Column()
+
+  @Column(nullable: true)
   String? status;
-  @Column()
+
+  @Column(nullable: true)
   bool? synced;
+
+  @Column(nullable: true)
+  bool? syncFailed;
+
+  @Column(nullable: true)
+  String? lastSyncSummary;
+
+  @Column(nullable: true)
+  String? lastSyncDate;
 
   @OneToMany(table: Event)
   List<Event>? events;
@@ -43,6 +59,9 @@ class Enrollment extends BaseEntity {
       required bool dirty,
       this.status,
       this.synced,
+      this.syncFailed,
+      this.lastSyncSummary,
+      this.lastSyncDate,
       this.events,
       this.trackedEntityInstance})
       : super(id: id, name: name, dirty: dirty);
@@ -59,6 +78,9 @@ class Enrollment extends BaseEntity {
         program: json['program'],
         status: json['status'],
         synced: json['synced'],
+        syncFailed: json['syncFailed'],
+        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncDate: json['lastSyncDate'],
         events: json['events'] != null
             ? List<dynamic>.from(json['events'])
                 .map((event) => Event.fromJson({...event, 'dirty': false}))
@@ -80,10 +102,23 @@ class Enrollment extends BaseEntity {
     data['program'] = this.program;
     data['status'] = this.status;
     data['synced'] = this.synced;
+    data['syncFailed'] = this.syncFailed;
+    data['lastSyncSummary'] = this.lastSyncSummary;
+    data['lastSyncDate'] = this.lastSyncDate;
     data['events'] = this.events;
     data['trackedEntityInstance'] = this.trackedEntityInstance;
     data['dirty'] = this.dirty;
 
     return data;
+  }
+
+  static toUpload(Enrollment enrollment) {
+    return {
+      "trackedEntityInstance": enrollment.trackedEntityInstance,
+      "orgUnit": enrollment.orgUnit,
+      "program": enrollment.program,
+      "enrollmentDate": enrollment.enrollmentDate,
+      "incidentDate": enrollment.incidentDate
+    };
   }
 }

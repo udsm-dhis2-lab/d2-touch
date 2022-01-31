@@ -1,10 +1,12 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
+import 'data_value_set.entity.dart';
+
 @AnnotationReflectable
 @Entity(tableName: 'datavalueset', apiResourceName: 'dataValueSets')
 class DataValue extends BaseEntity {
-    @Column(type: ColumnType.TEXT)
+  @Column(type: ColumnType.TEXT)
   String dataElement;
 
   @Column(type: ColumnType.TEXT, nullable: true)
@@ -53,21 +55,20 @@ class DataValue extends BaseEntity {
 
   factory DataValue.fromJson(Map<String, dynamic> json) {
     return DataValue(
-      id: json['id'],
-      name: json['name'],
-      created: json['created'],
-      shortName: json['shortName'],
-      code: json['code'],
-      displayName: json['displayName'],
-      lastUpdated: json['lastUpdated'],
-      dirty: json['dirty'],
-      dataElement: json['dataElement'],
-      attributeOptionCombo: json['attributeOptionCombo'],
-      categoryOptionCombo: json['categoryOptionCombo'],
-      dataValueSet: json['dataValueSet'],
-      value: json['value'],
-      synced: json['synced']
-    );
+        id: json['id'],
+        name: json['name'],
+        created: json['created'],
+        shortName: json['shortName'],
+        code: json['code'],
+        displayName: json['displayName'],
+        lastUpdated: json['lastUpdated'],
+        dirty: json['dirty'],
+        dataElement: json['dataElement'],
+        attributeOptionCombo: json['attributeOptionCombo'],
+        categoryOptionCombo: json['categoryOptionCombo'],
+        dataValueSet: json['dataValueSet'],
+        value: json['value'],
+        synced: json['synced']);
   }
 
   Map<String, dynamic> toJson() {

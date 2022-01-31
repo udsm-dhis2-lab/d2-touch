@@ -5,6 +5,7 @@ import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/enrollment.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
 import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
@@ -103,11 +104,23 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
                 merge: false)
             .get();
 
+    List<Enrollment> enrollments = await EnrollmentQuery()
+        .whereIn(
+            attribute: 'trackedEntityInstance',
+            values: trackedEntityInstanceIds,
+            merge: false)
+        .get();
+
     final trackedEntityInstanceUploadPayload =
         trackedEntityInstances.map((trackedEntityInstance) {
       trackedEntityInstance.attributes = attributes
           .where((attribute) =>
               attribute.trackedEntityInstance == trackedEntityInstance.id)
+          .toList();
+
+      trackedEntityInstance.enrollments = enrollments
+          .where((enrollment) =>
+              enrollment.trackedEntityInstance == trackedEntityInstance.id)
           .toList();
 
       return TrackedEntityInstance.toUpload(trackedEntityInstance);
@@ -149,10 +162,6 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return await TrackedEntityInstanceQuery()
         .byIds(trackedEntityInstanceIds)
         .get();
-
-    // TODO 4 Fetch enrollments
-    // TODO 5 Upload enrollments
-    // TODO 6 Update sync status for enrollemnts;
 
     // TODO 7 Fetch Events and data values
     // TODO 8 Upload events and data values
