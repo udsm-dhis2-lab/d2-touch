@@ -67,4 +67,11 @@ class EventDataValue extends BaseEntity {
     data['dirty'] = this.dirty;
     return data;
   }
+
+  static toUpload(EventDataValue eventDataValue) {
+    return {
+      "dataElement": eventDataValue.dataElement,
+      "value": eventDataValue.value
+    };
+  }
 }

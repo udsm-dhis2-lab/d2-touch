@@ -108,7 +108,7 @@ class ProgramStage extends BaseEntity {
       code: jsonData['code'],
       displayName: jsonData['displayName'],
       description: jsonData['description'],
-      dirty: jsonData['dirty'],
+      dirty: jsonData['dirty'] ?? false,
       captureCoordinates: jsonData['captureCoordinates'],
       featureType: jsonData['featureType'],
       allowGenerateNextVisit: jsonData['allowGenerateNextVisit'],

@@ -1,4 +1,4 @@
-final Map<Object, dynamic> sampleEnrollmentImportSummary = {
+final Map<Object, dynamic> sampleEventImportSummary = {
   "httpStatus": "Conflict",
   "httpStatusCode": 409,
   "status": "ERROR",
@@ -6,10 +6,10 @@ final Map<Object, dynamic> sampleEnrollmentImportSummary = {
   "response": {
     "responseType": "ImportSummaries",
     "status": "ERROR",
-    "imported": 0,
+    "imported": 1,
     "updated": 0,
     "deleted": 0,
-    "ignored": 2,
+    "ignored": 1,
     "importOptions": {
       "idSchemes": {},
       "dryRun": false,
@@ -42,7 +42,7 @@ final Map<Object, dynamic> sampleEnrollmentImportSummary = {
         "responseType": "ImportSummary",
         "status": "ERROR",
         "description":
-            "TrackedEntityInstance x2kJgpb0XQC already has an active or completed enrollment in program IpHINAT79UW, and this program only allows enrolling one time",
+            "Program stage is not repeatable and an event already exists",
         "importCount": {
           "imported": 0,
           "updated": 0,
@@ -50,39 +50,20 @@ final Map<Object, dynamic> sampleEnrollmentImportSummary = {
           "deleted": 0
         },
         "conflicts": [],
-        "events": {
-          "responseType": "ImportSummaries",
-          "status": "SUCCESS",
-          "imported": 0,
-          "updated": 0,
-          "deleted": 0,
-          "ignored": 0,
-          "importSummaries": [],
-          "total": 0
-        }
+        "reference": "NUE7a9V9dxi"
       },
       {
         "responseType": "ImportSummary",
-        "status": "ERROR",
-        "description":
-            "TrackedEntityInstance PQfMcpmXeFE already has an active or completed enrollment in program IpHINAT79UW, and this program only allows enrolling one time",
+        "status": "SUCCESS",
         "importCount": {
-          "imported": 0,
+          "imported": 1,
           "updated": 0,
-          "ignored": 1,
+          "ignored": 0,
           "deleted": 0
         },
         "conflicts": [],
-        "events": {
-          "responseType": "ImportSummaries",
-          "status": "SUCCESS",
-          "imported": 0,
-          "updated": 0,
-          "deleted": 0,
-          "ignored": 0,
-          "importSummaries": [],
-          "total": 0
-        }
+        "reference": "Tr95hr7sher",
+        "href": "https://play.dhis2.org/2.35.11/api/events/Tr95hr7sher"
       }
     ],
     "total": 2

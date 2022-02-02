@@ -10,30 +10,52 @@ import 'event_data_value.entity.dart';
 class Event extends BaseEntity {
   @Column()
   String event;
+
   @Column()
   String orgUnit;
+
   @Column()
   String status;
+
   @Column(nullable: true)
   String? eventDate;
+
   @Column(nullable: true)
   String? dueDate;
+
   @Column(nullable: true)
   bool? deleted;
+
   @Column(nullable: true)
   bool? synced;
+
+  @Column(nullable: true)
+  bool? syncFailed;
+
+  @Column(nullable: true)
+  String? lastSyncSummary;
+
+  @Column(nullable: true)
+  String? lastSyncDate;
+
   @Column(nullable: true)
   String? storedBy;
+
   @Column(nullable: true)
   String? coordinate;
+
   @Column(nullable: true)
   String? trackedEntityInstance;
+
   @Column(nullable: true)
   String? attributeCategoryOptions;
+
   @Column(nullable: true)
   String? attributeOptionCombo;
+
   @Column(nullable: true)
   String? notes;
+
   @Column(nullable: true)
   String? eventType;
 
@@ -57,6 +79,9 @@ class Event extends BaseEntity {
       this.dueDate,
       this.deleted,
       this.synced,
+      this.syncFailed,
+      this.lastSyncSummary,
+      this.lastSyncDate,
       this.storedBy,
       this.coordinate,
       this.trackedEntityInstance,
@@ -80,6 +105,9 @@ class Event extends BaseEntity {
         dueDate: json['dueDate'],
         deleted: json['deleted'],
         synced: json['synced'],
+        syncFailed: json['syncFailed'],
+        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncDate: json['lastSyncDate'],
         storedBy: json['storedBy'],
         coordinate: json['coordinate'],
         trackedEntityInstance: json['trackedEntityInstance'],
@@ -113,6 +141,9 @@ class Event extends BaseEntity {
     data['dueDate'] = this.dueDate;
     data['deleted'] = this.deleted;
     data['synced'] = this.synced;
+    data['syncFailed'] = this.syncFailed;
+    data['lastSyncSummary'] = this.lastSyncSummary;
+    data['lastSyncDate'] = this.lastSyncDate;
     data['storedBy'] = this.storedBy;
     data['coordinate'] = this.coordinate;
     data['trackedEntityInstance'] = this.trackedEntityInstance;
@@ -125,5 +156,22 @@ class Event extends BaseEntity {
     data['dataValues'] = this.dataValues;
     data['dirty'] = this.dirty;
     return data;
+  }
+
+  static toUpload(Event event) {
+    return {
+      "event": event.event,
+      "program": event.programStage['program'],
+      "programStage": event.programStage['id'],
+      "trackedEntityInstance": event.trackedEntityInstance,
+      "orgUnit": event.orgUnit,
+      "eventDate": event.eventDate,
+      "status": event.status,
+      "storedBy": event.storedBy,
+      "coordinate": event.coordinate,
+      "dataValues": (event.dataValues ?? [])
+          .map((event) => EventDataValue.toUpload(event))
+          .toList()
+    };
   }
 }
