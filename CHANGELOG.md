@@ -1,3 +1,7 @@
+## [1.0.0-alpha.5] - 31/01/2022
+
+- Support to upload tracked entity instances together with their attributes details
+
 ## [1.0.0-alpha.4] - 29/01/2022
 
 - Support to save tracked entity instances together with their attributes and enrollment details

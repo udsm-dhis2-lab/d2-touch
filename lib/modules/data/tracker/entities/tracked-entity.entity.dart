@@ -11,16 +11,30 @@ import 'tracked_entity_attribute_value.entity.dart';
 class TrackedEntityInstance extends BaseEntity {
   @Column()
   String orgUnit;
+
   @Column()
   String trackedEntityType;
+
   @Column()
   String trackedEntityInstance;
-  @Column()
+
+  @Column(nullable: true)
   bool? deleted;
-  @Column()
+
+  @Column(nullable: true)
   bool? synced;
-  @Column()
+
+  @Column(nullable: true)
   bool? inactive;
+
+  @Column(nullable: true)
+  bool? syncFailed;
+
+  @Column(nullable: true)
+  String? lastSyncSummary;
+
+  @Column(nullable: true)
+  String? lastSyncDate;
 
   @OneToMany(table: TrackedEntityAttributeValue)
   List<TrackedEntityAttributeValue>? attributes;
@@ -37,12 +51,16 @@ class TrackedEntityInstance extends BaseEntity {
       required this.trackedEntityInstance,
       this.deleted,
       this.synced,
+      this.syncFailed,
+      this.lastSyncSummary,
+      this.lastSyncDate,
       this.inactive,
       this.enrollments,
       this.attributes})
       : super(id: id, name: name, dirty: dirty);
 
   factory TrackedEntityInstance.fromJson(Map<String, dynamic> json) {
+    final attributes = json['attributes'];
     return TrackedEntityInstance(
         id: json['id'] ?? json['trackedEntityInstance'],
         name: json['trackedEntityInstance'],
@@ -51,6 +69,9 @@ class TrackedEntityInstance extends BaseEntity {
         trackedEntityType: json['trackedEntityType'],
         deleted: json['deleted'],
         synced: json['synced'],
+        syncFailed: json['syncFailed'],
+        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncDate: json['lastSyncDate'],
         inactive: json['inactive'],
         enrollments: json['enrollments'] != null
             ? List<dynamic>.from(json['enrollments'])
@@ -58,14 +79,14 @@ class TrackedEntityInstance extends BaseEntity {
                     Enrollment.fromJson({...enrollment, 'dirty': false}))
                 .toList()
             : null,
-        attributes: json['attributes'] != null
-            ? List<Map<String, dynamic>>.from(json['attributes'])
+        attributes: attributes != null
+            ? List<Map<String, dynamic>>.from(attributes)
                 .map((attribute) => TrackedEntityAttributeValue.fromJson({
                       ...attribute,
-                      'id':
+                      'id': attribute['id'] ??
                           '${json['trackedEntityInstance']}_${attribute['attribute']}',
                       'trackedEntityInstance': json['trackedEntityInstance'],
-                      'dirty': false
+                      'dirty': attribute['dirty'] ?? false
                     }))
                 .toList()
             : null,
@@ -81,10 +102,27 @@ class TrackedEntityInstance extends BaseEntity {
     data['trackedEntityType'] = this.trackedEntityType;
     data['deleted'] = this.deleted;
     data['synced'] = this.synced;
+    data['syncFailed'] = this.syncFailed;
+    data['lastSyncSummary'] = this.lastSyncSummary;
+    data['lastSyncDate'] = this.lastSyncDate;
     data['inactive'] = this.inactive;
     data['enrollments'] = this.enrollments;
     data['attributes'] = this.attributes;
     data['dirty'] = this.dirty;
     return data;
+  }
+
+  static toUpload(TrackedEntityInstance trackedEntityInstance) {
+    return {
+      "trackedEntityType": trackedEntityInstance.trackedEntityType,
+      "orgUnit": trackedEntityInstance.orgUnit,
+      "trackedEntityInstance": trackedEntityInstance.trackedEntityInstance,
+      "attributes": (trackedEntityInstance.attributes ?? [])
+          .map((attribute) => TrackedEntityAttributeValue.toUpload(attribute))
+          .toList(),
+      "enrollments": (trackedEntityInstance.enrollments ?? [])
+          .map((enrollment) => Enrollment.toUpload(enrollment))
+          .toList()
+    };
   }
 }

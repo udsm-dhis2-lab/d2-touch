@@ -252,8 +252,6 @@ class BaseQuery<T extends BaseEntity> {
     return this.data;
   }
 
-  upload() {}
-
   String get dhisUrl {
     return DhisUrlGenerator.generate(this.query);
   }

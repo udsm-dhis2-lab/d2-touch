@@ -24,7 +24,7 @@ class BaseEntity {
   final String? code;
 
   @Column()
-  final bool dirty;
+  bool dirty;
 
   BaseEntity(
       {required this.id,
