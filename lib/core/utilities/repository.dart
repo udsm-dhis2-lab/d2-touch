@@ -251,11 +251,13 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final List<String> dataIds =
         dataResults.map((dataResult) => dataResult['id'].toString()).toList();
 
-    final relationData = await this.findRelationByParent(
-        relations: relations as List<ColumnRelation>,
-        dataIds: dataIds,
-        orderParameters: orderParameters,
-        database: db);
+    final relationData = relations != null
+        ? await this.findRelationByParent(
+            relations: relations,
+            dataIds: dataIds,
+            orderParameters: orderParameters,
+            database: db)
+        : [];
 
     return dataResults.map((e) {
       Map<String, dynamic> resultMap = {...e};

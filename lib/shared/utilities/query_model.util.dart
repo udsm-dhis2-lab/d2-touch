@@ -1,3 +1,4 @@
+import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 
 class QueryModel {
@@ -8,6 +9,7 @@ class QueryModel {
   List<String>? fields;
   List<QueryFilter>? filters;
   dynamic relations;
+  List<Column> columns;
 
   QueryModel(
       {required this.resourceName,
@@ -16,5 +18,6 @@ class QueryModel {
       this.id,
       this.fields,
       this.filters,
-      this.relations});
+      this.relations,
+      required this.columns});
 }

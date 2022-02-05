@@ -136,7 +136,8 @@ class BaseQuery<T extends BaseEntity> {
         singularResourceName: this.singularResourceName,
         fields: this.fields as List<String>,
         filters: this.filters,
-        relations: this.relations);
+        relations: this.relations,
+        columns: this.repository.columns);
   }
 
   Future<List<T>> get() async {

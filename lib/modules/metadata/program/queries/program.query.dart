@@ -32,6 +32,7 @@ class ProgramQuery extends BaseQuery<Program> {
     return this;
   }
 
+  @override
   String get dhisUrl {
     final apiFilter =
         QueryFilter.getApiFilters(this.repository.columns, this.filters);
