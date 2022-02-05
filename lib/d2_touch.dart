@@ -1,8 +1,10 @@
 library dhis2_flutter_sdk;
 
 import 'package:dhis2_flutter_sdk/modules/auth/user/user.module.dart';
+import 'package:dhis2_flutter_sdk/modules/data/aggregate/aggregate.module.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/tracked_entity_instance.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/dataset/data_set.module.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/option_set/option_set.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/organisation_unit.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/program.module.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
@@ -39,6 +41,8 @@ class D2Touch {
       await ProgramModule.createTables();
       await DashboardModule.createTables();
       await TrackedEntityInstanceModule.createTables();
+      await AggregateModule.createTables();
+      await OptionSetModule.createTables();
     }
   }
 
@@ -158,4 +162,6 @@ class D2Touch {
 
   static TrackedEntityInstanceModule trackerModule =
       TrackedEntityInstanceModule();
+
+  static AggregateModule aggregateModule = AggregateModule();
 }

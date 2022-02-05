@@ -52,7 +52,95 @@ final Map<String, dynamic> samplePrograms = {
         {"id": "g2GooOydipB"},
         {"id": "aKpfPKSRQnv"}
       ],
-      "organisationUnits": []
+      "organisationUnits": [],
+      "programTrackedEntityAttributes": [
+        {
+          "name": "Child Programme First name",
+          "id": "l2T72XzBCLd",
+          "renderOptionsAsRadio": false,
+          "displayName": "Child Programme First name",
+          "sortOrder": 1,
+          "valueType": "TEXT",
+          "mandatory": false,
+          "trackedEntityAttribute": {
+            "code": "MMD_PER_NAM",
+            "name": "First name",
+            "id": "w75KJ2mc4zz",
+            "shortName": "First name",
+            "aggregationType": "NONE",
+            "generated": false,
+            "unique": false,
+            "optionSetValue": false
+          },
+          "attributeValues": []
+        },
+        {
+          "name": "Child Programme Last name",
+          "id": "XmRd2ZDjWhF",
+          "renderOptionsAsRadio": false,
+          "displayName": "Child Programme Last name",
+          "sortOrder": 2,
+          "valueType": "TEXT",
+          "mandatory": false,
+          "trackedEntityAttribute": {
+            "name": "Last name",
+            "id": "zDhUuAYrxNC",
+            "shortName": "Last name",
+            "aggregationType": "NONE",
+            "generated": false,
+            "unique": false,
+            "optionSetValue": false
+          },
+          "attributeValues": []
+        },
+        {
+          "name": "Child Programme Gender",
+          "id": "pWEEfUJUjej",
+          "renderOptionsAsRadio": false,
+          "displayName": "Child Programme Gender",
+          "sortOrder": 3,
+          "valueType": "TEXT",
+          "mandatory": false,
+          "trackedEntityAttribute": {
+            "name": "Gender",
+            "id": "cejWyOfXge6",
+            "shortName": "Gender",
+            "aggregationType": "NONE",
+            "generated": false,
+            "unique": false,
+            "optionSetValue": true,
+            "optionSet": {
+              "name": "Gender",
+              "id": "pC3N9N77UmT",
+              "options": [
+                {"code": "Male", "name": "Male", "id": "rBvjJYbMCVx"},
+                {"code": "Female", "name": "Female", "id": "Mnp3oXrpAbK"}
+              ]
+            }
+          },
+          "attributeValues": []
+        },
+        {
+          "name": "Child Programme Unique ID",
+          "id": "ALw63dHrw1n",
+          "renderOptionsAsRadio": false,
+          "displayName": "Child Programme Unique ID",
+          "sortOrder": 4,
+          "valueType": "TEXT",
+          "mandatory": false,
+          "trackedEntityAttribute": {
+            "code": "MMD_PER_ID",
+            "name": "Unique ID",
+            "id": "lZGmxYbs97q",
+            "shortName": "Unique identifier",
+            "aggregationType": "NONE",
+            "generated": true,
+            "unique": true,
+            "optionSetValue": false
+          },
+          "attributeValues": []
+        }
+      ]
     },
     {
       "lastUpdated": "2021-09-16T09:58:04.936",

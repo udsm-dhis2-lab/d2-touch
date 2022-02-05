@@ -1,10 +1,9 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/option_set/entities/option.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/option_set/queries/option.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value_set.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/aggregate/queries/data_value_set.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +16,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'program_sync_test.reflectable.dart';
 import '../sample/current_user.sample.dart';
 import '../sample/program.sample.dart';
+import '../sample/data_value_set.sample.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,8 +37,8 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/programs.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables&paging=false',
-    (server) => server.reply(200, samplePrograms),
+    'https://play.dhis2.org/2.35.11/api/dataValueSets.json?dataSet=BfMAe6Itzgt&period=202201&orgUnit=bG0PlyD0iP3',
+    (server) => server.reply(200, sampleDataValueSet),
   );
 
   userData['password'] = 'district';
@@ -47,22 +47,16 @@ void main() async {
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.11';
   final user = User.fromApi(userData);
   await userQuery.setData(user).save();
-  final programQuery = ProgramQuery(database: db);
 
-  List<Program>? programDownload =
-      await programQuery.download((progress, complete) {
+  List<DataValueSet>? dataValueSetDownload =
+      await D2Touch.aggregateModule.dataValueSet.download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
-  List<Program> programs = await programQuery.get();
-
-  List<ProgramTrackedEntityAttribute> programTrackedEntityAttributes =
-      await D2Touch.programModule.programTrackedEntityAttribute
-          .withOptions()
-          .get();
+  List<DataValueSet> dataValueSets =
+      await D2Touch.aggregateModule.dataValueSet.get();
 
   test('should store all incoming program metadata', () {
-    expect(programs.length, 14);
-    expect(programTrackedEntityAttributes.length, 4);
+    expect(dataValueSets.length, 1);
   });
 }

@@ -11,11 +11,23 @@ class DataValueSet extends BaseEntity {
   @Column(type: ColumnType.TEXT)
   String orgUnit;
 
-  @Column(type: ColumnType.BOOLEAN)
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
   bool synced;
+
+  @Column(nullable: true)
+  bool? syncFailed;
+
+  @Column(nullable: true)
+  String? lastSyncSummary;
+
+  @Column(nullable: true)
+  String? lastSyncDate;
 
   @Column(type: ColumnType.TEXT)
   String dataSet;
+
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? attributeOptionCombo;
 
   @OneToMany(table: DataValue)
   List<DataValue>? dataValues;
@@ -28,6 +40,9 @@ class DataValueSet extends BaseEntity {
       required this.period,
       required this.orgUnit,
       required this.synced,
+      this.syncFailed,
+      this.lastSyncSummary,
+      this.lastSyncDate,
       this.dataValues,
       required this.dataSet,
       required dirty})
@@ -46,6 +61,9 @@ class DataValueSet extends BaseEntity {
         lastUpdated: json['lastUpdated'],
         dirty: json['dirty'],
         synced: json['synced'],
+        syncFailed: json['syncFailed'],
+        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncDate: json['lastSyncDate'],
         period: json['period'],
         orgUnit: json['orgUnit'],
         dataSet: json['dataSet'],
@@ -60,11 +78,44 @@ class DataValueSet extends BaseEntity {
     data['name'] = this.name;
     data['dirty'] = this.dirty;
     data['synced'] = this.synced;
+    data['syncFailed'] = this.syncFailed;
+    data['lastSyncSummary'] = this.lastSyncSummary;
+    data['lastSyncDate'] = this.lastSyncDate;
     data['period'] = this.period;
     data['orgUnit'] = this.orgUnit;
     data['dataSet'] = this.dataSet;
     data['dataValues'] = this.dataValues;
 
     return data;
+  }
+
+  static toUpload() {
+    return {
+      "dataSet": "dataSetID",
+      "completeDate": "date",
+      "period": "period",
+      "orgUnit": "orgUnitID",
+      "attributeOptionCombo": "aocID",
+      "dataValues": [
+        {
+          "dataElement": "dataElementID",
+          "categoryOptionCombo": "cocID",
+          "value": "1",
+          "comment": "comment1"
+        },
+        {
+          "dataElement": "dataElementID",
+          "categoryOptionCombo": "cocID",
+          "value": "2",
+          "comment": "comment2"
+        },
+        {
+          "dataElement": "dataElementID",
+          "categoryOptionCombo": "cocID",
+          "value": "3",
+          "comment": "comment3"
+        }
+      ]
+    };
   }
 }
