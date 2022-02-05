@@ -1,3 +1,7 @@
+## [1.0.0-alpha.6] - 05/02/2022
+
+- Support to view list of items along with their relations
+
 ## [1.0.0-alpha.5] - 31/01/2022
 
 - Support to upload tracked entity instances together with their attributes details

@@ -1,8 +1,6 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/option_set/entities/option.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/option_set/queries/option.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
@@ -14,9 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'program_sync_test.reflectable.dart';
 import '../sample/current_user.sample.dart';
 import '../sample/program.sample.dart';
+import 'program_sync_test.reflectable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +35,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/programs.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables&paging=false',
+    'https://play.dhis2.org/2.35.11/api/programs.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariable,programTrackedEntityAttributes[id,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]]&paging=false',
     (server) => server.reply(200, samplePrograms),
   );
 
@@ -64,5 +62,21 @@ void main() async {
   test('should store all incoming program metadata', () {
     expect(programs.length, 14);
     expect(programTrackedEntityAttributes.length, 4);
+  });
+
+  dioAdapter.onGet(
+    'https://play.dhis2.org/2.35.11/api/programs.json?filter=id:in:[IpHINAT79UX]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariable,programTrackedEntityAttributes[id,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]]&paging=false',
+    (server) => server.reply(200, sampleFilteredPrograms),
+  );
+
+  List<Program>? programFilteredDownload =
+      await programQuery.byIds(['IpHINAT79UX']).download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  Program? filteredProgram = await programQuery.byId('IpHINAT79UX').getOne();
+
+  test('should store all incoming filtered program metadata', () {
+    expect(filteredProgram?.id, 'IpHINAT79UX');
   });
 }

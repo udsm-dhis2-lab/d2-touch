@@ -337,8 +337,20 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
     final Database db = database != null ? database : await this.database;
 
-    final saveDataResponse =
-        db.insert(columnRelation.referencedEntity?.tableName as String, data);
+    var result = await db.query(
+        columnRelation.referencedEntity?.tableName as String,
+        where: 'id = ?',
+        whereArgs: [data['id']]);
+
+    final saveDataResponse = result.length == 0
+        ? db.insert(columnRelation.referencedEntity?.tableName as String, data)
+        : db.update(
+            columnRelation.referencedEntity?.tableName as String,
+            data,
+            where: "id = ?",
+            whereArgs: [data['id']],
+          );
+    ;
 
     final List<Column?>? oneToManyColumns = columnRelation
         .referencedEntityColumns

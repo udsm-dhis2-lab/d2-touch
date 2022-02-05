@@ -3,6 +3,7 @@ import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -29,5 +30,11 @@ class ProgramQuery extends BaseQuery<Program> {
     }
 
     return this;
+  }
+
+  String get dhisUrl {
+    final apiFilter =
+        QueryFilter.getApiFilters(this.repository.columns, this.filters);
+    return 'programs.json${apiFilter != null ? '?filter=$apiFilter&' : '?'}fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariable,programTrackedEntityAttributes[id,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]]&paging=false';
   }
 }
