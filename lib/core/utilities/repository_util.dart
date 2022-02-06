@@ -65,7 +65,7 @@ class RepositoryUtil {
           });
 
           return relationMap;
-        });
+        }).toList();
 
       default:
         return null;

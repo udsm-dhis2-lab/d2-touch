@@ -48,15 +48,20 @@ void main() async {
   final user = User.fromApi(userData);
   await userQuery.setData(user).save();
 
-  List<DataValueSet>? dataValueSetDownload =
-      await D2Touch.aggregateModule.dataValueSet.download((progress, complete) {
+  List<DataValueSet>? dataValueSetDownload = await D2Touch
+      .aggregateModule.dataValueSet
+      .byDataSet('BfMAe6Itzgt')
+      .byOrgUnit('bG0PlyD0iP3')
+      .byPeriod("202201")
+      .download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
   List<DataValueSet> dataValueSets =
-      await D2Touch.aggregateModule.dataValueSet.get();
+      await DataValueSetQuery().withDataValues().get();
 
-  test('should store all incoming program metadata', () {
+  test('should store all incoming data value sets', () {
     expect(dataValueSets.length, 1);
+    expect(dataValueSets[0].dataValues?.length, 31);
   });
 }

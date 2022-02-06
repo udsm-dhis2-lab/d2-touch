@@ -1,6 +1,7 @@
 ## [1.0.0-alpha.6] - 05/02/2022
 
 - Support to view list of items along with their relations
+- Support to donwload items by ids
 
 ## [1.0.0-alpha.5] - 31/01/2022
 

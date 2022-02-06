@@ -12,7 +12,7 @@ class DataValueSet extends BaseEntity {
   String orgUnit;
 
   @Column(type: ColumnType.BOOLEAN, nullable: true)
-  bool synced;
+  bool? synced;
 
   @Column(nullable: true)
   bool? syncFailed;
@@ -54,9 +54,12 @@ class DataValueSet extends BaseEntity {
             dirty: dirty);
 
   factory DataValueSet.fromJson(Map<String, dynamic> json) {
+    final id =
+        json['id'] ?? '${json['dataSet']}_${json['orgUnit']}_${json['period']}';
+
     return DataValueSet(
-        id: json['id'],
-        name: json['name'],
+        id: id,
+        name: json['name'] ?? id,
         created: json['created'],
         lastUpdated: json['lastUpdated'],
         dirty: json['dirty'],
@@ -67,7 +70,10 @@ class DataValueSet extends BaseEntity {
         period: json['period'],
         orgUnit: json['orgUnit'],
         dataSet: json['dataSet'],
-        dataValues: json['dataValues']);
+        dataValues: List<dynamic>.from(json['dataValues'] ?? [])
+            .map((dataValue) => DataValue.fromJson(
+                {...dataValue, 'dirty': false, 'dataValueSet': id}))
+            .toList());
   }
 
   Map<String, dynamic> toJson() {

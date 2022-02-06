@@ -82,8 +82,8 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
             jsonData['trackedEntityAttribute']?['optionSetValue'],
         optionSetName: jsonData['optionSetName'] ??
             jsonData['trackedEntityAttribute']?['optionSet']?['name'],
-        options: List<dynamic>.from(jsonData['trackedEntityAttribute']
-                    ?['optionSet']?['options'] ??
+        options: List<dynamic>.from(jsonData['options'] ??
+                jsonData['trackedEntityAttribute']?['optionSet']?['options'] ??
                 [])
             .map((option) => Option.fromJson({
                   ...option,

@@ -4,7 +4,7 @@ import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'data_value_set.entity.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'datavalueset', apiResourceName: 'dataValueSets')
+@Entity(tableName: 'datavalue', apiResourceName: 'dataValues')
 class DataValue extends BaseEntity {
   @Column(type: ColumnType.TEXT)
   String dataElement;
@@ -18,8 +18,8 @@ class DataValue extends BaseEntity {
   @Column(type: ColumnType.TEXT)
   String value;
 
-  @Column(type: ColumnType.BOOLEAN)
-  bool synced;
+  @Column(type: ColumnType.BOOLEAN, nullable: true)
+  bool? synced;
 
   @ManyToOne(joinColumnName: 'dataValueSet', table: DataValueSet)
   dynamic dataValueSet;
@@ -33,9 +33,6 @@ class DataValue extends BaseEntity {
       String? created,
       String? lastUpdated,
       required String name,
-      required String shortName,
-      String? code,
-      String? displayName,
       required this.dataElement,
       required this.attributeOptionCombo,
       required this.categoryOptionCombo,
@@ -46,21 +43,17 @@ class DataValue extends BaseEntity {
       : super(
             id: id,
             name: name,
-            shortName: shortName,
-            displayName: displayName,
-            code: code,
             created: created,
             lastUpdated: lastUpdated,
             dirty: dirty);
 
   factory DataValue.fromJson(Map<String, dynamic> json) {
+    final id = json['id'] ??
+        '${json['dataElement']}_${json['categoryOptionCombo']}_${json['orgUnit']}_${json['period']}';
     return DataValue(
-        id: json['id'],
-        name: json['name'],
+        id: id,
+        name: json['name'] ?? id,
         created: json['created'],
-        shortName: json['shortName'],
-        code: json['code'],
-        displayName: json['displayName'],
         lastUpdated: json['lastUpdated'],
         dirty: json['dirty'],
         dataElement: json['dataElement'],
@@ -77,9 +70,6 @@ class DataValue extends BaseEntity {
     data['id'] = this.id;
     data['created'] = this.created;
     data['name'] = this.name;
-    data['shortName'] = this.shortName;
-    data['code'] = this.code;
-    data['displayName'] = this.displayName;
     data['dirty'] = this.dirty;
     data['dataElement'] = this.dataElement;
     data['attributeOptionCombo'] = this.attributeOptionCombo;

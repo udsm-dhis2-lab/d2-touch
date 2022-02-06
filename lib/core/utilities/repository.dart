@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository_util.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
@@ -137,9 +134,14 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       return dataResults.map((queryResult) {
         Map<String, dynamic> resultMap = {...queryResult};
 
-        (relationData ?? []).forEach((relationDataItem) => {
-              resultMap[relationDataItem['relation']] = relationDataItem['data']
-            });
+        (relationData ?? []).forEach((relationDataItem) {
+          final availableRelationData = (relationDataItem['data'] ?? [])
+              .where((relationItem) =>
+                  relationItem[relationDataItem['referencedColumn']] ==
+                  queryResult['id'])
+              .toList();
+          resultMap[relationDataItem['relation']] = availableRelationData;
+        });
 
         return getObject<T>(resultMap);
       }).toList();
@@ -215,7 +217,11 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
           whereParameters: whereParameters,
           orderParameters: orderParameters);
 
-      return {"relation": relation.attributeName, "data": newItem};
+      return {
+        "relation": relation.attributeName,
+        "referencedColumn": relation.referencedColumn,
+        "data": newItem
+      };
     }));
   }
 
@@ -229,13 +235,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   }) async {
     final Database db = database != null ? database : await this.database;
     return (await db.query(entity.tableName,
-            where: whereParameters, orderBy: orderParameters, columns: fields))
-        .map((e) {
-      return RepositoryUtil.getEntityData(
-          classMirror: entity.classMirror as ClassMirror,
-          objectMap: e,
-          columns: columns);
-    }).toList();
+        where: whereParameters, orderBy: orderParameters, columns: fields));
   }
 
   Future<List<T>> findWhere(
@@ -262,8 +262,14 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     return dataResults.map((e) {
       Map<String, dynamic> resultMap = {...e};
 
-      (relationData ?? []).forEach((relationDataItem) =>
-          {resultMap[relationDataItem['relation']] = relationDataItem['data']});
+      (relationData ?? []).forEach((relationDataItem) {
+        final availableRelationData = (relationDataItem['data'] ?? [])
+            .where((relationItem) =>
+                relationItem[relationDataItem['referencedColumn']] ==
+                resultMap['id'])
+            .toList();
+        resultMap[relationDataItem['relation']] = availableRelationData;
+      });
       return getObject<T>(e);
     }).toList();
   }
@@ -544,50 +550,5 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         columns: this.columns,
         objectMap: objectMap,
         classMirror: classMirror) as T;
-  }
-
-  getRelationObject({required ColumnRelation relation, dynamic value}) {
-    if (value == null) {
-      return null;
-    }
-    switch (relation.relationType) {
-      case RelationType.ManyToOne:
-        Map<String, dynamic> relationMap = {};
-
-        relation.referencedEntityColumns?.forEach((column) {
-          var relationValue = value[column!.name];
-          if (relationValue.runtimeType == int &&
-              column.type == ColumnType.BOOLEAN) {
-            relationMap[column.name as String] =
-                relationValue == 1 ? true : false;
-          } else {
-            relationMap[column.name as String] = relationValue;
-          }
-        });
-
-        return relation.referencedEntity?.classMirror!
-            .newInstance('fromJson', [relationMap]);
-
-      case RelationType.OneToMany:
-        return value.toList().map((valueItem) {
-          Map<String, dynamic> relationMap = {};
-
-          relation.referencedEntityColumns?.forEach((column) {
-            var relationValue = valueItem[column!.name];
-            if (relationValue.runtimeType == int &&
-                column.type == ColumnType.BOOLEAN) {
-              relationMap[column.name as String] =
-                  relationValue == 1 ? true : false;
-            } else {
-              relationMap[column.name as String] = relationValue;
-            }
-          });
-
-          return relationMap;
-        });
-
-      default:
-        return null;
-    }
   }
 }
