@@ -3,8 +3,6 @@ import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value_set.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/aggregate/queries/data_value_set.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,10 +11,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'program_sync_test.reflectable.dart';
 import '../sample/current_user.sample.dart';
-import '../sample/program.sample.dart';
 import '../sample/data_value_set.sample.dart';
+import 'program_sync_test.reflectable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

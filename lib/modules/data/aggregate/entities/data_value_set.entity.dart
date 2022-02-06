@@ -1,6 +1,7 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/object.util.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'datavalueset', apiResourceName: 'dataValueSets')
@@ -10,6 +11,9 @@ class DataValueSet extends BaseEntity {
 
   @Column(type: ColumnType.TEXT)
   String orgUnit;
+
+  @Column(nullable: true)
+  String? completeDate;
 
   @Column(type: ColumnType.BOOLEAN, nullable: true)
   bool? synced;
@@ -44,6 +48,7 @@ class DataValueSet extends BaseEntity {
       this.lastSyncSummary,
       this.lastSyncDate,
       this.dataValues,
+      this.completeDate,
       required this.dataSet,
       required dirty})
       : super(
@@ -61,6 +66,7 @@ class DataValueSet extends BaseEntity {
         id: id,
         name: json['name'] ?? id,
         created: json['created'],
+        completeDate: json['completeDate'],
         lastUpdated: json['lastUpdated'],
         dirty: json['dirty'],
         synced: json['synced'],
@@ -81,6 +87,7 @@ class DataValueSet extends BaseEntity {
     data['lastUpdated'] = this.lastUpdated;
     data['id'] = this.id;
     data['created'] = this.created;
+    data['completeDate'] = this.completeDate;
     data['name'] = this.name;
     data['dirty'] = this.dirty;
     data['synced'] = this.synced;
@@ -95,33 +102,16 @@ class DataValueSet extends BaseEntity {
     return data;
   }
 
-  static toUpload() {
-    return {
-      "dataSet": "dataSetID",
-      "completeDate": "date",
-      "period": "period",
-      "orgUnit": "orgUnitID",
-      "attributeOptionCombo": "aocID",
-      "dataValues": [
-        {
-          "dataElement": "dataElementID",
-          "categoryOptionCombo": "cocID",
-          "value": "1",
-          "comment": "comment1"
-        },
-        {
-          "dataElement": "dataElementID",
-          "categoryOptionCombo": "cocID",
-          "value": "2",
-          "comment": "comment2"
-        },
-        {
-          "dataElement": "dataElementID",
-          "categoryOptionCombo": "cocID",
-          "value": "3",
-          "comment": "comment3"
-        }
-      ]
-    };
+  static toUpload(DataValueSet dataValueSet) {
+    return ObjectUtil.removeNull({
+      "dataSet": dataValueSet.dataSet,
+      "completeDate": dataValueSet.completeDate,
+      "period": dataValueSet.period,
+      "orgUnit": dataValueSet.orgUnit,
+      "attributeOptionCombo": dataValueSet.attributeOptionCombo,
+      "dataValues": (dataValueSet.dataValues ?? [])
+          .map((dataValue) => DataValue.toUpload(dataValue))
+          .toList()
+    });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/object.util.dart';
 
 import 'data_value_set.entity.dart';
 
@@ -17,6 +18,9 @@ class DataValue extends BaseEntity {
 
   @Column(type: ColumnType.TEXT)
   String value;
+
+  @Column(nullable: true)
+  String? comment;
 
   @Column(type: ColumnType.BOOLEAN, nullable: true)
   bool? synced;
@@ -39,6 +43,7 @@ class DataValue extends BaseEntity {
       required this.dataValueSet,
       required this.value,
       required this.synced,
+      this.comment,
       required dirty})
       : super(
             id: id,
@@ -61,6 +66,7 @@ class DataValue extends BaseEntity {
         categoryOptionCombo: json['categoryOptionCombo'],
         dataValueSet: json['dataValueSet'],
         value: json['value'],
+        comment: json['comment'],
         synced: json['synced']);
   }
 
@@ -76,8 +82,18 @@ class DataValue extends BaseEntity {
     data['categoryOptionCombo'] = this.categoryOptionCombo;
     data['dataValueSet'] = this.dataValueSet;
     data['value'] = this.value;
+    data['comment'] = this.comment;
     data['synced'] = this.synced;
 
     return data;
+  }
+
+  static toUpload(DataValue dataValue) {
+    return ObjectUtil.removeNull({
+      "dataElement": dataValue.dataElement,
+      "categoryOptionCombo": dataValue.categoryOptionCombo,
+      "value": dataValue.value,
+      "comment": dataValue.comment
+    });
   }
 }

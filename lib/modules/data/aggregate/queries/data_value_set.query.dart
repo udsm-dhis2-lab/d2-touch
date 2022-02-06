@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value_set.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/aggregate/queries/data_value.query.dart';
 import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
+import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -56,7 +60,6 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   }
 
   @override
-  // TODO: implement dhisUrl
   String get dhisUrl {
     return 'dataValueSets.json?dataSet=${this.dataSet}&period=${this.period}&orgUnit=${this.orgUnit}';
   }
@@ -111,5 +114,51 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         true);
 
     return [this.data];
+  }
+
+  Future<List<DataValueSet>?> upload(Function(RequestProgress, bool) callback,
+      {Dio? dioTestClient}) async {
+    List<DataValueSet> dataValueSets = await this
+        .where(attribute: 'synced', value: false)
+        .where(attribute: 'dirty', value: true)
+        .withDataValues()
+        .get();
+
+    List<String> dataValueSetIds = [];
+
+    final queue = Queue(parallel: 50);
+    num availableItemCount = 0;
+
+    dataValueSets.forEach((dataValueSet) {
+      dataValueSetIds.add(dataValueSet.id);
+      availableItemCount++;
+      queue.add(
+          () => this.uploadOne(dataValueSet, dioTestClient: dioTestClient));
+    });
+
+    if (availableItemCount == 0) {
+      queue.cancel();
+    } else {
+      await queue.onComplete;
+    }
+
+    return await DataValueSetQuery().byIds(dataValueSetIds).get();
+  }
+
+  uploadOne(DataValueSet dataValueSet, {Dio? dioTestClient}) async {
+    final uploadFormat = DataValueSet.toUpload(dataValueSet);
+    final response = await HttpClient.post(
+        this.apiResourceName as String, uploadFormat,
+        database: this.database, dioTestClient: dioTestClient);
+
+    final importSummary = response.body;
+    final syncFailed = importSummary['status'] == 'ERROR';
+    dataValueSet.synced = !syncFailed;
+    dataValueSet.dirty = syncFailed;
+    dataValueSet.syncFailed = syncFailed;
+    dataValueSet.lastSyncDate = DateTime.now().toIso8601String();
+    dataValueSet.lastSyncSummary = importSummary.toString();
+
+    return DataValueSetQuery().setData(dataValueSet).save();
   }
 }
