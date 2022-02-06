@@ -40,7 +40,6 @@ abstract class BaseRepository<T extends BaseEntity> {
   Future<int> deleteById({required String id, Database database});
   Future<int> deleteByIds({required List<String> ids, Database database});
   Future<int> deleteAll({Database database});
-  Future<void> clear({Database database});
   Map<String, dynamic> sanitizeIncomingData(
       {required Map<String, dynamic> entity, required List<Column> columns});
 }
@@ -48,11 +47,6 @@ abstract class BaseRepository<T extends BaseEntity> {
 class Repository<T extends BaseEntity> extends BaseRepository<T> {
   @override
   Future<Database> get database => DatabaseManager.instance.database;
-
-  @override
-  Future<void> clear({Database? database}) async {
-    final Database db = database != null ? database : await this.database;
-  }
 
   @override
   Future<List<T>> findAll(
@@ -293,7 +287,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {required List<T> entities, Database? database}) async {
     final Database db = database != null ? database : await this.database;
 
-// TODO
     await Future.forEach(
         entities, ((T entity) => insertOne(entity: entity, database: db)));
 
@@ -359,7 +352,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
             where: "id = ?",
             whereArgs: [data['id']],
           );
-    ;
 
     final List<Column?>? oneToManyColumns = columnRelation
         .referencedEntityColumns

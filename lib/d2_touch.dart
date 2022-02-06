@@ -7,6 +7,7 @@ import 'package:dhis2_flutter_sdk/modules/metadata/dataset/data_set.module.dart'
 import 'package:dhis2_flutter_sdk/modules/metadata/option_set/option_set.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/organisation_unit.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/program.module.dart';
+import 'package:dhis2_flutter_sdk/modules/notification/notification.module.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,6 +44,7 @@ class D2Touch {
       await TrackedEntityInstanceModule.createTables();
       await AggregateModule.createTables();
       await OptionSetModule.createTables();
+      await NotificationModule.createTables();
     }
   }
 
@@ -164,4 +166,6 @@ class D2Touch {
       TrackedEntityInstanceModule();
 
   static AggregateModule aggregateModule = AggregateModule();
+
+  static NotificationModule notificationModule = NotificationModule();
 }

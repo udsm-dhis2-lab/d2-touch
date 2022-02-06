@@ -16,7 +16,7 @@ class MessageConversation extends BaseEntity {
   @Column(type: ColumnType.TEXT)
   String messageType;
 
-  @Column(type: ColumnType.TEXT)
+  @Column(type: ColumnType.TEXT, nullable: true)
   String? lastMessage;
 
   @Column(type: ColumnType.BOOLEAN)
@@ -31,18 +31,19 @@ class MessageConversation extends BaseEntity {
       String? lastUpdated,
       required String name,
       required String shortName,
+      required this.status,
+      required this.subject,
       required this.messageType,
-      String? code,
+      required this.read,
       String? displayName,
       this.messages,
       this.lastMessage,
-      required dirty})
+      required bool dirty})
       : super(
             id: id,
             name: name,
             shortName: shortName,
             displayName: displayName,
-            code: code,
             created: created,
             lastUpdated: lastUpdated,
             dirty: dirty);
@@ -53,12 +54,21 @@ class MessageConversation extends BaseEntity {
         name: json['name'],
         created: json['created'],
         shortName: json['shortName'],
-        code: json['code'],
         displayName: json['displayName'],
         lastUpdated: json['lastUpdated'],
         dirty: json['dirty'],
-        dataElement: json['text'],
-        attributeOptionCombo: json['sender']);
+        status: json['status'],
+        messageType: json['messageType'],
+        read: json['read'],
+        subject: json['subject'],
+        lastMessage: json['lastMessage'],
+        messages: (json['messages'] ?? [])
+            .map((message) => Message.fromJson({
+                  ...message,
+                  'dirty': false,
+                  'messageConversation': json['id']
+                }))
+            .toList());
   }
 
   Map<String, dynamic> toJson() {
@@ -68,11 +78,13 @@ class MessageConversation extends BaseEntity {
     data['created'] = this.created;
     data['name'] = this.name;
     data['shortName'] = this.shortName;
-    data['code'] = this.code;
     data['displayName'] = this.displayName;
+    data['status'] = this.status;
+    data['messageType'] = this.messageType;
+    data['read'] = this.read;
+    data['subject'] = this.subject;
+    data['lastMessage'] = this.lastMessage;
     data['dirty'] = this.dirty;
-    data['text'] = this.text;
-    data['sender'] = this.sender;
 
     return data;
   }
