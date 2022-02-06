@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/option_set/entities/option.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';

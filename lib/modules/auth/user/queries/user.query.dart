@@ -1,4 +1,3 @@
-import 'package:dhis2_flutter_sdk/core/annotations/column.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';

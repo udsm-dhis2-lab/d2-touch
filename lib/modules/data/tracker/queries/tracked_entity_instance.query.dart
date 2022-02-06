@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
@@ -162,9 +160,5 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return await TrackedEntityInstanceQuery()
         .byIds(trackedEntityInstanceIds)
         .get();
-
-    // TODO 7 Fetch Events and data values
-    // TODO 8 Upload events and data values
-    // TODO 9 Update sync status for events and data values
   }
 }

@@ -15,7 +15,7 @@ class HttpDetails {
     this.password,
     this.baseUrl,
     this.database,
-  }) {}
+  });
 
   Future<HttpDetails> get() async {
     if (this.username != null &&

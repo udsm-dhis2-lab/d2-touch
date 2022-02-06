@@ -1,6 +1,7 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
+import 'message_conversation.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'message', apiResourceName: 'messages')
@@ -11,13 +12,8 @@ class Message extends BaseEntity {
   @Column(type: ColumnType.TEXT)
   String text;
 
-
   @ManyToOne(joinColumnName: 'messageConversation', table: MessageConversation)
   dynamic messageConversation;
-
-  // @Column("simple-json") categoryCombo: any;
-  // @Column("simple-json") dataSetElements: any;
-  // @Column("simple-json") organisationUnits: any;
 
   Message(
       {required String id,
@@ -51,8 +47,8 @@ class Message extends BaseEntity {
         displayName: json['displayName'],
         lastUpdated: json['lastUpdated'],
         dirty: json['dirty'],
-        dataElement: json['text'],
-        attributeOptionCombo: json['sender'],
+        text: json['text'],
+        sender: json['sender'],
         messageConversation: json['messageConversation']);
   }
 
@@ -69,7 +65,7 @@ class Message extends BaseEntity {
     data['text'] = this.text;
     data['sender'] = this.sender;
     data['messageConversation'] = this.messageConversation;
-    
+
     return data;
   }
 }

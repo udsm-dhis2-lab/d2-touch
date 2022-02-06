@@ -1,9 +1,11 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
+import 'message.entity.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'messageconversation', apiResourceName: 'messageConversations')
+@Entity(
+    tableName: 'messageconversation', apiResourceName: 'messageConversations')
 class MessageConversation extends BaseEntity {
   @Column(type: ColumnType.TEXT)
   String status;
@@ -15,7 +17,7 @@ class MessageConversation extends BaseEntity {
   String messageType;
 
   @Column(type: ColumnType.TEXT)
-  String lastMessage;
+  String? lastMessage;
 
   @Column(type: ColumnType.BOOLEAN)
   bool read;
@@ -29,11 +31,11 @@ class MessageConversation extends BaseEntity {
       String? lastUpdated,
       required String name,
       required String shortName,
+      required this.messageType,
       String? code,
       String? displayName,
-      required this.sender,
-      required this.text,
       this.messages,
+      this.lastMessage,
       required dirty})
       : super(
             id: id,
@@ -71,7 +73,7 @@ class MessageConversation extends BaseEntity {
     data['dirty'] = this.dirty;
     data['text'] = this.text;
     data['sender'] = this.sender;
-    
+
     return data;
   }
 }

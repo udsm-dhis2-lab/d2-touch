@@ -2,7 +2,6 @@ import 'package:dhis2_flutter_sdk/core/annotations/column.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/entity.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:dhis2_flutter_sdk/shared/entities/geometry.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'organisationunit', apiResourceName: 'organisationUnits')

@@ -54,11 +54,10 @@ void main() async {
   await userQuery.setData(user).save();
   final trackedEntityInstanceQuery = TrackedEntityInstanceQuery(database: db);
 
-  List<TrackedEntityInstance>? trackedEntityInstanceDownload =
-      await trackedEntityInstanceQuery
-          .byOrgUnit('DiszpKrYNg8')
-          .byProgram('IpHINAT79UW')
-          .download((progress, complete) {
+  await trackedEntityInstanceQuery
+      .byOrgUnit('DiszpKrYNg8')
+      .byProgram('IpHINAT79UW')
+      .download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
@@ -93,11 +92,10 @@ void main() async {
     expect(eventDataValues.length, 442);
   });
 
-  List<TrackedEntityInstance>? trackedEntityInstanceSecondDownload =
-      await trackedEntityInstanceQuery
-          .byOrgUnit('DiszpKrYNg8')
-          .byProgram('IpHINAT79UW')
-          .download((progress, complete) {
+  await trackedEntityInstanceQuery
+      .byOrgUnit('DiszpKrYNg8')
+      .byProgram('IpHINAT79UW')
+      .download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 

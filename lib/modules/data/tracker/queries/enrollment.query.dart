@@ -62,13 +62,5 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
     }
 
     return await EnrollmentQuery().byIds(enrollmentIds).get();
-
-    // TODO 4 Fetch enrollments
-    // TODO 5 Upload enrollments
-    // TODO 6 Update sync status for enrollemnts;
-
-    // TODO 7 Fetch Events and data values
-    // TODO 8 Upload events and data values
-    // TODO 9 Update sync status for events and data values
   }
 }

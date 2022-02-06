@@ -49,8 +49,7 @@ void main() async {
     (server) => server.reply(200, dhisDataElements),
   );
 
-  List<DataElement>? dataElements =
-      await dataElementQuery.download((progress, complete) {
+  await dataElementQuery.download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 

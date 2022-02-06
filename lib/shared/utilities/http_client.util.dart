@@ -100,8 +100,15 @@ class HttpClient {
 
       return HttpResponse(
           statusCode: response.statusCode ?? 500, body: response.data);
-    } catch (error) {
-      throw Exception(error);
+    } on DioError catch (error) {
+      if (error.response != null) {
+        return HttpResponse(
+            statusCode: error.response?.statusCode ?? 500,
+            body: error.response?.data);
+      } else {
+        return HttpResponse(
+            statusCode: error.response?.statusCode ?? 500, body: error.message);
+      }
     }
   }
 

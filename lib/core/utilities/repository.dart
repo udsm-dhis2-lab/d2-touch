@@ -18,6 +18,7 @@ abstract class BaseRepository<T extends BaseEntity> {
   String get createQuery;
   Future<Database> get database;
   Future<dynamic> create({Database database});
+  Future<int> count({Database database});
   Future<List<T>> find(
       {String? id,
       List<QueryFilter>? filters,
@@ -163,7 +164,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     }
 
     return Future.wait(relations.map((relation) async {
-      // TODO Find best way to deal with other relationships;
       final referencedValue = data[
           relation.relationType == RelationType.OneToMany
               ? relation.primaryKey
@@ -551,5 +551,15 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         columns: this.columns,
         objectMap: objectMap,
         classMirror: classMirror) as T;
+  }
+
+  @override
+  Future<int> count({Database? database}) async {
+    final Database db = database != null ? database : await this.database;
+
+    final countResult = await db
+        .rawQuery('SELECT COUNT(*) as count FROM ${this.entity.tableName}');
+
+    return countResult[0]['count'] as int;
   }
 }

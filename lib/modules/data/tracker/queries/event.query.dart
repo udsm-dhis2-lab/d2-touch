@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event_data_value.query.dart';

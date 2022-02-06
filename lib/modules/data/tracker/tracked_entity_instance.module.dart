@@ -21,12 +21,13 @@ class TrackedEntityInstanceModule {
   TrackedEntityAttributeValueQuery trackedEntityAttributeValue =
       TrackedEntityAttributeValueQuery();
 
-  EventQuery event = EventQuery();
+  EventQuery get event => EventQuery();
 
-  EnrollmentQuery enrollment = EnrollmentQuery();
+  EnrollmentQuery get enrollment => EnrollmentQuery();
 
-  AttributeReservedValueQuery attributeReservedValue =
+  AttributeReservedValueQuery get attributeReservedValue =>
       AttributeReservedValueQuery();
 
-  Type eventDataValue = AttributeReservedValueQuery;
+  AttributeReservedValueQuery get eventDataValue =>
+      AttributeReservedValueQuery();
 }

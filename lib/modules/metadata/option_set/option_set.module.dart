@@ -1,4 +1,3 @@
-import 'package:dhis2_flutter_sdk/modules/metadata/option_set/entities/option.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/option_set/queries/option.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/option_set/queries/option_set.query.dart';
 

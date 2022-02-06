@@ -98,8 +98,8 @@ void main() async {
     expect(programStageResult.shortName, 'Program Stage 1');
   });
 
-  var programWithStages =
-      await programQuery.byId('test1').withProgramStages().getOne();
+  // var programWithStages =
+  //     await programQuery.byId('test1').withProgramStages().getOne();
 
   test('should return program with stage information', () {
     expect(result.id, 'test1');

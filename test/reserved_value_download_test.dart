@@ -1,8 +1,10 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/attribute_reserved_value.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,9 +13,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'orgunit_sync_test.reflectable.dart';
-import '../sample/org_unit.sample.dart';
 import '../sample/current_user.sample.dart';
+import 'reserved_value_download_test.reflectable.dart';
+import '../sample/program.sample.dart';
+import '../sample/reserved_values.sample.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,39 +33,37 @@ void main() async {
 
   UserQuery userQuery = UserQuery(database: db);
 
+  final dio = Dio(BaseOptions());
+  final dioAdapter = DioAdapter(dio: dio);
+
+  dioAdapter.onGet(
+    'https://play.dhis2.org/2.35.11/api/trackedEntityAttributes/lZGmxYbs97q/generateAndReserve?numberToReserve=100',
+    (server) => server.reply(200, sampleReservedValues),
+  );
+
   userData['password'] = 'district';
   userData['isLoggedIn'] = true;
   userData['username'] = 'admin';
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.11';
   final user = User.fromApi(userData);
   await userQuery.setData(user).save();
-  final organisationUnitQuery = OrganisationUnitQuery(database: db);
 
-  final dhisOrganisationUnits = sampleOrganisationUnits;
+  List<Program> programs = [];
+  samplePrograms['programs'].forEach((program) {
+    programs.add(Program.fromJson({...program, 'dirty': false}));
+  });
 
-  final dio = Dio(BaseOptions());
-  final dioAdapter = DioAdapter(dio: dio);
+  await ProgramQuery().setData(programs).save();
 
-  dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/organisationUnits.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,level,path,externalAccess,openingDate,geometry,parent&paging=false',
-    (server) => server.reply(200, dhisOrganisationUnits),
-  );
-
-  await organisationUnitQuery.download((progress, complete) {
+  await D2Touch.trackerModule.attributeReservedValue.download(
+      (progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
-  List<OrganisationUnit> orgUnits = await organisationUnitQuery.get();
+  List<AttributeReservedValue> attributeReservedValues =
+      await AttributeReservedValueQuery().get();
 
-  test('should store all incoming organisation unit metadata', () {
-    expect(orgUnits.length, 50);
-  });
-
-  OrganisationUnit? childOrgUnit = await OrganisationUnitQuery()
-      .where(attribute: 'parent', value: 'qtr8GGlm4gg')
-      .getOne();
-
-  test('should return result given parent id is passed where clause', () {
-    expect(childOrgUnit?.parent, 'qtr8GGlm4gg');
+  test('should store all incoming data value sets', () {
+    expect(attributeReservedValues.length, 100);
   });
 }

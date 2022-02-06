@@ -45,8 +45,7 @@ void main() async {
   final user = User.fromApi(userData);
   await userQuery.setData(user).save();
 
-  List<DataValueSet>? dataValueSetDownload = await D2Touch
-      .aggregateModule.dataValueSet
+  await D2Touch.aggregateModule.dataValueSet
       .byDataSet('BfMAe6Itzgt')
       .byOrgUnit('bG0PlyD0iP3')
       .byPeriod("202201")

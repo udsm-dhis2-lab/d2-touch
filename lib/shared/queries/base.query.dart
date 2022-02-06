@@ -190,7 +190,7 @@ class BaseQuery<T extends BaseEntity> {
   }
 
   Future count() {
-    throw UnimplementedError();
+    return this.repository.count(database: this.database);
   }
 
   Future create() {
@@ -239,7 +239,7 @@ class BaseQuery<T extends BaseEntity> {
             percentage: 51),
         false);
 
-    final saveResponse = await this.save();
+    await this.save();
 
     callback(
         RequestProgress(

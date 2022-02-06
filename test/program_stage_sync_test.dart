@@ -46,8 +46,7 @@ void main() async {
   await userQuery.setData(user).save();
   final programStageQuery = ProgramStageQuery(database: db);
 
-  List<ProgramStage>? programStageDownload =
-      await programStageQuery.download((progress, complete) {
+  await programStageQuery.download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 

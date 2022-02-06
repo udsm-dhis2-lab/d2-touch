@@ -1,10 +1,7 @@
-import 'dart:convert';
-
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value_set.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/aggregate/queries/data_value.query.dart';
 import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
@@ -102,7 +99,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
             percentage: 51),
         false);
 
-    final saveResponse = await this.save();
+    await this.save();
 
     callback(
         RequestProgress(

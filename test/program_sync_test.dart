@@ -46,9 +46,7 @@ void main() async {
   final user = User.fromApi(userData);
   await userQuery.setData(user).save();
   final programQuery = ProgramQuery(database: db);
-
-  List<Program>? programDownload =
-      await programQuery.download((progress, complete) {
+  await programQuery.download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
@@ -69,8 +67,7 @@ void main() async {
     (server) => server.reply(200, sampleFilteredPrograms),
   );
 
-  List<Program>? programFilteredDownload =
-      await programQuery.byIds(['IpHINAT79UX']).download((progress, complete) {
+  await programQuery.byIds(['IpHINAT79UX']).download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 

@@ -48,8 +48,7 @@ void main() async {
     (server) => server.reply(200, dhisDataSets),
   );
 
-  List<DataSet>? dataSetDownload =
-      await dataSetQuery.download((progress, complete) {
+  await dataSetQuery.download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
