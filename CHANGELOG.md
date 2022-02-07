@@ -1,3 +1,9 @@
+## [1.0.0-alpha.7] - 07/02/2022
+
+- Resolve issue on appending relating relations to parent data
+- Support to upload aggregate data
+- Support to download reserved values for value generated attributes
+
 ## [1.0.0-alpha.6] - 05/02/2022
 
 - Support to view list of items along with their relations
