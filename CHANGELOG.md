@@ -1,3 +1,7 @@
+## [1.0.0-alpha.8] - 08/02/2022
+
+- Resolve issues in creating tables with relations
+
 ## [1.0.0-alpha.7] - 07/02/2022
 
 - Resolve issue on appending relating relations to parent data
