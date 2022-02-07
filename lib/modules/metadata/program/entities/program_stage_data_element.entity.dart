@@ -7,17 +7,50 @@ import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
     tableName: 'programstagedataelement',
     apiResourceName: 'programStageDataElements')
 class ProgramStageDataElement extends BaseEntity {
-  @Column(type: ColumnType.TEXT, nullable: true)
+  @Column(nullable: true)
   String? formName;
 
-  @Column(type: ColumnType.TEXT, length: 50)
+  @Column()
   String valueType;
 
-  @Column(type: ColumnType.TEXT, length: 50)
+  @Column()
   String aggregationType;
 
-  @Column(type: ColumnType.TEXT, nullable: true)
+  @Column()
+  String domainType;
+
+  @Column(nullable: true)
   String? description;
+
+  @Column(nullable: true)
+  String? displayDescription;
+
+  @Column(nullable: true)
+  String? displayFormName;
+
+  @Column(nullable: true)
+  bool? displayInReports;
+
+  @Column(nullable: true)
+  bool? renderOptionsAsRadio;
+
+  @Column(nullable: true)
+  bool? compulsory;
+
+  @Column(nullable: true)
+  int? sortOrder;
+
+  @Column(nullable: true)
+  bool? skipSynchronization;
+
+  @Column(nullable: true)
+  bool? allowFutureDate;
+
+  @Column(nullable: true)
+  bool? zeroIsSignificant;
+
+  @Column(nullable: true)
+  int? periodOffset;
 
   @ManyToOne(joinColumnName: 'programStage', table: ProgramStage)
   dynamic programStage;
@@ -30,10 +63,21 @@ class ProgramStageDataElement extends BaseEntity {
       required String shortName,
       String? code,
       String? displayName,
+      this.displayDescription,
       this.formName,
       required this.aggregationType,
       this.description,
       this.programStage,
+      this.displayFormName,
+      this.displayInReports,
+      this.renderOptionsAsRadio,
+      this.compulsory,
+      this.sortOrder,
+      this.skipSynchronization,
+      this.allowFutureDate,
+      this.zeroIsSignificant,
+      this.periodOffset,
+      required this.domainType,
       required this.valueType,
       required dirty})
       : super(
@@ -55,9 +99,20 @@ class ProgramStageDataElement extends BaseEntity {
         shortName: json['shortName'],
         code: json['code'],
         displayName: json['displayName'],
+        displayDescription: json['displayDescription'],
         valueType: json['valueType'],
         aggregationType: json['aggregationType'],
+        domainType: json['domainType'],
+        displayInReports: json['displayInReports'],
+        renderOptionsAsRadio: json['renderOptionsAsRadio'],
+        compulsory: json['compulsory'],
+        sortOrder: json['sortOrder'],
+        skipSynchronization: json['skipSynchronization'],
+        allowFutureDate: json['allowFutureDate'],
         description: json['description'],
+        displayFormName: json['displayFormName'],
+        zeroIsSignificant: json['zeroIsSignificant'],
+        periodOffset: json['periodOffset'],
         dirty: json['dirty']);
   }
 
@@ -73,7 +128,16 @@ class ProgramStageDataElement extends BaseEntity {
     data['displayName'] = this.displayName;
     data['valueType'] = this.valueType;
     data['aggregationType'] = this.aggregationType;
+    data['domainType'] = this.domainType;
     data['description'] = this.description;
+    data['displayInReports'] = this.displayInReports;
+    data['renderOptionsAsRadio'] = this.renderOptionsAsRadio;
+    data['sortOrder'] = this.sortOrder;
+    data['compulsory'] = this.compulsory;
+    data['skipSynchronization'] = this.skipSynchronization;
+    data['allowFutureDate'] = this.allowFutureDate;
+    data['displayDescription'] = this.displayDescription;
+    data['displayFormName'] = this.displayFormName;
     data['dirty'] = this.dirty;
 
     return data;
