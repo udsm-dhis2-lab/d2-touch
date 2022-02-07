@@ -130,8 +130,9 @@ class ProgramStage extends BaseEntity {
                 ...programStageDataElement,
                 ...(programStageDataElement['dataElement'] ?? {}),
                 'id': programStageDataElement['id'],
-                'dataElement': programStageDataElement['dataElement']?['id'] ??
-                    programStageDataElement['dataElement'],
+                'dataElementId': programStageDataElement['dataElement']
+                        ?['id'] ??
+                    programStageDataElement['dataElementId'],
                 'programStage': jsonData['id'],
                 'dirty': false
               }))

@@ -3,6 +3,7 @@ import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage_data_element.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage_section.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
@@ -36,6 +37,30 @@ class ProgramStageQuery extends BaseQuery<ProgramStage> {
                   as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(ProgramStageDataElement)
+                  as ClassMirror,
+              false));
+      this.relations.add(relation);
+    }
+
+    return this;
+  }
+
+  ProgramStageQuery withSections() {
+    final programSection = Repository<ProgramStageSection>();
+    final Column? relationColumn = programSection.columns.firstWhere((column) =>
+        column.relation?.referencedEntity?.tableName == this.tableName);
+
+    if (relationColumn != null) {
+      ColumnRelation relation = ColumnRelation(
+          referencedColumn: relationColumn.relation?.attributeName,
+          attributeName: 'programStageSections',
+          primaryKey: this.primaryKey?.name,
+          relationType: RelationType.OneToMany,
+          referencedEntity: Entity.getEntityDefinition(
+              AnnotationReflectable.reflectType(ProgramStageSection)
+                  as ClassMirror),
+          referencedEntityColumns: Entity.getEntityColumns(
+              AnnotationReflectable.reflectType(ProgramStageSection)
                   as ClassMirror,
               false));
       this.relations.add(relation);

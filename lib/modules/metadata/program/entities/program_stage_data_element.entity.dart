@@ -15,6 +15,9 @@ class ProgramStageDataElement extends BaseEntity {
   String valueType;
 
   @Column()
+  String dataElementId;
+
+  @Column()
   String aggregationType;
 
   @Column()
@@ -71,6 +74,7 @@ class ProgramStageDataElement extends BaseEntity {
       String? lastUpdated,
       required String name,
       required String shortName,
+      required this.dataElementId,
       String? code,
       String? displayName,
       this.displayDescription,
@@ -110,6 +114,7 @@ class ProgramStageDataElement extends BaseEntity {
         programStage: json['programStage'],
         created: json['created'],
         shortName: json['shortName'],
+        dataElementId: json['dataElementId'],
         code: json['code'],
         displayName: json['displayName'],
         displayDescription: json['displayDescription'],
@@ -148,6 +153,7 @@ class ProgramStageDataElement extends BaseEntity {
     data['created'] = this.created;
     data['name'] = this.name;
     data['shortName'] = this.shortName;
+    data['dataElementId'] = this.dataElementId;
     data['code'] = this.code;
     data['displayName'] = this.displayName;
     data['valueType'] = this.valueType;
