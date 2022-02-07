@@ -1,5 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage_data_element_option.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
@@ -55,6 +56,15 @@ class ProgramStageDataElement extends BaseEntity {
   @ManyToOne(joinColumnName: 'programStage', table: ProgramStage)
   dynamic programStage;
 
+  @Column(nullable: true)
+  bool? optionSetValue;
+
+  @Column(nullable: true)
+  String? optionSetName;
+
+  @OneToMany(table: ProgramStageDataElementOption)
+  List<ProgramStageDataElementOption>? options;
+
   ProgramStageDataElement(
       {required String id,
       String? created,
@@ -77,6 +87,9 @@ class ProgramStageDataElement extends BaseEntity {
       this.allowFutureDate,
       this.zeroIsSignificant,
       this.periodOffset,
+      this.optionSetValue,
+      this.optionSetName,
+      this.options,
       required this.domainType,
       required this.valueType,
       required dirty})
@@ -113,6 +126,17 @@ class ProgramStageDataElement extends BaseEntity {
         displayFormName: json['displayFormName'],
         zeroIsSignificant: json['zeroIsSignificant'],
         periodOffset: json['periodOffset'],
+        optionSetValue: json['optionSetValue'],
+        optionSetName: json['optionSetName'],
+        options: List<dynamic>.from(
+                json['options'] ?? json['optionSet']?['options'] ?? [])
+            .map((option) => ProgramStageDataElementOption.fromJson({
+                  ...option,
+                  'id': '${option['id']}_${json['id']}}',
+                  'programStageDataElement': json['id'],
+                  'dirty': false
+                }))
+            .toList(),
         dirty: json['dirty']);
   }
 
@@ -132,6 +156,9 @@ class ProgramStageDataElement extends BaseEntity {
     data['description'] = this.description;
     data['displayInReports'] = this.displayInReports;
     data['renderOptionsAsRadio'] = this.renderOptionsAsRadio;
+    data['options'] = this.options;
+    data['optionSetName'] = this.optionSetName;
+    data['optionSetValue'] = this.optionSetValue;
     data['sortOrder'] = this.sortOrder;
     data['compulsory'] = this.compulsory;
     data['skipSynchronization'] = this.skipSynchronization;

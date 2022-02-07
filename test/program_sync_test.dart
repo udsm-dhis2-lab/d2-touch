@@ -3,9 +3,13 @@ import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage_data_element.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage_data_element_option.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage_data_element.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage_data_element_option.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -82,9 +86,17 @@ void main() async {
   List<ProgramStage> programStages =
       await ProgramStageQuery().withDataElements().get();
 
-  print(programStages[0].programStageDataElements);
+  List<ProgramStageDataElement> programStageElements =
+      await ProgramStageDataElementQuery().get();
 
-  test('should store all program stages per selected program', () {
+  List<ProgramStageDataElementOption> programStageElementOptions =
+      await ProgramStageDataElementOptionQuery().get();
+
+  test(
+      'should store all program stages, their elements and options per selected program',
+      () {
     expect(programStages.length, 2);
+    expect(programStageElements.length, 22);
+    expect(programStageElementOptions.length, 48);
   });
 }

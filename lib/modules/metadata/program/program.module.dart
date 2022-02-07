@@ -5,11 +5,14 @@ import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage_section.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_tracked_entity_attribute.query.dart';
 
+import 'queries/program_stage_data_element_option.query.dart';
+
 class ProgramModule {
   static createTables() async {
     await ProgramQuery().createTable();
     await ProgramStageQuery().createTable();
     await ProgramStageSectionQuery().createTable();
+    await ProgramStageDataElementOptionQuery().createTable();
     await AttributeOptionQuery().createTable();
     await ProgramTrackedEntityAttributeQuery().createTable();
     await ProgramStageDataElementQuery().createTable();
@@ -29,4 +32,7 @@ class ProgramModule {
 
   ProgramStageDataElementQuery get programStageDataElement =>
       ProgramStageDataElementQuery();
+
+  ProgramStageDataElementOptionQuery get programStageDataElementOption =>
+      ProgramStageDataElementOptionQuery();
 }
