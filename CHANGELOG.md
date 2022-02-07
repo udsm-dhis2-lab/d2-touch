@@ -1,3 +1,15 @@
+## [1.0.0-alpha.9] - 07/02/2022
+
+- Ensure uniquness on tracked entity attribute options
+
+## [1.0.0-alpha.8] - 07/02/2022
+
+- Resolve issues in creating tables with relations
+
+## [1.0.0-alpha.8] - 07/02/2022
+
+- Resolve issues in creating tables with relations
+
 ## [1.0.0-alpha.8] - 08/02/2022
 
 - Resolve issues in creating tables with relations

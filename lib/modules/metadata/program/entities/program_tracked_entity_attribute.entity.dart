@@ -85,6 +85,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
                 [])
             .map((option) => Option.fromJson({
                   ...option,
+                  'id': '${option['id']}_${jsonData['id']}}',
                   'programTrackedEntityAttribute': jsonData['id'],
                   'dirty': false
                 }))
