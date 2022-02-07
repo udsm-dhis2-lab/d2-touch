@@ -5,5 +5,5 @@ class OrganisationUnitModule {
     return await OrganisationUnitQuery().createTable();
   }
 
-  OrganisationUnitQuery organisationUnit = OrganisationUnitQuery();
+  OrganisationUnitQuery get organisationUnit => OrganisationUnitQuery();
 }

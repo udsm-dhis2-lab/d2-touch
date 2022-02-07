@@ -7,7 +7,7 @@ class AggregateModule {
     await DataValueQuery().createTable();
   }
 
-  Type dataValue = DataValueQuery;
+  DataValueQuery get dataValue => DataValueQuery();
 
   DataValueSetQuery get dataValueSet => DataValueSetQuery();
 }

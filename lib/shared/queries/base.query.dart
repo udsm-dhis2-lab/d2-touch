@@ -87,6 +87,12 @@ class BaseQuery<T extends BaseEntity> {
     return this;
   }
 
+  ilike({required String attribute, required dynamic value}) {
+    this.filters?.add(QueryFilter(
+        attribute: attribute, condition: QueryCondition.Ilike, value: value));
+    return this;
+  }
+
   greaterThan({required String attribute, required dynamic value}) {
     this.filters?.add(QueryFilter(
         attribute: attribute,
@@ -185,8 +191,8 @@ class BaseQuery<T extends BaseEntity> {
     return this.repository.deleteAll();
   }
 
-  Future createTable() {
-    return this.repository.create(database: this.database);
+  Future createTable() async {
+    return await this.repository.create(database: this.database);
   }
 
   Future count() {
@@ -203,7 +209,7 @@ class BaseQuery<T extends BaseEntity> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Downloading ${this.apiResourceName?.toUpperCase()} from the server....',
+                'Downloading ${this.apiResourceName?.toLowerCase()} from the server....',
             status: '',
             percentage: 0),
         false);
@@ -217,7 +223,7 @@ class BaseQuery<T extends BaseEntity> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${data.length} ${this.apiResourceName?.toUpperCase()} downloaded successfully',
+                '${data.length} ${this.apiResourceName?.toLowerCase()} downloaded successfully',
             status: '',
             percentage: 50),
         false);
@@ -234,7 +240,7 @@ class BaseQuery<T extends BaseEntity> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Saving ${data.length} ${this.apiResourceName?.toUpperCase()} into phone database...',
+                'Saving ${data.length} ${this.apiResourceName?.toLowerCase()} into phone database...',
             status: '',
             percentage: 51),
         false);
@@ -245,7 +251,7 @@ class BaseQuery<T extends BaseEntity> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${data.length} ${this.apiResourceName?.toUpperCase()} successifully saved into the database',
+                '${data.length} ${this.apiResourceName?.toLowerCase()} successifully saved into the database',
             status: '',
             percentage: 100),
         true);

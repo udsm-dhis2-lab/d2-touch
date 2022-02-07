@@ -495,7 +495,18 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   @override
   Future create({Database? database}) async {
     final Database db = database != null ? database : await this.database;
-    return db.execute(this.createQuery);
+
+    await db.transaction((txn) async {
+      var batch = txn.batch();
+
+      this.createQuery.split(';').forEach((sql) {
+        batch.execute(sql);
+      });
+
+      await batch.commit();
+    });
+
+    return 1;
   }
 
   @override

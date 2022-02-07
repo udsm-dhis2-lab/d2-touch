@@ -62,13 +62,21 @@ class QueryFilter {
         case QueryCondition.In:
           final List<String> values =
               filter.value is List ? filter.value : [filter.value];
-          return '${filter.attribute}:in:[${values.join(',')}]';
+          return 'filter=${filter.attribute}:in:[${values.join(',')}]';
 
         case QueryCondition.Equal:
           return '${filter.attribute} = ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
 
         case QueryCondition.Like:
           return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+
+        case QueryCondition.Ilike:
+          final List<String> values =
+              filter.value is List ? filter.value : [filter.value];
+          final ilikeFilters = values
+              .map((valueItem) => 'filter=${filter.attribute}:ilike:$valueItem')
+              .toList();
+          return ilikeFilters.join('&') + '&rootJunction=OR';
 
         case QueryCondition.LessThan:
           return '${filter.attribute} < ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';

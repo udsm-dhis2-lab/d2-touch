@@ -33,8 +33,6 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
     final List<dynamic> importSummaries =
         (response.body?['response']?['importSummaries'] ?? []).toList();
 
-    print(json.encode({'enrollments': enrollmentUploadPayload}));
-
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 

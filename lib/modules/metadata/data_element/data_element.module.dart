@@ -5,5 +5,5 @@ class DataElementModule {
     return await DataElementQuery().createTable();
   }
 
-  DataElementQuery dataElement = DataElementQuery();
+  DataElementQuery get dataElement => DataElementQuery();
 }

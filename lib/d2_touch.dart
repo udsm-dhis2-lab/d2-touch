@@ -168,4 +168,6 @@ class D2Touch {
   static AggregateModule aggregateModule = AggregateModule();
 
   static NotificationModule notificationModule = NotificationModule();
+
+  static OptionSetModule optionSetModule = OptionSetModule();
 }

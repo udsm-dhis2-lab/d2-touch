@@ -15,10 +15,10 @@ class TrackedEntityInstanceModule {
     await EventDataValueQuery().createTable();
   }
 
-  TrackedEntityInstanceQuery trackedEntityInstance =
+  TrackedEntityInstanceQuery get trackedEntityInstance =>
       TrackedEntityInstanceQuery();
 
-  TrackedEntityAttributeValueQuery trackedEntityAttributeValue =
+  TrackedEntityAttributeValueQuery get trackedEntityAttributeValue =>
       TrackedEntityAttributeValueQuery();
 
   EventQuery get event => EventQuery();

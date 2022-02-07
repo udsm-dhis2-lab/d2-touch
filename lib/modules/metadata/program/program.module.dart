@@ -9,9 +9,9 @@ class ProgramModule {
     await ProgramTrackedEntityAttributeQuery().createTable();
   }
 
-  ProgramQuery program = ProgramQuery();
+  ProgramQuery get program => ProgramQuery();
 
-  ProgramStageQuery programStage = ProgramStageQuery();
+  ProgramStageQuery get programStage => ProgramStageQuery();
 
   ProgramTrackedEntityAttributeQuery get programTrackedEntityAttribute =>
       ProgramTrackedEntityAttributeQuery();

@@ -5,5 +5,5 @@ class DataSetModule {
     return await DataSetQuery().createTable();
   }
 
-  DataSetQuery dataSet = DataSetQuery();
+  DataSetQuery get dataSet => DataSetQuery();
 }

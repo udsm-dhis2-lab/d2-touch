@@ -11,7 +11,7 @@ class DhisUrlGenerator {
         ? QueryFilter.getApiFilters(query.columns, query.filters)
         : null;
 
-    return '${query.resourceName}.json${apiFilter != null ? '?filter=$apiFilter&' : '?'}fields=${query.fields?.join(',')}&paging=false';
+    return '${query.resourceName}.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=${query.fields?.join(',')}&paging=false';
   }
 
   static getRelationFields(relations) {
