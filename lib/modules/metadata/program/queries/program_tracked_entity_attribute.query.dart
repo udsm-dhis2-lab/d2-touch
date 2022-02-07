@@ -1,6 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/option_set/entities/option.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/attribute_option.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:reflectable/reflectable.dart';
@@ -12,7 +12,7 @@ class ProgramTrackedEntityAttributeQuery
       : super(database: database);
 
   ProgramTrackedEntityAttributeQuery withOptions() {
-    final attributeOption = Repository<Option>();
+    final attributeOption = Repository<AttributeOption>();
 
     final Column? relationColumn = attributeOption.columns.firstWhere(
         (column) =>
@@ -25,9 +25,11 @@ class ProgramTrackedEntityAttributeQuery
           primaryKey: this.primaryKey?.name,
           relationType: RelationType.OneToMany,
           referencedEntity: Entity.getEntityDefinition(
-              AnnotationReflectable.reflectType(Option) as ClassMirror),
+              AnnotationReflectable.reflectType(AttributeOption)
+                  as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
-              AnnotationReflectable.reflectType(Option) as ClassMirror, false));
+              AnnotationReflectable.reflectType(AttributeOption) as ClassMirror,
+              false));
 
       this.relations.add(relation);
     }

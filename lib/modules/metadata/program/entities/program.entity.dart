@@ -152,17 +152,18 @@ class Program extends BaseEntity {
         useFirstStageDuringRegistration:
             json['useFirstStageDuringRegistration'],
         withoutRegistration: json['withoutRegistration'],
-        programStages: json['programStages'] != null
-            ? List<dynamic>.from(json['programStages'])
-                .map((programStage) =>
-                    ProgramStage.fromJson({...programStage, 'dirty': false}))
-                .toList()
-            : [],
+        programStages: List<dynamic>.from(json['programStages'] ?? [])
+            .map((programStage) => ProgramStage.fromJson(
+                {...programStage, 'program': json['id'], 'dirty': false}))
+            .toList(),
         programTrackedEntityAttributes:
             List<dynamic>.from(json['programTrackedEntityAttributes'] ?? [])
                 .map((programTrackedEntityAttribute) =>
-                    ProgramTrackedEntityAttribute.fromJson(
-                        {...programTrackedEntityAttribute, 'dirty': false}))
+                    ProgramTrackedEntityAttribute.fromJson({
+                      ...programTrackedEntityAttribute,
+                      'program': json['id'],
+                      'dirty': false
+                    }))
                 .toList());
   }
 

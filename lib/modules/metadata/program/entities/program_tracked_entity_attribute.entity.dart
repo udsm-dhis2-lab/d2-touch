@@ -1,5 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/option_set/entities/option.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/attribute_option.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
@@ -37,8 +38,11 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
   @Column(nullable: true)
   String? optionSetName;
 
-  @OneToMany(table: Option)
-  List<Option>? options;
+  @ManyToOne(joinColumnName: 'program', table: Program)
+  dynamic program;
+
+  @OneToMany(table: AttributeOption)
+  List<AttributeOption>? options;
 
   ProgramTrackedEntityAttribute(
       {required String id,
@@ -51,6 +55,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
       this.renderOptionsAsRadio,
       this.aggregationType,
       this.generated,
+      this.program,
       this.isUnique,
       this.optionSetValue,
       this.optionSetName,
@@ -67,6 +72,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
         renderOptionsAsRadio: jsonData['renderOptionsAsRadio'],
         name: jsonData['name'],
         displayName: jsonData['displayName'],
+        program: jsonData['program'],
         valueType: jsonData['valueType'],
         sortOrder: jsonData['sortOrder'],
         mandatory: jsonData['mandatory'],
@@ -83,7 +89,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
         options: List<dynamic>.from(jsonData['options'] ??
                 jsonData['trackedEntityAttribute']?['optionSet']?['options'] ??
                 [])
-            .map((option) => Option.fromJson({
+            .map((option) => AttributeOption.fromJson({
                   ...option,
                   'id': '${option['id']}_${jsonData['id']}}',
                   'programTrackedEntityAttribute': jsonData['id'],
@@ -97,6 +103,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
+    data['program'] = this.program;
     data['displayName'] = this.displayName;
     data['sortOrder'] = this.sortOrder;
     data['valueType'] = this.valueType;

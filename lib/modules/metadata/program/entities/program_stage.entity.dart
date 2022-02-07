@@ -1,5 +1,7 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage_data_element.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage_section.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
@@ -26,8 +28,8 @@ class ProgramStage extends BaseEntity {
   @Column(type: ColumnType.BOOLEAN)
   bool repeatable;
 
-  @Column(type: ColumnType.BOOLEAN)
-  bool allowGenerateNextVisit;
+  @Column(nullable: true)
+  bool? allowGenerateNextVisit;
 
   @Column(type: ColumnType.TEXT, nullable: true)
   int? minDaysFromStart;
@@ -47,19 +49,14 @@ class ProgramStage extends BaseEntity {
   @Column(type: ColumnType.TEXT, nullable: true)
   String? dueDateLabel;
 
-  @Column(type: ColumnType.TEXT)
-  Object programStageSections;
-
-  @Column(type: ColumnType.TEXT)
-  Object programStageDataElements;
+  @OneToMany(table: ProgramStageSection)
+  List<ProgramStageSection>? programStageSections;
 
   @ManyToOne(joinColumnName: 'program', table: Program)
   dynamic program;
 
-  // @OneToMany(() => EventEntity, (event) => event.programStage, {
-  //   cascade: true,
-  // })
-  // events: EventEntity[];
+  @OneToMany(table: ProgramStageDataElement)
+  List<ProgramStageDataElement>? programStageDataElements;
 
   ProgramStage(
       {required String id,
@@ -72,7 +69,7 @@ class ProgramStage extends BaseEntity {
       required this.featureType,
       required this.captureCoordinates,
       required this.sortOrder,
-      required this.allowGenerateNextVisit,
+      this.allowGenerateNextVisit,
       required this.autoGenerateEvent,
       required this.blockEntryForm,
       this.dueDateLabel,
@@ -119,8 +116,26 @@ class ProgramStage extends BaseEntity {
       hideDueDate: jsonData['hideDueDate'],
       minDaysFromStart: int.parse(jsonData['minDaysFromStart'].toString()),
       program: jsonData['program'],
-      programStageDataElements: jsonData['programStageDataElements'],
-      programStageSections: jsonData['programStageSections'],
+      programStageSections:
+          List<dynamic>.from(jsonData['programStageSections'] ?? [])
+              .map((programStageSection) => ProgramStageSection.fromJson({
+                    ...programStageSection,
+                    'programStage': jsonData['id'],
+                    'dirty': false
+                  }))
+              .toList(),
+      programStageDataElements: List<dynamic>.from(
+              jsonData['programStageDataElements'] ?? [])
+          .map((programStageDataElement) => ProgramStageDataElement.fromJson({
+                ...programStageDataElement,
+                ...(programStageDataElement['dataElement'] ?? {}),
+                'id': programStageDataElement['id'],
+                'dataElement': programStageDataElement['dataElement']?['id'] ??
+                    programStageDataElement['dataElement'],
+                'programStage': jsonData['id'],
+                'dirty': false
+              }))
+          .toList(),
       repeatable: jsonData['repeatable'],
       sortOrder: jsonData['sortOrder'],
     );

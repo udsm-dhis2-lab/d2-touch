@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';

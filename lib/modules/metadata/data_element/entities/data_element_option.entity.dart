@@ -1,30 +1,27 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/data_element/entities/data_element.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
-@Entity(tableName: 'option', apiResourceName: 'options')
-class Option extends BaseEntity {
-  @ManyToOne(
-      table: ProgramTrackedEntityAttribute,
-      joinColumnName: 'programTrackedEntityAttribute')
-  dynamic programTrackedEntityAttribute;
+@Entity(tableName: 'dataelementoption', apiResourceName: 'dataElementOptions')
+class DataElementOption extends BaseEntity {
+  @ManyToOne(table: DataElement, joinColumnName: 'dataElement')
+  dynamic dataElement;
 
-  Option(
+  DataElementOption(
       {required String id,
       required String name,
       required String code,
-      required this.programTrackedEntityAttribute,
+      required this.dataElement,
       required bool dirty})
       : super(id: id, name: name, code: code, dirty: dirty);
 
-  factory Option.fromJson(Map<String, dynamic> jsonData) {
-    return Option(
+  factory DataElementOption.fromJson(Map<String, dynamic> jsonData) {
+    return DataElementOption(
         id: jsonData['id'],
         name: jsonData['name'],
         code: jsonData['code'],
-        programTrackedEntityAttribute:
-            jsonData['programTrackedEntityAttribute'],
+        dataElement: jsonData['dataElement'],
         dirty: jsonData['dirty']);
   }
 
@@ -33,7 +30,7 @@ class Option extends BaseEntity {
     data['id'] = this.id;
     data['name'] = this.name;
     data['code'] = this.code;
-    data['programTrackedEntityAttribute'] = this.programTrackedEntityAttribute;
+    data['dataElement'] = this.dataElement;
     data['dirty'] = this.dirty;
     return data;
   }
