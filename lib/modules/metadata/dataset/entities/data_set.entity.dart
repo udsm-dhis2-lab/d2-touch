@@ -1,6 +1,8 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
+import 'data_set_element.entity.dart';
+
 @AnnotationReflectable
 @Entity(tableName: 'dataset', apiResourceName: 'dataSets')
 class DataSet extends BaseEntity {
@@ -31,9 +33,8 @@ class DataSet extends BaseEntity {
   @Column(type: ColumnType.BOOLEAN, nullable: true)
   bool? fieldCombinationRequired;
 
-  // @Column("simple-json") categoryCombo: any;
-  // @Column("simple-json") dataSetElements: any;
-  // @Column("simple-json") organisationUnits: any;
+  @OneToMany(table: DataSetElement)
+  List<DataSetElement>? dataSetElements;
 
   DataSet(
       {required String id,
@@ -52,6 +53,7 @@ class DataSet extends BaseEntity {
       this.renderAsTabs,
       this.description,
       this.fieldCombinationRequired,
+      this.dataSetElements,
       required dirty})
       : super(
             id: id,
@@ -65,20 +67,31 @@ class DataSet extends BaseEntity {
 
   factory DataSet.fromJson(Map<String, dynamic> json) {
     return DataSet(
-      id: json['id'],
-      name: json['name'],
-      created: json['created'],
-      shortName: json['shortName'],
-      code: json['code'],
-      displayName: json['displayName'],
-      timelyDays: json['timelyDays'],
-      formType: json['formType'],
-      description: json['description'],
-      dirty: json['dirty'],
-      expiryDays: json['expiryDays'],
-      openFuturePeriods: json['openFuturePeriods'],
-      periodType: json['periodType'],
-    );
+        id: json['id'],
+        name: json['name'],
+        created: json['created'],
+        shortName: json['shortName'],
+        code: json['code'],
+        displayName: json['displayName'],
+        timelyDays: json['timelyDays'],
+        formType: json['formType'],
+        description: json['description'],
+        dirty: json['dirty'],
+        expiryDays: json['expiryDays'],
+        openFuturePeriods: json['openFuturePeriods'],
+        periodType: json['periodType'],
+        dataSetElements: List<dynamic>.from(json['dataSetElements'] ?? [])
+            .map((dataSetElement) => DataSetElement.fromJson({
+                  ...dataSetElement,
+                  ...(dataSetElement['dataElement'] ?? {}),
+                  'id': dataSetElement['id'] ??
+                      '${json['id']}_${dataSetElement['dataElement']?['id']}',
+                  'dataElementId': dataSetElement['dataElementId'] ??
+                      dataSetElement['dataElement']?['id'],
+                  'dataSet': json['id'],
+                  'dirty': false
+                }))
+            .toList());
   }
 
   Map<String, dynamic> toJson() {
@@ -96,6 +109,7 @@ class DataSet extends BaseEntity {
     data['expiryDays'] = this.expiryDays;
     data['periodType'] = this.periodType;
     data['openFuturePeriods'] = this.openFuturePeriods;
+    data['dataSetElements'] = this.dataSetElements;
     data['dirty'] = this.dirty;
 
     return data;
