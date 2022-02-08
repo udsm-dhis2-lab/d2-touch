@@ -1,3 +1,10 @@
+## [1.0.0-alpha.10] - 08/02/2022
+
+- Support to save dataset element and options
+- Support for custom query builder for fetching program stage sections
+- Support to save program stage options
+- Support to save dataelements for programStage
+
 ## [1.0.0-alpha.9] - 07/02/2022
 
 - Ensure uniquness on tracked entity attribute options
