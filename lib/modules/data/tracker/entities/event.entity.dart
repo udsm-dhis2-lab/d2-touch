@@ -116,7 +116,7 @@ class Event extends BaseEntity {
         notes: json['notes'].toString(),
         eventType: json['eventType'],
         programStage: json['programStage'],
-        enrollment: json['enrollment'],
+        enrollment: json['enrollment'] ?? '',
         dataValues: List<dynamic>.from(json['dataValues'] ?? [])
             .map((event) => EventDataValue.fromJson({
                   ...event,

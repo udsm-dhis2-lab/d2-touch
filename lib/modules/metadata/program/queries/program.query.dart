@@ -2,6 +2,7 @@ import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:reflectable/reflectable.dart';
@@ -25,6 +26,31 @@ class ProgramQuery extends BaseQuery<Program> {
               AnnotationReflectable.reflectType(ProgramStage) as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(ProgramStage) as ClassMirror,
+              false));
+      this.relations.add(relation);
+    }
+
+    return this;
+  }
+
+  ProgramQuery withAttributes() {
+    final programAttribute = Repository<ProgramTrackedEntityAttribute>();
+    final Column? relationColumn = programAttribute.columns.firstWhere(
+        (column) =>
+            column.relation?.referencedEntity?.tableName == this.tableName);
+
+    if (relationColumn != null) {
+      ColumnRelation relation = ColumnRelation(
+          referencedColumn: relationColumn.relation?.attributeName,
+          attributeName: 'programTrackedEntityAttributes',
+          primaryKey: this.primaryKey?.name,
+          relationType: RelationType.OneToMany,
+          referencedEntity: Entity.getEntityDefinition(
+              AnnotationReflectable.reflectType(ProgramTrackedEntityAttribute)
+                  as ClassMirror),
+          referencedEntityColumns: Entity.getEntityColumns(
+              AnnotationReflectable.reflectType(ProgramTrackedEntityAttribute)
+                  as ClassMirror,
               false));
       this.relations.add(relation);
     }

@@ -56,7 +56,7 @@ class Program extends BaseEntity {
   String? trackedEntity;
 
   @Column(nullable: true)
-  Object? trackedEntityType;
+  String? trackedEntityType;
 
   @Column(nullable: true)
   Object? organisationUnits;
@@ -124,6 +124,12 @@ class Program extends BaseEntity {
             dirty: dirty);
 
   factory Program.fromJson(Map<String, dynamic> json) {
+    final trackedEntityType = json['trackedEntityType'] != null
+        ? json['trackedEntityType'] is String
+            ? json['trackedEntityType']
+            : json['trackedEntityType']['id'] ?? json['trackedEntityType']
+        : null;
+
     return Program(
         id: json['id'],
         name: json['name'],
@@ -148,7 +154,7 @@ class Program extends BaseEntity {
         selectEnrollmentDatesInFuture: json['selectEnrollmentDatesInFuture'],
         selectIncidentDatesInFuture: json['selectIncidentDatesInFuture'],
         trackedEntity: json['trackedEntity'],
-        trackedEntityType: json['trackedEntityType']?.toString() ?? null,
+        trackedEntityType: trackedEntityType,
         useFirstStageDuringRegistration:
             json['useFirstStageDuringRegistration'],
         withoutRegistration: json['withoutRegistration'],

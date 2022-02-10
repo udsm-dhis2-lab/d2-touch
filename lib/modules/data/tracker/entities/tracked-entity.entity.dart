@@ -16,7 +16,7 @@ class TrackedEntityInstance extends BaseEntity {
   String trackedEntityType;
 
   @Column()
-  String trackedEntityInstance;
+  late String? trackedEntityInstance;
 
   @Column(nullable: true)
   bool? deleted;
@@ -43,12 +43,14 @@ class TrackedEntityInstance extends BaseEntity {
   List<Enrollment>? enrollments;
 
   TrackedEntityInstance(
-      {required String id,
+      {String? id,
       String? name,
+      String? created,
+      String? lastUpdated,
       required this.orgUnit,
       required bool dirty,
       required this.trackedEntityType,
-      required this.trackedEntityInstance,
+      this.trackedEntityInstance,
       this.deleted,
       this.synced,
       this.syncFailed,
@@ -57,7 +59,14 @@ class TrackedEntityInstance extends BaseEntity {
       this.inactive,
       this.enrollments,
       this.attributes})
-      : super(id: id, name: name, dirty: dirty);
+      : super(
+            id: id,
+            name: name,
+            created: created,
+            lastUpdated: lastUpdated,
+            dirty: dirty) {
+    this.trackedEntityInstance = this.trackedEntityInstance ?? this.id;
+  }
 
   factory TrackedEntityInstance.fromJson(Map<String, dynamic> json) {
     final attributes = json['attributes'];
@@ -79,24 +88,22 @@ class TrackedEntityInstance extends BaseEntity {
                     Enrollment.fromJson({...enrollment, 'dirty': false}))
                 .toList()
             : null,
-        attributes: attributes != null
-            ? List<Map<String, dynamic>>.from(attributes)
-                .map((attribute) => TrackedEntityAttributeValue.fromJson({
-                      ...attribute,
-                      'id': attribute['id'] ??
-                          '${json['trackedEntityInstance']}_${attribute['attribute']}',
-                      'trackedEntityInstance': json['trackedEntityInstance'],
-                      'dirty': attribute['dirty'] ?? false
-                    }))
-                .toList()
-            : null,
+        attributes: List<Map<String, dynamic>>.from(attributes ?? [])
+            .map((attribute) => TrackedEntityAttributeValue.fromJson({
+                  ...attribute,
+                  'id': attribute['id'] ??
+                      '${json['trackedEntityInstance']}_${attribute['attribute']}',
+                  'trackedEntityInstance': json['trackedEntityInstance'],
+                  'dirty': attribute['dirty'] ?? false
+                }))
+            .toList(),
         dirty: json['dirty']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['name'] = this.name;
+    data['name'] = this.name ?? this.id;
     data['orgUnit'] = this.orgUnit;
     data['trackedEntityInstance'] = this.trackedEntityInstance;
     data['trackedEntityType'] = this.trackedEntityType;
@@ -109,6 +116,8 @@ class TrackedEntityInstance extends BaseEntity {
     data['enrollments'] = this.enrollments;
     data['attributes'] = this.attributes;
     data['dirty'] = this.dirty;
+    data['created'] = this.created;
+    data['lastUpdated'] = this.lastUpdated;
     return data;
   }
 

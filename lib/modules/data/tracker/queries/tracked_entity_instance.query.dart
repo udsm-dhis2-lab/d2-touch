@@ -1,10 +1,15 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/attribute_reserved_value.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/enrollment.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
 import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
@@ -78,6 +83,62 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return this;
   }
 
+  @override
+  Future create() async {
+    final Program program = await ProgramQuery()
+        .byId(this.program as String)
+        .withAttributes()
+        .getOne();
+
+    TrackedEntityInstance trackedEntityInstance = TrackedEntityInstance(
+      orgUnit: this.orgUnit as String,
+      dirty: true,
+      trackedEntityType: program.trackedEntityType as String,
+    );
+
+    final List<ProgramTrackedEntityAttribute> reservedAttributes =
+        (program.programTrackedEntityAttributes ?? [])
+            .where((attribute) => attribute.generated == true)
+            .toList();
+
+    List<TrackedEntityAttributeValue> attributeValues = [];
+
+    await Future.wait(reservedAttributes.map((attribute) async {
+      final AttributeReservedValue? attributeReservedValue =
+          await AttributeReservedValueQuery()
+              .where(attribute: 'attribute', value: attribute.attribute)
+              .getOne();
+
+      if (attributeReservedValue != null) {
+        final String id =
+            '${trackedEntityInstance.trackedEntityInstance}_${attribute.attribute}';
+        attributeValues.add(TrackedEntityAttributeValue(
+            id: id,
+            name: id,
+            dirty: true,
+            attribute: attribute.attribute,
+            trackedEntityInstance: trackedEntityInstance.trackedEntityInstance,
+            value: attributeReservedValue.value));
+
+        await AttributeReservedValueQuery()
+            .byId(attributeReservedValue.id as String)
+            .delete();
+      }
+
+      return null;
+    }));
+
+    trackedEntityInstance.attributes = attributeValues;
+
+    this.data = trackedEntityInstance;
+
+    await this.save();
+
+    // final reservedAttributes = await AttributeReservedValueQuery().where(attribute: attribute, value: value)
+
+    return trackedEntityInstance;
+  }
+
   String get dhisUrl {
     return 'trackedEntityInstances.json?ou=${this.orgUnit}&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=lastUpdated:desc&fields=*';
   }
@@ -91,7 +152,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         .get();
 
     final List<String> trackedEntityInstanceIds = trackedEntityInstances
-        .map((trackedEntityInstance) => trackedEntityInstance.id)
+        .map((trackedEntityInstance) => trackedEntityInstance.id as String)
         .toList();
 
     List<TrackedEntityAttributeValue> attributes =

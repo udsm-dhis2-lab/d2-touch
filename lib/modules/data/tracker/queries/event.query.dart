@@ -75,7 +75,7 @@ class EventQuery extends BaseQuery<Event> {
     List<String> eventIds = [];
     List<String> eventProgramStageIds = [];
     events.forEach((event) {
-      eventIds.add(event.id);
+      eventIds.add(event.id as String);
 
       eventProgramStageIds.removeWhere((id) => id == event.programStage);
       eventProgramStageIds.add(event.programStage);

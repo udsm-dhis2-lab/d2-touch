@@ -127,7 +127,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     num availableItemCount = 0;
 
     dataValueSets.forEach((dataValueSet) {
-      dataValueSetIds.add(dataValueSet.id);
+      dataValueSetIds.add(dataValueSet.id as String);
       availableItemCount++;
       queue.add(
           () => this.uploadOne(dataValueSet, dioTestClient: dioTestClient));

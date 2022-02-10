@@ -1,16 +1,8 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event_data_value.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/enrollment.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event_data_value.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_instance.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';

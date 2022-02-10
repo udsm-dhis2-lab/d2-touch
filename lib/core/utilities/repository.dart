@@ -439,7 +439,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   Future<int> saveOne({required T entity, Database? database}) async {
     final Database db = database != null ? database : await this.database;
 
-    var result = await this.findById(id: entity.id, database: db);
+    var result = await this.findById(id: entity.id as String, database: db);
 
     if (result != null) {
       return this.updateOne(entity: entity, database: db);

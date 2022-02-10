@@ -17,7 +17,7 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
         .get();
 
     final List<String> enrollmentIds = enrollments
-        .map((trackedEntityInstance) => trackedEntityInstance.id)
+        .map((trackedEntityInstance) => trackedEntityInstance.id as String)
         .toList();
 
     final enrollmentUploadPayload = enrollments.map((enrollment) {

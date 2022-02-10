@@ -1,3 +1,7 @@
+## [1.0.0-alpha.10] - 10/02/2022
+
+- Support to download events and save into the phone database
+
 ## [1.0.0-alpha.10] - 08/02/2022
 
 - Support to save dataset element and options
