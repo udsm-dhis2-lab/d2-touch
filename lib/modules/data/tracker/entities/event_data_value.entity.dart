@@ -48,7 +48,7 @@ class EventDataValue extends BaseEntity {
         id: json['id'],
         name: json['id'],
         dataElement: json['dataElement'],
-        value: json['value'],
+        value: json['value'] ?? '',
         created: json['created'],
         lastUpdated: json['lastUpdated'],
         event: json['event'],

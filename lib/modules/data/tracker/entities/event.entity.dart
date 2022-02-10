@@ -117,16 +117,14 @@ class Event extends BaseEntity {
         eventType: json['eventType'],
         programStage: json['programStage'],
         enrollment: json['enrollment'],
-        dataValues: json['dataValues'] != null
-            ? List<dynamic>.from(json['dataValues'])
-                .map((event) => EventDataValue.fromJson({
-                      ...event,
-                      "id": '${json['event']}_${event['dataElement']}',
-                      "event": json['event'],
-                      "dirty": false
-                    }))
-                .toList()
-            : null,
+        dataValues: List<dynamic>.from(json['dataValues'] ?? [])
+            .map((event) => EventDataValue.fromJson({
+                  ...event,
+                  "id": '${json['event']}_${event['dataElement']}',
+                  "event": json['event'],
+                  "dirty": false
+                }))
+            .toList(),
         dirty: json['dirty']);
   }
 

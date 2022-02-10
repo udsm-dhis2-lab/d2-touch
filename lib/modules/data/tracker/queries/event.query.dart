@@ -1,3 +1,5 @@
+import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event_data_value.query.dart';
@@ -8,10 +10,60 @@ import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
+import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
 class EventQuery extends BaseQuery<Event> {
+  String? orgUnit;
+  String? program;
+  String? programStage;
   EventQuery({Database? database}) : super(database: database);
+
+  EventQuery withAttributes() {
+    final eventDataValue = Repository<EventDataValue>();
+
+    final Column? relationColumn = eventDataValue.columns.firstWhere((column) {
+      return column.relation?.referencedEntity?.tableName == this.tableName;
+    });
+
+    if (relationColumn != null) {
+      ColumnRelation relation = ColumnRelation(
+          referencedColumn: relationColumn.relation?.attributeName,
+          attributeName: 'dataValues',
+          primaryKey: this.primaryKey?.name,
+          relationType: RelationType.OneToMany,
+          referencedEntity: Entity.getEntityDefinition(
+              AnnotationReflectable.reflectType(EventDataValue) as ClassMirror),
+          referencedEntityColumns: Entity.getEntityColumns(
+              AnnotationReflectable.reflectType(EventDataValue) as ClassMirror,
+              false));
+
+      this.relations.add(relation);
+    }
+
+    return this;
+  }
+
+  EventQuery byOrgUnit(String orgUnit) {
+    this.orgUnit = orgUnit;
+    return this;
+  }
+
+  EventQuery byProgram(String program) {
+    this.program = program;
+
+    return this;
+  }
+
+  EventQuery byProgramStage(String programStage) {
+    this.programStage = programStage;
+    return this;
+  }
+
+  @override
+  String get dhisUrl {
+    return 'events.json?fields=event,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1';
+  }
 
   Future<List<Event>?> upload(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
