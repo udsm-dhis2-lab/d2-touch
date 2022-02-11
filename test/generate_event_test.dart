@@ -13,7 +13,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../sample/current_user.sample.dart';
 import '../sample/program.sample.dart';
 import '../sample/reserved_values.sample.dart';
-import 'generate_tracked_entity_instance_test.reflectable.dart';
+import 'generate_event_test.reflectable.dart';
 
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -67,9 +67,11 @@ void main() async {
   final Event event = await D2Touch.trackerModule.event
       .byProgramStage('A03MvHHogjR')
       .byOrgUnit('fnei293faf')
+      .byEnrollment(trackedEntityInstance.enrollments?[0].enrollment as String)
       .create();
 
-  print(event);
+  final Event? createdEvent =
+      await D2Touch.trackerModule.event.byId(event.id as String).getOne();
 
   test('should return created tracked entity instance with generated values',
       () {
@@ -80,5 +82,6 @@ void main() async {
             .lastWhere((attribute) => attribute.attribute == 'lZGmxYbs97q')
             .attribute,
         'lZGmxYbs97q');
+    expect(createdEvent?.id, event.id);
   });
 }

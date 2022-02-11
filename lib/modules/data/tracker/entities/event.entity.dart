@@ -71,6 +71,8 @@ class Event extends BaseEntity {
   Event(
       {String? id,
       String? name,
+      String? created,
+      String? lastUpdated,
       this.event,
       required this.orgUnit,
       required this.status,
@@ -92,7 +94,12 @@ class Event extends BaseEntity {
       required this.programStage,
       this.enrollment,
       this.dataValues})
-      : super(id: id, name: name, dirty: dirty) {
+      : super(
+            id: id,
+            name: name,
+            created: created,
+            lastUpdated: lastUpdated,
+            dirty: dirty) {
     this.event = this.event ?? this.id;
     this.name = this.name ?? this.event;
   }
@@ -153,7 +160,7 @@ class Event extends BaseEntity {
     data['notes'] = this.notes;
     data['eventType'] = this.eventType;
     data['programStage'] = this.programStage;
-    data['enrollment'] = this.enrollment;
+    data['enrollment'] = this.enrollment ?? '';
     data['dataValues'] = this.dataValues;
     data['dirty'] = this.dirty;
     return data;

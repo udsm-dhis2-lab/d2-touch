@@ -19,6 +19,7 @@ class EventQuery extends BaseQuery<Event> {
   String? orgUnit;
   String? program;
   String? programStage;
+  String? enrollment;
   EventQuery({Database? database}) : super(database: database);
 
   EventQuery withAttributes() {
@@ -62,6 +63,11 @@ class EventQuery extends BaseQuery<Event> {
     return this;
   }
 
+  EventQuery byEnrollment(String enrollment) {
+    this.enrollment = enrollment;
+    return this;
+  }
+
   @override
   String get dhisUrl {
     return 'events.json?fields=event,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1';
@@ -69,59 +75,18 @@ class EventQuery extends BaseQuery<Event> {
 
   @override
   Future create() async {
-    final Program program = await ProgramQuery()
-        .byId(this.program as String)
-        .withAttributes()
-        .getOne();
-
-    Event trackedEntityInstance = Event(
+    Event event = Event(
         orgUnit: this.orgUnit as String,
         status: 'ACTIVE',
-        enrollment: '',
+        enrollment: this.enrollment,
         dirty: true,
         programStage: this.programStage);
 
-    // final List<ProgramTrackedEntityAttribute> reservedAttributes =
-    //     (program.programTrackedEntityAttributes ?? [])
-    //         .where((attribute) => attribute.generated == true)
-    //         .toList();
-
-    // List<TrackedEntityAttributeValue> attributeValues = [];
-
-    // await Future.wait(reservedAttributes.map((attribute) async {
-    //   final AttributeReservedValue? attributeReservedValue =
-    //       await AttributeReservedValueQuery()
-    //           .where(attribute: 'attribute', value: attribute.attribute)
-    //           .getOne();
-
-    //   if (attributeReservedValue != null) {
-    //     final String id =
-    //         '${trackedEntityInstance.trackedEntityInstance}_${attribute.attribute}';
-    //     attributeValues.add(TrackedEntityAttributeValue(
-    //         id: id,
-    //         name: id,
-    //         dirty: true,
-    //         attribute: attribute.attribute,
-    //         trackedEntityInstance: trackedEntityInstance.trackedEntityInstance,
-    //         value: attributeReservedValue.value));
-
-    //     await AttributeReservedValueQuery()
-    //         .byId(attributeReservedValue.id as String)
-    //         .delete();
-    //   }
-
-    //   return null;
-    // }));
-
-    // trackedEntityInstance.attributes = attributeValues;
-
-    this.data = trackedEntityInstance;
+    this.data = event;
 
     await this.save();
 
-    // final reservedAttributes = await AttributeReservedValueQuery().where(attribute: attribute, value: value)
-
-    return trackedEntityInstance;
+    return event;
   }
 
   Future<List<Event>?> upload(Function(RequestProgress, bool) callback,
