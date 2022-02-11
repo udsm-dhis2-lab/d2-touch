@@ -30,7 +30,7 @@ class MessageConversation extends BaseEntity {
       String? created,
       String? lastUpdated,
       required String name,
-      required String shortName,
+      String? shortName,
       required this.status,
       required this.subject,
       required this.messageType,

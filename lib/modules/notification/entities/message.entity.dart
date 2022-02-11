@@ -6,10 +6,10 @@ import 'message_conversation.entity.dart';
 @AnnotationReflectable
 @Entity(tableName: 'message', apiResourceName: 'messages')
 class Message extends BaseEntity {
-  @Column(type: ColumnType.TEXT)
-  String sender;
+  @Column(nullable: true)
+  String? sender;
 
-  @Column(type: ColumnType.TEXT)
+  @Column()
   String text;
 
   @ManyToOne(joinColumnName: 'messageConversation', table: MessageConversation)
@@ -20,10 +20,10 @@ class Message extends BaseEntity {
       String? created,
       String? lastUpdated,
       required String name,
-      required String shortName,
+      String? shortName,
       String? code,
       String? displayName,
-      required this.sender,
+      this.sender,
       required this.text,
       required this.messageConversation,
       required dirty})

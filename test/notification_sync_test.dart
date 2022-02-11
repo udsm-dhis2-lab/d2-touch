@@ -3,6 +3,8 @@ import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/dataset/entities/data_set.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/dataset/queries/data_set.query.dart';
+import 'package:dhis2_flutter_sdk/modules/notification/entities/message_conversation.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/notification/queries/message_conversation.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,6 +16,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'dataset_sync_test.reflectable.dart';
 import '../sample/current_user.sample.dart';
 import '../sample/data_sets.sample.dart';
+import '../sample/message_conversation.sample.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,25 +39,24 @@ void main() async {
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.11';
   final user = User.fromApi(userData);
   await userQuery.setData(user).save();
-  final dataSetQuery = DataSetQuery(database: db);
-
-  final dhisDataSets = sampleDataSets;
+  final notificationQuery = MessageConversationQuery(database: db);
 
   final dio = Dio(BaseOptions());
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/dataSets.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired&paging=false',
-    (server) => server.reply(200, dhisDataSets),
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,status,subject,messageType,lastMessage,read&paging=false',
+    (server) => server.reply(200, sampleMessageConversations),
   );
 
-  await dataSetQuery.download((progress, complete) {
+  await notificationQuery.download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
-  List<DataSet> dataSets = await dataSetQuery.get();
+  List<MessageConversation> messageConversations =
+      await notificationQuery.get();
 
-  test('should store all incoming data set metadata', () {
-    expect(dataSets.length, 26);
+  test('should store all incoming  notification', () {
+    expect(messageConversations.length, 26);
   });
 }
