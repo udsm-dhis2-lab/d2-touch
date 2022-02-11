@@ -1,4 +1,9 @@
-## [1.0.0-alpha.10] - 10/02/2022
+## [1.0.0-alpha.12] - 10/02/2022
+
+- Support to generate tracked entity instances along with reserved values
+- Resolve issues in saving events that have no enrollments
+
+## [1.0.0-alpha.11] - 10/02/2022
 
 - Support to download events and save into the phone database
 
