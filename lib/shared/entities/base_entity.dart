@@ -7,7 +7,7 @@ class BaseEntity {
   late String? id;
 
   @Column()
-  final String? name;
+  String? name;
 
   @Column(nullable: true)
   final String? displayName;

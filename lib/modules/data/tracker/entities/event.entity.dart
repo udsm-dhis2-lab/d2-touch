@@ -9,7 +9,7 @@ import 'event_data_value.entity.dart';
 @Entity(tableName: 'event', apiResourceName: 'events')
 class Event extends BaseEntity {
   @Column()
-  String event;
+  String? event;
 
   @Column()
   String orgUnit;
@@ -69,9 +69,9 @@ class Event extends BaseEntity {
   List<EventDataValue>? dataValues;
 
   Event(
-      {required String id,
-      required String name,
-      required this.event,
+      {String? id,
+      String? name,
+      this.event,
       required this.orgUnit,
       required this.status,
       required dirty,
@@ -92,7 +92,10 @@ class Event extends BaseEntity {
       required this.programStage,
       this.enrollment,
       this.dataValues})
-      : super(id: id, name: name, dirty: dirty);
+      : super(id: id, name: name, dirty: dirty) {
+    this.event = this.event ?? this.id;
+    this.name = this.name ?? this.event;
+  }
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(

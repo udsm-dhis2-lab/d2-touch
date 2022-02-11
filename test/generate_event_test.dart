@@ -2,6 +2,7 @@ import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/attribute_reserved_value.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
@@ -61,8 +62,14 @@ void main() async {
   final TrackedEntityInstance createdInstance = await D2Touch
       .trackerModule.trackedEntityInstance
       .byId(trackedEntityInstance.id as String)
-      .withEnrollments()
       .getOne();
+
+  final Event event = await D2Touch.trackerModule.event
+      .byProgramStage('A03MvHHogjR')
+      .byOrgUnit('fnei293faf')
+      .create();
+
+  print(event);
 
   test('should return created tracked entity instance with generated values',
       () {
@@ -73,6 +80,5 @@ void main() async {
             .lastWhere((attribute) => attribute.attribute == 'lZGmxYbs97q')
             .attribute,
         'lZGmxYbs97q');
-    expect(createdInstance.enrollments?.length, 1);
   });
 }

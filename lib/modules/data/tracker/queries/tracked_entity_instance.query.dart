@@ -96,6 +96,16 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       trackedEntityType: program.trackedEntityType as String,
     );
 
+    Enrollment enrollment = Enrollment(
+        trackedEntityType: program.trackedEntityType as String,
+        orgUnit: this.orgUnit as String,
+        program: program.id as String,
+        trackedEntityInstance: trackedEntityInstance.trackedEntityInstance,
+        status: 'ACTIVE',
+        dirty: true);
+
+    trackedEntityInstance.enrollments = [enrollment];
+
     final List<ProgramTrackedEntityAttribute> reservedAttributes =
         (program.programTrackedEntityAttributes ?? [])
             .where((attribute) => attribute.generated == true)

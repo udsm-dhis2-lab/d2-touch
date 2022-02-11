@@ -8,13 +8,13 @@ import 'tracked-entity.entity.dart';
 @Entity(tableName: 'enrollment', apiResourceName: 'enrollments')
 class Enrollment extends BaseEntity {
   @Column()
-  String enrollment;
+  String? enrollment;
 
   @Column()
-  String incidentDate;
+  String? incidentDate;
 
   @Column()
-  String enrollmentDate;
+  String? enrollmentDate;
 
   @Column()
   String trackedEntityType;
@@ -48,11 +48,11 @@ class Enrollment extends BaseEntity {
   dynamic trackedEntityInstance;
 
   Enrollment(
-      {required String id,
-      required String name,
-      required this.enrollment,
-      required this.incidentDate,
-      required this.enrollmentDate,
+      {String? id,
+      String? name,
+      this.enrollment,
+      this.incidentDate,
+      this.enrollmentDate,
       required this.trackedEntityType,
       required this.orgUnit,
       required this.program,
@@ -64,7 +64,12 @@ class Enrollment extends BaseEntity {
       this.lastSyncDate,
       this.events,
       this.trackedEntityInstance})
-      : super(id: id, name: name, dirty: dirty);
+      : super(id: id, name: name, dirty: dirty) {
+    this.enrollment = this.enrollment ?? this.id;
+    this.name = this.name ?? this.enrollment;
+    this.incidentDate = this.incidentDate ?? this.created;
+    this.enrollmentDate = this.enrollmentDate ?? this.created;
+  }
 
   factory Enrollment.fromJson(Map<String, dynamic> json) {
     return Enrollment(
@@ -81,11 +86,9 @@ class Enrollment extends BaseEntity {
         syncFailed: json['syncFailed'],
         lastSyncSummary: json['lastSyncSummary'],
         lastSyncDate: json['lastSyncDate'],
-        events: json['events'] != null
-            ? List<dynamic>.from(json['events'])
-                .map((event) => Event.fromJson({...event, 'dirty': false}))
-                .toList()
-            : null,
+        events: List<dynamic>.from(json['events'] ?? [])
+            .map((event) => Event.fromJson({...event, 'dirty': false}))
+            .toList(),
         trackedEntityInstance: json['trackedEntityInstance'],
         dirty: json['dirty'] ?? false);
   }
@@ -105,7 +108,7 @@ class Enrollment extends BaseEntity {
     data['syncFailed'] = this.syncFailed;
     data['lastSyncSummary'] = this.lastSyncSummary;
     data['lastSyncDate'] = this.lastSyncDate;
-    data['events'] = this.events;
+    data['events'] = this.events ?? [];
     data['trackedEntityInstance'] = this.trackedEntityInstance;
     data['dirty'] = this.dirty;
 
