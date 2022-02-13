@@ -1,3 +1,7 @@
+## [1.0.0-alpha.13] - 13/02/2022
+
+- Resolve issues in saving program stage details as part of program data
+
 ## [1.0.0-alpha.12] - 10/02/2022
 
 - Support to generate tracked entity instances along with reserved values
