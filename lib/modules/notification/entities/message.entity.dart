@@ -38,6 +38,7 @@ class Message extends BaseEntity {
             dirty: dirty);
 
   factory Message.fromJson(Map<String, dynamic> json) {
+    print(json);
     return Message(
         id: json['id'],
         name: json['name'],

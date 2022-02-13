@@ -22,7 +22,7 @@ class EventQuery extends BaseQuery<Event> {
   String? enrollment;
   EventQuery({Database? database}) : super(database: database);
 
-  EventQuery withAttributes() {
+  EventQuery withDataValues() {
     final eventDataValue = Repository<EventDataValue>();
 
     final Column? relationColumn = eventDataValue.columns.firstWhere((column) {
@@ -70,7 +70,7 @@ class EventQuery extends BaseQuery<Event> {
 
   @override
   String get dhisUrl {
-    return 'events.json?fields=event,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1';
+    return 'events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1';
   }
 
   @override

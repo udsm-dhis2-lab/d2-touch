@@ -469,12 +469,40 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     Map<String, dynamic> data = this
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
-    return db.update(
+    final saveDataResponse = db.update(
       this.entity.tableName,
       data,
       where: "id = ?",
       whereArgs: [data['id']],
     );
+
+    if (this.oneToManyColumns.isEmpty) {
+      return saveDataResponse;
+    }
+
+    final queue = Queue(parallel: 50);
+    num availableItemCount = 0;
+
+    this.oneToManyColumns.forEach((Column column) {
+      final List data = entity.toJson()[column.relation?.attributeName] ?? [];
+      if (data.isNotEmpty) {
+        availableItemCount++;
+        data.forEach((dataItem) {
+          queue.add(() => insertRelationData(
+              columnRelation: column.relation as ColumnRelation,
+              entity: dataItem,
+              database: db));
+        });
+      }
+    });
+
+    if (availableItemCount == 0) {
+      queue.cancel();
+      return saveDataResponse;
+    }
+
+    await queue.onComplete;
+    return saveDataResponse;
   }
 
   @override
