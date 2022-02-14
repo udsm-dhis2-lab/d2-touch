@@ -1,5 +1,6 @@
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/attribute_option.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage_data_element.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage_section.query.dart';
@@ -16,6 +17,7 @@ class ProgramModule {
     await AttributeOptionQuery().createTable();
     await ProgramTrackedEntityAttributeQuery().createTable();
     await ProgramStageDataElementQuery().createTable();
+    await ProgramRuleQuery().createTable();
   }
 
   ProgramQuery get program => ProgramQuery();
@@ -35,4 +37,6 @@ class ProgramModule {
 
   ProgramStageDataElementOptionQuery get programStageDataElementOption =>
       ProgramStageDataElementOptionQuery();
+
+  ProgramRuleQuery get programRule => ProgramRuleQuery();
 }
