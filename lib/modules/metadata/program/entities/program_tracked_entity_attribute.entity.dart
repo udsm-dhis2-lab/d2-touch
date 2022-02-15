@@ -12,6 +12,9 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
   String attribute;
 
   @Column(nullable: true)
+  String? formName;
+
+  @Column(nullable: true)
   bool? renderOptionsAsRadio;
 
   @Column()
@@ -51,6 +54,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
       required this.sortOrder,
       required this.valueType,
       required this.mandatory,
+      this.formName,
       String? displayName,
       this.renderOptionsAsRadio,
       this.aggregationType,
@@ -70,8 +74,12 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
         attribute:
             jsonData['attribute'] ?? jsonData['trackedEntityAttribute']?['id'],
         renderOptionsAsRadio: jsonData['renderOptionsAsRadio'],
-        name: jsonData['name'],
-        displayName: jsonData['displayName'],
+        name: jsonData['name'] ?? jsonData['trackedEntityAttribute']?['name'],
+        displayName: jsonData['displayName'] ??
+            jsonData['trackedEntityAttribute']?['displayName'],
+        formName: jsonData['formName'] ??
+            jsonData['trackedEntityAttribute']?['formName'] ??
+            jsonData['formName'],
         program: jsonData['program'],
         valueType: jsonData['valueType'],
         sortOrder: jsonData['sortOrder'],
@@ -105,6 +113,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
     data['name'] = this.name;
     data['program'] = this.program;
     data['displayName'] = this.displayName;
+    data['formName'] = this.formName;
     data['sortOrder'] = this.sortOrder;
     data['valueType'] = this.valueType;
     data['attribute'] = this.attribute;

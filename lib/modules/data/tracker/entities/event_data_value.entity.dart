@@ -25,15 +25,15 @@ class EventDataValue extends BaseEntity {
   dynamic event;
 
   EventDataValue(
-      {required String id,
+      {String? id,
       required this.dataElement,
       required this.value,
       required this.event,
       required bool dirty,
       this.storedBy,
-      required String created,
-      required String lastUpdated,
-      required String name,
+      String? created,
+      String? lastUpdated,
+      String? name,
       this.synced,
       this.providedElsewhere})
       : super(
@@ -41,7 +41,10 @@ class EventDataValue extends BaseEntity {
             name: name,
             created: created,
             lastUpdated: lastUpdated,
-            dirty: dirty);
+            dirty: dirty) {
+    this.id = this.id ?? '${this.event}_${this.dataElement}';
+    this.name = this.name ?? this.id;
+  }
 
   factory EventDataValue.fromJson(Map<String, dynamic> json) {
     return EventDataValue(

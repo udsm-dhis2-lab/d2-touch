@@ -312,7 +312,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       if (data.isNotEmpty) {
         availableItemCount++;
         data.forEach((dataItem) {
-          queue.add(() => insertRelationData(
+          queue.add(() => saveRelationData(
               columnRelation: column.relation as ColumnRelation,
               entity: dataItem,
               database: db));
@@ -329,7 +329,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     return saveDataResponse;
   }
 
-  Future insertRelationData(
+  Future saveRelationData(
       {required ColumnRelation columnRelation,
       required BaseEntity entity,
       Database? database}) async {
@@ -348,7 +348,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         ? db.insert(columnRelation.referencedEntity?.tableName as String, data)
         : db.update(
             columnRelation.referencedEntity?.tableName as String,
-            data,
+            {...data, 'created': result[0]['created']},
             where: "id = ?",
             whereArgs: [data['id']],
           );
@@ -372,7 +372,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       if (data.isNotEmpty) {
         availableItemCount++;
         data.forEach((dataItem) {
-          queue.add(() => insertRelationData(
+          queue.add(() => saveRelationData(
               columnRelation: column?.relation as ColumnRelation,
               entity: dataItem,
               database: db));
@@ -442,6 +442,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     var result = await this.findById(id: entity.id as String, database: db);
 
     if (result != null) {
+      entity.created = (result as dynamic)['created'];
       return this.updateOne(entity: entity, database: db);
     }
 
@@ -488,7 +489,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       if (data.isNotEmpty) {
         availableItemCount++;
         data.forEach((dataItem) {
-          queue.add(() => insertRelationData(
+          queue.add(() => saveRelationData(
               columnRelation: column.relation as ColumnRelation,
               entity: dataItem,
               database: db));
