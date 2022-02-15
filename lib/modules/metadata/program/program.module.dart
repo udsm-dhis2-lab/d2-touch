@@ -1,6 +1,8 @@
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/attribute_option.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule_action.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule_variable.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage_data_element.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage_section.query.dart';
@@ -18,6 +20,8 @@ class ProgramModule {
     await ProgramTrackedEntityAttributeQuery().createTable();
     await ProgramStageDataElementQuery().createTable();
     await ProgramRuleQuery().createTable();
+    await ProgramRuleActionQuery().createTable();
+    await ProgramRuleVariableQuery().createTable();
   }
 
   ProgramQuery get program => ProgramQuery();
@@ -39,4 +43,9 @@ class ProgramModule {
       ProgramStageDataElementOptionQuery();
 
   ProgramRuleQuery get programRule => ProgramRuleQuery();
+
+  ProgramRuleActionQuery get programRuleAction => ProgramRuleActionQuery();
+
+  ProgramRuleVariableQuery get programRuleVariable =>
+      ProgramRuleVariableQuery();
 }

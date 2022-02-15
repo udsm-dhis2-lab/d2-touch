@@ -2,7 +2,9 @@ import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_action.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule_action.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,7 +36,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/programRules.json?filter=program.id:in:[IpHINAT79UW]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,condition,description,program&paging=false',
+    'https://play.dhis2.org/2.35.11/api/programRules.json?filter=program.id:in:[IpHINAT79UW]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,condition,description,program,programRuleActions[id,name,displayName,shortName,lastUpdated,created,code,dirty,content,displayContent,programRuleActionType,evaluationTime,description,dataElement,trackedEntityAttribute,programRule]&paging=false',
     (server) => server.reply(200, sampleProgramRules),
   );
 
@@ -52,9 +54,13 @@ void main() async {
     print(progress.message);
   }, dioTestClient: dio);
 
-  List<ProgramRule> programRules = await programRuleQuery.get();
+  List<ProgramRule> programRules = await ProgramRuleQuery().withActions().get();
+
+  List<ProgramRuleAction> programRuleActions =
+      await ProgramRuleActionQuery().get();
 
   test('should download and store all incoming program rule metadata', () {
     expect(programRules.length, 3);
+    expect(programRuleActions.length, 3);
   });
 }

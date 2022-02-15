@@ -1,3 +1,4 @@
+import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_model.util.dart';
 
@@ -11,7 +12,22 @@ class DhisUrlGenerator {
         ? QueryFilter.getApiFilters(query.columns, query.filters)
         : null;
 
-    return '${query.resourceName}.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=${query.fields?.join(',')}&paging=false';
+    final apiFields = DhisUrlGenerator.getApiFields(query.columns);
+
+    return '${query.resourceName}.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=${apiFields.join(',')}&paging=false';
+  }
+
+  static List<String> getApiFields(List<Column> columns) {
+    return columns.map((column) {
+      if (column.relation?.relationType == RelationType.OneToMany) {
+        final relationFields = DhisUrlGenerator.getApiFields(
+            (column.relation?.referencedEntityColumns ?? []) as List<Column>);
+
+        return '${column.name}[${relationFields.join(',')}]';
+      }
+
+      return column.name ?? '';
+    }).toList();
   }
 
   static getRelationFields(relations) {
