@@ -348,7 +348,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         ? db.insert(columnRelation.referencedEntity?.tableName as String, data)
         : db.update(
             columnRelation.referencedEntity?.tableName as String,
-            {...data, 'created': result[0]['created']},
+            data,
             where: "id = ?",
             whereArgs: [data['id']],
           );

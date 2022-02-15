@@ -74,11 +74,10 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
         attribute:
             jsonData['attribute'] ?? jsonData['trackedEntityAttribute']?['id'],
         renderOptionsAsRadio: jsonData['renderOptionsAsRadio'],
-        name: jsonData['name'] ?? jsonData['trackedEntityAttribute']?['name'],
-        displayName: jsonData['displayName'] ??
-            jsonData['trackedEntityAttribute']?['displayName'],
-        formName: jsonData['formName'] ??
-            jsonData['trackedEntityAttribute']?['formName'] ??
+        name: jsonData['trackedEntityAttribute']?['name'] ?? jsonData['name'],
+        displayName: jsonData['trackedEntityAttribute']?['displayName'] ??
+            jsonData['displayName'],
+        formName: jsonData['trackedEntityAttribute']?['formName'] ??
             jsonData['formName'],
         program: jsonData['program'],
         valueType: jsonData['valueType'],
