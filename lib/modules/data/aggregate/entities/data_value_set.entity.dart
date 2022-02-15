@@ -37,10 +37,10 @@ class DataValueSet extends BaseEntity {
   List<DataValue>? dataValues;
 
   DataValueSet(
-      {required String id,
+      {String? id,
       String? created,
       String? lastUpdated,
-      required String name,
+      String? name,
       required this.period,
       required this.orgUnit,
       required this.synced,
@@ -56,7 +56,10 @@ class DataValueSet extends BaseEntity {
             name: name,
             created: created,
             lastUpdated: lastUpdated,
-            dirty: dirty);
+            dirty: dirty) {
+    this.id = '${this.dataSet}_${this.orgUnit}_${this.period}';
+    this.name = this.name ?? this.id;
+  }
 
   factory DataValueSet.fromJson(Map<String, dynamic> json) {
     final id =

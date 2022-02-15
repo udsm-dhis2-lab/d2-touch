@@ -57,6 +57,22 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   }
 
   @override
+  Future create() async {
+    DataValueSet dataValueSet = DataValueSet(
+        period: this.period as String,
+        orgUnit: this.orgUnit as String,
+        synced: false,
+        dataSet: this.dataSet as String,
+        dirty: true);
+
+    this.data = dataValueSet;
+
+    await this.save();
+
+    return dataValueSet;
+  }
+
+  @override
   String get dhisUrl {
     return 'dataValueSets.json?dataSet=${this.dataSet}&period=${this.period}&orgUnit=${this.orgUnit}';
   }
