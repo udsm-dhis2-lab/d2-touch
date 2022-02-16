@@ -62,6 +62,7 @@ void main() async {
       .trackerModule.trackedEntityInstance
       .byId(trackedEntityInstance.id as String)
       .withEnrollments()
+      .withAttributes()
       .getOne();
 
   test('should return created tracked entity instance with generated values',
