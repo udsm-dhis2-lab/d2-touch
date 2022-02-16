@@ -49,23 +49,22 @@ class EventQuery extends BaseQuery<Event> {
 
   EventQuery byOrgUnit(String orgUnit) {
     this.orgUnit = orgUnit;
-    return this;
+    return this.where(attribute: 'orgUnit', value: orgUnit);
   }
 
   EventQuery byProgram(String program) {
     this.program = program;
-
-    return this;
+    return this.where(attribute: 'program', value: program);
   }
 
   EventQuery byProgramStage(String programStage) {
     this.programStage = programStage;
-    return this;
+    return this.where(attribute: 'programStage', value: programStage);
   }
 
   EventQuery byEnrollment(String enrollment) {
     this.enrollment = enrollment;
-    return this;
+    return this.where(attribute: 'enrollment', value: enrollment);
   }
 
   @override

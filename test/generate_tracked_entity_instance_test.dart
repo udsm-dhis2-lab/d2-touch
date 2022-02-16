@@ -50,8 +50,6 @@ void main() async {
 
   await AttributeReservedValueQuery().setData(attributeResrvedValues).save();
 
-  final res = await D2Touch.trackerModule.attributeReservedValue.get();
-
   final TrackedEntityInstance trackedEntityInstance = await D2Touch
       .trackerModule.trackedEntityInstance
       .byProgram('IpHINAT79UW')

@@ -1,8 +1,10 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value_set.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/aggregate/queries/data_value_set.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_action.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule.query.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule_action.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,8 +14,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../sample/current_user.sample.dart';
-import '../sample/data_value_set.sample.dart';
-import 'aggregate_sync_test.reflectable.dart';
+import '../sample/program_rule.sample.dart';
+import 'program_rule_sync_test.reflectable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,8 +36,8 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/dataValueSets.json?dataSet=BfMAe6Itzgt&period=202201&orgUnit=bG0PlyD0iP3',
-    (server) => server.reply(200, sampleDataValueSet),
+    'https://play.dhis2.org/2.35.11/api/programRules.json?filter=program.id:in:[IpHINAT79UW]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,condition,description,program,programRuleActions[id,name,displayName,shortName,lastUpdated,created,code,dirty,content,displayContent,programRuleActionType,evaluationTime,description,dataElement,trackedEntityAttribute,programRule]&paging=false',
+    (server) => server.reply(200, sampleProgramRules),
   );
 
   userData['password'] = 'district';
@@ -44,20 +46,21 @@ void main() async {
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.11';
   final user = User.fromApi(userData);
   await userQuery.setData(user).save();
+  final programRuleQuery = ProgramRuleQuery(database: db);
 
-  await D2Touch.aggregateModule.dataValueSet
-      .byDataSet('BfMAe6Itzgt')
-      .byOrgUnit('bG0PlyD0iP3')
-      .byPeriod("202201")
+  await programRuleQuery
+      .whereIn(attribute: 'program', values: ['IpHINAT79UW'], merge: false)
       .download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
-  List<DataValueSet> dataValueSets =
-      await DataValueSetQuery().withDataValues().get();
+  List<ProgramRule> programRules = await ProgramRuleQuery().withActions().get();
 
-  test('should store all incoming data value sets', () {
-    expect(dataValueSets.length, 1);
-    expect(dataValueSets[0].dataValues?.length, 31);
+  List<ProgramRuleAction> programRuleActions =
+      await ProgramRuleActionQuery().get();
+
+  test('should download and store all incoming program rule metadata', () {
+    expect(programRules.length, 3);
+    expect(programRuleActions.length, 3);
   });
 }

@@ -75,12 +75,71 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
   TrackedEntityInstanceQuery byOrgUnit(String orgUnit) {
     this.orgUnit = orgUnit;
-    return this;
+    return this.where(attribute: 'orgUnit', value: orgUnit);
   }
 
   TrackedEntityInstanceQuery byProgram(String program) {
     this.program = program;
     return this;
+  }
+
+  @override
+  get() async {
+    if (this.program != null) {
+      EnrollmentQuery enrollmentQuery = EnrollmentQuery();
+
+      enrollmentQuery.where(attribute: 'program', value: this.program);
+
+      if (this.orgUnit != null) {
+        enrollmentQuery.where(attribute: 'orgUnit', value: this.orgUnit);
+      }
+
+      List<Enrollment> enrollments = await enrollmentQuery.get();
+
+      if (enrollments.isEmpty) {
+        return [];
+      }
+
+      List<String> trackedEntityAttributeIds = [];
+
+      enrollments.forEach((enrollment) {
+        String? availableId;
+
+        try {
+          availableId = trackedEntityAttributeIds.firstWhere(
+            (id) => enrollment.trackedEntityInstance == id,
+          );
+        } catch (e) {}
+
+        if (availableId == null) {
+          trackedEntityAttributeIds.add(enrollment.trackedEntityInstance);
+        }
+      });
+
+      this.byIds(trackedEntityAttributeIds);
+
+      return this.repository.findAll(
+          database: this.database,
+          filters: this.filters,
+          fields: this.fields as List<String>,
+          sortOrder: this.sortOrder,
+          relations: this.relations) as Future<List<TrackedEntityInstance>>;
+    }
+
+    if (this.id != null) {
+      return this.repository.find(
+          id: this.id,
+          fields: this.fields as List<String>,
+          database: this.database,
+          relations: this.relations) as Future<List<TrackedEntityInstance>>;
+    }
+
+    return this.repository.findAll(
+        database: this.database,
+        filters: this.filters,
+        fields: this.fields as List<String>,
+        sortOrder: this.sortOrder,
+        relations: this.relations) as Future<List<TrackedEntityInstance>>;
   }
 
   @override

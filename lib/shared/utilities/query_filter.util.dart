@@ -62,7 +62,7 @@ class QueryFilter {
         case QueryCondition.In:
           final List<String> values =
               filter.value is List ? filter.value : [filter.value];
-          return 'filter=${filter.attribute}:in:[${values.join(',')}]';
+          return 'filter=${filter.attribute}${attributeColumn.relation?.referencedColumn != null ? '.${attributeColumn.relation?.referencedColumn}' : ''}:in:[${values.join(',')}]';
 
         case QueryCondition.Equal:
           return '${filter.attribute} = ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';

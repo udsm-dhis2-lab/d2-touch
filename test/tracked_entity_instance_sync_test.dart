@@ -130,4 +130,16 @@ void main() async {
   test('should store all incoming event data values', () {
     expect(secondEventDataValues.length, 442);
   });
+
+  List<TrackedEntityInstance> trackedEntityInstancesByProgram =
+      await TrackedEntityInstanceQuery()
+          .byOrgUnit('DiszpKrYNg8')
+          .byProgram('IpHINAT79UW')
+          .get();
+
+  test(
+      'should updated all tracked entity instances for selected program and orgunit',
+      () {
+    expect(trackedEntityInstancesByProgram.length, 32);
+  });
 }

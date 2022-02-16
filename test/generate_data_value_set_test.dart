@@ -2,18 +2,11 @@ import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value_set.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/attribute_reserved_value.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
 import '../sample/current_user.sample.dart';
-import '../sample/program.sample.dart';
-import '../sample/reserved_values.sample.dart';
 import 'generate_event_test.reflectable.dart';
 
 void main() async {

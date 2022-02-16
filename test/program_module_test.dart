@@ -33,7 +33,7 @@ void main() async {
     incidentDateLabel: '',
     onlyEnrollOnce: false,
     organisationUnits: '',
-    programRuleVariables: '',
+    programRuleVariables: [],
     programType: 'EVENT',
     selectEnrollmentDatesInFuture: true,
     selectIncidentDatesInFuture: false,
