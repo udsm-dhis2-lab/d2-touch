@@ -1,3 +1,12 @@
+## [1.0.0-alpha.16] - 16/02/2022
+
+- Bug fixes on saving event data value
+
+## [1.0.0-alpha.15] - 16/02/2022
+
+- Support to download program rules, actions and variables
+- Bug fixes and improments
+
 ## [1.0.0-alpha.14] - 13/02/2022
 
 - Support to generate data value set information

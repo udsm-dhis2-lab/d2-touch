@@ -28,6 +28,5 @@ class TrackedEntityInstanceModule {
   AttributeReservedValueQuery get attributeReservedValue =>
       AttributeReservedValueQuery();
 
-  AttributeReservedValueQuery get eventDataValue =>
-      AttributeReservedValueQuery();
+  EventDataValueQuery get eventDataValue => EventDataValueQuery();
 }

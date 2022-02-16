@@ -203,6 +203,11 @@ class BaseQuery<T extends BaseEntity> {
     return this.repository.create(database: database);
   }
 
+  // _fetchOnline() async {
+  //   final response = await HttpClient.get(this.dhisUrl,
+  //       database: this.database, dioTestClient: dioTestClient);
+  // }
+
   Future<List<T>?> download(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
     callback(
