@@ -3,9 +3,7 @@ import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event_data_value.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
@@ -54,7 +52,7 @@ class EventQuery extends BaseQuery<Event> {
 
   EventQuery byProgram(String program) {
     this.program = program;
-    return this.where(attribute: 'program', value: program);
+    return this;
   }
 
   EventQuery byProgramStage(String programStage) {

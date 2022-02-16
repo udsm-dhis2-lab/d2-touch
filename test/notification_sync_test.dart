@@ -1,8 +1,6 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/dataset/entities/data_set.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/dataset/queries/data_set.query.dart';
 import 'package:dhis2_flutter_sdk/modules/notification/entities/message_conversation.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/notification/queries/message_conversation.query.dart';
 import 'package:dio/dio.dart';
@@ -13,10 +11,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'dataset_sync_test.reflectable.dart';
 import '../sample/current_user.sample.dart';
-import '../sample/data_sets.sample.dart';
 import '../sample/message_conversation.sample.dart';
+import 'dataset_sync_test.reflectable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

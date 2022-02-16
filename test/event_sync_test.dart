@@ -54,7 +54,7 @@ void main() async {
     print(progress.message);
   }, dioTestClient: dio);
 
-  List<Event> events = await eventQuery.get();
+  List<Event> events = await EventQuery().get();
   test('should store all incoming events', () {
     expect(events.length, 75);
   });

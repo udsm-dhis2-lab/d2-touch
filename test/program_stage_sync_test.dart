@@ -34,7 +34,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/programStages.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,sortOrder,executionDateLabel,description,formType,blockEntryForm,hideDueDate,repeatable,allowGenerateNextVisit,minDaysFromStart,generatedByEnrollmentDate,autoGenerateEvent,captureCoordinates,featureType,dueDateLabel,programStageSections,programStageDataElements,program&paging=false',
+    'https://play.dhis2.org/2.35.11/api/programStages.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,sortOrder,executionDateLabel,description,formType,blockEntryForm,hideDueDate,repeatable,allowGenerateNextVisit,minDaysFromStart,generatedByEnrollmentDate,autoGenerateEvent,captureCoordinates,featureType,dueDateLabel,programStageSections[id,name,displayName,shortName,lastUpdated,created,code,dirty,programStage],program,programStageDataElements[id,name,displayName,shortName,lastUpdated,created,code,dirty,formName,valueType,dataElementId,aggregationType,domainType,description,displayDescription,displayFormName,displayInReports,renderOptionsAsRadio,compulsory,sortOrder,skipSynchronization,allowFutureDate,zeroIsSignificant,periodOffset,programStage,optionSetValue,optionSetName,options[id,name,displayName,shortName,lastUpdated,created,code,dirty,programStageDataElement]]&paging=false',
     (server) => server.reply(200, sampleProgramStages),
   );
 
@@ -53,6 +53,6 @@ void main() async {
   List<ProgramStage> programStages = await programStageQuery.get();
 
   test('should download and store all incoming program stage metadata', () {
-    expect(programStages.length, 28);
+    expect(programStages.length, 2);
   });
 }
