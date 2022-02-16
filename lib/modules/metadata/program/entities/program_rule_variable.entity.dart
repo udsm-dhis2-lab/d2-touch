@@ -1,6 +1,5 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_action.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
@@ -11,7 +10,7 @@ class ProgramRuleVariable extends BaseEntity {
   String programRuleVariableSourceType;
 
   @Column(nullable: true)
-  String? useCodeForOptionSet;
+  bool? useCodeForOptionSet;
 
   @ManyToOne(table: Program, joinColumnName: 'program')
   dynamic program;
@@ -22,9 +21,6 @@ class ProgramRuleVariable extends BaseEntity {
   @Column(nullable: true)
   String? trackedEntityAttribute;
 
-  @OneToMany(table: ProgramRuleAction)
-  List<ProgramRuleAction>? programRuleActions;
-
   ProgramRuleVariable(
       {String? id,
       String? name,
@@ -32,7 +28,6 @@ class ProgramRuleVariable extends BaseEntity {
       required this.programRuleVariableSourceType,
       this.program,
       this.useCodeForOptionSet,
-      this.programRuleActions,
       this.dataElement,
       this.trackedEntityAttribute,
       required bool dirty})
@@ -42,18 +37,20 @@ class ProgramRuleVariable extends BaseEntity {
     return ProgramRuleVariable(
         id: json['id'],
         name: json['name'],
+        displayName: json['displayName'],
         programRuleVariableSourceType: json['programRuleVariableSourceType'],
         useCodeForOptionSet: json['useCodeForOptionSet'],
-        dataElement: json['dataElement'],
-        trackedEntityAttribute: json['trackedEntityAttribute'],
+        dataElement: json['dataElement'] != null
+            ? json['dataElement'] is String
+                ? json['dataElement']
+                : json['dataElement']['id']
+            : null,
+        trackedEntityAttribute: json['trackedEntityAttribute'] != null
+            ? json['trackedEntityAttribute'] is String
+                ? json['trackedEntityAttribute']
+                : json['trackedEntityAttribute']['id']
+            : null,
         program: json['program'],
-        programRuleActions: List<dynamic>.from(json['programRuleActions'] ?? [])
-            .map((programRuleAction) => ProgramRuleAction.fromJson({
-                  ...programRuleAction,
-                  'programRule': json['id'],
-                  'dirty': false
-                }))
-            .toList(),
         dirty: json['dirty']);
   }
 
@@ -66,7 +63,6 @@ class ProgramRuleVariable extends BaseEntity {
     data['trackedEntityAttribute'] = this.trackedEntityAttribute;
     data['programRuleVariableSourceType'] = this.programRuleVariableSourceType;
     data['program'] = this.program;
-    data['programRuleActions'] = this.programRuleActions;
     data['dirty'] = this.dirty;
     return data;
   }

@@ -75,12 +75,12 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
   TrackedEntityInstanceQuery byOrgUnit(String orgUnit) {
     this.orgUnit = orgUnit;
-    return this;
+    return this.where(attribute: 'orgUnit', value: orgUnit);
   }
 
   TrackedEntityInstanceQuery byProgram(String program) {
     this.program = program;
-    return this;
+    return this.where(attribute: 'program', value: program);
   }
 
   @override

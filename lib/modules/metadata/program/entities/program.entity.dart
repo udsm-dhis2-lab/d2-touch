@@ -1,4 +1,5 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_variable.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
@@ -61,9 +62,6 @@ class Program extends BaseEntity {
   @Column(nullable: true)
   Object? organisationUnits;
 
-  @Column(nullable: true)
-  Object? programRuleVariables;
-
   // @OneToMany(() => ProgramStageEntity, (programStage) => programStage.program, {
   //   cascade: true,
   // })
@@ -77,8 +75,8 @@ class Program extends BaseEntity {
   @OneToMany(table: ProgramTrackedEntityAttribute)
   List<ProgramTrackedEntityAttribute>? programTrackedEntityAttributes;
 
-  // @OneToMany(() => ProgramRuleEntity, (programRule) => programRule.program)
-  // programRules: ProgramRuleEntity[];
+  @OneToMany(table: ProgramRuleVariable)
+  List<ProgramRuleVariable>? programRuleVariables;
 
   @OneToMany(table: ProgramStage)
   List<ProgramStage>? programStages;
@@ -149,7 +147,14 @@ class Program extends BaseEntity {
         incidentDateLabel: json['incidentDateLabel'],
         onlyEnrollOnce: json['onlyEnrollOnce'],
         organisationUnits: json['organisationUnits']?.toString() ?? null,
-        programRuleVariables: json['programRuleVariables'],
+        programRuleVariables:
+            List<dynamic>.from(json['programRuleVariables'] ?? [])
+                .map((programRuleVariable) => ProgramRuleVariable.fromJson({
+                      ...programRuleVariable,
+                      'program': json['id'],
+                      'dirty': false
+                    }))
+                .toList(),
         programType: json['programType'],
         selectEnrollmentDatesInFuture: json['selectEnrollmentDatesInFuture'],
         selectIncidentDatesInFuture: json['selectIncidentDatesInFuture'],

@@ -21,10 +21,6 @@ final Map<String, dynamic> samplePrograms = {
       "displayIncidentDate": false,
       "selectEnrollmentDatesInFuture": false,
       "useFirstStageDuringRegistration": false,
-      "programRuleVariables": [
-        {"id": "omrL0gtPpDL"},
-        {"id": "Z92dJO9gIje"}
-      ],
       "organisationUnits": []
     },
     {
@@ -49,8 +45,28 @@ final Map<String, dynamic> samplePrograms = {
       "useFirstStageDuringRegistration": true,
       "trackedEntityType": {"id": "nEenWmSyUEp"},
       "programRuleVariables": [
-        {"id": "g2GooOydipB"},
-        {"id": "aKpfPKSRQnv"}
+        {
+          "lastUpdated": "2017-05-23T00:29:24.345",
+          "created": "2015-08-07T18:41:55.152",
+          "name": "apgarscore",
+          "id": "g2GooOydipB",
+          "displayName": "apgarscore",
+          "programRuleVariableSourceType": "DATAELEMENT_NEWEST_EVENT_PROGRAM",
+          "useCodeForOptionSet": false,
+          "program": {"id": "IpHINAT79UW"},
+          "dataElement": {"id": "a3kGcGDCuk6"}
+        },
+        {
+          "lastUpdated": "2017-05-23T00:29:24.345",
+          "created": "2015-09-14T21:17:40.956",
+          "name": "apgarcomment",
+          "id": "aKpfPKSRQnv",
+          "displayName": "apgarcomment",
+          "programRuleVariableSourceType": "DATAELEMENT_NEWEST_EVENT_PROGRAM",
+          "useCodeForOptionSet": false,
+          "program": {"id": "IpHINAT79UW"},
+          "dataElement": {"id": "H6uSAMO5WLD"}
+        }
       ],
       "organisationUnits": [],
       "programTrackedEntityAttributes": [
@@ -207,10 +223,6 @@ final Map<String, dynamic> samplePrograms = {
       "displayIncidentDate": false,
       "selectEnrollmentDatesInFuture": false,
       "useFirstStageDuringRegistration": false,
-      "programRuleVariables": [
-        {"id": "RycV5uDi66i"},
-        {"id": "zINGRka3g9N"}
-      ],
       "organisationUnits": []
     },
     {
@@ -400,12 +412,6 @@ final Map<String, dynamic> samplePrograms = {
       "selectEnrollmentDatesInFuture": false,
       "useFirstStageDuringRegistration": false,
       "trackedEntityType": {"id": "nEenWmSyUEp"},
-      "programRuleVariables": [
-        {"id": "mYMJHVqdBKt"},
-        {"id": "M3dL6ZAIZ3I"},
-        {"id": "o0BgK1dLhF8"},
-        {"id": "T3iVyvrCpZ0"},
-      ]
     },
     {
       "lastUpdated": "2021-09-16T10:05:19.023",
@@ -425,11 +431,6 @@ final Map<String, dynamic> samplePrograms = {
       "displayIncidentDate": true,
       "selectEnrollmentDatesInFuture": false,
       "useFirstStageDuringRegistration": false,
-      "programRuleVariables": [
-        {"id": "Q2zYkzn2fu7"},
-        {"id": "i47jDXmfVOC"},
-        {"id": "Bn9GkaU8ayh"}
-      ],
       "organisationUnits": [
         {"id": "U7yKrx2QVet"},
         {"id": "V6QWyB0KqvP"},
