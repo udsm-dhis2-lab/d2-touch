@@ -73,6 +73,46 @@ final Map<String, dynamic> sampleProgramRules = {
           "programRule": {"id": "ppdTpuQC7Q5"}
         }
       ]
+    },
+    {
+      "name": "Assign Last name if gender is female",
+      "id": "gmpBeDbY05Z",
+      "condition": "A{genderattribute}  == 'Female'",
+      "displayName": "Assign Last name if gender is female",
+      "program": {"id": "IpHINAT79UW"},
+      "programRuleActions": [
+        {
+          "lastUpdated": "2022-02-16T18:02:56.724",
+          "id": "ulPyDVRD6QN",
+          "created": "2022-02-16T18:02:56.724",
+          "data": "Last Name",
+          "externalAccess": false,
+          "programRuleActionType": "ASSIGN",
+          "evaluationTime": "ALWAYS",
+          "favorite": false,
+          "access": {
+            "read": true,
+            "update": true,
+            "externalize": true,
+            "delete": true,
+            "write": true,
+            "manage": true
+          },
+          "trackedEntityAttribute": {"id": "zDhUuAYrxNC"},
+          "programRule": {"id": "gmpBeDbY05Z"},
+          "lastUpdatedBy": {
+            "displayName": "Tom Wakiki",
+            "id": "GOLswS44mh8",
+            "username": "system"
+          },
+          "favorites": [],
+          "evaluationEnvironments": ["WEB", "ANDROID"],
+          "translations": [],
+          "userGroupAccesses": [],
+          "attributeValues": [],
+          "userAccesses": []
+        }
+      ]
     }
   ]
 };

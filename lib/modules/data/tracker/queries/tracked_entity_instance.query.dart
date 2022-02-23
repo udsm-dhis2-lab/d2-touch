@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
@@ -84,7 +86,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   }
 
   @override
-  get() async {
+  get({Dio? dioTestClient, bool? online}) async {
     if (this.program != null) {
       EnrollmentQuery enrollmentQuery = EnrollmentQuery();
 
@@ -266,7 +268,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
     trackedEntityInstances.forEach((trackedEntityInstance) {
       final importSummary = importSummaries.lastWhere(
-          (summary) => summary['reference'] == trackedEntityInstance.id);
+          (summary) => summary['reference'] == trackedEntityInstance.id,
+          orElse: (() => null));
 
       if (importSummary != null) {
         availableItemCount++;

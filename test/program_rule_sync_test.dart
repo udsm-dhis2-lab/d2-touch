@@ -60,7 +60,7 @@ void main() async {
       await ProgramRuleActionQuery().get();
 
   test('should download and store all incoming program rule metadata', () {
-    expect(programRules.length, 3);
-    expect(programRuleActions.length, 3);
+    expect(programRules.length, 4);
+    expect(programRuleActions.length, 4);
   });
 }

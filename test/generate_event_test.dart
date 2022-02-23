@@ -84,4 +84,17 @@ void main() async {
         'lZGmxYbs97q');
     expect(createdEvent?.id, event.id);
   });
+
+  final Event eventWithoutEnrollment = await D2Touch.trackerModule.event
+      .byProgramStage('A03MvHHogjR')
+      .byOrgUnit('fnei293faf')
+      .create();
+
+  final Event? createdEventWithoutEnrollment = await D2Touch.trackerModule.event
+      .byId(eventWithoutEnrollment.id as String)
+      .getOne();
+
+  test('should return created event without enrollment', () {
+    expect(createdEventWithoutEnrollment?.id, eventWithoutEnrollment.id);
+  });
 }

@@ -66,6 +66,28 @@ final Map<String, dynamic> samplePrograms = {
           "useCodeForOptionSet": false,
           "program": {"id": "IpHINAT79UW"},
           "dataElement": {"id": "H6uSAMO5WLD"}
+        },
+        {
+          "lastUpdated": "2022-02-16T17:56:07.688",
+          "created": "2022-02-16T17:56:07.688",
+          "name": "genderattribute",
+          "id": "XG6Z6dvXwYW",
+          "displayName": "genderattribute",
+          "programRuleVariableSourceType": "TEI_ATTRIBUTE",
+          "useCodeForOptionSet": true,
+          "program": {"id": "IpHINAT79UW"},
+          "trackedEntityAttribute": {"id": "cejWyOfXge6"}
+        },
+        {
+          "lastUpdated": "2022-02-16T17:57:35.707",
+          "created": "2022-02-16T17:57:35.707",
+          "name": "lastnameattribute",
+          "id": "mAWsBBzYvxh",
+          "displayName": "lastnameattribute",
+          "programRuleVariableSourceType": "TEI_ATTRIBUTE",
+          "useCodeForOptionSet": false,
+          "program": {"id": "IpHINAT79UW"},
+          "trackedEntityAttribute": {"id": "zDhUuAYrxNC"}
         }
       ],
       "organisationUnits": [],

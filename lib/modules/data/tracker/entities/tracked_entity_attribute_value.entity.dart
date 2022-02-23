@@ -18,14 +18,17 @@ class TrackedEntityAttributeValue extends BaseEntity {
   dynamic trackedEntityInstance;
 
   TrackedEntityAttributeValue(
-      {required String id,
-      required String name,
+      {String? id,
+      String? name,
       required bool dirty,
       required this.attribute,
       required this.trackedEntityInstance,
       required this.value,
       this.synced})
-      : super(id: id, name: name, dirty: dirty);
+      : super(id: id, name: name, dirty: dirty) {
+    this.id = '${this.trackedEntityInstance}_${this.attribute}';
+    this.name = this.id;
+  }
 
   factory TrackedEntityAttributeValue.fromJson(Map<String, dynamic> json) {
     return TrackedEntityAttributeValue(

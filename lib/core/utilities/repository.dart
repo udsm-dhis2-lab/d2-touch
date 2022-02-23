@@ -76,8 +76,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final Database db = database != null ? database : await this.database;
 
     if (id != null) {
-      final queryResult = (await db.query(this.entity.tableName,
-          where: 'id = ?', whereArgs: [id], columns: fields));
+      final queryResult = await db.query(this.entity.tableName,
+          where: 'id = ?', whereArgs: [id], columns: fields);
 
       final relationResults = await this.findRelations(
           database: db,
@@ -423,6 +423,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   Future<int> saveMany(
       {required List<T> entities, Database? database, int? chunk}) async {
     final Database db = database != null ? database : await this.database;
+
+    if (entities.isEmpty) {
+      return 1;
+    }
 
     final queue = Queue(parallel: chunk ?? 100);
 

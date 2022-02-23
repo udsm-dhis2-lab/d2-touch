@@ -9,6 +9,9 @@ class ProgramRuleAction extends BaseEntity {
   String? content;
 
   @Column(nullable: true)
+  String? data;
+
+  @Column(nullable: true)
   String? displayContent;
 
   @Column(type: ColumnType.TEXT)
@@ -40,6 +43,7 @@ class ProgramRuleAction extends BaseEntity {
       this.programRule,
       this.dataElement,
       this.trackedEntityAttribute,
+      this.data,
       required bool dirty})
       : super(id: id, name: name, dirty: dirty);
 
@@ -63,7 +67,8 @@ class ProgramRuleAction extends BaseEntity {
                 : json['trackedEntityAttribute']['id']
             : null,
         evaluationTime: json['evaluationTime'],
-        dirty: json['dirty']);
+        dirty: json['dirty'],
+        data: json['data']);
   }
 
   Map<String, dynamic> toJson() {
@@ -79,6 +84,7 @@ class ProgramRuleAction extends BaseEntity {
     data['dataElement'] = this.dataElement;
     data['trackedEntityAttribute'] = this.trackedEntityAttribute;
     data['dirty'] = this.dirty;
+    data['data'] = this.data;
     return data;
   }
 }

@@ -103,6 +103,6 @@ void main() async {
     expect(programStages.length, 2);
     expect(programStageElements.length, 22);
     expect(programStageElementOptions.length, 48);
-    expect(programRuleVariables.length, 2);
+    expect(programRuleVariables.length, 4);
   });
 }

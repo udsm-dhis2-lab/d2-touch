@@ -146,7 +146,11 @@ class BaseQuery<T extends BaseEntity> {
         columns: this.repository.columns);
   }
 
-  Future<List<T>> get() async {
+  Future<List<T>> get({Dio? dioTestClient, bool? online}) async {
+    if (online == true) {
+      return this._fetchOnline(dioTestClient: dioTestClient);
+    }
+
     if (this.id != null) {
       return this.repository.find(
           id: this.id,
@@ -203,10 +207,20 @@ class BaseQuery<T extends BaseEntity> {
     return this.repository.create(database: database);
   }
 
-  // _fetchOnline() async {
-  //   final response = await HttpClient.get(this.dhisUrl,
-  //       database: this.database, dioTestClient: dioTestClient);
-  // }
+  Future<List<T>> _fetchOnline({Dio? dioTestClient}) async {
+    final response = await HttpClient.get(this.dhisUrl,
+        database: this.database, dioTestClient: dioTestClient);
+
+    List data = response.body[this.apiResourceName]?.toList();
+
+    return data.map((dataItem) {
+      dataItem['dirty'] = false;
+      ClassMirror classMirror =
+          AnnotationReflectable.reflectType(T) as ClassMirror;
+
+      return classMirror.newInstance('fromJson', [dataItem]) as T;
+    }).toList();
+  }
 
   Future<List<T>?> download(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
@@ -219,10 +233,7 @@ class BaseQuery<T extends BaseEntity> {
             percentage: 0),
         false);
 
-    final response = await HttpClient.get(this.dhisUrl,
-        database: this.database, dioTestClient: dioTestClient);
-
-    List data = response.body[this.apiResourceName]?.toList();
+    this.data = await this._fetchOnline(dioTestClient: dioTestClient);
 
     callback(
         RequestProgress(
@@ -232,14 +243,6 @@ class BaseQuery<T extends BaseEntity> {
             status: '',
             percentage: 50),
         false);
-
-    this.data = data.map((dataItem) {
-      dataItem['dirty'] = false;
-      ClassMirror classMirror =
-          AnnotationReflectable.reflectType(T) as ClassMirror;
-
-      return classMirror.newInstance('fromJson', [dataItem]) as T;
-    }).toList();
 
     callback(
         RequestProgress(

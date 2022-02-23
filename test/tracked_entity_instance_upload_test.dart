@@ -64,11 +64,9 @@ void main() async {
       data: sampleTrackedEntityInstanceUpload);
 
   List<TrackedEntityInstance>? trackedEntityInstanceUpload =
-      await TrackedEntityInstanceQuery().upload(
-    (progress, complete) {
-      print(progress.message);
-    },
-  );
+      await TrackedEntityInstanceQuery().upload((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
 
   test('should correctly set sync status to true for successfull import', () {
     final successImports = (trackedEntityInstanceUpload ?? [])

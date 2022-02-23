@@ -114,6 +114,7 @@ class ProgramStageDataElement extends BaseEntity {
         programStage: json['programStage'],
         created: json['created'],
         shortName: json['shortName'],
+        formName: json['formName'],
         dataElementId: json['dataElementId'],
         code: json['code'],
         displayName: json['displayName'],
@@ -153,6 +154,7 @@ class ProgramStageDataElement extends BaseEntity {
     data['created'] = this.created;
     data['name'] = this.name;
     data['shortName'] = this.shortName;
+    data['formName'] = this.formName;
     data['dataElementId'] = this.dataElementId;
     data['code'] = this.code;
     data['displayName'] = this.displayName;

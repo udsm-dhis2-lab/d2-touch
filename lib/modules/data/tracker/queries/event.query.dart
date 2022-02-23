@@ -76,7 +76,7 @@ class EventQuery extends BaseQuery<Event> {
         orgUnit: this.orgUnit as String,
         status: 'ACTIVE',
         enrollment: this.enrollment,
-        dirty: true,
+        dirty: false,
         programStage: this.programStage);
 
     this.data = event;
