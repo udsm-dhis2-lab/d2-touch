@@ -43,17 +43,17 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
   DataValueSetQuery byOrgUnit(String orgUnit) {
     this.orgUnit = orgUnit;
-    return this;
+    return this.where(attribute: 'orgUnit', value: orgUnit);
   }
 
   DataValueSetQuery byDataSet(String dataSet) {
     this.dataSet = dataSet;
-    return this;
+    return this.where(attribute: 'dataSet', value: dataSet);
   }
 
   DataValueSetQuery byPeriod(String period) {
     this.period = period;
-    return this;
+    return this.where(attribute: 'period', value: period);
   }
 
   @override

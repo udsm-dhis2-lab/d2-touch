@@ -1,11 +1,11 @@
-import 'package:dhis2_flutter_sdk/modules/engine/program_rule/data_value_entities.dart';
+import 'package:dhis2_flutter_sdk/modules/engine/program_rule/utilities/data_value_entities.util.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_action.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_variable.entity.dart';
 import 'package:expressions/expressions.dart';
 
 class ProgramRuleEngine {
-  static getEvaluationContext(
+  static _getEvaluationContext(
       {required Map<String, DataValueObject> dataValueEntities,
       required List<ProgramRuleVariable> programRuleVariables}) {
     Map<String, dynamic> evaluationContext = {};
@@ -32,7 +32,7 @@ class ProgramRuleEngine {
     List<ProgramRuleAction> programRulesActions = [];
 
     Map<String, dynamic> evaluationContext =
-        ProgramRuleEngine.getEvaluationContext(
+        ProgramRuleEngine._getEvaluationContext(
             dataValueEntities: dataValueEntities,
             programRuleVariables: programRuleVariables);
 

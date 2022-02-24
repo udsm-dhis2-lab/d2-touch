@@ -33,7 +33,7 @@ class DataValue extends BaseEntity {
   // @Column("simple-json") organisationUnits: any;
 
   DataValue(
-      {required String id,
+      { String? id,
       String? created,
       String? lastUpdated,
       required String name,
@@ -50,11 +50,13 @@ class DataValue extends BaseEntity {
             name: name,
             created: created,
             lastUpdated: lastUpdated,
-            dirty: dirty);
+            dirty: dirty) {
+              this.id = this.id ?? '${this.dataElement}_${this.categoryOptionCombo}_${this.dataValueSet}';
+            }
 
   factory DataValue.fromJson(Map<String, dynamic> json) {
     final id = json['id'] ??
-        '${json['dataElement']}_${json['categoryOptionCombo']}_${json['orgUnit']}_${json['period']}';
+        '${json['dataElement']}_${json['categoryOptionCombo']}_${json['dataValueSet']}}';
     return DataValue(
         id: id,
         name: json['name'] ?? id,
