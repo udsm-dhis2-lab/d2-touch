@@ -51,7 +51,7 @@ void main() async {
       data: sampleDataValueSetUpload);
 
   List<DataValueSet>? dataValueSetUpload =
-      await DataValueSetQuery().upload((progress, complete) {
+      await D2Touch.aggregateModule.dataValueSet.upload((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 

@@ -142,4 +142,31 @@ void main() async {
       () {
     expect(trackedEntityInstancesByProgram.length, 32);
   });
+
+  await TrackedEntityAttributeValueQuery()
+      .setData(TrackedEntityAttributeValue.fromJson({
+        ...secondAttributes[0].toJson(),
+        "value": 'New Female',
+        "dirty": true
+      }))
+      .save();
+
+  final ulteredAttributeValue = await TrackedEntityAttributeValueQuery()
+      .byId(secondAttributes[0].id as String)
+      .getOne();
+
+  await trackedEntityInstanceQuery
+      .byOrgUnit('DiszpKrYNg8')
+      .byProgram('IpHINAT79UW')
+      .download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  final finalAttributeValue = await TrackedEntityAttributeValueQuery()
+      .byId(secondAttributes[0].id as String)
+      .getOne();
+
+  test('should not change local latest local attribute value', () {
+    expect(ulteredAttributeValue.value, finalAttributeValue.value);
+  });
 }

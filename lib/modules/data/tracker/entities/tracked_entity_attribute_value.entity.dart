@@ -20,12 +20,19 @@ class TrackedEntityAttributeValue extends BaseEntity {
   TrackedEntityAttributeValue(
       {String? id,
       String? name,
+      String? created,
+      String? lastUpdated,
       required bool dirty,
       required this.attribute,
       required this.trackedEntityInstance,
       required this.value,
       this.synced})
-      : super(id: id, name: name, dirty: dirty) {
+      : super(
+            id: id,
+            name: name,
+            created: created,
+            lastUpdated: lastUpdated,
+            dirty: dirty) {
     this.id = '${this.trackedEntityInstance}_${this.attribute}';
     this.name = this.id;
   }
@@ -35,6 +42,8 @@ class TrackedEntityAttributeValue extends BaseEntity {
         id: json['id'],
         name: json['id'],
         attribute: json['attribute'],
+        created: json['created'],
+        lastUpdated: json['lastUpdated'],
         trackedEntityInstance: json['trackedEntityInstance'],
         value: json['value'],
         dirty: json['dirty']);
@@ -47,6 +56,9 @@ class TrackedEntityAttributeValue extends BaseEntity {
     data['attribute'] = this.attribute;
     data['value'] = this.value;
     data['trackedEntityInstance'] = this.trackedEntityInstance;
+    data['dirty'] = this.dirty;
+    data['created'] = this.created;
+    data['lastUpdated'] = this.lastUpdated;
     return data;
   }
 

@@ -446,6 +446,15 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     var result = await this.findById(id: entity.id as String, database: db);
 
     if (result != null) {
+      final currentLastUpdatedDate =
+          DateTime.parse(result.lastUpdated as String);
+      final newLastUpdatedDate = DateTime.parse(entity.lastUpdated as String);
+
+      if (currentLastUpdatedDate.difference(newLastUpdatedDate).inMilliseconds >
+          0) {
+        return 0;
+      }
+
       return this.updateOne(entity: entity, database: db);
     }
 
