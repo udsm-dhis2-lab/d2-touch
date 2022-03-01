@@ -36,7 +36,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/programRules.json?filter=program.id:in:[IpHINAT79UW]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,condition,description,program,programRuleActions[id,name,displayName,shortName,lastUpdated,created,code,dirty,content,displayContent,programRuleActionType,evaluationTime,description,dataElement,trackedEntityAttribute,programRule]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/programRules.json?filter=program.id:in:[IpHINAT79UW]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,condition,description,program,programRuleActions[id,name,displayName,shortName,lastUpdated,created,code,dirty,content,data,displayContent,programRuleActionType,evaluationTime,description,dataElement,trackedEntityAttribute,programRule]&paging=false',
     (server) => server.reply(200, sampleProgramRules),
   );
 

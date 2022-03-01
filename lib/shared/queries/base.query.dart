@@ -167,7 +167,11 @@ class BaseQuery<T extends BaseEntity> {
         relations: this.relations) as Future<List<T>>;
   }
 
-  Future<T?> getOne() async {
+  Future<T?> getOne({Dio? dioTestClient, bool? online}) async {
+    if (online == true) {
+      return (await this._fetchOnline(dioTestClient: dioTestClient))[0];
+    }
+
     List<T> results = await this.get();
 
     return results.length > 0 ? results[0] : null;

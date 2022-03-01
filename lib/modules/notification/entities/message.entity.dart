@@ -2,6 +2,8 @@ import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
 import 'message_conversation.entity.dart';
+import 'dart:convert';
+import 'dart:core';
 
 @AnnotationReflectable
 @Entity(tableName: 'message', apiResourceName: 'messages')
@@ -20,8 +22,6 @@ class Message extends BaseEntity {
       String? created,
       String? lastUpdated,
       required String name,
-      String? shortName,
-      String? code,
       String? displayName,
       this.sender,
       required this.text,
@@ -30,26 +30,24 @@ class Message extends BaseEntity {
       : super(
             id: id,
             name: name,
-            shortName: shortName,
             displayName: displayName,
-            code: code,
             created: created,
             lastUpdated: lastUpdated,
             dirty: dirty);
 
   factory Message.fromJson(Map<String, dynamic> json) {
-    print(json);
+    const JsonEncoder encoder = JsonEncoder();
+    final dynamic sender = encoder.convert(json['sender']);
+
     return Message(
         id: json['id'],
         name: json['name'],
         created: json['created'],
-        shortName: json['shortName'],
-        code: json['code'],
         displayName: json['displayName'],
         lastUpdated: json['lastUpdated'],
         dirty: json['dirty'],
         text: json['text'],
-        sender: json['sender'],
+        sender: sender.toString(),
         messageConversation: json['messageConversation']);
   }
 
@@ -59,8 +57,6 @@ class Message extends BaseEntity {
     data['id'] = this.id;
     data['created'] = this.created;
     data['name'] = this.name;
-    data['shortName'] = this.shortName;
-    data['code'] = this.code;
     data['displayName'] = this.displayName;
     data['dirty'] = this.dirty;
     data['text'] = this.text;

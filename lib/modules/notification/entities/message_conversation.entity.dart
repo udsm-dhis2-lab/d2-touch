@@ -11,9 +11,6 @@ class MessageConversation extends BaseEntity {
   String status;
 
   @Column(type: ColumnType.TEXT)
-  String subject;
-
-  @Column(type: ColumnType.TEXT)
   String messageType;
 
   @Column(type: ColumnType.TEXT, nullable: true)
@@ -30,9 +27,7 @@ class MessageConversation extends BaseEntity {
       String? created,
       String? lastUpdated,
       required String name,
-      String? shortName,
       required this.status,
-      required this.subject,
       required this.messageType,
       required this.read,
       String? displayName,
@@ -42,7 +37,6 @@ class MessageConversation extends BaseEntity {
       : super(
             id: id,
             name: name,
-            shortName: shortName,
             displayName: displayName,
             created: created,
             lastUpdated: lastUpdated,
@@ -53,17 +47,15 @@ class MessageConversation extends BaseEntity {
         id: json['id'],
         name: json['name'],
         created: json['created'],
-        shortName: json['shortName'],
         displayName: json['displayName'],
         lastUpdated: json['lastUpdated'],
         dirty: json['dirty'],
         status: json['status'],
         messageType: json['messageType'],
         read: json['read'],
-        subject: json['subject'],
         lastMessage: json['lastMessage'],
         messages: (json['messages'] ?? [])
-            .map((message) => Message.fromJson({
+            .map<Message>((message) => Message.fromJson({
                   ...message,
                   'dirty': false,
                   'messageConversation': json['id']
@@ -77,12 +69,10 @@ class MessageConversation extends BaseEntity {
     data['id'] = this.id;
     data['created'] = this.created;
     data['name'] = this.name;
-    data['shortName'] = this.shortName;
     data['displayName'] = this.displayName;
     data['status'] = this.status;
     data['messageType'] = this.messageType;
     data['read'] = this.read;
-    data['subject'] = this.subject;
     data['lastMessage'] = this.lastMessage;
     data['dirty'] = this.dirty;
 

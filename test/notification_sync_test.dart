@@ -1,7 +1,9 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
+import 'package:dhis2_flutter_sdk/modules/notification/entities/message.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/notification/entities/message_conversation.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/notification/queries/message.query.dart';
 import 'package:dhis2_flutter_sdk/modules/notification/queries/message_conversation.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,7 +44,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/messageConversations.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,status,subject,messageType,lastMessage,read,messages[id,name,displayName,shortName,lastUpdated,created,code,dirty,sender,text,messageConversation]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,status,messageType,lastMessage,read,messages[id,name,displayName,shortName,lastUpdated,created,code,dirty,sender,text,messageConversation]&paging=false',
     (server) => server.reply(200, sampleMessageConversations),
   );
 
@@ -53,7 +55,13 @@ void main() async {
   List<MessageConversation> messageConversations =
       await notificationQuery.get();
 
+  Message? message = await MessageQuery().byId('VVqmVHyD1KP').getOne();
+
+  final onlineNotifications =
+      await notificationQuery.get(online: true, dioTestClient: dio);
+
   test('should store all incoming  notification', () {
-    expect(messageConversations.length, 0);
+    expect(messageConversations.length, 50);
+    expect(onlineNotifications.length, 50);
   });
 }
