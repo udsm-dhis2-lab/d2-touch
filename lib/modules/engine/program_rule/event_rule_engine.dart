@@ -27,8 +27,9 @@ class EventRuleEngine {
             .where(attribute: 'program', value: program)
             .get();
 
-    List<EventDataValue> eventDataValues =
-        EventDataValueQuery().where(attribute: 'event', value: event.id).get();
+    List<EventDataValue> eventDataValues = await EventDataValueQuery()
+        .where(attribute: 'event', value: event.id)
+        .get();
 
     final dataValueEntities =
         DataValueEntities.fromEventDataValues(eventDataValues);

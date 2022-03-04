@@ -25,6 +25,35 @@ class ProgramRuleEngine {
     return evaluationContext;
   }
 
+  static _parseRuleValue(value) {
+    if (value == null) {
+      return '';
+    }
+
+    bool isDouble = false;
+
+    try {
+      double.parse(value);
+      isDouble = true;
+    } catch (e) {}
+
+    if (isDouble) {
+      return value;
+    }
+
+    bool isInt = false;
+    try {
+      int.parse(value);
+      isInt = true;
+    } catch (e) {}
+
+    if (isInt) {
+      return value;
+    }
+
+    return "'$value'";
+  }
+
   static List<ProgramRuleAction> execute(
       {required Map<String, DataValueObject> dataValueEntities,
       required List<ProgramRule> programRules,
@@ -37,10 +66,17 @@ class ProgramRuleEngine {
             programRuleVariables: programRuleVariables);
 
     programRules.forEach((programRule) {
-      final ruleConditionForEvaluation = programRule.condition
+      String ruleConditionForEvaluation = programRule.condition
           .replaceAll("#{", "")
           .replaceAll("A{", "")
           .replaceAll("}", "");
+      // .replaceAll("'", "");
+
+      evaluationContext.keys.forEach((key) {
+        final value = evaluationContext[key];
+        ruleConditionForEvaluation = ruleConditionForEvaluation.replaceAll(
+            key, ProgramRuleEngine._parseRuleValue(value));
+      });
 
       try {
         Expression expression = Expression.parse(ruleConditionForEvaluation);
