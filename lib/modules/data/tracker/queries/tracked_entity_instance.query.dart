@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
@@ -273,7 +275,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         availableItemCount++;
         final syncFailed = importSummary['status'] == 'ERROR';
         trackedEntityInstance.synced = !syncFailed;
-        trackedEntityInstance.dirty = syncFailed;
+        trackedEntityInstance.dirty = true;
         trackedEntityInstance.syncFailed = syncFailed;
         trackedEntityInstance.lastSyncDate = DateTime.now().toIso8601String();
         trackedEntityInstance.lastSyncSummary = importSummary.toString();

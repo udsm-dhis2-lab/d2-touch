@@ -295,9 +295,13 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<int> insertOne({required T entity, Database? database}) async {
+    if (entity.dirty == true) {
+      entity.lastUpdated = DateTime.now().toIso8601String();
+    }
     Map<String, dynamic> data = this
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
+
     final saveDataResponse = db.insert(this.entity.tableName, data);
 
     if (this.oneToManyColumns.isEmpty) {
@@ -333,6 +337,9 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {required ColumnRelation columnRelation,
       required BaseEntity entity,
       Database? database}) async {
+    if (entity.dirty == true) {
+      entity.lastUpdated = DateTime.now().toIso8601String();
+    }
     Map<String, dynamic> data = this.sanitizeIncomingData(
         entity: entity.toJson(),
         columns: columnRelation.referencedEntityColumns as List<Column>);
@@ -446,6 +453,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     var result = await this.findById(id: entity.id as String, database: db);
 
     if (result != null) {
+      if (entity.dirty == true) {
+        entity.lastUpdated = DateTime.now().toIso8601String();
+      }
+
       final currentLastUpdatedDate =
           DateTime.parse(result.lastUpdated as String);
       final newLastUpdatedDate = DateTime.parse(entity.lastUpdated as String);

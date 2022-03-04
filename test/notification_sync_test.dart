@@ -55,10 +55,14 @@ void main() async {
   List<MessageConversation> messageConversations =
       await notificationQuery.get();
 
-  Message? message = await MessageQuery().byId('VVqmVHyD1KP').getOne();
+  dioAdapter.onGet(
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?filter=read:eq:false&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,status,messageType,lastMessage,read,messages[id,name,displayName,shortName,lastUpdated,created,code,dirty,sender,text,messageConversation]&paging=false',
+    (server) => server.reply(200, sampleMessageConversations),
+  );
 
-  final onlineNotifications =
-      await notificationQuery.get(online: true, dioTestClient: dio);
+  final onlineNotifications = await notificationQuery
+      .where(attribute: 'read', value: false)
+      .get(online: true, dioTestClient: dio);
 
   test('should store all incoming  notification', () {
     expect(messageConversations.length, 50);

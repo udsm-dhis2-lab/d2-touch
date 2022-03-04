@@ -39,7 +39,7 @@ class User extends BaseEntity {
   final String? dataSets;
 
   @Column()
-  final bool isLoggedIn;
+  bool isLoggedIn;
 
   User(
       {required String id,
@@ -59,7 +59,7 @@ class User extends BaseEntity {
       this.programs,
       this.dataSets,
       required this.isLoggedIn,
-      required dirty})
+      required bool dirty})
       : super(id: id, name: name, dirty: dirty);
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -79,7 +79,7 @@ class User extends BaseEntity {
         programs: json['programs'].toString(),
         dataSets: json['datasets'].toString(),
         isLoggedIn: json['isLoggedIn'],
-        dirty: false);
+        dirty: json['dirty']);
   }
 
   factory User.fromApi(Map<String, dynamic> json) {
@@ -100,14 +100,14 @@ class User extends BaseEntity {
                 orgUnit: orgUnit['id'],
                 user: json['id'],
                 type: 'DATA_VIEW',
-                dirty: false))
+                dirty: json['dirty'] ?? false))
             .toList(),
         dataViewOrganisationUnits: json['dataViewOrganisationUnits'],
         authorities: json['authorities'].toString(),
         programs: json['programs'].toString(),
         dataSets: json['datasets'].toString(),
         isLoggedIn: json['isLoggedIn'],
-        dirty: false);
+        dirty: json['dirty'] ?? false);
   }
 
   Map<String, dynamic> toJson() {
@@ -126,6 +126,7 @@ class User extends BaseEntity {
     data['programs'] = this.programs;
     data['isLoggedIn'] = this.isLoggedIn;
     data['baseUrl'] = this.baseUrl;
+    data['dirty'] = this.dirty;
 
     return data;
   }

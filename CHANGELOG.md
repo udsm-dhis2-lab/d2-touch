@@ -1,3 +1,8 @@
+## [1.0.0-alpha.18] - 01/03/2022
+
+- Support to save/retain most upto date data during synchronization
+- Bug fixes and improvements
+
 ## [1.0.0-alpha.17] - 24/02/2022
 
 - Support for program rule execution for non d2 conditions

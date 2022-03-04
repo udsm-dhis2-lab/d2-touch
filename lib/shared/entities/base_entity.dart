@@ -39,9 +39,6 @@ class BaseEntity {
     this.id = this.id ?? DhisUidGenerator.generate();
     this.created = this.created ?? DateTime.now().toIso8601String();
     this.lastUpdated = this.lastUpdated ?? this.created;
-    if (this.dirty == true) {
-      this.lastUpdated = DateTime.now().toIso8601String();
-    }
   }
 
   static fromJson(Map<String, dynamic> json) {

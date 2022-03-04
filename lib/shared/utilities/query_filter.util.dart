@@ -65,10 +65,15 @@ class QueryFilter {
           return 'filter=${filter.attribute}${attributeColumn.relation?.referencedColumn != null ? '.${attributeColumn.relation?.referencedColumn}' : ''}:in:[${values.join(',')}]';
 
         case QueryCondition.Equal:
-          return '${filter.attribute} = ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+          return 'filter=${filter.attribute}:eq:${filter.value}';
 
         case QueryCondition.Like:
-          return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+          final List<String> values =
+              filter.value is List ? filter.value : [filter.value];
+          final ilikeFilters = values
+              .map((valueItem) => 'filter=${filter.attribute}:like:$valueItem')
+              .toList();
+          return ilikeFilters.join('&') + '&rootJunction=OR';
 
         case QueryCondition.Ilike:
           final List<String> values =
@@ -79,15 +84,15 @@ class QueryFilter {
           return ilikeFilters.join('&') + '&rootJunction=OR';
 
         case QueryCondition.LessThan:
-          return '${filter.attribute} < ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+          return 'filter=${filter.attribute}:lt:${filter.value}';
 
         case QueryCondition.LessThanOrEqualTo:
-          return '${filter.attribute} <= ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+          return 'filter=${filter.attribute}:lte:${filter.value}';
         case QueryCondition.GreaterThan:
-          return '${filter.attribute} > ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+          return 'filter=${filter.attribute}:gt:${filter.value}';
 
         case QueryCondition.GreaterThanOrEqualTo:
-          return '${filter.attribute} >= ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+          return 'filter=${filter.attribute}:gte:${filter.value}';
         default:
           return null;
       }

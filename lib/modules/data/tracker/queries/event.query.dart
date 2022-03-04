@@ -137,7 +137,7 @@ class EventQuery extends BaseQuery<Event> {
         availableItemCount++;
         final syncFailed = importSummary['status'] == 'ERROR';
         event.synced = !syncFailed;
-        event.dirty = syncFailed;
+        event.dirty = true;
         event.syncFailed = syncFailed;
         event.lastSyncDate = DateTime.now().toIso8601String();
         event.lastSyncSummary = importSummary.toString();

@@ -139,11 +139,11 @@ class D2Touch {
     try {
       User? currentUser = await D2Touch.userModule.user.getOne();
 
-      Map<String, dynamic> userObject = currentUser!.toJson();
-      userObject['isLoggedIn'] = false;
-      final user = User.fromJson(userObject);
+      currentUser?.isLoggedIn = false;
+      currentUser?.dirty = true;
 
-      await D2Touch.userModule.user.setData(user).save();
+      await D2Touch.userModule.user.setData(currentUser).save();
+
       logOutSuccess = true;
     } catch (e) {}
     return logOutSuccess;
