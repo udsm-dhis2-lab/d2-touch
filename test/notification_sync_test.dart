@@ -1,9 +1,7 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/notification/entities/message.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/notification/entities/message_conversation.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/notification/queries/message.query.dart';
 import 'package:dhis2_flutter_sdk/modules/notification/queries/message_conversation.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';

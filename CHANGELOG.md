@@ -1,3 +1,7 @@
+## [1.0.0-alpha.19] - 04/03/2022
+
+- Bug fixes and improvements
+
 ## [1.0.0-alpha.18] - 01/03/2022
 
 - Support to save/retain most upto date data during synchronization

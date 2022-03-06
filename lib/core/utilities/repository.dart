@@ -239,6 +239,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       List<String>? fields,
       List<ColumnRelation>? relations}) async {
     final Database db = database != null ? database : await this.database;
+
     final dataResults = (await db.query(this.entity.tableName,
         where: whereParameters, orderBy: orderParameters, columns: fields));
 

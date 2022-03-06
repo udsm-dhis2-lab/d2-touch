@@ -105,6 +105,8 @@ class QueryFilter {
     switch (attributeColumn.columnType) {
       case 'TEXT':
         return '"$value"';
+      case 'BOOLEAN':
+        return value == true ? 1 : 0;
       default:
         return value;
     }
