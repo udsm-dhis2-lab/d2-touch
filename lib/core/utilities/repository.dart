@@ -436,7 +436,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       return 1;
     }
 
-    final queue = Queue(parallel: chunk ?? 100);
+    final queue = Queue(parallel: chunk ?? 500);
 
     entities.forEach((T entity) {
       queue.add(() => saveOne(entity: entity, database: db));
@@ -478,7 +478,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {required List<T> entities, Database? database, int? chunk}) async {
     final Database db = database != null ? database : await this.database;
 
-    final queue = Queue(parallel: chunk ?? 100);
+    final queue = Queue(parallel: chunk ?? 500);
 
     entities.forEach((T entity) {
       queue.add(() => updateOne(entity: entity, database: db));

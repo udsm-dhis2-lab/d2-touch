@@ -1,3 +1,7 @@
+## [1.0.0-alpha.20] - 06/03/2022
+
+- Resolve issues in searching by boolean values
+
 ## [1.0.0-alpha.19] - 04/03/2022
 
 - Bug fixes and improvements

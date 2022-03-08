@@ -66,7 +66,7 @@ class D2Touch {
         databaseFactory: databaseFactory);
 
     User? user = await D2Touch.userModule.user.getOne();
-    return user!.isLoggedIn;
+    return user?.isLoggedIn ?? false;
   }
 
   static Future<String?> getDatabaseName(
@@ -95,13 +95,15 @@ class D2Touch {
       DatabaseFactory? databaseFactory,
       Dio? dioTestClient}) async {
     WidgetsFlutterBinding.ensureInitialized();
-    HttpResponse userReponse = await HttpClient.get('me.json',
+    HttpResponse userResponse = await HttpClient.get('me.json',
         baseUrl: url,
         username: username,
         password: password,
         dioTestClient: dioTestClient);
 
-    if (userReponse.statusCode == 401) {
+    print("USER RESPONSE:: ${userResponse.statusCode} ${userResponse.body}");
+
+    if (userResponse.statusCode == 401) {
       return LoginResponseStatus.WRONG_CREDENTIALS;
     }
 
@@ -120,7 +122,7 @@ class D2Touch {
 
     UserQuery userQuery = UserQuery();
 
-    Map<String, dynamic> userData = userReponse.body;
+    Map<String, dynamic> userData = userResponse.body;
     userData['password'] = password;
     userData['isLoggedIn'] = true;
     userData['username'] = username;

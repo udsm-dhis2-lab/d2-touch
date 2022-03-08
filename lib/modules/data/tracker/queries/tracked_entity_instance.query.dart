@@ -215,10 +215,36 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   Future<List<TrackedEntityInstance>?> upload(
       Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Retrieving ${this.apiResourceName?.toLowerCase()} from phone database....',
+            status: '',
+            percentage: 0),
+        false);
     List<TrackedEntityInstance> trackedEntityInstances = await this
         .where(attribute: 'synced', value: false)
         .where(attribute: 'dirty', value: true)
         .get();
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                '${trackedEntityInstances.length} ${this.apiResourceName?.toLowerCase()} retrieved successfully',
+            status: '',
+            percentage: 50),
+        false);
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Uploading ${trackedEntityInstances.length} ${this.apiResourceName?.toLowerCase()} into the server...',
+            status: '',
+            percentage: 51),
+        false);
 
     final List<String> trackedEntityInstanceIds = trackedEntityInstances
         .map((trackedEntityInstance) => trackedEntityInstance.id as String)
@@ -258,6 +284,23 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
 
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Upload for ${trackedEntityInstances.length} ${this.apiResourceName?.toLowerCase()} is completed.',
+            status: '',
+            percentage: 75),
+        true);
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message: 'Saving import summaries into the phone database...',
+            status: '',
+            percentage: 76),
+        true);
+
     final List<dynamic> importSummaries =
         (response.body?['response']?['importSummaries'] ?? []).toList();
 
@@ -287,6 +330,14 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     } else {
       await queue.onComplete;
     }
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message: 'Import summaries saved succussfully',
+            status: '',
+            percentage: 100),
+        true);
 
     return await TrackedEntityInstanceQuery()
         .byIds(trackedEntityInstanceIds)
