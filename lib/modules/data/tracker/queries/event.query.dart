@@ -88,10 +88,36 @@ class EventQuery extends BaseQuery<Event> {
 
   Future<List<Event>?> upload(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Retrieving ${this.apiResourceName?.toLowerCase()} from phone database....',
+            status: '',
+            percentage: 0),
+        false);
     List<Event> events = await this
         .where(attribute: 'synced', value: false)
         .where(attribute: 'dirty', value: true)
         .get();
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                '${events.length} ${this.apiResourceName?.toLowerCase()} retrieved successfully',
+            status: '',
+            percentage: 50),
+        false);
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Uploading ${events.length} ${this.apiResourceName?.toLowerCase()} into the server...',
+            status: '',
+            percentage: 51),
+        false);
 
     List<String> eventIds = [];
     List<String> eventProgramStageIds = [];
@@ -123,6 +149,23 @@ class EventQuery extends BaseQuery<Event> {
         this.apiResourceName as String, {'events': eventUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
 
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Upload for ${events.length} ${this.apiResourceName?.toLowerCase()} is completed.',
+            status: '',
+            percentage: 75),
+        true);
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message: 'Saving import summaries into the phone database...',
+            status: '',
+            percentage: 76),
+        true);
+
     final List<dynamic> importSummaries =
         (response.body?['response']?['importSummaries'] ?? []).toList();
 
@@ -150,6 +193,14 @@ class EventQuery extends BaseQuery<Event> {
     } else {
       await queue.onComplete;
     }
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message: 'Import summaries saved succussfully',
+            status: '',
+            percentage: 100),
+        true);
 
     return await EventQuery().byIds(eventIds).get();
   }
