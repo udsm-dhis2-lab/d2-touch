@@ -33,12 +33,25 @@ class ValidationRuleEngine {
     validationRules.forEach((validationRule) {
       final leftSide = jsonDecode(json.decode(validationRule.leftSide));
 
-      String leftSideConditionForEvaluation =
-          leftSide['expression'].replaceAll("#{", "").replaceAll("}", "");
+      String leftSideConditionForEvaluation = leftSide['expression']
+          .replaceAll("#{", "")
+          .replaceAll("}", "")
+          .replaceAll(".", "");
 
       final rightSide = jsonDecode(json.decode(validationRule.rightSide));
-      String rightSideConditionForEvaluation =
-          rightSide['expression'].replaceAll("#{", "").replaceAll("}", "");
+      String rightSideConditionForEvaluation = rightSide['expression']
+          .replaceAll("#{", "")
+          .replaceAll("}", "")
+          .replaceAll(".", "");
+
+      evaluationContext.keys.forEach((key) {
+        final value = evaluationContext[key];
+
+        leftSideConditionForEvaluation =
+            leftSideConditionForEvaluation.replaceAll(key, value);
+        rightSideConditionForEvaluation =
+            rightSideConditionForEvaluation.replaceAll(key, value);
+      });
 
       bool skipLeftSideExpression = false;
       try {
@@ -74,21 +87,13 @@ class ValidationRuleEngine {
           final evaluator = const ExpressionEvaluator();
           var evaluationResult = evaluator.eval(expression, evaluationContext);
 
-          validationRuleActions.add(ValidationRuleAction(
-              instruction: validationRule.displayInstruction as String,
-              dataElements: [],
-              action: evaluationResult == false ? 'SHOWWARNING' : ''));
-        } catch (e) {
-          validationRuleActions.add(ValidationRuleAction(
-              instruction: validationRule.displayInstruction as String,
-              dataElements: [],
-              action: ''));
-        }
-      } else {
-        validationRuleActions.add(ValidationRuleAction(
-            instruction: validationRule.displayInstruction as String,
-            dataElements: [],
-            action: ''));
+          if (evaluationResult == false) {
+            validationRuleActions.add(ValidationRuleAction(
+                instruction: validationRule.displayInstruction as String,
+                dataElements: [],
+                action: 'SHOWWARNING'));
+          }
+        } catch (e) {}
       }
     });
 
@@ -101,7 +106,8 @@ class ValidationRuleEngine {
     Map<String, dynamic> evaluationContext = {};
 
     dataValueEntities.keys.forEach((key) {
-      evaluationContext[key] = dataValueEntities[key]?.value;
+      evaluationContext[key.replaceAll(".", "")] =
+          dataValueEntities[key]?.value;
       evaluationContext[key.split('.')[0]] = dataValueEntities[key]?.value;
     });
 
@@ -112,6 +118,16 @@ class ValidationRuleEngine {
     switch (operator) {
       case 'less_than_or_equal_to':
         return '<=';
+      case 'less_than':
+        return '<';
+      case 'greater_than_or_equal_to':
+        return '>=';
+      case 'greater_than':
+        return '>';
+      case 'equal':
+        return '==';
+      case 'not_equal':
+        return '!=';
       default:
         return operator;
     }

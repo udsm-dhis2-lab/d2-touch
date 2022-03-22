@@ -9,6 +9,7 @@ import 'package:dhis2_flutter_sdk/modules/metadata/dataset/queries/data_set.quer
 import 'package:dhis2_flutter_sdk/modules/metadata/dataset/queries/validation_rule.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
@@ -88,7 +89,7 @@ void main() async {
           attributeOptionCombo: '',
           categoryOptionCombo: 'Prlt0C1RF0s',
           dataValueSet: dataValueSet.id,
-          value: '2',
+          value: '3',
           synced: false,
           dirty: true))
       .save();
@@ -99,5 +100,7 @@ void main() async {
     dataSet: 'BfMAe6Itzgt',
   );
 
-  print(validationRuleResult.validationRuleActions[0]);
+  test('should return validation rule actions', () {
+    expect(validationRuleResult.validationRuleActions.length, 1);
+  });
 }
