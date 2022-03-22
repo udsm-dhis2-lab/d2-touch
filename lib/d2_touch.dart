@@ -101,10 +101,12 @@ class D2Touch {
         password: password,
         dioTestClient: dioTestClient);
 
-    print("USER RESPONSE:: ${userResponse.statusCode} ${userResponse.body}");
-
     if (userResponse.statusCode == 401) {
       return LoginResponseStatus.WRONG_CREDENTIALS;
+    }
+
+    if (userResponse.statusCode == 500) {
+      return LoginResponseStatus.SERVER_ERROR;
     }
 
     final uri = Uri.parse(url).host;
@@ -127,6 +129,7 @@ class D2Touch {
     userData['isLoggedIn'] = true;
     userData['username'] = username;
     userData['baseUrl'] = url;
+    userData['dirty'] = true;
     final user = User.fromApi(userData);
     await userQuery.setData(user).save();
 

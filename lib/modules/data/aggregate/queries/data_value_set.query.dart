@@ -169,7 +169,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     dataValueSet.synced = !syncFailed;
     dataValueSet.dirty = syncFailed;
     dataValueSet.syncFailed = syncFailed;
-    dataValueSet.lastSyncDate = DateTime.now().toIso8601String();
+    dataValueSet.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
     dataValueSet.lastSyncSummary = importSummary.toString();
 
     return DataValueSetQuery().setData(dataValueSet).save();

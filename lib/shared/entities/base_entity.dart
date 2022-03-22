@@ -37,7 +37,8 @@ class BaseEntity {
       this.code,
       required this.dirty}) {
     this.id = this.id ?? DhisUidGenerator.generate();
-    this.created = this.created ?? DateTime.now().toIso8601String();
+    this.created =
+        this.created ?? DateTime.now().toIso8601String().split('.')[0];
     this.lastUpdated = this.lastUpdated ?? this.created;
   }
 

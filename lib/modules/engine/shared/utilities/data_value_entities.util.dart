@@ -1,3 +1,4 @@
+import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 
@@ -26,6 +27,17 @@ class DataValueEntities {
     eventDataValues.forEach((eventDataValue) {
       entities[eventDataValue.dataElement] = DataValueObject(
           id: eventDataValue.dataElement, value: eventDataValue.value);
+    });
+    return entities;
+  }
+
+  static fromAggregateDataValues(List<DataValue> aggregateDataValues) {
+    Map<String, DataValueObject> entities = {};
+
+    aggregateDataValues.forEach((aggregateDataValue) {
+      final id =
+          '${aggregateDataValue.dataElement}.${aggregateDataValue.categoryOptionCombo}';
+      entities[id] = DataValueObject(id: id, value: aggregateDataValue.value);
     });
     return entities;
   }

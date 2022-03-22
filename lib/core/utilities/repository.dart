@@ -297,7 +297,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   @override
   Future<int> insertOne({required T entity, Database? database}) async {
     if (entity.dirty == true) {
-      entity.lastUpdated = DateTime.now().toIso8601String();
+      entity.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
     }
     Map<String, dynamic> data = this
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
@@ -339,7 +339,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       required BaseEntity entity,
       Database? database}) async {
     if (entity.dirty == true) {
-      entity.lastUpdated = DateTime.now().toIso8601String();
+      entity.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
     }
     Map<String, dynamic> data = this.sanitizeIncomingData(
         entity: entity.toJson(),
@@ -455,7 +455,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
     if (result != null) {
       if (entity.dirty == true) {
-        entity.lastUpdated = DateTime.now().toIso8601String();
+        entity.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
       }
 
       final currentLastUpdatedDate =

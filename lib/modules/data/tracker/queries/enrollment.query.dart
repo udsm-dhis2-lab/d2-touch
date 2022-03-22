@@ -45,7 +45,8 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
         enrollment.synced = !syncFailed;
         enrollment.dirty = syncFailed;
         enrollment.syncFailed = syncFailed;
-        enrollment.lastSyncDate = DateTime.now().toIso8601String();
+        enrollment.lastSyncDate =
+            DateTime.now().toIso8601String().split('.')[0].split('.')[0];
         enrollment.lastSyncSummary = importSummary.toString();
         queue.add(() => EnrollmentQuery().setData(enrollment).save());
       }

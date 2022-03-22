@@ -1,4 +1,4 @@
-import 'package:dhis2_flutter_sdk/modules/engine/program_rule/utilities/data_value_entities.util.dart';
+import 'package:dhis2_flutter_sdk/modules/engine/shared/utilities/data_value_entities.util.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_action.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_variable.entity.dart';
@@ -70,7 +70,6 @@ class ProgramRuleEngine {
           .replaceAll("#{", "")
           .replaceAll("A{", "")
           .replaceAll("}", "");
-      // .replaceAll("'", "");
 
       evaluationContext.keys.forEach((key) {
         final value = evaluationContext[key];

@@ -2,7 +2,7 @@ import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.e
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_instance.query.dart';
-import 'package:dhis2_flutter_sdk/modules/engine/program_rule/utilities/data_value_entities.util.dart';
+import 'package:dhis2_flutter_sdk/modules/engine/shared/utilities/data_value_entities.util.dart';
 import 'package:dhis2_flutter_sdk/modules/engine/program_rule/models/tracker_rule_result.model.dart';
 import 'package:dhis2_flutter_sdk/modules/engine/program_rule/utilities/program_rule_engine.util.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule.entity.dart';

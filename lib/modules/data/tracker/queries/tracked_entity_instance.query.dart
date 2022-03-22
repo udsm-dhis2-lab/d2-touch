@@ -318,7 +318,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         trackedEntityInstance.synced = !syncFailed;
         trackedEntityInstance.dirty = true;
         trackedEntityInstance.syncFailed = syncFailed;
-        trackedEntityInstance.lastSyncDate = DateTime.now().toIso8601String();
+        trackedEntityInstance.lastSyncDate =
+            DateTime.now().toIso8601String().split('.')[0];
         trackedEntityInstance.lastSyncSummary = importSummary.toString();
         queue.add(() =>
             TrackedEntityInstanceQuery().setData(trackedEntityInstance).save());

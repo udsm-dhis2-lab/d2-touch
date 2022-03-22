@@ -182,7 +182,7 @@ class EventQuery extends BaseQuery<Event> {
         event.synced = !syncFailed;
         event.dirty = true;
         event.syncFailed = syncFailed;
-        event.lastSyncDate = DateTime.now().toIso8601String();
+        event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
         event.lastSyncSummary = importSummary.toString();
         queue.add(() => EventQuery().setData(event).save());
       }
