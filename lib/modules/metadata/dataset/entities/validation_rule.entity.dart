@@ -11,7 +11,7 @@ class ValidationRule extends BaseEntity {
   @Column()
   String? description;
 
-  @Column()
+  @Column(nullable: true)
   String? displayFormName;
 
   @Column()

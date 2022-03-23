@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dhis2_flutter_sdk/modules/metadata/dataset/entities/data_set.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/dataset/entities/validation_rule.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/dataset/queries/data_set.query.dart';
@@ -22,7 +24,8 @@ class ValidationRuleQuery extends BaseQuery<ValidationRule> {
 
     dataSets.forEach((dataSet) {
       availableItemCount++;
-      queue.add(() => this.downloadOne(dataSet, (progress, complete) {
+      queue.add(() =>
+          this.downloadOne(dataSet, availableItemCount, (progress, complete) {
             callback(progress, complete);
           }, dioTestClient: dioTestClient));
     });
@@ -37,7 +40,7 @@ class ValidationRuleQuery extends BaseQuery<ValidationRule> {
   }
 
   Future<List<ValidationRule>?> downloadOne(
-      DataSet dataSet, Function(RequestProgress, bool) callback,
+      DataSet dataSet, num index, Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
     callback(
         RequestProgress(
