@@ -51,6 +51,9 @@ class ValidationRuleQuery extends BaseQuery<ValidationRule> {
             percentage: 0),
         false);
 
+        print('url: ');
+        print('validationRules?dataSet=${dataSet.id}&fields=id,name,displayName,created,lastUpdated,description,operator,instruction,displayInstruction,displayFormName,periodOffset,periodType,leftSide,rightSide');
+
     final response = await HttpClient.get(
         'validationRules?dataSet=${dataSet.id}&fields=id,name,displayName,created,lastUpdated,description,operator,instruction,displayInstruction,displayFormName,periodOffset,periodType,leftSide,rightSide',
         database: this.database,

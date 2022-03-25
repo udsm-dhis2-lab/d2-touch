@@ -8,16 +8,16 @@ import 'data_set.entity.dart';
 @AnnotationReflectable
 @Entity(tableName: 'validationrule', apiResourceName: 'validationRules')
 class ValidationRule extends BaseEntity {
-  @Column()
+  @Column(nullable: true)
   String? description;
 
   @Column(nullable: true)
   String? displayFormName;
 
-  @Column()
+  @Column(nullable: true)
   String? instruction;
 
-  @Column()
+  @Column(nullable: true)
   String? displayInstruction;
 
   @Column()
@@ -70,7 +70,7 @@ class ValidationRule extends BaseEntity {
     final dynamic rightSide = encoder.convert(json['rightSide']);
 
     return ValidationRule(
-        id: json['id'],
+        id: json['id'] + '_' + json['dataSet'],
         created: json['created'],
         lastUpdated: json['lastUpdated'],
         name: json['name'],
