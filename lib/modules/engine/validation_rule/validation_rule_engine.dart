@@ -16,6 +16,7 @@ class ValidationRuleEngine {
       required String dataSet,
       DataValue? changedDataValue}) async {
     List<ValidationRuleAction> validationRuleActions = [];
+
     List<ValidationRule> validationRules = await ValidationRuleQuery()
         .where(attribute: 'dataSet', value: dataSet)
         .get();
@@ -27,8 +28,12 @@ class ValidationRuleEngine {
     final dataValueEntities =
         DataValueEntities.fromAggregateDataValues(dataValues);
 
-    final evaluationContext =
+    final nonTotalEvaluationContext =
         ValidationRuleEngine._getEvaluationContext(dataValueEntities);
+
+    final totalEvaluationContext = ValidationRuleEngine._getEvaluationContext(
+        dataValueEntities,
+        totalOnly: true);
 
     validationRules.forEach((validationRule) {
       final leftSide = jsonDecode(json.decode(validationRule.leftSide));
@@ -38,14 +43,37 @@ class ValidationRuleEngine {
           .replaceAll("}", "")
           .replaceAll(".", "");
 
+      List<String> leftSideElements = leftSide['expression']
+          .replaceAll("#{", ",")
+          .replaceAll("}", ",")
+          .split(',')
+          .where((String id) => id.length > 0)
+          .toList();
+
       final rightSide = jsonDecode(json.decode(validationRule.rightSide));
       String rightSideConditionForEvaluation = rightSide['expression']
           .replaceAll("#{", "")
           .replaceAll("}", "")
           .replaceAll(".", "");
 
-      evaluationContext.keys.forEach((key) {
-        final value = evaluationContext[key];
+      List<String> rightSideElements = rightSide['expression']
+          .replaceAll("#{", ",")
+          .replaceAll("}", ",")
+          .split(',')
+          .where((String id) => id.length > 0)
+          .toList();
+
+      nonTotalEvaluationContext.keys.forEach((key) {
+        final value = nonTotalEvaluationContext[key];
+
+        leftSideConditionForEvaluation =
+            leftSideConditionForEvaluation.replaceAll(key, value);
+        rightSideConditionForEvaluation =
+            rightSideConditionForEvaluation.replaceAll(key, value);
+      });
+
+      totalEvaluationContext.keys.forEach((key) {
+        final value = totalEvaluationContext[key];
 
         leftSideConditionForEvaluation =
             leftSideConditionForEvaluation.replaceAll(key, value);
@@ -58,8 +86,8 @@ class ValidationRuleEngine {
         Expression leftSideExpression =
             Expression.parse(leftSideConditionForEvaluation);
         final leftSideEvaluator = const ExpressionEvaluator();
-        var leftSideEvaluationResult =
-            leftSideEvaluator.eval(leftSideExpression, evaluationContext);
+        var leftSideEvaluationResult = leftSideEvaluator.eval(
+            leftSideExpression, nonTotalEvaluationContext);
       } catch (e) {
         skipLeftSideExpression =
             leftSide['missingValueStrategy'] == 'SKIP_IF_ANY_VALUE_MISSING';
@@ -70,8 +98,8 @@ class ValidationRuleEngine {
         Expression rightSideExpression =
             Expression.parse(rightSideConditionForEvaluation);
         final rightSideEvaluator = const ExpressionEvaluator();
-        var rightSideEvaluationResult =
-            rightSideEvaluator.eval(rightSideExpression, evaluationContext);
+        var rightSideEvaluationResult = rightSideEvaluator.eval(
+            rightSideExpression, nonTotalEvaluationContext);
       } catch (e) {
         skipRightSideExpression =
             rightSide['missingValueStrategy'] == 'SKIP_IF_ANY_VALUE_MISSING';
@@ -85,12 +113,15 @@ class ValidationRuleEngine {
           Expression expression = Expression.parse(ruleExpressionForEvaluation);
 
           final evaluator = const ExpressionEvaluator();
-          var evaluationResult = evaluator.eval(expression, evaluationContext);
+          var evaluationResult =
+              evaluator.eval(expression, nonTotalEvaluationContext);
 
           if (evaluationResult == false) {
             validationRuleActions.add(ValidationRuleAction(
-                instruction: validationRule.displayInstruction as String,
-                dataElements: [],
+                instruction: (validationRule.displayInstruction ??
+                    validationRule.instruction ??
+                    validationRule.name) as String,
+                dataElements: [...leftSideElements, ...rightSideElements],
                 action: 'SHOWWARNING'));
           }
         } catch (e) {}
@@ -102,13 +133,17 @@ class ValidationRuleEngine {
         validationRuleActions: validationRuleActions);
   }
 
-  static _getEvaluationContext(Map<String, DataValueObject> dataValueEntities) {
+  static _getEvaluationContext(Map<String, DataValueObject> dataValueEntities,
+      {bool totalOnly = false}) {
     Map<String, dynamic> evaluationContext = {};
 
     dataValueEntities.keys.forEach((key) {
-      evaluationContext[key.replaceAll(".", "")] =
-          dataValueEntities[key]?.value;
-      evaluationContext[key.split('.')[0]] = dataValueEntities[key]?.value;
+      if (totalOnly) {
+        evaluationContext[key.split('.')[0]] = dataValueEntities[key]?.value;
+      } else {
+        evaluationContext[key.replaceAll(".", "")] =
+            dataValueEntities[key]?.value;
+      }
     });
 
     return evaluationContext;
