@@ -16,6 +16,7 @@ import 'package:sqflite/sqflite.dart';
 
 import 'core/database/database_manager.dart';
 import 'modules/auth/user/entities/user.entity.dart';
+import 'modules/auth/user/models/auth-token.model.dart';
 import 'modules/auth/user/models/login-response.model.dart';
 import 'modules/auth/user/queries/user.query.dart';
 import 'modules/auth/user/queries/user_organisation_unit.query.dart';
@@ -129,7 +130,9 @@ class D2Touch {
     userData['isLoggedIn'] = true;
     userData['username'] = username;
     userData['baseUrl'] = url;
+    userData['authTye'] = 'basic';
     userData['dirty'] = true;
+
     final user = User.fromApi(userData);
     await userQuery.setData(user).save();
 
@@ -152,6 +155,27 @@ class D2Touch {
       logOutSuccess = true;
     } catch (e) {}
     return logOutSuccess;
+  }
+
+  static Future<LoginResponseStatus> setToken(
+      {required String instanceUrl,
+      required Map<String, dynamic> userObject,
+      required Map<String, dynamic> tokenObject}) async {
+    AuthToken token = AuthToken.fromJson(tokenObject);
+    userObject['token'] = token.accessToken;
+    userObject['tokenType'] = token.tokenType;
+    userObject['tokenExpiry'] = token.expiresIn;
+    userObject['refreshToken'] = token.refreshToken;
+    userObject['isLoggedIn'] = true;
+    userObject['dirty'] = true;
+    userObject['baseUrl'] = instanceUrl;
+
+    final user = User.fromApi(userObject);
+    await UserQuery().setData(user).save();
+
+    await UserOrganisationUnitQuery().setData(user.organisationUnits).save();
+
+    return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }
 
   static UserModule userModule = UserModule();

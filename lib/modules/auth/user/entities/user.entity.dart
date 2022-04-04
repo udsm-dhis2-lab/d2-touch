@@ -5,17 +5,32 @@ import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 @AnnotationReflectable
 @Entity(tableName: 'user', apiResourceName: 'users')
 class User extends BaseEntity {
-  @Column()
-  final String username;
+  @Column(nullable: true)
+  final String? username;
 
-  @Column()
-  final String password;
+  @Column(nullable: true)
+  final String? password;
 
   @Column()
   final String firstName;
 
-  @Column()
-  final String surname;
+  @Column(nullable: true)
+  final String? surname;
+
+  @Column(nullable: true)
+  final String? token;
+
+  @Column(nullable: true)
+  final String? tokenType;
+
+  @Column(nullable: true)
+  final String? refreshToken;
+
+  @Column(nullable: true)
+  final int? tokenExpiry;
+
+  @Column(nullable: true)
+  final String? authType;
 
   @Column()
   final String baseUrl;
@@ -43,8 +58,8 @@ class User extends BaseEntity {
 
   User(
       {required String id,
-      required this.username,
-      required this.password,
+      this.username,
+      this.password,
       required this.firstName,
       required this.surname,
       required String name,
@@ -58,6 +73,11 @@ class User extends BaseEntity {
       this.authorities,
       this.programs,
       this.dataSets,
+      this.token,
+      this.tokenType,
+      this.refreshToken,
+      this.tokenExpiry,
+      this.authType,
       required this.isLoggedIn,
       required bool dirty})
       : super(id: id, name: name, dirty: dirty);
@@ -69,6 +89,11 @@ class User extends BaseEntity {
         password: json['password'],
         firstName: json['firstName'],
         surname: json['surname'],
+        token: json['token'],
+        tokenType: json['tokenType'],
+        refreshToken: json['refreshToken'],
+        tokenExpiry: json['tokenExpiry'],
+        authType: json['authType'],
         name: json['name'],
         baseUrl: json['baseUrl'],
         teiSearchOrganisationUnits:
@@ -91,6 +116,11 @@ class User extends BaseEntity {
         surname: json['surname'],
         name: json['name'],
         baseUrl: json['baseUrl'],
+        token: json['token'],
+        tokenType: json['tokenType'],
+        refreshToken: json['refreshToken'],
+        tokenExpiry: json['tokenExpiry'],
+        authType: json['authType'],
         teiSearchOrganisationUnits:
             json['teiSearchOrganisationUnits'].toString(),
         organisationUnits: json['organisationUnits']
@@ -119,6 +149,11 @@ class User extends BaseEntity {
     data['surname'] = this.surname;
     data['username'] = this.username;
     data['password'] = this.password;
+    data['token'] = this.token;
+    data['tokenType'] = this.tokenType;
+    data['refreshToken'] = this.refreshToken;
+    data['tokenExpiry'] = this.tokenExpiry;
+    data['authType'] = this.authType;
     data['teiSearchOrganisationUnits'] = this.teiSearchOrganisationUnits;
     data['organisationUnits'] = this.organisationUnits;
     data['dataViewOrganisationUnits'] = this.dataViewOrganisationUnits;

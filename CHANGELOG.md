@@ -1,3 +1,8 @@
+## [1.0.0-beta.1] - 01/04/2022
+
+- Support validation rule execution
+- Bug fixes and improvement
+
 ## [1.0.0-alpha.20] - 06/03/2022
 
 - Resolve issues in searching by boolean values
