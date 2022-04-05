@@ -1,8 +1,11 @@
 import 'package:dhis2_flutter_sdk/d2_touch.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -26,7 +29,7 @@ void main() async {
   await D2Touch.setToken(
       instanceUrl: 'https://dev.dhis2.udsm.ac.tz',
       userObject: userData,
-      tokenObject: sampleAuthToken);
+      tokenObject: wrongSampleAuthToken);
 
   UserQuery userQuery = UserQuery(database: db);
 
@@ -36,5 +39,51 @@ void main() async {
     expect(user, isNotNull);
     expect(user?.token, '6NK1ZJIWakbVaftAQnigzWgue98');
     expect(user?.tokenType, 'bearer');
+  });
+
+  final dio = Dio(BaseOptions());
+  final dioAdapter = DioAdapter(dio: dio);
+
+  dioAdapter.onGet(
+    'https://dev.dhis2.udsm.ac.tz/api/me.json',
+    (server) => server.reply(401,
+        '<InvalidTokenException><error>invalid_token</error><error_description>Invalid access token: 6NK1ZJIWakbVaftAQnigzWgue98</error_description></InvalidTokenException>'),
+  );
+
+  final invalidTokenResponse =
+      await HttpClient.get('me.json', dioTestClient: dio);
+
+  test("should return error message and status for invalid token", () {
+    expect(invalidTokenResponse.statusCode, 401);
+    expect(invalidTokenResponse.body['InvalidTokenException']['error'],
+        'invalid_token');
+  });
+
+// Setting correct token
+  await D2Touch.setToken(
+      instanceUrl: 'https://dev.dhis2.udsm.ac.tz',
+      userObject: userData,
+      tokenObject: correctSampleAuthToken);
+
+  User? userWithCorrectToken = await UserQuery().getOne();
+
+  test('should get user information with correct authentication token',
+      () async {
+    expect(userWithCorrectToken, isNotNull);
+    expect(userWithCorrectToken?.token, '6NK1ZJIWakbVaftAQ78gzWgue98');
+    expect(userWithCorrectToken?.tokenType, 'bearer');
+  });
+
+  dioAdapter.onGet(
+    'https://dev.dhis2.udsm.ac.tz/api/me.json',
+    (server) => server.reply(200, userData),
+  );
+
+  final validTokenResponse =
+      await HttpClient.get('me.json', dioTestClient: dio);
+
+  test("should return given data from the server", () {
+    expect(validTokenResponse.statusCode, 200);
+    expect(validTokenResponse.body['id'], 'xE7jOejl9FI');
   });
 }
