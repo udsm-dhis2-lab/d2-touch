@@ -160,7 +160,24 @@ class D2Touch {
   static Future<LoginResponseStatus> setToken(
       {required String instanceUrl,
       required Map<String, dynamic> userObject,
-      required Map<String, dynamic> tokenObject}) async {
+      required Map<String, dynamic> tokenObject,
+      Future<SharedPreferences>? sharedPreferenceInstance,
+      bool? inMemory,
+      DatabaseFactory? databaseFactory,
+      Dio? dioTestClient}) async {
+    final uri = Uri.parse(instanceUrl).host;
+    final String databaseName = '$uri';
+
+    await D2Touch.initialize(
+        databaseName: databaseName,
+        inMemory: inMemory,
+        databaseFactory: databaseFactory);
+
+    await D2Touch.setDatabaseName(
+        databaseName: databaseName,
+        sharedPreferenceInstance:
+            sharedPreferenceInstance ?? SharedPreferences.getInstance());
+
     AuthToken token = AuthToken.fromJson(tokenObject);
     userObject['token'] = token.accessToken;
     userObject['tokenType'] = token.tokenType;
