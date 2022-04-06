@@ -209,7 +209,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   }
 
   String get dhisUrl {
-    return 'trackedEntityInstances.json?ou=${this.orgUnit}&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=lastUpdated:desc&fields=*';
+    return 'trackedEntityInstances.json?ou=${this.orgUnit}&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*';
   }
 
   Future<List<TrackedEntityInstance>?> upload(

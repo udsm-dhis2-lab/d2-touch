@@ -88,6 +88,9 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
       return null;
     }
 
+    print("the tei attr generate");
+    print('trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve');
+
     final response = await HttpClient.get(
         'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
         database: this.database,
