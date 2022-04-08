@@ -3,6 +3,11 @@ title: Getting Started
 slug: /getting-started
 ---
 
+:::caution
+
+D2Touch is inspired by DHIS2 Android SDK. Some of the functionalities may not yet be available as the SDK.
+
+:::
 ## Installation
 
 <!--DHIS2-SECTION-ID:installation-->
@@ -52,19 +57,10 @@ flutter packages pub run build_runner build --delete-conflicting-outputs
 
 <!--DHIS2-SECTION-ID:initialization-->
 
-In order to start using the SDK, the first step is to login to a DHIS2 instance.
-
-The minimum configuration that needs to be passed to the `D2Manager` is the following: 
+In order to start using the SDK, the first step is to initialize to a D2Touch instance as follows:
 
 ```dart
-D2TouchInstance d2TouchInstance = D2Touch.initialize(
+D2TouchInstance d2Touch = D2Touch.initialize(
         instance: "https://play.dhis2.org/2.36.10"
     );
-```
-
-```dart
-d2TouchInstance.login(
-    username: "admin",
-    password: "district"
-);
 ```
