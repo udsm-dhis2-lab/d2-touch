@@ -14,32 +14,17 @@ D2Touch is inspired by DHIS2 Android SDK. Some of the functionalities may not ye
 
 Include dependency in pubspec.yaml.
 
-```yml
-
-dependencies:
-    flutter:
-        sdk: flutter
-    dhis2_flutter_sdk: ^2.1.7
-    ...
-
-```
-
-Include dev_dependency in pubspec.yaml.
-
-```yml
-dev_dependencies:
-    flutter_test:
-        sdk: flutter
-    build_runner: ^2.1.7
-    ...
-
-```
-
-Install Packages:
-
 ```shell
 
-flutter pub get
+flutter pub add d2-touch
+
+```
+
+Install dev_dependency in pubspec.yaml.
+
+```yml
+
+flutter pub add -d build_runner
 
 ```
 
