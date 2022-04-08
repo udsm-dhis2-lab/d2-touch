@@ -352,14 +352,35 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         where: 'id = ?',
         whereArgs: [data['id']]);
 
-    final saveDataResponse = result.length == 0
-        ? db.insert(columnRelation.referencedEntity?.tableName as String, data)
-        : db.update(
+    dynamic saveDataResponse;
+    if (result.length == 0) {
+      saveDataResponse = await db.insert(
+          columnRelation.referencedEntity?.tableName as String, data);
+    } else {
+      final lastUpdated = result[0]['lastUpdated'];
+      if (lastUpdated != null) {
+        final currentLastUpdatedDate = DateTime.parse(lastUpdated as String);
+
+        final newLastUpdatedDate =
+            DateTime.parse(data['lastUpdated'] as String);
+
+        if (currentLastUpdatedDate
+                .difference(newLastUpdatedDate)
+                .inMilliseconds >
+            0) {
+          saveDataResponse = 1;
+        } else {
+          saveDataResponse = await db.update(
             columnRelation.referencedEntity?.tableName as String,
             data,
             where: "id = ?",
             whereArgs: [data['id']],
           );
+        }
+      } else {
+        saveDataResponse = 1;
+      }
+    }
 
     final List<Column?>? oneToManyColumns = columnRelation
         .referencedEntityColumns

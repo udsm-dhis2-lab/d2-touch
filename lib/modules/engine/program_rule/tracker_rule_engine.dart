@@ -78,7 +78,6 @@ class TrackerRuleEngine {
 
   List<ProgramRuleAction> forEvent(
       {TrackedEntityAttributeValue? attributeValue}) {
-    print(attributeValue);
     return [];
   }
 }

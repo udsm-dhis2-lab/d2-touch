@@ -56,11 +56,6 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
             percentage: 26),
         false);
 
-
-    print(" the endpoint ");
-    print(this.apiResourceName);
-    print(this.dhisUrl);
-
     final response = await HttpClient.get(this.dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
@@ -79,7 +74,6 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
       dataItem['dirty'] = false;
       return OrganisationUnit.fromJson(dataItem);
     }).toList();
-
 
     callback(
         RequestProgress(
