@@ -22,7 +22,7 @@ Please read and follow our [Code of Conduct][coc].
 ## <a name="question"></a> Got a Question or Problem?
 
 Do not open issues for general support questions as we want to keep GitHub issues for bug reports and feature requests.
-Instead, we recommend using [Stack Overflow](https://stackoverflow.com/questions/tagged/dhis2-flutter-sdk) to ask support-related questions. When creating a new question on Stack Overflow, make sure to add the `dhis2-flutter-sdk` tag.
+Instead, we recommend using [Stack Overflow](https://stackoverflow.com/questions/tagged/d2-touch) to ask support-related questions. When creating a new question on Stack Overflow, make sure to add the `d2-touch` tag.
 
 Stack Overflow is a much better place to ask questions since:
 
@@ -69,14 +69,14 @@ We understand that sometimes it might be hard to extract essential bits of code 
 
 Unfortunately, we are not able to investigate / fix bugs without a minimal reproduction, so if we don't hear back from you, we are going to close an issue that doesn't have enough info to be reproduced.
 
-You can file new issues by selecting from our [new issue templates](https://github.com/interactive-apps/dhis2-flutter-sdk/issues/new/choose) and filling out the issue template.
+You can file new issues by selecting from our [new issue templates](https://github.com/interactive-apps/d2-touch/issues/new/choose) and filling out the issue template.
 
 
 ### <a name="submit-pr"></a> Submitting a Pull Request (PR)
 
 Before you submit your Pull Request (PR) consider the following guidelines:
 
-1. Search [GitHub](https://github.com/interactive-apps/dhis2-flutter-sdk/pulls) for an open or closed PR that relates to your submission.
+1. Search [GitHub](https://github.com/interactive-apps/d2-touch/pulls) for an open or closed PR that relates to your submission.
    You don't want to duplicate existing efforts.
 
 2. Be sure that an issue describes the problem you're fixing, or documents the design for the feature you'd like to add.
@@ -86,7 +86,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
    We cannot accept code without a signed CLA.
    Make sure you author all contributed Git commits with email address associated with your CLA signature.
 
-4. [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) the interactive-apps/dhis2-flutter-sdk repo.
+4. [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) the interactive-apps/d2-touch repo.
 
 5. In your forked repository, make your changes in a new git branch:
 
@@ -114,11 +114,11 @@ Before you submit your Pull Request (PR) consider the following guidelines:
     git push origin my-fix-branch
     ```
 
-11. In GitHub, send a pull request to `dhis2-flutter-sdk:develop`.
+11. In GitHub, send a pull request to `d2-touch:develop`.
 
 ### Reviewing a Pull Request
 
-The DHIS2 Flutter SDK team reserves the right not to accept pull requests from community members who haven't been good citizens of the community. Such behavior includes not following the [DHIS2 Flutter SDK code of conduct](https://github.com/interactive-apps/dhis2-flutter-sdk/code-of-conduct) and applies within or outside of DHIS2 Flutter SDK managed channels.
+The DHIS2 Flutter SDK team reserves the right not to accept pull requests from community members who haven't been good citizens of the community. Such behavior includes not following the [DHIS2 Flutter SDK code of conduct](https://github.com/interactive-apps/d2-touch/code-of-conduct) and applies within or outside of DHIS2 Flutter SDK managed channels.
 
 #### Addressing review feedback
 
@@ -378,12 +378,12 @@ The following documents can help you sort out issues with GitHub accounts and mu
 [coc]: https://github.com/interactive-apps/code-of-conduct/blob/master/CODE_OF_CONDUCT.md
 [commit-message-format]: https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#
 [corporate-cla]: https://cla.developers.google.com/about/google-corporate
-[dev-doc]: https://github.com/interactive-apps/dhis2-flutter-sdk/blob/master/docs/DEVELOPER.md
-[github]: https://github.com/interactive-apps/dhis2-flutter-sdk
+[dev-doc]: https://github.com/interactive-apps/d2-touch/blob/master/docs/DEVELOPER.md
+[github]: https://github.com/interactive-apps/d2-touch
 [discord]: https://discord.gg/DHIS2 Flutter SDK
 [individual-cla]: https://cla.developers.google.com/about/google-individual
 [js-style-guide]: https://google.github.io/styleguide/jsguide.html
 [jsfiddle]: https://jsfiddle.net/
 [plunker]: https://plnkr.co/edit
 [runnable]: https://runnable.com/
-[stackoverflow]: https://stackoverflow.com/questions/tagged/interactive-apps/dhis2-flutter-sdk
+[stackoverflow]: https://stackoverflow.com/questions/tagged/interactive-apps/d2-touch

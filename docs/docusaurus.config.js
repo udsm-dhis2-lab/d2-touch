@@ -1,13 +1,13 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: "D2Touch (DHIS2 Flutter SDK)",
-  url: "https://dhis2-club-tanzania.github.io",
-  baseUrl: "/dhis2-flutter-sdk/",
+  url: "https://udsm-dhis2-lab.github.io",
+  baseUrl: "/d2-touch/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
-  organizationName: "dhis2-club-tanzania",
-  projectName: "dhis2-flutter-sdk",
+  organizationName: "udsm-dhis2-lab",
+  projectName: "d2-touch",
   themeConfig: {
     navbar: {
       title: "D2Touch (DHIS2 Flutter SDK)",
@@ -23,7 +23,7 @@ module.exports = {
           position: "left",
         },
         {
-          href: "https://github.com/dhis2-club-tanzania/dhis2-flutter-sdk/tree/develop/docs/",
+          href: "https://github.com/udsm-dhis2-lab/d2-touch/tree/develop/docs/",
           label: "GitHub",
           position: "right",
         },
@@ -42,7 +42,7 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl:
-            "https://github.com/dhis2-club-tanzania/dhis2-flutter-sdk/edit/develop/docs/",
+            "https://github.com/udsm-dhis2-lab/d2-touch/edit/develop/docs/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
