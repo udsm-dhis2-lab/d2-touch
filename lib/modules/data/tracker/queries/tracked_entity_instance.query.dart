@@ -6,7 +6,6 @@ import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.e
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/attribute_reserved_value.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/enrollment.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
@@ -203,8 +202,6 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
     await this.save();
 
-    // final reservedAttributes = await AttributeReservedValueQuery().where(attribute: attribute, value: value)
-
     return trackedEntityInstance;
   }
 
@@ -224,6 +221,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             percentage: 0),
         false);
     List<TrackedEntityInstance> trackedEntityInstances = await this
+        .withAttributes()
+        .withEnrollments()
         .where(attribute: 'synced', value: false)
         .where(attribute: 'dirty', value: true)
         .get();
@@ -250,33 +249,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         .map((trackedEntityInstance) => trackedEntityInstance.id as String)
         .toList();
 
-    List<TrackedEntityAttributeValue> attributes =
-        await TrackedEntityAttributeValueQuery()
-            .whereIn(
-                attribute: 'trackedEntityInstance',
-                values: trackedEntityInstanceIds,
-                merge: false)
-            .get();
-
-    List<Enrollment> enrollments = await EnrollmentQuery()
-        .whereIn(
-            attribute: 'trackedEntityInstance',
-            values: trackedEntityInstanceIds,
-            merge: false)
-        .get();
-
     final trackedEntityInstanceUploadPayload =
         trackedEntityInstances.map((trackedEntityInstance) {
-      trackedEntityInstance.attributes = attributes
-          .where((attribute) =>
-              attribute.trackedEntityInstance == trackedEntityInstance.id)
-          .toList();
-
-      trackedEntityInstance.enrollments = enrollments
-          .where((enrollment) =>
-              enrollment.trackedEntityInstance == trackedEntityInstance.id)
-          .toList();
-
       return TrackedEntityInstance.toUpload(trackedEntityInstance);
     }).toList();
 
