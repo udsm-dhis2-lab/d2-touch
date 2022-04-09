@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
@@ -105,6 +107,8 @@ class Event extends BaseEntity {
   }
 
   factory Event.fromJson(Map<String, dynamic> json) {
+    const JsonEncoder encoder = JsonEncoder();
+    final dynamic lastSyncSummary = encoder.convert(json['lastSyncSummary']);
     return Event(
         id: json['event'],
         name: json['event'],
@@ -116,7 +120,7 @@ class Event extends BaseEntity {
         deleted: json['deleted'],
         synced: json['synced'],
         syncFailed: json['syncFailed'],
-        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncSummary: lastSyncSummary,
         lastSyncDate: json['lastSyncDate'],
         storedBy: json['storedBy'],
         coordinate: json['coordinate'],

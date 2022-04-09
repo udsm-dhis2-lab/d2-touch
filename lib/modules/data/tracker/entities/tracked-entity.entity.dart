@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
@@ -70,6 +72,9 @@ class TrackedEntityInstance extends BaseEntity {
 
   factory TrackedEntityInstance.fromJson(Map<String, dynamic> json) {
     final attributes = json['attributes'];
+
+    const JsonEncoder encoder = JsonEncoder();
+    final dynamic lastSyncSummary = encoder.convert(json['lastSyncSummary']);
     return TrackedEntityInstance(
         id: json['id'] ?? json['trackedEntityInstance'],
         name: json['trackedEntityInstance'],
@@ -79,7 +84,7 @@ class TrackedEntityInstance extends BaseEntity {
         deleted: json['deleted'],
         synced: json['synced'],
         syncFailed: json['syncFailed'],
-        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncSummary: lastSyncSummary,
         lastSyncDate: json['lastSyncDate'],
         inactive: json['inactive'],
         enrollments: json['enrollments'] != null
