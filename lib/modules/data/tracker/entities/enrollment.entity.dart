@@ -117,6 +117,7 @@ class Enrollment extends BaseEntity {
 
   static toUpload(Enrollment enrollment) {
     return {
+      "enrollment": enrollment.enrollment,
       "trackedEntityInstance": enrollment.trackedEntityInstance,
       "orgUnit": enrollment.orgUnit,
       "program": enrollment.program,
