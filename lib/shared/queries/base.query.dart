@@ -136,12 +136,20 @@ class BaseQuery<T extends BaseEntity> {
   }
 
   QueryModel get query {
+    List<QueryFilter>? filters = this.filters;
+    if (this.id != null) {
+      filters = [
+        QueryFilter(
+            attribute: 'id', condition: QueryCondition.Equal, value: this.id)
+      ];
+    }
+
     return QueryModel(
         resourceName: this.apiResourceName as String,
         tableName: this.tableName as String,
         singularResourceName: this.singularResourceName,
         fields: this.fields as List<String>,
-        filters: this.filters,
+        filters: filters,
         relations: this.relations,
         columns: this.repository.columns);
   }

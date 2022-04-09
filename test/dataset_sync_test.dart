@@ -57,7 +57,7 @@ void main() async {
   List<DataSet> dataSets = await dataSetQuery.get();
 
   test('should store all incoming data set metadata', () {
-    expect(dataSets.length, 26);
+    expect(dataSets.length, 24);
   });
 
   List<DataSetElement> dataSetElements = await DataSetElementQuery().get();
@@ -71,5 +71,22 @@ void main() async {
 
   test('should store all incoming data set data element options', () {
     expect(dataSetElementOptions.length, 4);
+  });
+
+  dioAdapter.onGet(
+    'https://play.dhis2.org/2.35.11/api/dataSets.json?filter=id:in:[BfMAe6Itzgt,VTdjfLXXmoi]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired&dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]&paging=false',
+    (server) => server.reply(200, chunkedSampleDataSets),
+  );
+
+  await dataSetQuery.byIds(['BfMAe6Itzgt', 'VTdjfLXXmoi']).download(
+      (progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  List<DataSet> newDataSets =
+      await DataSetQuery().byIds(['BfMAe6Itzgt', 'VTdjfLXXmoi']).get();
+
+  test('should store dataset given the ids', () {
+    expect(newDataSets.length, 2);
   });
 }
