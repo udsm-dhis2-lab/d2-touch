@@ -57,6 +57,7 @@ class D2Touch {
     final databaseName = await D2Touch.getDatabaseName(
         sharedPreferenceInstance: sharedPreferenceInstance);
 
+
     if (databaseName == null) {
       return false;
     }
@@ -67,6 +68,7 @@ class D2Touch {
         databaseFactory: databaseFactory);
 
     User? user = await D2Touch.userModule.user.getOne();
+
     return user?.isLoggedIn ?? false;
   }
 

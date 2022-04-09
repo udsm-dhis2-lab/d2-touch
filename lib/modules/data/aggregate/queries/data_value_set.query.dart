@@ -79,7 +79,12 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
   @override
   Future<List<DataValueSet>?> download(Function(RequestProgress, bool) callback,
+
       {Dio? dioTestClient}) async {
+
+    print("thus url");
+    print(this.dhisUrl);
+
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -160,6 +165,10 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
   uploadOne(DataValueSet dataValueSet, {Dio? dioTestClient}) async {
     final uploadFormat = DataValueSet.toUpload(dataValueSet);
+
+    print("data value set");
+    print(uploadFormat);
+
     final response = await HttpClient.post(
         this.apiResourceName as String, uploadFormat,
         database: this.database, dioTestClient: dioTestClient);

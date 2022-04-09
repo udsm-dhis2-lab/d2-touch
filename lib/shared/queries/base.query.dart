@@ -211,8 +211,6 @@ class BaseQuery<T extends BaseEntity> {
   }
 
   Future<List<T>> _fetchOnline({Dio? dioTestClient}) async {
-    print('the url');
-    print(this.dhisUrl);
 
     final response = await HttpClient.get(this.dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
@@ -241,6 +239,8 @@ class BaseQuery<T extends BaseEntity> {
         false);
 
     this.data = await this._fetchOnline(dioTestClient: dioTestClient);
+
+
 
     callback(
         RequestProgress(
