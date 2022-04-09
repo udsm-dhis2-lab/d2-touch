@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
@@ -65,6 +67,9 @@ class DataValueSet extends BaseEntity {
     final id =
         json['id'] ?? '${json['dataSet']}_${json['orgUnit']}_${json['period']}';
 
+    const JsonEncoder encoder = JsonEncoder();
+    final dynamic lastSyncSummary = encoder.convert(json['lastSyncSummary']);
+
     return DataValueSet(
         id: id,
         name: json['name'] ?? id,
@@ -74,7 +79,7 @@ class DataValueSet extends BaseEntity {
         dirty: json['dirty'],
         synced: json['synced'],
         syncFailed: json['syncFailed'],
-        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncSummary: lastSyncSummary,
         lastSyncDate: json['lastSyncDate'],
         period: json['period'],
         orgUnit: json['orgUnit'],
