@@ -109,6 +109,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         false);
 
     data['dirty'] = false;
+    data['synced'] = true;
     this.data = DataValueSet.fromJson(data);
 
     callback(
