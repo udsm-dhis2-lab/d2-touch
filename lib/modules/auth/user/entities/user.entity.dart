@@ -67,6 +67,8 @@ class User extends BaseEntity {
       String? shortName,
       String? displayName,
       String? code,
+      String? created,
+      String? lastUpdated,
       this.teiSearchOrganisationUnits,
       this.organisationUnits,
       this.dataViewOrganisationUnits,
@@ -80,7 +82,12 @@ class User extends BaseEntity {
       this.authType,
       required this.isLoggedIn,
       required bool dirty})
-      : super(id: id, name: name, dirty: dirty);
+      : super(
+            id: id,
+            name: name,
+            dirty: dirty,
+            created: created,
+            lastUpdated: lastUpdated);
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -96,6 +103,8 @@ class User extends BaseEntity {
         authType: json['authType'],
         name: json['name'],
         baseUrl: json['baseUrl'],
+        created: json['created'],
+        lastUpdated: json['lastUpdated'],
         teiSearchOrganisationUnits:
             json['teiSearchOrganisationUnits'].toString(),
         organisationUnits: json['organisationUnits'],
@@ -116,6 +125,8 @@ class User extends BaseEntity {
         surname: json['surname'],
         name: json['name'],
         baseUrl: json['baseUrl'],
+        created: json['created'],
+        lastUpdated: json['lastUpdated'],
         token: json['token'],
         tokenType: json['tokenType'],
         refreshToken: json['refreshToken'],
@@ -149,6 +160,8 @@ class User extends BaseEntity {
     data['surname'] = this.surname;
     data['username'] = this.username;
     data['password'] = this.password;
+    data['created'] = this.created;
+    data['lastUpdated'] = this.lastUpdated;
     data['token'] = this.token;
     data['tokenType'] = this.tokenType;
     data['refreshToken'] = this.refreshToken;

@@ -42,7 +42,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/trackedEntityInstances.json?ou=DiszpKrYNg8&program=IpHINAT79UW&programStatus=ACTIVE&pageSize=50&order=lastUpdated:desc&fields=*',
+    'https://play.dhis2.org/2.35.11/api/trackedEntityInstances.json?ou=DiszpKrYNg8&program=IpHINAT79UW&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*',
     (server) => server.reply(200, sampleTrackedEntityInstances),
   );
 
@@ -155,6 +155,9 @@ void main() async {
       .byId(secondAttributes[0].id as String)
       .getOne();
 
+  print(
+      'ULTERED ATTRIBUTE ${ulteredAttributeValue.id} ${ulteredAttributeValue.value}');
+
   await trackedEntityInstanceQuery
       .byOrgUnit('DiszpKrYNg8')
       .byProgram('IpHINAT79UW')
@@ -165,6 +168,9 @@ void main() async {
   final finalAttributeValue = await TrackedEntityAttributeValueQuery()
       .byId(secondAttributes[0].id as String)
       .getOne();
+
+  print(
+      'Final ATTRIBUTE ${finalAttributeValue.id} ${finalAttributeValue.value}');
 
   test('should not change local latest local attribute value', () {
     expect(ulteredAttributeValue.value, finalAttributeValue.value);
