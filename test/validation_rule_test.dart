@@ -62,7 +62,7 @@ void main() async {
     (server) => server.reply(200, sampleValidationRule),
   );
 
-  final validationRules = await ValidationRuleQuery().download(
+  await ValidationRuleQuery().download(
       (progress, complete) => {print(progress.message)},
       dioTestClient: dio);
 

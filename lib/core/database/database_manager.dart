@@ -64,5 +64,7 @@ class DatabaseManager {
     return database;
   }
 
+  closeDatabase() {}
+
   void _createDatabase(Database database, int version) async {}
 }

@@ -296,9 +296,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<int> insertOne({required T entity, Database? database}) async {
-    if (entity.dirty == true) {
-      entity.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
-    }
     Map<String, dynamic> data = this
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
@@ -338,9 +335,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {required ColumnRelation columnRelation,
       required BaseEntity entity,
       Database? database}) async {
-    if (entity.dirty == true) {
-      entity.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
-    }
     Map<String, dynamic> data = this.sanitizeIncomingData(
         entity: entity.toJson(),
         columns: columnRelation.referencedEntityColumns as List<Column>);
@@ -370,6 +364,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
             0) {
           saveDataResponse = 1;
         } else {
+          if (data['dirty'] == 1) {
+            data['lastUpdated'] =
+                DateTime.now().toIso8601String().split('.')[0];
+          }
           saveDataResponse = await db.update(
             columnRelation.referencedEntity?.tableName as String,
             data,
@@ -475,10 +473,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     var result = await this.findById(id: entity.id as String, database: db);
 
     if (result != null) {
-      if (entity.dirty == true) {
-        entity.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
-      }
-
       final currentLastUpdatedDate =
           DateTime.parse(result.lastUpdated as String);
       final newLastUpdatedDate = DateTime.parse(entity.lastUpdated as String);
@@ -512,6 +506,9 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<int> updateOne({required T entity, Database? database}) async {
+    if (entity.dirty == true) {
+      entity.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
+    }
     Map<String, dynamic> data = this
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
