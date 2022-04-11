@@ -75,9 +75,12 @@ class TrackedEntityInstance extends BaseEntity {
 
     const JsonEncoder encoder = JsonEncoder();
     final dynamic lastSyncSummary = encoder.convert(json['lastSyncSummary']);
+
     return TrackedEntityInstance(
         id: json['id'] ?? json['trackedEntityInstance'],
         name: json['trackedEntityInstance'],
+        created: json['created'],
+        lastUpdated: json['lastUpdated'],
         orgUnit: json['orgUnit'],
         trackedEntityInstance: json['trackedEntityInstance'],
         trackedEntityType: json['trackedEntityType'],
