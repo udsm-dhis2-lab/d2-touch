@@ -1,5 +1,6 @@
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/merge_mode.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -109,8 +110,8 @@ void main() async {
     expect(deletedResult, null);
   });
 
-  var savedResponse =
-      await repository.saveOne(entity: organisationUnit, database: db);
+  var savedResponse = await repository.saveOne(
+      entity: organisationUnit, database: db, mergeMode: MergeMode.Replace);
 
   test('should return save success', () {
     expect(savedResponse, 1);
@@ -142,8 +143,10 @@ void main() async {
         dirty: false)
   ];
 
-  var saveManyResponse =
-      await repository.saveMany(entities: organisationUnitList, database: db);
+  var saveManyResponse = await repository.saveMany(
+      entities: organisationUnitList,
+      database: db,
+      mergeMode: MergeMode.Replace);
 
   test('should return save success for saved list', () {
     expect(saveManyResponse, 1);

@@ -2,6 +2,7 @@ import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/database/database_manager.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository_util.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/merge_mode.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/sort_order.util.dart';
@@ -35,8 +36,12 @@ abstract class BaseRepository<T extends BaseEntity> {
   Future<int> insertMany({required List<T> entities, Database? database});
   Future<int> updateOne({required T entity, Database database});
   Future<int> updateMany({required List<T> entities, Database database});
-  Future<int> saveMany({required List<T> entities, Database database});
-  Future<int> saveOne({required T entity, Database database});
+  Future<int> saveMany(
+      {required List<T> entities,
+      Database database,
+      required MergeMode mergeMode});
+  Future<int> saveOne(
+      {required T entity, Database database, required MergeMode mergeMode});
   Future<int> deleteById({required String id, Database database});
   Future<int> deleteByIds({required List<String> ids, Database database});
   Future<int> deleteAll({Database database});
@@ -448,7 +453,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<int> saveMany(
-      {required List<T> entities, Database? database, int? chunk}) async {
+      {required List<T> entities,
+      Database? database,
+      int? chunk,
+      required MergeMode mergeMode}) async {
     final Database db = database != null ? database : await this.database;
 
     if (entities.isEmpty) {
@@ -458,7 +466,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final queue = Queue(parallel: chunk ?? 500);
 
     entities.forEach((T entity) {
-      queue.add(() => saveOne(entity: entity, database: db));
+      queue.add(
+          () => saveOne(entity: entity, database: db, mergeMode: mergeMode));
     });
 
     await queue.onComplete;
@@ -467,7 +476,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   }
 
   @override
-  Future<int> saveOne({required T entity, Database? database}) async {
+  Future<int> saveOne(
+      {required T entity,
+      Database? database,
+      required MergeMode mergeMode}) async {
     final Database db = database != null ? database : await this.database;
 
     var result = await this.findById(id: entity.id as String, database: db);
@@ -482,7 +494,33 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         return 0;
       }
 
-      return this.updateOne(entity: entity, database: db);
+      T newEntity = entity;
+
+      if (mergeMode == MergeMode.Merge) {
+        Map<String, dynamic> localData = result.toJson();
+        Map<String, dynamic> entityMap = entity.toJson();
+
+        localData.keys.forEach((key) {
+          if (entityMap[key] == null) {
+            entityMap[key] = localData[key];
+          }
+        });
+
+        this.columns.forEach((column) {
+          if (column.relation == null) {
+            if (entityMap[column.name] == null) {
+              entityMap[column.name as String] = localData[column.name];
+            }
+          }
+        });
+
+        ClassMirror classMirror =
+            AnnotationReflectable.reflectType(T) as ClassMirror;
+
+        newEntity = classMirror.newInstance('fromJson', [entityMap]) as T;
+      }
+
+      return this.updateOne(entity: newEntity, database: db);
     }
 
     return this.insertOne(entity: entity, database: db);

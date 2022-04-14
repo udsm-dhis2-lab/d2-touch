@@ -70,6 +70,8 @@ class DataValueSet extends BaseEntity {
     const JsonEncoder encoder = JsonEncoder();
     final dynamic lastSyncSummary = encoder.convert(json['lastSyncSummary']);
 
+    final dataValues = json['dataValues'];
+
     return DataValueSet(
         id: id,
         name: json['name'] ?? id,
@@ -84,10 +86,12 @@ class DataValueSet extends BaseEntity {
         period: json['period'],
         orgUnit: json['orgUnit'],
         dataSet: json['dataSet'],
-        dataValues: List<dynamic>.from(json['dataValues'] ?? [])
-            .map((dataValue) => DataValue.fromJson(
-                {...dataValue, 'dirty': false, 'dataValueSet': id}))
-            .toList());
+        dataValues: dataValues is List<DataValue>
+            ? dataValues
+            : List<dynamic>.from(dataValues ?? [])
+                .map((dataValue) => DataValue.fromJson(
+                    {...dataValue, 'dirty': false, 'dataValueSet': id}))
+                .toList());
   }
 
   Map<String, dynamic> toJson() {

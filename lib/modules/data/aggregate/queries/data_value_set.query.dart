@@ -5,6 +5,7 @@ import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value_set
 import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/merge_mode.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
@@ -14,7 +15,9 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   String? orgUnit;
   String? dataSet;
   String? period;
-  DataValueSetQuery({Database? database}) : super(database: database);
+  DataValueSetQuery({Database? database}) : super(database: database) {
+    this.mergeMode = MergeMode.Merge;
+  }
 
   DataValueSetQuery withDataValues() {
     final dataValue = Repository<DataValue>();
