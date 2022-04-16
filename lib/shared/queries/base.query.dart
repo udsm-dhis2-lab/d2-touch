@@ -4,6 +4,7 @@ import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/dhis-url-generator.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/merge_mode.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/query_model.util.dart';
@@ -27,6 +28,7 @@ class BaseQuery<T extends BaseEntity> {
   List<QueryFilter>? filters = [];
   Map<String, SortOrder> sortOrder = {};
   List<ColumnRelation> relations = [];
+  MergeMode _mergeMode = MergeMode.Replace;
 
   BaseQuery({this.database}) {
     this.repository = Repository<T>();
@@ -39,6 +41,10 @@ class BaseQuery<T extends BaseEntity> {
 
     this.fields = newColumns.map((column) => column.name ?? '').toList();
     this.primaryKey = repository.columns.firstWhere((column) => column.primary);
+  }
+
+  set mergeMode(MergeMode mergeMode) {
+    this._mergeMode = mergeMode;
   }
 
   select(List<String> fields) {
@@ -187,14 +193,16 @@ class BaseQuery<T extends BaseEntity> {
 
   Future<int> save({SaveOptions? saveOptions}) {
     if (this.data is List) {
-      return this
-          .repository
-          .saveMany(entities: this.data as List<T>, database: this.database);
+      return this.repository.saveMany(
+          entities: this.data as List<T>,
+          database: this.database,
+          mergeMode: this._mergeMode);
     }
 
-    return this
-        .repository
-        .saveOne(entity: this.data as T, database: this.database);
+    return this.repository.saveOne(
+        entity: this.data as T,
+        database: this.database,
+        mergeMode: this._mergeMode);
   }
 
   Future delete() {

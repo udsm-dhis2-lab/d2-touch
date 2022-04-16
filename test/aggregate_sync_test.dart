@@ -60,4 +60,22 @@ void main() async {
     expect(dataValueSets.length, 1);
     expect(dataValueSets[0].dataValues?.length, 31);
   });
+
+  await DataValueSetQuery()
+      .setData(DataValueSet(
+          period: '202201',
+          orgUnit: 'bG0PlyD0iP3',
+          synced: false,
+          dataSet: 'BfMAe6Itzgt',
+          dirty: true))
+      .save();
+
+  DataValueSet updatedDataValueSet = await DataValueSetQuery()
+      .withDataValues()
+      .byId('BfMAe6Itzgt_bG0PlyD0iP3_202201')
+      .getOne();
+
+  test('should not replace existing local data', () {
+    expect(updatedDataValueSet.completeDate, '2010-03-06T00:00:00.000+0000');
+  });
 }

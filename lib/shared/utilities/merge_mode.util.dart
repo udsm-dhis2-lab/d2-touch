@@ -1,0 +1,1 @@
+enum MergeMode { Merge, Replace }
