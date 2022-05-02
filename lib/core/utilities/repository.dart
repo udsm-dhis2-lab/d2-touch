@@ -499,6 +499,9 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       if (mergeMode == MergeMode.Merge) {
         Map<String, dynamic> localData = result.toJson();
         Map<String, dynamic> entityMap = entity.toJson();
+        
+        entityMap['synced'] = localData['synced'];
+
 
         localData.keys.forEach((key) {
           if (entityMap[key] == null) {
