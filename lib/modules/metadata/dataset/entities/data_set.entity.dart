@@ -66,10 +66,6 @@ class DataSet extends BaseEntity {
             dirty: dirty);
 
   factory DataSet.fromJson(Map<String, dynamic> json) {
-
-    print("****************************************************************************************************");
-    print(json);
-
     return DataSet(
         id: json['id'],
         name: json['name'],

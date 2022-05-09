@@ -1,5 +1,7 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
+import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_organisation_unit.entity.dart';
+import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user_organisation_unit.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.entity.dart';
@@ -20,6 +22,7 @@ import 'package:sqflite/sqflite.dart';
 class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   String? orgUnit;
   String? program;
+  bool? useUserOrgUnit;
   TrackedEntityInstanceQuery({Database? database}) : super(database: database);
 
   TrackedEntityInstanceQuery withAttributes() {
@@ -79,6 +82,11 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
   TrackedEntityInstanceQuery byProgram(String program) {
     this.program = program;
+    return this;
+  }
+
+  TrackedEntityInstanceQuery byUserOrgUnit() {
+    this.useUserOrgUnit = true;
     return this;
   }
 
@@ -205,8 +213,16 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return trackedEntityInstance;
   }
 
-  String get dhisUrl {
-    return 'trackedEntityInstances.json?ou=${this.orgUnit}&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*';
+  Future<String> dhisUrl() async {
+    if (this.useUserOrgUnit == true) {
+      final userOrgUnits = await UserOrganisationUnitQuery().get();
+
+      this.orgUnit =
+          userOrgUnits.map((userOrgUnit) => userOrgUnit.orgUnit).join(';');
+    }
+
+    return Future.value(
+        'trackedEntityInstances.json?ou=${this.orgUnit}&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*');
   }
 
   Future<List<TrackedEntityInstance>?> upload(

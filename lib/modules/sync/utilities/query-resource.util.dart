@@ -15,9 +15,7 @@ class QueryResource {
 
   static List<QueryResource> getAllResources({Database? database}) {
     return [
-      QueryResource(
-          name: 'organisationUnits',
-          dhisUrl: OrganisationUnitQuery(database: database).dhisUrl),
+      QueryResource(name: 'organisationUnits', dhisUrl: ''),
     ];
   }
 }

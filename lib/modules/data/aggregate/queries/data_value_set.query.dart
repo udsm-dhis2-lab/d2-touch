@@ -76,18 +76,14 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   }
 
   @override
-  String get dhisUrl {
-    return 'dataValueSets.json?dataSet=${this.dataSet}&period=${this.period}&orgUnit=${this.orgUnit}';
+  Future<String> dhisUrl() {
+    return Future.value(
+        'dataValueSets.json?dataSet=${this.dataSet}&period=${this.period}&orgUnit=${this.orgUnit}');
   }
 
   @override
   Future<List<DataValueSet>?> download(Function(RequestProgress, bool) callback,
-
       {Dio? dioTestClient}) async {
-
-    print("thus url");
-    print(this.dhisUrl);
-
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -97,7 +93,8 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
             percentage: 0),
         false);
 
-    final response = await HttpClient.get(this.dhisUrl,
+    final dhisUrl = await this.dhisUrl();
+    final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
     final data = response.body;
@@ -169,9 +166,6 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
   uploadOne(DataValueSet dataValueSet, {Dio? dioTestClient}) async {
     final uploadFormat = DataValueSet.toUpload(dataValueSet);
-
-    print("data value set");
-    print(uploadFormat);
 
     final response = await HttpClient.post(
         this.apiResourceName as String, uploadFormat,

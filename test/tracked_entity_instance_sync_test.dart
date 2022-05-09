@@ -169,4 +169,23 @@ void main() async {
   test('should not change local latest local attribute value', () {
     expect(ulteredAttributeValue.value, finalAttributeValue.value);
   });
+
+  dioAdapter.onGet(
+    'https://play.dhis2.org/2.35.11/api/trackedEntityInstances.json?ou=ImspTQPwCqd&program=IpHINAT79UW&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*',
+    (server) => server.reply(200, sampleTrackedEntityInstances),
+  );
+
+  List<TrackedEntityInstance>? listByOrgUnits =
+      await TrackedEntityInstanceQuery()
+          .byUserOrgUnit()
+          .byProgram('IpHINAT79UW')
+          .download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  test(
+      'should updated all incoming tracked entity instances given user organisation unit',
+      () {
+    expect(listByOrgUnits?.length, 32);
+  });
 }

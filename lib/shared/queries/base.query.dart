@@ -228,7 +228,8 @@ class BaseQuery<T extends BaseEntity> {
   }
 
   Future<List<T>> _fetchOnline({Dio? dioTestClient}) async {
-    final response = await HttpClient.get(this.dhisUrl,
+    final dhisUrl = await this.dhisUrl();
+    final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
     List data = response.body[this.apiResourceName]?.toList();
@@ -255,8 +256,6 @@ class BaseQuery<T extends BaseEntity> {
         false);
 
     this.data = await this._fetchOnline(dioTestClient: dioTestClient);
-
-
 
     callback(
         RequestProgress(
@@ -290,7 +289,7 @@ class BaseQuery<T extends BaseEntity> {
     return this.data;
   }
 
-  String get dhisUrl {
-    return DhisUrlGenerator.generate(this.query);
+  Future<String> dhisUrl() {
+    return Future.value(DhisUrlGenerator.generate(this.query));
   }
 }

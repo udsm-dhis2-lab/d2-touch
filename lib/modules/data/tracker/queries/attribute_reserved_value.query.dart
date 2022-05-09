@@ -12,8 +12,9 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
   AttributeReservedValueQuery({Database? database}) : super(database: database);
 
   @override
-  String get dhisUrl {
-    return 'trackedEntityAttributes/attributeID/generateAndReserve?numberToReserve=3';
+  Future<String> dhisUrl() {
+    return Future.value(
+        'trackedEntityAttributes/attributeID/generateAndReserve?numberToReserve=3');
   }
 
   @override
@@ -87,9 +88,6 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
     if (numberToReserve <= 0) {
       return null;
     }
-
-    print("##########################################################################################################");
-    print('trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve');
 
     final response = await HttpClient.get(
         'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
