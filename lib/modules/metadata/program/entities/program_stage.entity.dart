@@ -43,8 +43,8 @@ class ProgramStage extends BaseEntity {
   @Column(type: ColumnType.BOOLEAN, nullable: true)
   bool? captureCoordinates;
 
-  @Column(type: ColumnType.TEXT)
-  String featureType;
+  @Column(type: ColumnType.TEXT, nullable: true)
+  String? featureType;
 
   @Column(type: ColumnType.TEXT, nullable: true)
   String? dueDateLabel;
