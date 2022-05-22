@@ -188,4 +188,23 @@ void main() async {
       () {
     expect(listByOrgUnits?.length, 32);
   });
+
+  final enrollmentToUpdate = await EnrollmentQuery().getOne();
+
+  print('BEFORE UPDATE ${enrollmentToUpdate?.dirty}');
+
+  enrollmentToUpdate?.status = 'COMPLETED';
+  enrollmentToUpdate?.dirty = true;
+
+  await EnrollmentQuery().setData(enrollmentToUpdate).save();
+
+  final updatedEnrollment =
+      await EnrollmentQuery().byId(enrollmentToUpdate?.id as String).getOne();
+
+  print('AFTER UPDATE ${updatedEnrollment?.dirty}');
+
+  test('should update enrollment details for selected tracked entity instance',
+      () {
+    expect(listByOrgUnits?.length, 32);
+  });
 }

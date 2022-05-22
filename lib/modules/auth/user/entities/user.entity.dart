@@ -1,4 +1,5 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_authority.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_organisation_unit.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
 
@@ -41,11 +42,11 @@ class User extends BaseEntity {
   @OneToMany(table: UserOrganisationUnit)
   List<UserOrganisationUnit>? organisationUnits;
 
-  @Column(nullable: true)
-  final dynamic dataViewOrganisationUnits;
+  @OneToMany(table: UserAuthority)
+  List<UserAuthority>? authorities;
 
   @Column(nullable: true)
-  final String? authorities;
+  final dynamic dataViewOrganisationUnits;
 
   @Column(nullable: true)
   final String? programs;
@@ -71,8 +72,8 @@ class User extends BaseEntity {
       String? lastUpdated,
       this.teiSearchOrganisationUnits,
       this.organisationUnits,
-      this.dataViewOrganisationUnits,
       this.authorities,
+      this.dataViewOrganisationUnits,
       this.programs,
       this.dataSets,
       this.token,
@@ -89,31 +90,38 @@ class User extends BaseEntity {
             created: created,
             lastUpdated: lastUpdated);
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory User.fromJson(Map<String, dynamic> jsonData) {
     return User(
-        id: json['id'],
-        username: json['username'],
-        password: json['password'],
-        firstName: json['firstName'],
-        surname: json['surname'],
-        token: json['token'],
-        tokenType: json['tokenType'],
-        refreshToken: json['refreshToken'],
-        tokenExpiry: json['tokenExpiry'],
-        authType: json['authType'],
-        name: json['name'],
-        baseUrl: json['baseUrl'],
-        created: json['created'],
-        lastUpdated: json['lastUpdated'],
+        id: jsonData['id'],
+        username: jsonData['username'],
+        password: jsonData['password'],
+        firstName: jsonData['firstName'],
+        surname: jsonData['surname'],
+        token: jsonData['token'],
+        tokenType: jsonData['tokenType'],
+        refreshToken: jsonData['refreshToken'],
+        tokenExpiry: jsonData['tokenExpiry'],
+        authType: jsonData['authType'],
+        name: jsonData['name'],
+        baseUrl: jsonData['baseUrl'],
+        created: jsonData['created'],
+        lastUpdated: jsonData['lastUpdated'],
         teiSearchOrganisationUnits:
-            json['teiSearchOrganisationUnits'].toString(),
-        organisationUnits: json['organisationUnits'],
-        dataViewOrganisationUnits: json['dataViewOrganisationUnits'],
-        authorities: json['authorities'].toString(),
-        programs: json['programs'].toString(),
-        dataSets: json['datasets'].toString(),
-        isLoggedIn: json['isLoggedIn'],
-        dirty: json['dirty']);
+            jsonData['teiSearchOrganisationUnits'].toString(),
+        organisationUnits: jsonData['organisationUnits'],
+        authorities: (jsonData['authorities'] ?? [])
+            .map<UserAuthority>((authority) => UserAuthority(
+                id: authority['id'],
+                name: authority['name'],
+                authority: authority['authority'],
+                user: authority['user'],
+                dirty: authority['dirty'] ?? false))
+            .toList(),
+        dataViewOrganisationUnits: jsonData['dataViewOrganisationUnits'],
+        programs: jsonData['programs'].toString(),
+        dataSets: jsonData['datasets'].toString(),
+        isLoggedIn: jsonData['isLoggedIn'],
+        dirty: jsonData['dirty']);
   }
 
   factory User.fromApi(Map<String, dynamic> json) {
@@ -143,8 +151,15 @@ class User extends BaseEntity {
                 type: 'DATA_VIEW',
                 dirty: json['dirty'] ?? false))
             .toList(),
+        authorities: json['authorities']
+            .map<UserAuthority>((authority) => UserAuthority(
+                id: '${json['id']}_$authority',
+                name: '${json['id']}_$authority',
+                authority: authority,
+                user: json['id'],
+                dirty: json['dirty'] ?? false))
+            .toList(),
         dataViewOrganisationUnits: json['dataViewOrganisationUnits'],
-        authorities: json['authorities'].toString(),
         programs: json['programs'].toString(),
         dataSets: json['datasets'].toString(),
         isLoggedIn: json['isLoggedIn'],
@@ -169,8 +184,8 @@ class User extends BaseEntity {
     data['authType'] = this.authType;
     data['teiSearchOrganisationUnits'] = this.teiSearchOrganisationUnits;
     data['organisationUnits'] = this.organisationUnits;
-    data['dataViewOrganisationUnits'] = this.dataViewOrganisationUnits;
     data['authorities'] = this.authorities;
+    data['dataViewOrganisationUnits'] = this.dataViewOrganisationUnits;
     data['programs'] = this.programs;
     data['isLoggedIn'] = this.isLoggedIn;
     data['baseUrl'] = this.baseUrl;
