@@ -11,6 +11,7 @@ import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event.query.dart'
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event_data_value.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/tracked_entity_instance.query.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/orgunit_mode.util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,7 +43,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/trackedEntityInstances.json?ou=DiszpKrYNg8&program=IpHINAT79UW&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*',
+    'https://play.dhis2.org/2.35.11/api/trackedEntityInstances.json?ou=DiszpKrYNg8&ouMode=SELECTED&program=IpHINAT79UW&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*',
     (server) => server.reply(200, sampleTrackedEntityInstances),
   );
 
@@ -171,7 +172,7 @@ void main() async {
   });
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/trackedEntityInstances.json?ou=ImspTQPwCqd&program=IpHINAT79UW&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*',
+    'https://play.dhis2.org/2.35.11/api/trackedEntityInstances.json?ou=ImspTQPwCqd&ouMode=SELECTED&program=IpHINAT79UW&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*',
     (server) => server.reply(200, sampleTrackedEntityInstances),
   );
 
@@ -191,19 +192,31 @@ void main() async {
 
   final enrollmentToUpdate = await EnrollmentQuery().getOne();
 
-  print('BEFORE UPDATE ${enrollmentToUpdate?.dirty}');
-
   enrollmentToUpdate?.status = 'COMPLETED';
   enrollmentToUpdate?.dirty = true;
 
   await EnrollmentQuery().setData(enrollmentToUpdate).save();
 
-  final updatedEnrollment =
-      await EnrollmentQuery().byId(enrollmentToUpdate?.id as String).getOne();
-
-  print('AFTER UPDATE ${updatedEnrollment?.dirty}');
-
   test('should update enrollment details for selected tracked entity instance',
+      () {
+    expect(listByOrgUnits?.length, 32);
+  });
+
+  dioAdapter.onGet(
+    'https://play.dhis2.org/2.35.11/api/trackedEntityInstances.json?ou=ImspTQPwCqd&ouMode=DESCENDANTS&program=IpHINAT79UW&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*',
+    (server) => server.reply(200, sampleTrackedEntityInstances),
+  );
+
+  List<TrackedEntityInstance>? listByOuMode = await TrackedEntityInstanceQuery()
+      .byUserOrgUnit()
+      .byProgram('IpHINAT79UW')
+      .withOuMode(OrgUnitMode.DESCENDANTS)
+      .download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  test(
+      'should updated all incoming tracked entity instances given user organisation unit',
       () {
     expect(listByOrgUnits?.length, 32);
   });

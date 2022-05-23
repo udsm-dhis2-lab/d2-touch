@@ -1,6 +1,5 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
 import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
-import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_organisation_unit.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user_organisation_unit.query.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
@@ -14,6 +13,7 @@ import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query
 import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
 import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/orgunit_mode.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/mirrors.dart';
@@ -23,6 +23,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   String? orgUnit;
   String? program;
   bool? useUserOrgUnit;
+  OrgUnitMode? ouMode;
   TrackedEntityInstanceQuery({Database? database}) : super(database: database);
 
   TrackedEntityInstanceQuery withAttributes() {
@@ -82,6 +83,11 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
   TrackedEntityInstanceQuery byProgram(String program) {
     this.program = program;
+    return this;
+  }
+
+  TrackedEntityInstanceQuery withOuMode(OrgUnitMode ouMode) {
+    this.ouMode = ouMode;
     return this;
   }
 
@@ -221,8 +227,28 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           userOrgUnits.map((userOrgUnit) => userOrgUnit.orgUnit).join(';');
     }
 
+    String orgUnitMode = 'ouMode=';
+
+    switch (this.ouMode) {
+      case OrgUnitMode.DESCENDANTS:
+        orgUnitMode += 'DESCENDANTS';
+        break;
+      case OrgUnitMode.CHILDREN:
+        orgUnitMode += 'CHILDREN';
+        break;
+      case OrgUnitMode.SELECTED:
+        orgUnitMode += 'SELECTED';
+        break;
+      case OrgUnitMode.ACCESSIBLE:
+        orgUnitMode += 'ACCESSIBLE';
+        break;
+      default:
+        orgUnitMode += 'SELECTED';
+        break;
+    }
+
     return Future.value(
-        'trackedEntityInstances.json?ou=${this.orgUnit}&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*');
+        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*');
   }
 
   Future<List<TrackedEntityInstance>?> upload(
