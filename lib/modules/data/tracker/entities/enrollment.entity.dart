@@ -50,6 +50,8 @@ class Enrollment extends BaseEntity {
   Enrollment(
       {String? id,
       String? name,
+      String? created,
+      String? lastUpdated,
       this.enrollment,
       this.incidentDate,
       this.enrollmentDate,
@@ -64,7 +66,12 @@ class Enrollment extends BaseEntity {
       this.lastSyncDate,
       this.events,
       this.trackedEntityInstance})
-      : super(id: id, name: name, dirty: dirty) {
+      : super(
+            id: id,
+            name: name,
+            created: created,
+            lastUpdated: lastUpdated,
+            dirty: dirty) {
     this.enrollment = this.enrollment ?? this.id;
     this.name = this.name ?? this.enrollment;
     this.incidentDate = this.incidentDate ?? this.created;
@@ -76,6 +83,8 @@ class Enrollment extends BaseEntity {
         id: json['enrollment'],
         enrollment: json['enrollment'],
         name: json['enrollment'],
+        created: json['created'],
+        lastUpdated: json['lastUpdated'],
         incidentDate: json['incidentDate'],
         enrollmentDate: json['enrollmentDate'],
         trackedEntityType: json['trackedEntityType'],
@@ -111,6 +120,8 @@ class Enrollment extends BaseEntity {
     data['events'] = this.events ?? [];
     data['trackedEntityInstance'] = this.trackedEntityInstance;
     data['dirty'] = this.dirty;
+    data['created'] = this.created;
+    data['lastUpdated'] = this.lastUpdated;
 
     return data;
   }

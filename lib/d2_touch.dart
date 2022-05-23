@@ -22,6 +22,7 @@ import 'modules/auth/user/queries/user.query.dart';
 import 'modules/auth/user/queries/user_organisation_unit.query.dart';
 import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
+import 'dart:convert';
 
 class D2Touch {
   static Future<void> initialize(
@@ -135,8 +136,12 @@ class D2Touch {
     userData['authTye'] = 'basic';
     userData['dirty'] = true;
 
+    print('LOGIN RESPONSE:: ${userData}');
+
     final user = User.fromApi(userData);
     await userQuery.setData(user).save();
+
+
 
     await UserOrganisationUnitQuery().setData(user.organisationUnits).save();
 
