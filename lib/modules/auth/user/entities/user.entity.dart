@@ -151,7 +151,7 @@ class User extends BaseEntity {
                 type: 'DATA_VIEW',
                 dirty: json['dirty'] ?? false))
             .toList(),
-        authorities: json['authorities']
+        authorities: (json['authorities'] ?? [])
             .map<UserAuthority>((authority) => UserAuthority(
                 id: '${json['id']}_$authority',
                 name: '${json['id']}_$authority',
