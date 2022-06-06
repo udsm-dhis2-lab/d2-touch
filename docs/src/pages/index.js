@@ -20,7 +20,7 @@ function Hero() {
         </Link>
         <div className="button button--link">
           <iframe
-            src="https://ghbtns.com/github-btn.html?user=dhis2-club-tanzania&repo=dhis2-flutter-sdk&type=star&count=true&size=large"
+            src="https://ghbtns.com/github-btn.html?user=udsm-dhis2-lab&repo=d2-touch&type=star&count=true&size=large"
             frameBorder="0"
             scrolling="0"
             width="160px"

@@ -1,9 +1,13 @@
 library dhis2_flutter_sdk;
 
 import 'package:dhis2_flutter_sdk/modules/auth/user/user.module.dart';
+import 'package:dhis2_flutter_sdk/modules/data/aggregate/aggregate.module.dart';
+import 'package:dhis2_flutter_sdk/modules/data/tracker/tracked_entity_instance.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/dataset/data_set.module.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/option_set/option_set.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/organisation_unit.module.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/program.module.dart';
+import 'package:dhis2_flutter_sdk/modules/notification/notification.module.dart';
 import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,10 +16,13 @@ import 'package:sqflite/sqflite.dart';
 
 import 'core/database/database_manager.dart';
 import 'modules/auth/user/entities/user.entity.dart';
+import 'modules/auth/user/models/auth-token.model.dart';
 import 'modules/auth/user/models/login-response.model.dart';
 import 'modules/auth/user/queries/user.query.dart';
+import 'modules/auth/user/queries/user_organisation_unit.query.dart';
 import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
+import 'dart:convert';
 
 class D2Touch {
   static Future<void> initialize(
@@ -36,6 +43,10 @@ class D2Touch {
       await DataSetModule.createTables();
       await ProgramModule.createTables();
       await DashboardModule.createTables();
+      await TrackedEntityInstanceModule.createTables();
+      await AggregateModule.createTables();
+      await OptionSetModule.createTables();
+      await NotificationModule.createTables();
     }
   }
 
@@ -47,6 +58,7 @@ class D2Touch {
     final databaseName = await D2Touch.getDatabaseName(
         sharedPreferenceInstance: sharedPreferenceInstance);
 
+
     if (databaseName == null) {
       return false;
     }
@@ -57,7 +69,8 @@ class D2Touch {
         databaseFactory: databaseFactory);
 
     User? user = await D2Touch.userModule.user.getOne();
-    return user!.isLoggedIn;
+
+    return user?.isLoggedIn ?? false;
   }
 
   static Future<String?> getDatabaseName(
@@ -86,14 +99,18 @@ class D2Touch {
       DatabaseFactory? databaseFactory,
       Dio? dioTestClient}) async {
     WidgetsFlutterBinding.ensureInitialized();
-    HttpResponse userReponse = await HttpClient.get('me.json',
+    HttpResponse userResponse = await HttpClient.get('me.json',
         baseUrl: url,
         username: username,
         password: password,
         dioTestClient: dioTestClient);
 
-    if (userReponse.statusCode == 401) {
+    if (userResponse.statusCode == 401) {
       return LoginResponseStatus.WRONG_CREDENTIALS;
+    }
+
+    if (userResponse.statusCode == 500) {
+      return LoginResponseStatus.SERVER_ERROR;
     }
 
     final uri = Uri.parse(url).host;
@@ -111,13 +128,22 @@ class D2Touch {
 
     UserQuery userQuery = UserQuery();
 
-    Map<String, dynamic> userData = userReponse.body;
+    Map<String, dynamic> userData = userResponse.body;
     userData['password'] = password;
     userData['isLoggedIn'] = true;
     userData['username'] = username;
     userData['baseUrl'] = url;
-    final user = User.fromJson(userData);
+    userData['authTye'] = 'basic';
+    userData['dirty'] = true;
+
+    print('LOGIN RESPONSE:: ${userData}');
+
+    final user = User.fromApi(userData);
     await userQuery.setData(user).save();
+
+
+
+    await UserOrganisationUnitQuery().setData(user.organisationUnits).save();
 
     return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }
@@ -128,14 +154,52 @@ class D2Touch {
     try {
       User? currentUser = await D2Touch.userModule.user.getOne();
 
-      Map<String, dynamic> userObject = currentUser!.toJson();
-      userObject['isLoggedIn'] = false;
-      final user = User.fromJson(userObject);
+      currentUser?.isLoggedIn = false;
+      currentUser?.dirty = true;
 
-      await D2Touch.userModule.user.setData(user).save();
+      await D2Touch.userModule.user.setData(currentUser).save();
+
       logOutSuccess = true;
     } catch (e) {}
     return logOutSuccess;
+  }
+
+  static Future<LoginResponseStatus> setToken(
+      {required String instanceUrl,
+      required Map<String, dynamic> userObject,
+      required Map<String, dynamic> tokenObject,
+      Future<SharedPreferences>? sharedPreferenceInstance,
+      bool? inMemory,
+      DatabaseFactory? databaseFactory,
+      Dio? dioTestClient}) async {
+    final uri = Uri.parse(instanceUrl).host;
+    final String databaseName = '$uri';
+
+    await D2Touch.initialize(
+        databaseName: databaseName,
+        inMemory: inMemory,
+        databaseFactory: databaseFactory);
+
+    await D2Touch.setDatabaseName(
+        databaseName: databaseName,
+        sharedPreferenceInstance:
+            sharedPreferenceInstance ?? SharedPreferences.getInstance());
+
+    AuthToken token = AuthToken.fromJson(tokenObject);
+    userObject['token'] = token.accessToken;
+    userObject['tokenType'] = token.tokenType;
+    userObject['tokenExpiry'] = token.expiresIn;
+    userObject['refreshToken'] = token.refreshToken;
+    userObject['isLoggedIn'] = true;
+    userObject['dirty'] = true;
+    userObject['baseUrl'] = instanceUrl;
+
+    final user = User.fromApi(userObject);
+    await UserQuery().setData(user).save();
+
+    await UserOrganisationUnitQuery().setData(user.organisationUnits).save();
+
+    return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }
 
   static UserModule userModule = UserModule();
@@ -150,4 +214,13 @@ class D2Touch {
   static ProgramModule programModule = ProgramModule();
 
   static DashboardModule dashboardModule = DashboardModule();
+
+  static TrackedEntityInstanceModule trackerModule =
+      TrackedEntityInstanceModule();
+
+  static AggregateModule aggregateModule = AggregateModule();
+
+  static NotificationModule notificationModule = NotificationModule();
+
+  static OptionSetModule optionSetModule = OptionSetModule();
 }

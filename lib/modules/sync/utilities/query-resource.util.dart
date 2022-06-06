@@ -9,15 +9,13 @@ class QueryResource {
   QueryResource({required this.name, required this.dhisUrl});
 
   static List<QueryResource> getQueryResources(
-      {User? currentUser, dynamic? enableResources, Database? database}) {
+      {User? currentUser, dynamic enableResources, Database? database}) {
     return QueryResource.getAllResources(database: database);
   }
 
   static List<QueryResource> getAllResources({Database? database}) {
     return [
-      QueryResource(
-          name: 'organisationUnits',
-          dhisUrl: OrganisationUnitQuery(database: database).dhisUrl),
+      QueryResource(name: 'organisationUnits', dhisUrl: ''),
     ];
   }
 }

@@ -1,12 +1,13 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:dhis2_flutter_sdk/shared/utilities/dhis_uid_generator.util.dart';
 
 @AnnotationReflectable
 class BaseEntity {
   @PrimaryColumn()
-  final String id;
+  late String? id;
 
   @Column()
-  final String name;
+  String? name;
 
   @Column(nullable: true)
   final String? displayName;
@@ -15,26 +16,31 @@ class BaseEntity {
   final String? shortName;
 
   @Column(nullable: true)
-  final String? lastUpdated;
+  String? lastUpdated;
 
   @Column(nullable: true)
-  final String? created;
+  String? created;
 
   @Column(nullable: true)
   final String? code;
 
   @Column()
-  final bool dirty;
+  bool dirty;
 
   BaseEntity(
       {required this.id,
-      required this.name,
+      this.name,
       this.displayName,
       this.shortName,
       this.lastUpdated,
       this.created,
       this.code,
-      required this.dirty});
+      required this.dirty}) {
+    this.id = this.id ?? DhisUidGenerator.generate();
+    this.created =
+        this.created ?? DateTime.now().toIso8601String().split('.')[0];
+    this.lastUpdated = this.lastUpdated ?? this.created;
+  }
 
   static fromJson(Map<String, dynamic> json) {
     throw UnimplementedError();

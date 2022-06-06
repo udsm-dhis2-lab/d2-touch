@@ -2,8 +2,8 @@ import 'package:dhis2_flutter_sdk/modules/metadata/data_element/queries/data_ele
 
 class DataElementModule {
   static createTables() async {
-    return await DataElementQuery().createTable();
+    await DataElementQuery().createTable();
   }
 
-  DataElementQuery dataElement = DataElementQuery();
+  DataElementQuery get dataElement => DataElementQuery();
 }

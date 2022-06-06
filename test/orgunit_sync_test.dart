@@ -34,7 +34,8 @@ void main() async {
   userData['isLoggedIn'] = true;
   userData['username'] = 'admin';
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.11';
-  final user = User.fromJson(userData);
+  final user = User.fromApi(userData);
+
   await userQuery.setData(user).save();
   final organisationUnitQuery = OrganisationUnitQuery(database: db);
 
@@ -44,12 +45,11 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/organisationUnits.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,level,path,externalAccess,openingDate,geometry,parent&paging=true',
+    'https://play.dhis2.org/2.35.11/api/organisationUnits.json?filter=path:ilike:ImspTQPwCqd&rootJunction=OR&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,level,path,externalAccess,openingDate,geometry,parent&paging=false',
     (server) => server.reply(200, dhisOrganisationUnits),
   );
 
-  List<OrganisationUnit>? organisationUnits =
-      await organisationUnitQuery.download((progress, complete) {
+  await organisationUnitQuery.download((progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
@@ -57,5 +57,13 @@ void main() async {
 
   test('should store all incoming organisation unit metadata', () {
     expect(orgUnits.length, 50);
+  });
+
+  OrganisationUnit? childOrgUnit = await OrganisationUnitQuery()
+      .where(attribute: 'parent', value: 'qtr8GGlm4gg')
+      .getOne();
+
+  test('should return result given parent id is passed where clause', () {
+    expect(childOrgUnit?.parent, 'qtr8GGlm4gg');
   });
 }

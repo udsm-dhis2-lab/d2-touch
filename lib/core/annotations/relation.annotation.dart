@@ -19,5 +19,8 @@ class ManyToOne {
 
 @AnnotationReflectable
 class OneToMany {
-  const OneToMany();
+  final Type table;
+  const OneToMany({
+    required this.table,
+  });
 }

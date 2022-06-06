@@ -58,6 +58,8 @@ void main() async {
       databaseFactory: databaseFactoryFfi,
       dioTestClient: dio);
 
+  final user = await UserQuery().withAuthorities().getOne();
+
   test('should successfully authenticate user on online login', () {
     expect(onlineLogIn, LoginResponseStatus.ONLINE_LOGIN_SUCCESS);
   });

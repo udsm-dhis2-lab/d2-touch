@@ -2,7 +2,6 @@ import 'package:dhis2_flutter_sdk/core/annotations/column.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/entity.annotation.dart';
 import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:dhis2_flutter_sdk/shared/entities/geometry.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'organisationunit', apiResourceName: 'organisationUnits')
@@ -51,6 +50,7 @@ class OrganisationUnit extends BaseEntity {
             dirty: dirty);
 
   factory OrganisationUnit.fromJson(Map<String, dynamic> json) {
+    final parent = json['parent'];
     return OrganisationUnit(
         id: json['id'],
         name: json['name'],
@@ -64,7 +64,11 @@ class OrganisationUnit extends BaseEntity {
         openingDate: json['openingDate'],
         dirty: json['dirty'],
         geometry: json['geometry']?.toString() ?? null,
-        parent: json['parent']?.toString() ?? null);
+        parent: parent != null
+            ? parent is String
+                ? parent
+                : parent['id'] ?? parent
+            : null);
   }
 
   Map<String, dynamic> toJson() {

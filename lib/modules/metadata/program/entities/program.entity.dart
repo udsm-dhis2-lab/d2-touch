@@ -1,7 +1,9 @@
 import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_variable.entity.dart';
 import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
-import 'package:flutter/foundation.dart';
+
+import 'program_tracked_entity_attribute.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'program', apiResourceName: 'programs')
@@ -55,13 +57,10 @@ class Program extends BaseEntity {
   String? trackedEntity;
 
   @Column(nullable: true)
-  Object? trackedEntityType;
+  String? trackedEntityType;
 
   @Column(nullable: true)
   Object? organisationUnits;
-
-  @Column(nullable: true)
-  Object? programRuleVariables;
 
   // @OneToMany(() => ProgramStageEntity, (programStage) => programStage.program, {
   //   cascade: true,
@@ -73,17 +72,13 @@ class Program extends BaseEntity {
   // })
   // programIndicators: ProgramIndicatorEntity[];
 
-  // @OneToMany(
-  //   () => ProgramTrackedEntityAttributeEntity,
-  //   (programTrackedEntityAttribute) => programTrackedEntityAttribute.program,
-  //   { cascade: true }
-  // )
-  // programTrackedEntityAttributes: ProgramTrackedEntityAttributeEntity[];
+  @OneToMany(table: ProgramTrackedEntityAttribute)
+  List<ProgramTrackedEntityAttribute>? programTrackedEntityAttributes;
 
-  // @OneToMany(() => ProgramRuleEntity, (programRule) => programRule.program)
-  // programRules: ProgramRuleEntity[];
+  @OneToMany(table: ProgramRuleVariable)
+  List<ProgramRuleVariable>? programRuleVariables;
 
-  @OneToMany()
+  @OneToMany(table: ProgramStage)
   List<ProgramStage>? programStages;
 
   Program(
@@ -114,7 +109,8 @@ class Program extends BaseEntity {
       this.trackedEntityType,
       this.useFirstStageDuringRegistration,
       this.withoutRegistration,
-      @required dirty})
+      this.programTrackedEntityAttributes,
+      required bool dirty})
       : super(
             id: id,
             name: name,
@@ -126,34 +122,60 @@ class Program extends BaseEntity {
             dirty: dirty);
 
   factory Program.fromJson(Map<String, dynamic> json) {
+    final trackedEntityType = json['trackedEntityType'] != null
+        ? json['trackedEntityType'] is String
+            ? json['trackedEntityType']
+            : json['trackedEntityType']['id'] ?? json['trackedEntityType']
+        : null;
+
     return Program(
-      id: json['id'],
-      name: json['name'],
-      created: json['created'],
-      shortName: json['shortName'],
-      code: json['code'],
-      displayName: json['displayName'],
-      description: json['description'],
-      dirty: json['dirty'],
-      captureCoordinates: json['captureCoordinates'],
-      completeEventsExpiryDays: json['completeEventsExpiryDays'],
-      displayFrontPageList: json['displayFrontPageList'],
-      displayIncidentDate: json['displayIncidentDate'],
-      enrollmentDateLabel: json['enrollmentDateLabel'],
-      featureType: json['featureType'],
-      ignoreOverdueEvents: json['ignoreOverdueEvents'],
-      incidentDateLabel: json['incidentDateLabel'],
-      onlyEnrollOnce: json['onlyEnrollOnce'],
-      organisationUnits: json['organisationUnits']?.toString() ?? null,
-      programRuleVariables: json['programRuleVariables'],
-      programType: json['programType'],
-      selectEnrollmentDatesInFuture: json['selectEnrollmentDatesInFuture'],
-      selectIncidentDatesInFuture: json['selectIncidentDatesInFuture'],
-      trackedEntity: json['trackedEntity'],
-      trackedEntityType: json['trackedEntityType']?.toString() ?? null,
-      useFirstStageDuringRegistration: json['useFirstStageDuringRegistration'],
-      withoutRegistration: json['withoutRegistration'],
-    );
+        id: json['id'],
+        name: json['name'],
+        created: json['created'],
+        shortName: json['shortName'],
+        code: json['code'],
+        displayName: json['displayName'],
+        description: json['description'],
+        dirty: json['dirty'],
+        captureCoordinates: json['captureCoordinates'],
+        completeEventsExpiryDays: json['completeEventsExpiryDays'],
+        displayFrontPageList: json['displayFrontPageList'],
+        displayIncidentDate: json['displayIncidentDate'],
+        enrollmentDateLabel: json['enrollmentDateLabel'],
+        featureType: json['featureType'],
+        ignoreOverdueEvents: json['ignoreOverdueEvents'],
+        incidentDateLabel: json['incidentDateLabel'],
+        onlyEnrollOnce: json['onlyEnrollOnce'],
+        organisationUnits: json['organisationUnits']?.toString() ?? null,
+        programRuleVariables:
+            List<dynamic>.from(json['programRuleVariables'] ?? [])
+                .map((programRuleVariable) => ProgramRuleVariable.fromJson({
+                      ...programRuleVariable,
+                      'program': json['id'],
+                      'dirty': false
+                    }))
+                .toList(),
+        programType: json['programType'],
+        selectEnrollmentDatesInFuture: json['selectEnrollmentDatesInFuture'],
+        selectIncidentDatesInFuture: json['selectIncidentDatesInFuture'],
+        trackedEntity: json['trackedEntity'],
+        trackedEntityType: trackedEntityType,
+        useFirstStageDuringRegistration:
+            json['useFirstStageDuringRegistration'],
+        withoutRegistration: json['withoutRegistration'],
+        programStages: List<dynamic>.from(json['programStages'] ?? [])
+            .map((programStage) => ProgramStage.fromJson(
+                {...programStage, 'program': json['id'], 'dirty': false}))
+            .toList(),
+        programTrackedEntityAttributes:
+            List<dynamic>.from(json['programTrackedEntityAttributes'] ?? [])
+                .map((programTrackedEntityAttribute) =>
+                    ProgramTrackedEntityAttribute.fromJson({
+                      ...programTrackedEntityAttribute,
+                      'program': json['id'],
+                      'dirty': false
+                    }))
+                .toList());
   }
 
   Map<String, dynamic> toJson() {
@@ -177,6 +199,9 @@ class Program extends BaseEntity {
     data['incidentDateLabel'] = this.incidentDateLabel;
     data['onlyEnrollOnce'] = this.onlyEnrollOnce;
     data['organisationUnits'] = this.organisationUnits;
+    data['programStages'] = this.programStages;
+    data['programTrackedEntityAttributes'] =
+        this.programTrackedEntityAttributes;
     data['programRuleVariables'] = this.programRuleVariables;
     data['programType'] = this.programType;
     data['selectEnrollmentDatesInFuture'] = this.selectEnrollmentDatesInFuture;
