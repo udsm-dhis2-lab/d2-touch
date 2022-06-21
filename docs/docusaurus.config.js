@@ -1,6 +1,6 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: "DHIS2 Flutter SDK",
+  title: "D2Touch (DHIS2 Flutter SDK)",
   url: "https://udsm-dhis2-lab.github.io",
   baseUrl: "/d2-touch/",
   onBrokenLinks: "throw",
@@ -10,9 +10,9 @@ module.exports = {
   projectName: "d2-touch",
   themeConfig: {
     navbar: {
-      title: "DHIS2 Flutter SDK",
+      title: "D2Touch (DHIS2 Flutter SDK)",
       logo: {
-        alt: "DHIS2 Flutter SDK",
+        alt: "D2Touch (DHIS2 Flutter SDK)",
         src: "img/logo.svg",
       },
       items: [
