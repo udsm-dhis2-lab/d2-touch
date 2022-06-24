@@ -2,7 +2,7 @@ name: d2_touch
 description: DHIS2 Flutter SDK
 version: 1.0.0-beta.1
 homepage:
-repository: https://github.com/dhis2-club-tanzania/dhis2-flutter-sdk
+repository: https://github.com/udsm-dhis2-lab/d2-touch
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

@@ -12,7 +12,7 @@ Main goals:
 
 ## Documentation
 
-Developer-oriented documentation can be found in [Documentation section](https://interactive-apps.github.io/dhis2-flutter-sdk/) in DHIS2 web. It is intended to be used by developers.
+Developer-oriented documentation can be found in [Documentation section](https://interactive-apps.github.io/d2-touch/) in DHIS2 web. It is intended to be used by developers.
 
 ## Contributing
 
