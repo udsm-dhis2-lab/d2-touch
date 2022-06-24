@@ -1,6 +1,6 @@
-import 'package:dhis2_flutter_sdk/shared/utilities/dhis-url-generator.util.dart';
-import 'package:dhis2_flutter_sdk/modules/sync/utilities/query-resource.util.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/query_model.util.dart';
+import 'package:d2_touch/shared/utilities/dhis-url-generator.util.dart';
+import 'package:d2_touch/modules/sync/utilities/query-resource.util.dart';
+import 'package:d2_touch/shared/utilities/query_model.util.dart';
 
 class QueryRequest {
   QueryModel? query;

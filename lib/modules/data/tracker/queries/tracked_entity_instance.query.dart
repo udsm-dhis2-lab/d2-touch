@@ -1,19 +1,25 @@
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/core/utilities/repository.dart';
-import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user_organisation_unit.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked-entity.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/attribute_reserved_value.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/enrollment.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
-import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
-import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/orgunit_mode.util.dart';
+import 'dart:convert';
+
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/core/utilities/repository.dart';
+import 'package:d2_touch/modules/auth/user/queries/user_organisation_unit.query.dart';
+import 'package:d2_touch/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/enrollment.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked-entity.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/queries/attribute_reserved_value.query.dart';
+import 'package:d2_touch/modules/data/tracker/queries/enrollment.query.dart';
+import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
+import 'package:d2_touch/shared/models/request_progress.model.dart';
+import 'package:d2_touch/shared/queries/base.query.dart';
+import 'package:d2_touch/shared/utilities/http_client.util.dart';
+import 'package:d2_touch/shared/utilities/orgunit_mode.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/mirrors.dart';
@@ -247,6 +253,9 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         break;
     }
 
+    print(
+        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*');
+
     return Future.value(
         'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*');
   }
@@ -287,13 +296,49 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             percentage: 51),
         false);
 
-    final List<String> trackedEntityInstanceIds = trackedEntityInstances
-        .map((trackedEntityInstance) => trackedEntityInstance.id as String)
-        .toList();
+    List<String> enrollmentIds = [];
+
+    final List<String> trackedEntityInstanceIds =
+        trackedEntityInstances.map((trackedEntityInstance) {
+      trackedEntityInstance.enrollments?.forEach((enrollment) {
+        if (enrollment.id != null) {
+          enrollmentIds.add(enrollment.id as String);
+        }
+      });
+
+      return trackedEntityInstance.id as String;
+    }).toList();
+
+    final List<Event> events = await EventQuery()
+        .whereIn(attribute: 'enrollment', values: enrollmentIds, merge: false)
+        .withDataValues()
+        .get();
+
+    List<String> eventIds = [];
+    List<String> eventProgramStageIds = [];
+    events.forEach((event) {
+      eventIds.add(event.id as String);
+
+      eventProgramStageIds.removeWhere((id) => id == event.programStage);
+      eventProgramStageIds.add(event.programStage);
+    });
+
+    List<ProgramStage> programStages =
+        await ProgramStageQuery().byIds(eventProgramStageIds).get();
+
+    final eventUploadPayload = events.map((event) {
+      if (programStages.length > 0) {
+        event.programStage = programStages
+            .lastWhere((programStage) => programStage.id == event.programStage)
+            .toJson();
+      }
+      return event;
+    }).toList();
 
     final trackedEntityInstanceUploadPayload =
         trackedEntityInstances.map((trackedEntityInstance) {
-      return TrackedEntityInstance.toUpload(trackedEntityInstance);
+      return TrackedEntityInstance.toUpload(
+          trackedEntityInstance, eventUploadPayload);
     }).toList();
 
     final response = await HttpClient.post(this.apiResourceName as String,

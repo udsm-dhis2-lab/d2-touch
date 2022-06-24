@@ -1,4 +1,4 @@
-import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
+import 'package:d2_touch/core/annotations/reflectable.annotation.dart';
 
 @AnnotationReflectable
 class OneToOne {

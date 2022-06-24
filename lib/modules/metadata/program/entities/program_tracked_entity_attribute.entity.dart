@@ -1,7 +1,7 @@
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/attribute_option.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
-import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/modules/metadata/program/entities/attribute_option.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
+import 'package:d2_touch/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
 @Entity(
@@ -39,6 +39,9 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
   bool? optionSetValue;
 
   @Column(nullable: true)
+  int? optionSetValueCount;
+
+  @Column(nullable: true)
   String? optionSetName;
 
   @ManyToOne(joinColumnName: 'program', table: Program)
@@ -62,6 +65,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
       this.program,
       this.isUnique,
       this.optionSetValue,
+      this.optionSetValueCount,
       this.optionSetName,
       this.options,
       required bool dirty})
@@ -69,6 +73,8 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
 
   factory ProgramTrackedEntityAttribute.fromJson(
       Map<String, dynamic> jsonData) {
+    final optionSetValueCount =
+        jsonData['trackedEntityAttribute']?['optionSet']?['options']?.length;
     return ProgramTrackedEntityAttribute(
         id: jsonData['id'],
         attribute:
@@ -91,6 +97,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
             jsonData['trackedEntityAttribute']?['unique'],
         optionSetValue: jsonData['optionSetValue'] ??
             jsonData['trackedEntityAttribute']?['optionSetValue'],
+        optionSetValueCount: optionSetValueCount,
         optionSetName: jsonData['optionSetName'] ??
             jsonData['trackedEntityAttribute']?['optionSet']?['name'],
         options: List<dynamic>.from(jsonData['options'] ??
@@ -124,6 +131,7 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
     data['optionSetValue'] = this.optionSetValue;
     data['optionSetName'] = this.optionSetName;
     data['options'] = this.options;
+    data['optionSetValueCount'] = this.optionSetValueCount;
     return data;
   }
 }

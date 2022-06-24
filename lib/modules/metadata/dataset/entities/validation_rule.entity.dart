@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/shared/entities/base_entity.dart';
 
 import 'data_set.entity.dart';
 

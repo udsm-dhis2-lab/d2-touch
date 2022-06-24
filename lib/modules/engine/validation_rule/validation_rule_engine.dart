@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value_set.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/aggregate/queries/data_value.query.dart';
-import 'package:dhis2_flutter_sdk/modules/engine/shared/utilities/data_value_entities.util.dart';
-import 'package:dhis2_flutter_sdk/modules/engine/validation_rule/models/validation_rule_action.model.dart';
-import 'package:dhis2_flutter_sdk/modules/engine/validation_rule/models/validation_rule_result.model.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/dataset/entities/validation_rule.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/dataset/queries/validation_rule.query.dart';
+import 'package:d2_touch/modules/data/aggregate/entities/data_value.entity.dart';
+import 'package:d2_touch/modules/data/aggregate/entities/data_value_set.entity.dart';
+import 'package:d2_touch/modules/data/aggregate/queries/data_value.query.dart';
+import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
+import 'package:d2_touch/modules/engine/validation_rule/models/validation_rule_action.model.dart';
+import 'package:d2_touch/modules/engine/validation_rule/models/validation_rule_result.model.dart';
+import 'package:d2_touch/modules/metadata/dataset/entities/validation_rule.entity.dart';
+import 'package:d2_touch/modules/metadata/dataset/queries/validation_rule.query.dart';
 import 'package:expressions/expressions.dart';
 
 class ValidationRuleEngine {

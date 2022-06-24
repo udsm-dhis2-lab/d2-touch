@@ -1,4 +1,4 @@
-import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
+import 'package:d2_touch/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
 
 class OrganisationUnitModule {
   static createTables() async {

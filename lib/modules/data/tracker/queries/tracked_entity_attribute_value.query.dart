@@ -1,5 +1,5 @@
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
-import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TrackedEntityAttributeValueQuery

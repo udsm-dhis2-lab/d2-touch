@@ -1,6 +1,6 @@
-import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
-import 'package:dhis2_flutter_sdk/core/annotations/relation.annotation.dart';
-import 'package:dhis2_flutter_sdk/core/utilities/query_expression.dart';
+import 'package:d2_touch/core/annotations/reflectable.annotation.dart';
+import 'package:d2_touch/core/annotations/relation.annotation.dart';
+import 'package:d2_touch/core/utilities/query_expression.dart';
 import 'package:reflectable/reflectable.dart';
 
 import 'entity.annotation.dart';

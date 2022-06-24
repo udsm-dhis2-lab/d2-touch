@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/http-details.util.dart';
+import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
+import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
+import 'package:d2_touch/shared/utilities/http-details.util.dart';
 import 'package:dio/dio.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:xml2json/xml2json.dart';

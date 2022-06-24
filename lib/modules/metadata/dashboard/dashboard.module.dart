@@ -1,5 +1,5 @@
-import 'package:dhis2_flutter_sdk/modules/metadata/dashboard/queries/dashboard.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/dashboard/queries/dashboard_item.query.dart';
+import 'package:d2_touch/modules/metadata/dashboard/queries/dashboard.query.dart';
+import 'package:d2_touch/modules/metadata/dashboard/queries/dashboard_item.query.dart';
 
 class DashboardModule {
   static createTables() async {

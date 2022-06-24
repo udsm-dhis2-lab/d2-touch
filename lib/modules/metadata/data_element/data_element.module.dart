@@ -1,4 +1,4 @@
-import 'package:dhis2_flutter_sdk/modules/metadata/data_element/queries/data_element.query.dart';
+import 'package:d2_touch/modules/metadata/data_element/queries/data_element.query.dart';
 
 class DataElementModule {
   static createTables() async {

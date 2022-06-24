@@ -1,4 +1,4 @@
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
+import 'package:d2_touch/core/annotations/index.dart';
 import 'package:reflectable/reflectable.dart';
 
 class RepositoryUtil {

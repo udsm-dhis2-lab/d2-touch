@@ -1,7 +1,7 @@
-import 'package:dhis2_flutter_sdk/core/annotations/column.annotation.dart';
-import 'package:dhis2_flutter_sdk/core/annotations/entity.annotation.dart';
-import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart';
-import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:d2_touch/core/annotations/column.annotation.dart';
+import 'package:d2_touch/core/annotations/entity.annotation.dart';
+import 'package:d2_touch/core/annotations/reflectable.annotation.dart';
+import 'package:d2_touch/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'organisationunit', apiResourceName: 'organisationUnits')

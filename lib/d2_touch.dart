@@ -1,14 +1,14 @@
-library dhis2_flutter_sdk;
+library d2_touch;
 
-import 'package:dhis2_flutter_sdk/modules/auth/user/user.module.dart';
-import 'package:dhis2_flutter_sdk/modules/data/aggregate/aggregate.module.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/tracked_entity_instance.module.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/dataset/data_set.module.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/option_set/option_set.module.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/organisation_unit.module.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/program.module.dart';
-import 'package:dhis2_flutter_sdk/modules/notification/notification.module.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
+import 'package:d2_touch/modules/auth/user/user.module.dart';
+import 'package:d2_touch/modules/data/aggregate/aggregate.module.dart';
+import 'package:d2_touch/modules/data/tracker/tracked_entity_instance.module.dart';
+import 'package:d2_touch/modules/metadata/dataset/data_set.module.dart';
+import 'package:d2_touch/modules/metadata/option_set/option_set.module.dart';
+import 'package:d2_touch/modules/metadata/organisation_unit/organisation_unit.module.dart';
+import 'package:d2_touch/modules/metadata/program/program.module.dart';
+import 'package:d2_touch/modules/notification/notification.module.dart';
+import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,7 +22,6 @@ import 'modules/auth/user/queries/user.query.dart';
 import 'modules/auth/user/queries/user_organisation_unit.query.dart';
 import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
-import 'dart:convert';
 
 class D2Touch {
   static Future<void> initialize(
@@ -57,7 +56,6 @@ class D2Touch {
     WidgetsFlutterBinding.ensureInitialized();
     final databaseName = await D2Touch.getDatabaseName(
         sharedPreferenceInstance: sharedPreferenceInstance);
-
 
     if (databaseName == null) {
       return false;
@@ -136,12 +134,8 @@ class D2Touch {
     userData['authTye'] = 'basic';
     userData['dirty'] = true;
 
-    print('LOGIN RESPONSE:: ${userData}');
-
     final user = User.fromApi(userData);
     await userQuery.setData(user).save();
-
-
 
     await UserOrganisationUnitQuery().setData(user.organisationUnits).save();
 
