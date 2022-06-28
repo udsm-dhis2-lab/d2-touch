@@ -28,7 +28,7 @@ class QueryFilter {
           return '${filter.attribute} = ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
 
         case QueryCondition.Like:
-          return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+          return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value, isLikeFilter: true)}';
 
         case QueryCondition.LessThan:
           return '${filter.attribute} < ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
@@ -101,10 +101,13 @@ class QueryFilter {
     return whereParams.length > 0 ? whereParams.join(' AND ') : null;
   }
 
-  static getTypedValue(Column attributeColumn, dynamic value) {
+  static getTypedValue(Column attributeColumn, dynamic value,
+      {bool? isLikeFilter}) {
     switch (attributeColumn.columnType) {
       case 'TEXT':
-        return '"$value"';
+        return isLikeFilter != null && isLikeFilter == true
+            ? '"%$value%"'
+            : '"$value"';
       case 'BOOLEAN':
         return value == true ? 1 : 0;
       default:
