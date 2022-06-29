@@ -1,8 +1,8 @@
-import 'package:dhis2_flutter_sdk/d2_touch.dart';
-import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/auth/user/queries/user.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/data_element/entities/data_element.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/data_element/queries/data_element.query.dart';
+import 'package:d2_touch/d2_touch.dart';
+import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
+import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
+import 'package:d2_touch/modules/metadata/data_element/entities/data_element.entity.dart';
+import 'package:d2_touch/modules/metadata/data_element/queries/data_element.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -3,23 +3,20 @@
 // @dart = 2.12
 
 import 'dart:core';
-import 'package:dhis2_flutter_sdk/core/annotations/column.annotation.dart'
-    as prefix5;
-import 'package:dhis2_flutter_sdk/core/annotations/entity.annotation.dart'
-    as prefix3;
-import 'package:dhis2_flutter_sdk/core/annotations/reflectable.annotation.dart'
+import 'package:d2_touch/core/annotations/column.annotation.dart' as prefix5;
+import 'package:d2_touch/core/annotations/entity.annotation.dart' as prefix3;
+import 'package:d2_touch/core/annotations/reflectable.annotation.dart'
     as prefix0;
-import 'package:dhis2_flutter_sdk/core/annotations/relation.annotation.dart'
-    as prefix7;
-import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user.entity.dart'
+import 'package:d2_touch/core/annotations/relation.annotation.dart' as prefix7;
+import 'package:d2_touch/modules/auth/user/entities/user.entity.dart'
     as prefix6;
-import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_authority.entity.dart'
+import 'package:d2_touch/modules/auth/user/entities/user_authority.entity.dart'
     as prefix8;
-import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_organisation_unit.entity.dart'
+import 'package:d2_touch/modules/auth/user/entities/user_organisation_unit.entity.dart'
     as prefix2;
-import 'package:dhis2_flutter_sdk/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart'
+import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart'
     as prefix1;
-import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart' as prefix4;
+import 'package:d2_touch/shared/entities/base_entity.dart' as prefix4;
 import 'package:reflectable/mirrors.dart' as prefix9;
 
 // ignore_for_file: camel_case_types

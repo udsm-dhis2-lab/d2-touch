@@ -1,6 +1,6 @@
-import 'package:dhis2_flutter_sdk/d2_touch.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/dashboard/entities/dashboard.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/dashboard/queries/dashboard.query.dart';
+import 'package:d2_touch/d2_touch.dart';
+import 'package:d2_touch/modules/metadata/dashboard/entities/dashboard.entity.dart';
+import 'package:d2_touch/modules/metadata/dashboard/queries/dashboard.query.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 

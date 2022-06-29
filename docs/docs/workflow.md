@@ -20,10 +20,14 @@ A typical workflow would be like this:
 
 Before interacting with the server it is required to login into the DHIS 2 instance. Currently, the SDK does only support one pair "user - server" simultaneously. That means that only one user can be authenticated in only one server at the same time.
 
-```java
-d2.userModule().logIn(username, password, serverUrl)
+```dart
+d2TouchInstance.userModule().login(
+    username: "admin",
+    password: "district"
+);
 
-d2.userModule().logOut()
+d2TouchInstance.userModule().logOut();
+
 ```
 
 After a logout, the SDK keeps track of the last logged user so that it is able to differentiate recurring and new users. It also keeps a hash of the user credentials in order to authenticate the user even when there is no connectivity. Given that said, the login method will:

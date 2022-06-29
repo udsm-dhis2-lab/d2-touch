@@ -1,7 +1,7 @@
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_authority.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/auth/user/entities/user_organisation_unit.entity.dart';
-import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/modules/auth/user/entities/user_authority.entity.dart';
+import 'package:d2_touch/modules/auth/user/entities/user_organisation_unit.entity.dart';
+import 'package:d2_touch/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'user', apiResourceName: 'users')

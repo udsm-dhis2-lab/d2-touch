@@ -1,10 +1,13 @@
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/enrollment.entity.dart';
-import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
-import 'package:dhis2_flutter_sdk/shared/queries/base.query.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
+import 'package:d2_touch/modules/data/tracker/entities/enrollment.entity.dart';
+import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';
+import 'package:d2_touch/shared/models/request_progress.model.dart';
+import 'package:d2_touch/shared/queries/base.query.dart';
+import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../entities/event.entity.dart';
 
 class EnrollmentQuery extends BaseQuery<Enrollment> {
   EnrollmentQuery({Database? database}) : super(database: database);
@@ -20,8 +23,11 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
         .map((trackedEntityInstance) => trackedEntityInstance.id as String)
         .toList();
 
+    final List<Event> events = await EventQuery()
+        .whereIn(attribute: 'enrollment', values: enrollmentIds, merge: false);
+
     final enrollmentUploadPayload = enrollments.map((enrollment) {
-      return Enrollment.toUpload(enrollment);
+      return Enrollment.toUpload(enrollment, events);
     }).toList();
 
     final response = await HttpClient.post(this.apiResourceName as String,

@@ -1,4 +1,4 @@
-import 'package:dhis2_flutter_sdk/modules/notification/queries/message_conversation.query.dart';
+import 'package:d2_touch/modules/notification/queries/message_conversation.query.dart';
 
 import 'queries/message.query.dart';
 

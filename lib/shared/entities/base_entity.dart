@@ -1,5 +1,5 @@
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/dhis_uid_generator.util.dart';
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/shared/utilities/dhis_uid_generator.util.dart';
 
 @AnnotationReflectable
 class BaseEntity {

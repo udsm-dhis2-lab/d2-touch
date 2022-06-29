@@ -1,6 +1,6 @@
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/query_filter.util.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/query_model.util.dart';
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/shared/utilities/query_filter.util.dart';
+import 'package:d2_touch/shared/utilities/query_model.util.dart';
 
 class DhisUrlGenerator {
   static String generate(QueryModel? query) {

@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/shared/entities/base_entity.dart';
 
 import 'enrollment.entity.dart';
+import 'event.entity.dart';
 import 'tracked_entity_attribute_value.entity.dart';
 
 @AnnotationReflectable
@@ -33,6 +34,9 @@ class TrackedEntityInstance extends BaseEntity {
   bool? syncFailed;
 
   @Column(nullable: true)
+  bool? transfer;
+
+  @Column(nullable: true)
   String? lastSyncSummary;
 
   @Column(nullable: true)
@@ -60,7 +64,8 @@ class TrackedEntityInstance extends BaseEntity {
       this.lastSyncDate,
       this.inactive,
       this.enrollments,
-      this.attributes})
+      this.attributes,
+      this.transfer})
       : super(
             id: id,
             name: name,
@@ -68,6 +73,11 @@ class TrackedEntityInstance extends BaseEntity {
             lastUpdated: lastUpdated,
             dirty: dirty) {
     this.trackedEntityInstance = this.trackedEntityInstance ?? this.id;
+  }
+
+  transferOrgUnit(String orgUnit) {
+    this.orgUnit = orgUnit;
+    this.transfer = true;
   }
 
   factory TrackedEntityInstance.fromJson(Map<String, dynamic> json) {
@@ -86,6 +96,7 @@ class TrackedEntityInstance extends BaseEntity {
         trackedEntityType: json['trackedEntityType'],
         deleted: json['deleted'],
         synced: json['synced'],
+        transfer: json['transfer'],
         syncFailed: json['syncFailed'],
         lastSyncSummary: lastSyncSummary,
         lastSyncDate: json['lastSyncDate'],
@@ -126,10 +137,12 @@ class TrackedEntityInstance extends BaseEntity {
     data['dirty'] = this.dirty;
     data['created'] = this.created;
     data['lastUpdated'] = this.lastUpdated;
+    data['transfer'] = this.transfer;
     return data;
   }
 
-  static toUpload(TrackedEntityInstance trackedEntityInstance) {
+  static toUpload(
+      TrackedEntityInstance trackedEntityInstance, List<Event>? events) {
     return {
       "trackedEntityType": trackedEntityInstance.trackedEntityType,
       "orgUnit": trackedEntityInstance.orgUnit,
@@ -138,7 +151,7 @@ class TrackedEntityInstance extends BaseEntity {
           .map((attribute) => TrackedEntityAttributeValue.toUpload(attribute))
           .toList(),
       "enrollments": (trackedEntityInstance.enrollments ?? [])
-          .map((enrollment) => Enrollment.toUpload(enrollment))
+          .map((enrollment) => Enrollment.toUpload(enrollment, events))
           .toList()
     };
   }

@@ -1,7 +1,7 @@
-import 'package:dhis2_flutter_sdk/modules/engine/shared/utilities/data_value_entities.util.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_action.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_variable.entity.dart';
+import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_rule.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_rule_action.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_rule_variable.entity.dart';
 import 'package:expressions/expressions.dart';
 
 class ProgramRuleEngine {

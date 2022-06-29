@@ -1,15 +1,15 @@
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event_data_value.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event.query.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/queries/event_data_value.query.dart';
-import 'package:dhis2_flutter_sdk/modules/engine/program_rule/models/event_rule_result.model.dart';
-import 'package:dhis2_flutter_sdk/modules/engine/shared/utilities/data_value_entities.util.dart';
-import 'package:dhis2_flutter_sdk/modules/engine/program_rule/utilities/program_rule_engine.util.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_action.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_rule_variable.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule_variable.query.dart';
+import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';
+import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
+import 'package:d2_touch/modules/engine/program_rule/models/event_rule_result.model.dart';
+import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
+import 'package:d2_touch/modules/engine/program_rule/utilities/program_rule_engine.util.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_rule.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_rule_action.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_rule_variable.entity.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_rule.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_rule_variable.query.dart';
 import 'package:queue/queue.dart';
 
 class EventRuleEngine {

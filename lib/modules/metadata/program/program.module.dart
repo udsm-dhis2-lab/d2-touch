@@ -1,12 +1,12 @@
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/attribute_option.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule_action.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_rule_variable.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage_data_element.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage_section.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_tracked_entity_attribute.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/attribute_option.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_rule.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_rule_action.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_rule_variable.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_stage_data_element.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_stage_section.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_tracked_entity_attribute.query.dart';
 
 import 'queries/program_stage_data_element_option.query.dart';
 

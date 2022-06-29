@@ -1,7 +1,7 @@
-import 'package:dhis2_flutter_sdk/modules/sync/models/error_message.model.dart';
-import 'package:dhis2_flutter_sdk/modules/sync/utilities/query-resource.util.dart';
-import 'package:dhis2_flutter_sdk/shared/models/request_progress.model.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/http_client.util.dart';
+import 'package:d2_touch/modules/sync/models/error_message.model.dart';
+import 'package:d2_touch/modules/sync/utilities/query-resource.util.dart';
+import 'package:d2_touch/shared/models/request_progress.model.dart';
+import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:queue/queue.dart';
 import 'package:sqflite/sqflite.dart';
 

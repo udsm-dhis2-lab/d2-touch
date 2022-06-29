@@ -1,5 +1,5 @@
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/shared/utilities/query_filter_condition.util.dart';
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/shared/utilities/query_filter_condition.util.dart';
 
 class QueryFilter {
   String attribute;
@@ -29,6 +29,9 @@ class QueryFilter {
 
         case QueryCondition.Like:
           return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+
+        case QueryCondition.Ilike:
+          return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value, isLikeFilter: true)}';
 
         case QueryCondition.LessThan:
           return '${filter.attribute} < ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
@@ -101,10 +104,13 @@ class QueryFilter {
     return whereParams.length > 0 ? whereParams.join(' AND ') : null;
   }
 
-  static getTypedValue(Column attributeColumn, dynamic value) {
+  static getTypedValue(Column attributeColumn, dynamic value,
+      {bool? isLikeFilter}) {
     switch (attributeColumn.columnType) {
       case 'TEXT':
-        return '"$value"';
+        return isLikeFilter != null && isLikeFilter == true
+            ? '"%$value%"'
+            : '"$value"';
       case 'BOOLEAN':
         return value == true ? 1 : 0;
       default:

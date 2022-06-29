@@ -1,6 +1,6 @@
-import 'package:dhis2_flutter_sdk/modules/data/aggregate/entities/data_value.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/event_data_value.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:d2_touch/modules/data/aggregate/entities/data_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 
 class DataValueObject {
   String id;

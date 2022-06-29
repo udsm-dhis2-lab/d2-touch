@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
-import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
+import 'package:d2_touch/shared/entities/base_entity.dart';
 
 import 'enrollment.entity.dart';
 import 'event_data_value.entity.dart';
@@ -171,10 +171,9 @@ class Event extends BaseEntity {
   }
 
   static toUpload(Event event) {
-    return {
+    Map<String, dynamic> eventToUpload = {
       "event": event.event,
-      "program": event.programStage['program'],
-      "programStage": event.programStage['id'],
+      "programStage": event.programStage,
       "trackedEntityInstance": event.trackedEntityInstance,
       "orgUnit": event.orgUnit,
       "eventDate": event.eventDate,
@@ -185,5 +184,12 @@ class Event extends BaseEntity {
           .map((event) => EventDataValue.toUpload(event))
           .toList()
     };
+
+    if (event.programStage != null &&
+        event.programStage.runtimeType != String) {
+      eventToUpload['program'] = event.programStage['program'];
+    }
+
+    return eventToUpload;
   }
 }

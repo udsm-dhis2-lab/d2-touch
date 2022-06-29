@@ -1,8 +1,8 @@
-import 'package:dhis2_flutter_sdk/d2_touch.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/entities/program_stage.entity.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program.query.dart';
-import 'package:dhis2_flutter_sdk/modules/metadata/program/queries/program_stage.query.dart';
+import 'package:d2_touch/d2_touch.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 

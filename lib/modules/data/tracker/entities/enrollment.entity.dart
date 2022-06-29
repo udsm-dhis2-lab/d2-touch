@@ -1,5 +1,5 @@
-import 'package:dhis2_flutter_sdk/core/annotations/index.dart';
-import 'package:dhis2_flutter_sdk/shared/entities/base_entity.dart';
+import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/shared/entities/base_entity.dart';
 
 import 'event.entity.dart';
 import 'tracked-entity.entity.dart';
@@ -126,14 +126,17 @@ class Enrollment extends BaseEntity {
     return data;
   }
 
-  static toUpload(Enrollment enrollment) {
+  static toUpload(Enrollment enrollment, List<Event>? events) {
+    final filteredEvents =
+        (events ?? []).where((event) => event.enrollment == enrollment.id);
     return {
       "enrollment": enrollment.enrollment,
       "trackedEntityInstance": enrollment.trackedEntityInstance,
       "orgUnit": enrollment.orgUnit,
       "program": enrollment.program,
       "enrollmentDate": enrollment.enrollmentDate,
-      "incidentDate": enrollment.incidentDate
+      "incidentDate": enrollment.incidentDate,
+      "events": (filteredEvents).map((event) => Event.toUpload(event)).toList()
     };
   }
 }
