@@ -28,6 +28,9 @@ class QueryFilter {
           return '${filter.attribute} = ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
 
         case QueryCondition.Like:
+          return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
+
+        case QueryCondition.Ilike:
           return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value, isLikeFilter: true)}';
 
         case QueryCondition.LessThan:
