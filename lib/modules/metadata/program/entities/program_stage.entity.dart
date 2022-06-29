@@ -66,7 +66,7 @@ class ProgramStage extends BaseEntity {
       String? shortName,
       String? code,
       String? displayName,
-      required this.featureType,
+      this.featureType,
       required this.captureCoordinates,
       required this.sortOrder,
       this.allowGenerateNextVisit,
