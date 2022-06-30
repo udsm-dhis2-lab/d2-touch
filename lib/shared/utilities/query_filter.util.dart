@@ -31,7 +31,7 @@ class QueryFilter {
           return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
 
         case QueryCondition.Ilike:
-          return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value, isLikeFilter: true)}';
+          return ' DISTINCT ${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value, isLikeFilter: true)}';
 
         case QueryCondition.LessThan:
           return '${filter.attribute} < ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
