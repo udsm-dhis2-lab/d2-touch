@@ -20,6 +20,8 @@ import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:d2_touch/shared/utilities/orgunit_mode.util.dart';
+import 'package:d2_touch/shared/utilities/query_filter.util.dart';
+import 'package:d2_touch/shared/utilities/query_filter_condition.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/mirrors.dart';
@@ -31,6 +33,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   bool? useUserOrgUnit;
   OrgUnitMode? ouMode;
   TrackedEntityInstanceQuery({Database? database}) : super(database: database);
+  List<QueryFilter>? attributeFilters = [];
 
   TrackedEntityInstanceQuery withAttributes() {
     final attributeValue = Repository<TrackedEntityAttributeValue>();
@@ -85,6 +88,16 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   TrackedEntityInstanceQuery byOrgUnit(String orgUnit) {
     this.orgUnit = orgUnit;
     return this.where(attribute: 'orgUnit', value: orgUnit);
+  }
+
+  TrackedEntityInstanceQuery byAttribute(
+      String attributeId, String attibuteValue) {
+    this.attributeFilters?.add(QueryFilter(
+        attribute: attributeId,
+        condition: QueryCondition.Equal,
+        value: attibuteValue));
+
+    return this;
   }
 
   TrackedEntityInstanceQuery byProgram(String program) {
@@ -253,11 +266,15 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         break;
     }
 
-    print(
-        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*');
+    String url =
+        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*${this.attributeFilters?.length == 0 ? "" : "&" + (this.attributeFilters?.map((queryFilterItem) {
+              return "filter=" +
+                  queryFilterItem.attribute +
+                  ":EQ:" +
+                  queryFilterItem.value;
+            }).join("&") as String)}';
 
-    return Future.value(
-        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*');
+    return Future.value(url);
   }
 
   Future<List<TrackedEntityInstance>?> upload(
