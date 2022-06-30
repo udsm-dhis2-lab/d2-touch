@@ -253,9 +253,6 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         break;
     }
 
-    print(
-        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*');
-
     return Future.value(
         'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*');
   }
