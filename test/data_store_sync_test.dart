@@ -2,6 +2,7 @@ import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
 import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set.query.dart';
+import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,10 +30,16 @@ void main() async {
   userData['password'] = 'district';
   userData['isLoggedIn'] = true;
   userData['username'] = 'admin';
-  userData['baseUrl'] = 'https://play.dhis2.org/2.35.11';
+  userData['baseUrl'] = 'https://play.dhis2.org/2.35.14';
   final user = User.fromApi(userData);
   await userQuery.setData(user).save();
   final dataSetQuery = DataSetQuery(database: db);
+
+  final callOne = await HttpClient.get('me.json');
+  final callTwo = await HttpClient.get('users.json');
+
+  print(callOne.body);
+  print(callTwo.body);
 
   test('should do something', () {
     expect('', '');
