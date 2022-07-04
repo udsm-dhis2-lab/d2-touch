@@ -1,3 +1,5 @@
+import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_file_resource.query.dart';
+
 import 'queries/attribute_reserved_value.query.dart';
 import 'queries/enrollment.query.dart';
 import 'queries/event.query.dart';
@@ -13,6 +15,7 @@ class TrackedEntityInstanceModule {
     await EnrollmentQuery().createTable();
     await AttributeReservedValueQuery().createTable();
     await EventDataValueQuery().createTable();
+    await TrackedEntityFileResourceQuery().createTable();
   }
 
   TrackedEntityInstanceQuery get trackedEntityInstance =>
@@ -29,4 +32,7 @@ class TrackedEntityInstanceModule {
       AttributeReservedValueQuery();
 
   EventDataValueQuery get eventDataValue => EventDataValueQuery();
+
+  TrackedEntityFileResourceQuery get trackedEntityFileResource =>
+      TrackedEntityFileResourceQuery();
 }
