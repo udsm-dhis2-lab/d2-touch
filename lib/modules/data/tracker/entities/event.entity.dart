@@ -187,6 +187,7 @@ class Event extends BaseEntity {
 
     if (event.programStage != null &&
         event.programStage.runtimeType != String) {
+      eventToUpload['programStage'] = event.programStage['id'];
       eventToUpload['program'] = event.programStage['program'];
     }
 
