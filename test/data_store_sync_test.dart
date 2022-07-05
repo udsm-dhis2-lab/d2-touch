@@ -36,10 +36,10 @@ void main() async {
   final dataSetQuery = DataSetQuery(database: db);
 
   final callOne = await HttpClient.get('me.json');
-  final callTwo = await HttpClient.get('users.json');
+  // final callTwo = await HttpClient.get('users.json');
 
   print(callOne.body);
-  print(callTwo.body);
+  // print(callTwo.body);
 
   test('should do something', () {
     expect('', '');

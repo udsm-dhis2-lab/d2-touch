@@ -3,6 +3,7 @@ library d2_touch;
 import 'package:d2_touch/modules/auth/user/user.module.dart';
 import 'package:d2_touch/modules/data/aggregate/aggregate.module.dart';
 import 'package:d2_touch/modules/data/tracker/tracked_entity_instance.module.dart';
+import 'package:d2_touch/modules/file_resource/file_resource.module.dart';
 import 'package:d2_touch/modules/metadata/dataset/data_set.module.dart';
 import 'package:d2_touch/modules/metadata/option_set/option_set.module.dart';
 import 'package:d2_touch/modules/metadata/organisation_unit/organisation_unit.module.dart';
@@ -46,6 +47,7 @@ class D2Touch {
       await AggregateModule.createTables();
       await OptionSetModule.createTables();
       await NotificationModule.createTables();
+      await FileResourceModule.createTables();
     }
   }
 
@@ -217,4 +219,6 @@ class D2Touch {
   static NotificationModule notificationModule = NotificationModule();
 
   static OptionSetModule optionSetModule = OptionSetModule();
+
+  static FileResourceModule fileResourceModule = FileResourceModule();
 }
