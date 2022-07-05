@@ -4,18 +4,24 @@ import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
-@Entity(
-    tableName: 'attributeReserveValue',
-    apiResourceName: 'attributeReserveValues')
-class TrackedEntityInstanceFileResource extends BaseEntity {
+@Entity(tableName: 'fileResource', apiResourceName: 'fileResources')
+class FileResource extends BaseEntity {
   @Column(nullable: true)
-  String localReference;
+  String? resourceId;
+
   @Column()
-  String serverReference;
+  String elementId;
+
   @Column()
-  String trackedEntityAttribute;
+  String contentType;
+
+  @Column(nullable: true)
+  String? contentLength;
+
   @Column()
-  String trackedEntityInstance;
+  String storageStatus;
+  @Column()
+  String localFilePath;
 
   @Column(nullable: true)
   bool? synced;
@@ -29,13 +35,15 @@ class TrackedEntityInstanceFileResource extends BaseEntity {
   @Column(nullable: true)
   String? lastSyncDate;
 
-  TrackedEntityInstanceFileResource(
+  FileResource(
       {required String id,
+      required this.elementId,
+      this.resourceId,
       required String name,
-      required this.localReference,
-      required this.serverReference,
-      required this.trackedEntityAttribute,
-      required this.trackedEntityInstance,
+      required this.contentType,
+      this.contentLength,
+      required this.storageStatus,
+      required this.localFilePath,
       this.synced,
       this.syncFailed,
       this.lastSyncSummary,
@@ -49,39 +57,40 @@ class TrackedEntityInstanceFileResource extends BaseEntity {
             dirty: dirty,
             created: created,
             lastUpdated: lastUpdated) {
-    this.id = this.id ??
-        '${this.trackedEntityInstance}_${this.trackedEntityAttribute}';
     this.name = this.name ?? this.id;
   }
 
-  factory TrackedEntityInstanceFileResource.fromJson(
-      Map<String, dynamic> json) {
+  factory FileResource.fromJson(Map<String, dynamic> json) {
     const JsonEncoder encoder = JsonEncoder();
     final dynamic lastSyncSummary = encoder.convert(json['lastSyncSummary']);
-    return TrackedEntityInstanceFileResource(
+    return FileResource(
         id: json['id'],
+        elementId: json['elementId'],
+        resourceId: json['resourceId'],
         name: json['name'],
-        localReference: json['localReference'],
-        serverReference: json['serverReference'],
-        trackedEntityAttribute: json['trackedEntityAttribute'],
-        trackedEntityInstance: json['trackedEntityInstance'],
+        contentType: json['contentType'],
+        contentLength: json['contentLength'],
+        storageStatus: json['storageStatus'],
+        localFilePath: json['localFilePath'],
         synced: json['synced'],
         syncFailed: json['syncFailed'],
         lastSyncSummary: lastSyncSummary,
         lastSyncDate: json['lastSyncDate'],
         created: json['created'],
         lastUpdated: json['lastUpdated'],
-        dirty: json['dirty']);
+        dirty: json['dirty'] ?? false);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['elementId'] = this.elementId;
+    data['resourceId'] = this.resourceId;
     data['name'] = this.name;
-    data['localReference'] = this.localReference;
-    data['serverReference'] = this.serverReference;
-    data['trackedEntityAttribute'] = this.trackedEntityAttribute;
-    data['trackedEntityInstance'] = this.trackedEntityInstance;
+    data['contentType'] = this.contentType;
+    data['contentLength'] = this.contentLength;
+    data['storageStatus'] = this.storageStatus;
+    data['localFilePath'] = this.localFilePath;
     data['created'] = this.created;
     data['lastUpdated'] = this.lastUpdated;
     data['synced'] = this.synced;
