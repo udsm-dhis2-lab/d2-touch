@@ -5,7 +5,10 @@ final List<Map<String, dynamic>> sampleFileResources = [
     "contentType": 'image/png',
     "contentLength": '1120',
     "storageStatus": 'PENDING',
-    "elementId": "lZ98xYbs97q",
+    "elementId": "cejWyOfXge6",
+    "elementType": "TRACKED_ENTITY_ATTRIBUTE",
+    "formInstance": "VYhjy99cyVv",
+    "resourceId": 'lZ98xYbs97q',
     "localFilePath":
         '/Users/rajabu/Desktop/Screenshot 2022-06-22 at 11.50.50.png'
   }

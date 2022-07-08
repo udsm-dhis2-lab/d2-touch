@@ -13,6 +13,12 @@ class FileResource extends BaseEntity {
   String elementId;
 
   @Column()
+  String elementType;
+
+  @Column()
+  String formInstance;
+
+  @Column()
   String contentType;
 
   @Column(nullable: true)
@@ -36,10 +42,12 @@ class FileResource extends BaseEntity {
   String? lastSyncDate;
 
   FileResource(
-      {required String id,
+      {String? id,
       required this.elementId,
+      required this.formInstance,
+      required this.elementType,
       this.resourceId,
-      required String name,
+      String? name,
       required this.contentType,
       this.contentLength,
       required this.storageStatus,
@@ -57,6 +65,7 @@ class FileResource extends BaseEntity {
             dirty: dirty,
             created: created,
             lastUpdated: lastUpdated) {
+    this.id = this.id ?? '${this.formInstance}_${this.elementId}';
     this.name = this.name ?? this.id;
   }
 
@@ -66,6 +75,8 @@ class FileResource extends BaseEntity {
     return FileResource(
         id: json['id'],
         elementId: json['elementId'],
+        elementType: json['elementType'],
+        formInstance: json['formInstance'],
         resourceId: json['resourceId'],
         name: json['name'],
         contentType: json['contentType'],
@@ -85,6 +96,8 @@ class FileResource extends BaseEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['elementId'] = this.elementId;
+    data['elementType'] = this.elementType;
+    data['formInstance'] = this.formInstance;
     data['resourceId'] = this.resourceId;
     data['name'] = this.name;
     data['contentType'] = this.contentType;

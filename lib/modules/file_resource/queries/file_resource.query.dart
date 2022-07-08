@@ -1,6 +1,11 @@
 import 'dart:convert';
 
+import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
+import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
 import 'package:d2_touch/modules/file_resource/entities/file_resource.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
@@ -41,10 +46,6 @@ class FileResourceQuery extends BaseQuery<FileResource> {
             status: '',
             percentage: 51),
         false);
-
-    // final response = await HttpClient.post(this.apiResourceName as String,
-    //     {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
-    //     database: this.database, dioTestClient: dioTestClient);
 
     final uploadQueue = Queue(parallel: 50);
     num availableUploadItemCount = 0;
@@ -90,10 +91,10 @@ class FileResourceQuery extends BaseQuery<FileResource> {
             percentage: 76),
         true);
 
-    final List<dynamic> importSummaries = ([]).toList();
-
     final queue = Queue(parallel: 50);
+    final formValueUpdateQueue = Queue(parallel: 50);
     num availableItemCount = 0;
+    num availableElementCount = 0;
 
     fileResources.forEach((fileResource) {
       final fileResourceResponse = fileResourceResponses.lastWhere(
@@ -103,19 +104,41 @@ class FileResourceQuery extends BaseQuery<FileResource> {
       if (fileResourceResponse != null) {
         final importSummary = fileResourceResponse['fileResourceResponse'];
         availableItemCount++;
+        final resourceId = importSummary['response']?['fileResource']?['id'];
 
         final syncFailed = importSummary['status'] != 'OK';
         fileResource.synced = !syncFailed;
         fileResource.dirty = true;
         fileResource.syncFailed = syncFailed;
-        fileResource.resourceId =
-            importSummary['response']?['fileResource']?['id'];
+        fileResource.resourceId = resourceId;
         fileResource.storageStatus =
             importSummary['response']?['fileResource']?['storageStatus'];
         fileResource.lastSyncDate =
             DateTime.now().toIso8601String().split('.')[0];
         fileResource.lastSyncSummary = importSummary.toString();
         queue.add(() => FileResourceQuery().setData(fileResource).save());
+
+        if (resourceId != null) {
+          switch (fileResource.elementType) {
+            case 'TRACKED_ENTITY_ATTRIBUTE':
+              availableElementCount++;
+              formValueUpdateQueue.add(() => this
+                  .updateTrackedEntityAttributeValue(
+                      attribute: fileResource.elementId,
+                      trackedEntityInstance: fileResource.formInstance,
+                      resourceId: resourceId));
+              break;
+            case 'DATA_ELEMENT':
+              availableElementCount++;
+              formValueUpdateQueue.add(() => this.updateDataElementValue(
+                  dataElement: fileResource.elementId,
+                  event: fileResource.formInstance,
+                  resourceId: resourceId));
+              break;
+            default:
+              break;
+          }
+        }
       }
     });
 
@@ -130,13 +153,57 @@ class FileResourceQuery extends BaseQuery<FileResource> {
             resourceName: this.apiResourceName as String,
             message: 'Import summaries saved succussfully',
             status: '',
-            percentage: 100),
+            percentage: 85),
         true);
+
+    if (availableElementCount == 0) {
+      formValueUpdateQueue.cancel();
+    } else {
+      await formValueUpdateQueue.onComplete;
+    }
 
     return await FileResourceQuery()
         .byIds(fileResources
             .map((fileResource) => fileResource.id as String)
             .toList())
         .get();
+  }
+
+  Future<dynamic> updateTrackedEntityAttributeValue(
+      {required String attribute,
+      required String trackedEntityInstance,
+      required String resourceId}) async {
+    TrackedEntityAttributeValue? trackedEntityAttributeValue =
+        await TrackedEntityAttributeValueQuery()
+            .where(attribute: 'attribute', value: attribute)
+            .where(
+                attribute: 'trackedEntityInstance',
+                value: trackedEntityInstance)
+            .getOne();
+
+    if (trackedEntityAttributeValue == null) {
+      return null;
+    }
+
+    trackedEntityAttributeValue.value = resourceId;
+    return await TrackedEntityAttributeValueQuery()
+        .setData(trackedEntityAttributeValue)
+        .save();
+  }
+
+  Future<dynamic> updateDataElementValue(
+      {required String dataElement,
+      required String event,
+      required String resourceId}) async {
+    EventDataValue? eventDataValue = EventDataValueQuery()
+        .where(attribute: 'dataElement', value: dataElement)
+        .where(attribute: 'event', value: event)
+        .getOne();
+    if (eventDataValue == null) {
+      return null;
+    }
+
+    eventDataValue.value = resourceId;
+    return await EventDataValueQuery().setData(eventDataValue).save();
   }
 }
