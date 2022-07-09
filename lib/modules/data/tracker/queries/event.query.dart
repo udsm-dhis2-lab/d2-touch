@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';

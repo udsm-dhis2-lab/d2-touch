@@ -182,7 +182,15 @@ class FileResourceQuery extends BaseQuery<FileResource> {
             .getOne();
 
     if (trackedEntityAttributeValue == null) {
-      return null;
+      final newTrackedEntityAttributeValue = TrackedEntityAttributeValue(
+          dirty: true,
+          attribute: attribute,
+          trackedEntityInstance: trackedEntityInstance,
+          value: resourceId);
+
+      return await TrackedEntityAttributeValueQuery()
+          .setData(newTrackedEntityAttributeValue)
+          .save();
     }
 
     trackedEntityAttributeValue.value = resourceId;
@@ -200,7 +208,13 @@ class FileResourceQuery extends BaseQuery<FileResource> {
         .where(attribute: 'event', value: event)
         .getOne();
     if (eventDataValue == null) {
-      return null;
+      final newEventDataValue = EventDataValue(
+          dataElement: dataElement,
+          value: resourceId,
+          event: event,
+          dirty: true);
+
+      return await EventDataValueQuery().setData(newEventDataValue).save();
     }
 
     eventDataValue.value = resourceId;

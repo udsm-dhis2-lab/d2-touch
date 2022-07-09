@@ -90,7 +90,7 @@ class DataValueSet extends BaseEntity {
             ? dataValues
             : List<dynamic>.from(dataValues ?? [])
                 .map((dataValue) => DataValue.fromJson(
-                    {...dataValue, 'dirty': false, 'dataValueSet': id}))
+                    {...dataValue, 'dirty': json['dirty'], 'dataValueSet': id}))
                 .toList());
   }
 
