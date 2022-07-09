@@ -136,7 +136,7 @@ class Event extends BaseEntity {
                   ...event,
                   "id": '${json['event']}_${event['dataElement']}',
                   "event": json['event'],
-                  "dirty": false
+                  "dirty": json['dirty']
                 }))
             .toList(),
         dirty: json['dirty']);
