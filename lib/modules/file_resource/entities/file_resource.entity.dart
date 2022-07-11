@@ -66,7 +66,7 @@ class FileResource extends BaseEntity {
             created: created,
             lastUpdated: lastUpdated) {
     this.id = this.id ?? '${this.formInstance}_${this.elementId}';
-    this.name = this.name ?? this.id;
+    this.name = this.name ?? this.localFilePath;
   }
 
   factory FileResource.fromJson(Map<String, dynamic> json) {

@@ -1,15 +1,14 @@
-import 'dart:convert';
-
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
 import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
 import 'package:d2_touch/modules/file_resource/entities/file_resource.entity.dart';
-import 'package:d2_touch/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 import 'package:queue/queue.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -52,10 +51,13 @@ class FileResourceQuery extends BaseQuery<FileResource> {
     List fileResourceResponses = [];
 
     fileResources.forEach((fileResource) async {
+      final mimeType =
+          lookupMimeType(fileResource.localFilePath)?.split('/') ?? [];
       availableUploadItemCount++;
-
-      var formData = FormData.fromMap(
-          {'file': await MultipartFile.fromFile(fileResource.localFilePath)});
+      var formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(fileResource.localFilePath,
+            contentType: MediaType(mimeType[0], mimeType[1]))
+      });
       uploadQueue.add(() async {
         final fileResourceResponse = await HttpClient.post(
             this.apiResourceName as String, formData,
