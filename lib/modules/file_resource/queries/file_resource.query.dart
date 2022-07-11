@@ -203,10 +203,11 @@ class FileResourceQuery extends BaseQuery<FileResource> {
       {required String dataElement,
       required String event,
       required String resourceId}) async {
-    EventDataValue? eventDataValue = EventDataValueQuery()
+    EventDataValue? eventDataValue = await EventDataValueQuery()
         .where(attribute: 'dataElement', value: dataElement)
         .where(attribute: 'event', value: event)
         .getOne();
+
     if (eventDataValue == null) {
       final newEventDataValue = EventDataValue(
           dataElement: dataElement,
