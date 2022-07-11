@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
@@ -9,10 +7,10 @@ import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:queue/queue.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:http_parser/src/media_type.dart';
 
 class FileResourceQuery extends BaseQuery<FileResource> {
   FileResourceQuery({Database? database}) : super(database: database);
@@ -207,7 +205,7 @@ class FileResourceQuery extends BaseQuery<FileResource> {
       {required String dataElement,
       required String event,
       required String resourceId}) async {
-    EventDataValue? eventDataValue = EventDataValueQuery()
+    EventDataValue? eventDataValue = await EventDataValueQuery()
         .where(attribute: 'dataElement', value: dataElement)
         .where(attribute: 'event', value: event)
         .getOne();
