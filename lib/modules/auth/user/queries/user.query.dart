@@ -3,6 +3,7 @@ import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
 import 'package:d2_touch/modules/auth/user/entities/user_authority.entity.dart';
 import 'package:d2_touch/modules/auth/user/entities/user_organisation_unit.entity.dart';
+import 'package:d2_touch/modules/auth/user/entities/user_role.entity.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
@@ -50,6 +51,28 @@ class UserQuery extends BaseQuery<User> {
               AnnotationReflectable.reflectType(UserAuthority) as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(UserAuthority) as ClassMirror,
+              false));
+      this.relations.add(relation);
+    }
+
+    return this;
+  }
+
+  UserQuery withRoles() {
+    final userRole = Repository<UserRole>();
+    final Column? relationColumn = userRole.columns.firstWhere((column) =>
+        column.relation?.referencedEntity?.tableName == this.tableName);
+
+    if (relationColumn != null) {
+      ColumnRelation relation = ColumnRelation(
+          referencedColumn: relationColumn.relation?.attributeName,
+          attributeName: 'roles',
+          primaryKey: this.primaryKey?.name,
+          relationType: RelationType.OneToMany,
+          referencedEntity: Entity.getEntityDefinition(
+              AnnotationReflectable.reflectType(UserRole) as ClassMirror),
+          referencedEntityColumns: Entity.getEntityColumns(
+              AnnotationReflectable.reflectType(UserRole) as ClassMirror,
               false));
       this.relations.add(relation);
     }
