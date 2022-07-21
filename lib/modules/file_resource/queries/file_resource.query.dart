@@ -209,6 +209,7 @@ class FileResourceQuery extends BaseQuery<FileResource> {
         .where(attribute: 'dataElement', value: dataElement)
         .where(attribute: 'event', value: event)
         .getOne();
+
     if (eventDataValue == null) {
       final newEventDataValue = EventDataValue(
           dataElement: dataElement,

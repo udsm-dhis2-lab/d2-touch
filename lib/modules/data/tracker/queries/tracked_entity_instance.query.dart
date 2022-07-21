@@ -280,6 +280,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   Future<List<TrackedEntityInstance>?> upload(
       Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
+    
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -357,6 +358,9 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       return TrackedEntityInstance.toUpload(
           trackedEntityInstance, eventUploadPayload);
     }).toList();
+
+
+
 
     final response = await HttpClient.post(this.apiResourceName as String,
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
