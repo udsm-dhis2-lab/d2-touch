@@ -92,10 +92,27 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
   TrackedEntityInstanceQuery byAttribute(
       String attributeId, String attibuteValue) {
-    this.attributeFilters?.add(QueryFilter(
-        attribute: attributeId,
-        condition: QueryCondition.Equal,
-        value: attibuteValue));
+    List<QueryFilter>? existingFilterForSameAttribute = this
+        .attributeFilters
+        ?.where((element) => element.attribute == attributeId)
+        .toList();
+    if (existingFilterForSameAttribute?.length == 0) {
+      this.attributeFilters?.add(QueryFilter(
+          attribute: attributeId,
+          condition: QueryCondition.Equal,
+          value: attibuteValue));
+    } else {
+      QueryFilter newQueryFilter = QueryFilter(
+          attribute: attributeId,
+          condition: QueryCondition.In,
+          value:
+              '${existingFilterForSameAttribute?[0].value};${attibuteValue}');
+
+      this
+          .attributeFilters
+          ?.removeWhere((element) => element.attribute == attributeId);
+      this.attributeFilters?.add(newQueryFilter);
+    }
 
     return this;
   }
@@ -270,7 +287,9 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*${this.attributeFilters?.length == 0 ? "" : "&" + (this.attributeFilters?.map((queryFilterItem) {
               return "filter=" +
                   queryFilterItem.attribute +
-                  ":EQ:" +
+                  (queryFilterItem.condition == QueryCondition.In
+                      ? ":IN:"
+                      : ":EQ:") +
                   queryFilterItem.value;
             }).join("&") as String)}';
 
@@ -280,7 +299,6 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   Future<List<TrackedEntityInstance>?> upload(
       Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
-    
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -358,9 +376,6 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       return TrackedEntityInstance.toUpload(
           trackedEntityInstance, eventUploadPayload);
     }).toList();
-
-
-
 
     final response = await HttpClient.post(this.apiResourceName as String,
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
