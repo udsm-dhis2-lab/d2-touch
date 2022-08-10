@@ -45,13 +45,14 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://dev.dhis2.udsm.ac.tz/api/me.json',
+    'https://dev.dhis2.udsm.ac.tz/api/me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
     (server) => server.reply(401,
         '<InvalidTokenException><error>invalid_token</error><error_description>Invalid access token: 6NK1ZJIWakbVaftAQnigzWgue98</error_description></InvalidTokenException>'),
   );
 
-  final invalidTokenResponse =
-      await HttpClient.get('me.json', dioTestClient: dio);
+  final invalidTokenResponse = await HttpClient.get(
+      'me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
+      dioTestClient: dio);
 
   test("should return error message and status for invalid token", () {
     expect(invalidTokenResponse.statusCode, 401);
@@ -75,12 +76,13 @@ void main() async {
   });
 
   dioAdapter.onGet(
-    'https://dev.dhis2.udsm.ac.tz/api/me.json',
+    'https://dev.dhis2.udsm.ac.tz/api/me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
     (server) => server.reply(200, userData),
   );
 
-  final validTokenResponse =
-      await HttpClient.get('me.json', dioTestClient: dio);
+  final validTokenResponse = await HttpClient.get(
+      'me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
+      dioTestClient: dio);
 
   test("should return given data from the server", () {
     expect(validTokenResponse.statusCode, 200);
