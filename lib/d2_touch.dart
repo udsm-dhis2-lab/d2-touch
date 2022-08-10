@@ -105,6 +105,9 @@ class D2Touch {
         password: password,
         dioTestClient: dioTestClient);
 
+    print("----------------------------------------------------------------------------------");
+    print(userResponse.body);
+
     if (userResponse.statusCode == 401) {
       return LoginResponseStatus.WRONG_CREDENTIALS;
     }
