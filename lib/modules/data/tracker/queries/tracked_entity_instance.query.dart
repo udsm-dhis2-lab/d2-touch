@@ -32,6 +32,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   String? program;
   bool? useUserOrgUnit;
   OrgUnitMode? ouMode;
+
   TrackedEntityInstanceQuery({Database? database}) : super(database: database);
   List<QueryFilter>? attributeFilters = [];
 
@@ -50,10 +51,10 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           relationType: RelationType.OneToMany,
           referencedEntity: Entity.getEntityDefinition(
               AnnotationReflectable.reflectType(TrackedEntityAttributeValue)
-                  as ClassMirror),
+              as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(TrackedEntityAttributeValue)
-                  as ClassMirror,
+              as ClassMirror,
               false));
 
       this.relations.add(relation);
@@ -65,7 +66,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   TrackedEntityInstanceQuery withEnrollments() {
     final enrollment = Repository<Enrollment>();
     final Column? relationColumn = enrollment.columns.firstWhere((column) =>
-        column.relation?.referencedEntity?.tableName == this.tableName);
+    column.relation?.referencedEntity?.tableName == this.tableName);
 
     if (relationColumn != null) {
       ColumnRelation relation = ColumnRelation(
@@ -90,8 +91,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return this.where(attribute: 'orgUnit', value: orgUnit);
   }
 
-  TrackedEntityInstanceQuery byAttribute(
-      String attributeId, String attibuteValue) {
+  TrackedEntityInstanceQuery byAttribute(String attributeId,
+      String attibuteValue) {
     List<QueryFilter>? existingFilterForSameAttribute = this
         .attributeFilters
         ?.where((element) => element.attribute == attributeId)
@@ -106,7 +107,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           attribute: attributeId,
           condition: QueryCondition.In,
           value:
-              '${existingFilterForSameAttribute?[0].value};${attibuteValue}');
+          '${existingFilterForSameAttribute?[0].value};${attibuteValue}');
 
       this
           .attributeFilters
@@ -156,7 +157,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
         try {
           availableId = trackedEntityAttributeIds.firstWhere(
-            (id) => enrollment.trackedEntityInstance == id,
+                (id) => enrollment.trackedEntityInstance == id,
           );
         } catch (e) {}
 
@@ -215,21 +216,22 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     trackedEntityInstance.enrollments = [enrollment];
 
     final List<ProgramTrackedEntityAttribute> reservedAttributes =
-        (program.programTrackedEntityAttributes ?? [])
-            .where((attribute) => attribute.generated == true)
-            .toList();
+    (program.programTrackedEntityAttributes ?? [])
+        .where((attribute) => attribute.generated == true)
+        .toList();
 
     List<TrackedEntityAttributeValue> attributeValues = [];
 
     await Future.wait(reservedAttributes.map((attribute) async {
       final AttributeReservedValue? attributeReservedValue =
-          await AttributeReservedValueQuery()
-              .where(attribute: 'attribute', value: attribute.attribute)
-              .getOne();
+      await AttributeReservedValueQuery()
+          .where(attribute: 'attribute', value: attribute.attribute)
+          .getOne();
 
       if (attributeReservedValue != null) {
         final String id =
-            '${trackedEntityInstance.trackedEntityInstance}_${attribute.attribute}';
+            '${trackedEntityInstance.trackedEntityInstance}_${attribute
+            .attribute}';
         attributeValues.add(TrackedEntityAttributeValue(
             id: id,
             name: id,
@@ -284,14 +286,18 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     }
 
     String url =
-        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*${this.attributeFilters?.length == 0 ? "" : "&" + (this.attributeFilters?.map((queryFilterItem) {
-              return "filter=" +
-                  queryFilterItem.attribute +
-                  (queryFilterItem.condition == QueryCondition.In
-                      ? ":IN:"
-                      : ":EQ:") +
-                  queryFilterItem.value;
-            }).join("&") as String)}';
+        'trackedEntityInstances.json?ou=${this
+        .orgUnit}&$orgUnitMode&program=${this
+        .program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*${this
+        .attributeFilters?.length == 0 ? "" : "&" +
+        (this.attributeFilters?.map((queryFilterItem) {
+          return "filter=" +
+              queryFilterItem.attribute +
+              (queryFilterItem.condition == QueryCondition.In
+                  ? ":IN:"
+                  : ":EQ:") +
+              queryFilterItem.value;
+        }).join("&") as String)}';
 
     return Future.value(url);
   }
@@ -303,7 +309,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Retrieving ${this.apiResourceName?.toLowerCase()} from phone database....',
+            'Retrieving ${this.apiResourceName
+                ?.toLowerCase()} from phone database....',
             status: '',
             percentage: 0),
         false);
@@ -318,7 +325,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${trackedEntityInstances.length} ${this.apiResourceName?.toLowerCase()} retrieved successfully',
+            '${trackedEntityInstances.length} ${this.apiResourceName
+                ?.toLowerCase()} retrieved successfully',
             status: '',
             percentage: 50),
         false);
@@ -327,7 +335,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Uploading ${trackedEntityInstances.length} ${this.apiResourceName?.toLowerCase()} into the server...',
+            'Uploading ${trackedEntityInstances.length} ${this.apiResourceName
+                ?.toLowerCase()} into the server...',
             status: '',
             percentage: 51),
         false);
@@ -335,7 +344,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     List<String> enrollmentIds = [];
 
     final List<String> trackedEntityInstanceIds =
-        trackedEntityInstances.map((trackedEntityInstance) {
+    trackedEntityInstances.map((trackedEntityInstance) {
       trackedEntityInstance.enrollments?.forEach((enrollment) {
         if (enrollment.id != null) {
           enrollmentIds.add(enrollment.id as String);
@@ -344,6 +353,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
       return trackedEntityInstance.id as String;
     }).toList();
+
 
     final List<Event> events = await EventQuery()
         .whereIn(attribute: 'enrollment', values: enrollmentIds, merge: false)
@@ -360,7 +370,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     });
 
     List<ProgramStage> programStages =
-        await ProgramStageQuery().byIds(eventProgramStageIds).get();
+    await ProgramStageQuery().byIds(eventProgramStageIds).get();
 
     final eventUploadPayload = events.map((event) {
       if (programStages.length > 0) {
@@ -372,20 +382,35 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     }).toList();
 
     final trackedEntityInstanceUploadPayload =
-        trackedEntityInstances.map((trackedEntityInstance) {
+    trackedEntityInstances.map((trackedEntityInstance) {
       return TrackedEntityInstance.toUpload(
           trackedEntityInstance, eventUploadPayload);
     }).toList();
+
 
     final response = await HttpClient.post(this.apiResourceName as String,
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
 
+
+    final List<Future<HttpResponse>> transferApis = trackedEntityInstances
+        .where((tei) => tei.transfer == true)
+        .map((teiToTransfer) =>
+        HttpClient.put(
+            "tracker/ownership/transfer?trackedEntityInstance=${teiToTransfer
+                .trackedEntityInstance}&program=${teiToTransfer.enrollments?[0]
+                .program as String}&ou=${teiToTransfer.orgUnit}", null,
+            database: this.database, dioTestClient: dioTestClient))
+        .toList();
+
+    final results = await Future.wait(transferApis);
+
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Upload for ${trackedEntityInstances.length} ${this.apiResourceName?.toLowerCase()} is completed.',
+            'Upload for ${trackedEntityInstances.length} ${this.apiResourceName
+                ?.toLowerCase()} is completed.',
             status: '',
             percentage: 75),
         true);
@@ -399,14 +424,14 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         true);
 
     final List<dynamic> importSummaries =
-        (response.body?['response']?['importSummaries'] ?? []).toList();
+    (response.body?['response']?['importSummaries'] ?? []).toList();
 
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 
     trackedEntityInstances.forEach((trackedEntityInstance) {
       final importSummary = importSummaries.lastWhere(
-          (summary) => summary['reference'] == trackedEntityInstance.id,
+              (summary) => summary['reference'] == trackedEntityInstance.id,
           orElse: (() => null));
 
       if (importSummary != null) {
@@ -416,7 +441,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         trackedEntityInstance.dirty = true;
         trackedEntityInstance.syncFailed = syncFailed;
         trackedEntityInstance.lastSyncDate =
-            DateTime.now().toIso8601String().split('.')[0];
+        DateTime.now().toIso8601String().split('.')[0];
         trackedEntityInstance.lastSyncSummary = importSummary.toString();
         queue.add(() =>
             TrackedEntityInstanceQuery().setData(trackedEntityInstance).save());
