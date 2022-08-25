@@ -47,7 +47,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/me.json',
+    'https://play.dhis2.org/2.35.11/api/me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
     (server) => server.reply(200, userData),
   );
 
@@ -58,10 +58,14 @@ void main() async {
       databaseFactory: databaseFactoryFfi,
       dioTestClient: dio);
 
-  final user = await UserQuery().withAuthorities().getOne();
+  final user = await UserQuery().withAuthorities().withRoles().getOne();
 
   test('should successfully authenticate user on online login', () {
     expect(onlineLogIn, LoginResponseStatus.ONLINE_LOGIN_SUCCESS);
+  });
+
+  test('should return appropriate user roles for a user', () {
+    expect(user?.roles?.length, 13);
   });
 
   final logOutResponse = await D2Touch.logOut();

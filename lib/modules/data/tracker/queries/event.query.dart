@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
@@ -73,12 +75,14 @@ class EventQuery extends BaseQuery<Event> {
 
   @override
   Future create() async {
-    Event event = Event(
-        orgUnit: this.orgUnit as String,
+    Event event = Event(  orgUnit: this.orgUnit as String,
         status: 'ACTIVE',
         enrollment: this.enrollment,
-        dirty: false,
-        programStage: this.programStage);
+        dirty: true,
+        synced: false,
+        programStage: this.programStage,
+        eventDate: DateTime.now().toIso8601String().split(".")[0]
+    );
 
     this.data = event;
 

@@ -3,6 +3,7 @@ import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
 import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked-entity.entity.dart';
 import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_instance.query.dart';
+import 'package:d2_touch/modules/file_resource/entities/file_resource.entity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,6 +13,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../sample/current_user.sample.dart';
+import '../sample/file_resource.sample.dart';
 import '../sample/tracked_entity_instances.sample.dart';
 import '../sample/tracked_entity_import_summary.sample.dart';
 import '../sample/tracked_entity_instance_upload.sample.dart';
@@ -37,6 +39,15 @@ void main() async {
   final user = User.fromApi(userData);
   UserQuery userQuery = UserQuery(database: db);
   await userQuery.setData(user).save();
+
+  final List<FileResource> fileResources = sampleFileResources
+      .map((fileResource) => FileResource.fromJson(fileResource))
+      .toList();
+
+  await D2Touch.fileResourceModule.fileResource.setData(fileResources).save();
+
+  final List<FileResource> savedFileResources =
+      await D2Touch.fileResourceModule.fileResource.get();
 
   final TrackedEntityInstance trackedEntityInstance =
       TrackedEntityInstance.fromJson({

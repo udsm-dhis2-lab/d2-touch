@@ -103,8 +103,11 @@ class TrackedEntityInstance extends BaseEntity {
         inactive: json['inactive'],
         enrollments: json['enrollments'] != null
             ? List<dynamic>.from(json['enrollments'])
-                .map((enrollment) => Enrollment.fromJson(
-                    {...enrollment, 'dirty': enrollment['dirty'] ?? false}))
+                .map((enrollment) => Enrollment.fromJson({
+                      ...enrollment,
+                      'dirty': enrollment['dirty'] ?? json['dirty'] ?? false,
+                      'synced': json['synced']
+                    }))
                 .toList()
             : null,
         attributes: List<Map<String, dynamic>>.from(attributes ?? [])

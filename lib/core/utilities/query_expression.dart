@@ -61,7 +61,12 @@ class QueryExpression {
     return 'SELECT $columnExpression FROM ${entity.tableName}';
   }
 
-  static getSelectColumnExpression(List<String> columns) {
-    return columns.length > 0 ? columns.join(',').toString() : '*';
+  static getSelectColumnExpression(List<String> columns,
+      {bool? isDistinctColumn}) {
+    return isDistinctColumn == true
+        ? 'DISTINCT ${columns[0]}'
+        : columns.length > 0
+            ? columns.join(',').toString()
+            : '*';
   }
 }

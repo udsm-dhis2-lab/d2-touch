@@ -5,8 +5,12 @@ class QueryFilter {
   String attribute;
   QueryCondition condition;
   dynamic value;
+  String? filterCondition;
   QueryFilter(
-      {required this.attribute, required this.condition, required this.value});
+      {required this.attribute,
+      required this.condition,
+      required this.value,
+      this.filterCondition});
 
   static String? getWhereParameters(
       List<Column> columns, List<QueryFilter>? filters) {
@@ -31,7 +35,7 @@ class QueryFilter {
           return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
 
         case QueryCondition.Ilike:
-          return ' DISTINCT ${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value, isLikeFilter: true)}';
+          return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value, isLikeFilter: true, filterCondition: filter.filterCondition)}';
 
         case QueryCondition.LessThan:
           return '${filter.attribute} < ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
@@ -105,16 +109,32 @@ class QueryFilter {
   }
 
   static getTypedValue(Column attributeColumn, dynamic value,
-      {bool? isLikeFilter}) {
+      {bool? isLikeFilter, String? filterCondition}) {
     switch (attributeColumn.columnType) {
       case 'TEXT':
-        return isLikeFilter != null && isLikeFilter == true
-            ? '"%$value%"'
-            : '"$value"';
+        return getTextFiler(value,
+            isLikeFilter: isLikeFilter, filterCondition: filterCondition);
       case 'BOOLEAN':
         return value == true ? 1 : 0;
       default:
         return value;
+    }
+  }
+
+  static getTextFiler(dynamic value,
+      {bool? isLikeFilter, String? filterCondition}) {
+    if (isLikeFilter == false || isLikeFilter == null) {
+      return '"$value"';
+    }
+    switch (filterCondition) {
+      case 'startsWith':
+        return '"$value%"';
+      case 'endsWith':
+        return '"%$value"';
+      case 'includes':
+        return '"%$value%"';
+      default:
+        return '"%$value%"';
     }
   }
 }

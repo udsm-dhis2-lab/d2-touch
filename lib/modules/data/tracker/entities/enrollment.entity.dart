@@ -96,7 +96,11 @@ class Enrollment extends BaseEntity {
         lastSyncSummary: json['lastSyncSummary'],
         lastSyncDate: json['lastSyncDate'],
         events: List<dynamic>.from(json['events'] ?? [])
-            .map((event) => Event.fromJson({...event, 'dirty': false}))
+            .map((event) => Event.fromJson({
+                  ...event,
+                  'dirty': json['dirty'] ?? false,
+                  'synced': json['synced'] ?? false
+                }))
             .toList(),
         trackedEntityInstance: json['trackedEntityInstance'],
         dirty: json['dirty'] ?? false);

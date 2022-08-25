@@ -1,6 +1,6 @@
 name: d2_touch
 description: DHIS2 Flutter SDK
-version: 1.0.0-beta.1
+version: 1.0.0-beta.11
 homepage:
 repository: https://github.com/udsm-dhis2-lab/d2-touch
 
@@ -23,6 +23,8 @@ dependencies:
   dio: ^4.0.4
   expressions: ^0.2.3
   xml2json: ^5.3.2
+  mime: ^1.0.2
+  http_parser: ^4.0.1
 
 dev_dependencies:
   flutter_test:

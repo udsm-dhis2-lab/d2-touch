@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/auth/user/entities/user_authority.entity.dart';
 import 'package:d2_touch/modules/auth/user/entities/user_organisation_unit.entity.dart';
+import 'package:d2_touch/modules/auth/user/entities/user_role.entity.dart';
 import 'package:d2_touch/shared/entities/base_entity.dart';
 
 @AnnotationReflectable
@@ -45,6 +48,9 @@ class User extends BaseEntity {
   @OneToMany(table: UserAuthority)
   List<UserAuthority>? authorities;
 
+  @OneToMany(table: UserRole)
+  List<UserRole>? roles;
+
   @Column(nullable: true)
   final dynamic dataViewOrganisationUnits;
 
@@ -73,6 +79,7 @@ class User extends BaseEntity {
       this.teiSearchOrganisationUnits,
       this.organisationUnits,
       this.authorities,
+      this.roles,
       this.dataViewOrganisationUnits,
       this.programs,
       this.dataSets,
@@ -117,6 +124,13 @@ class User extends BaseEntity {
                 user: authority['user'],
                 dirty: authority['dirty'] ?? false))
             .toList(),
+        roles: (jsonData['roles'] ?? [])
+            .map<UserRole>((role) => UserRole(
+                id: role['id'],
+                name: role['name'],
+                user: role['user'],
+                dirty: role['dirty'] ?? false))
+            .toList(),
         dataViewOrganisationUnits: jsonData['dataViewOrganisationUnits'],
         programs: jsonData['programs'].toString(),
         dataSets: jsonData['datasets'].toString(),
@@ -124,46 +138,53 @@ class User extends BaseEntity {
         dirty: jsonData['dirty']);
   }
 
-  factory User.fromApi(Map<String, dynamic> json) {
+  factory User.fromApi(Map<String, dynamic> jsonData) {
     return User(
-        id: json['id'],
-        username: json['username'],
-        password: json['password'],
-        firstName: json['firstName'],
-        surname: json['surname'],
-        name: json['name'],
-        baseUrl: json['baseUrl'],
-        created: json['created'],
-        lastUpdated: json['lastUpdated'],
-        token: json['token'],
-        tokenType: json['tokenType'],
-        refreshToken: json['refreshToken'],
-        tokenExpiry: json['tokenExpiry'],
-        authType: json['authType'],
+        id: jsonData['id'],
+        username: jsonData['username'],
+        password: jsonData['password'],
+        firstName: jsonData['firstName'],
+        surname: jsonData['surname'],
+        name: jsonData['name'],
+        baseUrl: jsonData['baseUrl'],
+        created: jsonData['created'],
+        lastUpdated: jsonData['lastUpdated'],
+        token: jsonData['token'],
+        tokenType: jsonData['tokenType'],
+        refreshToken: jsonData['refreshToken'],
+        tokenExpiry: jsonData['tokenExpiry'],
+        authType: jsonData['authType'],
         teiSearchOrganisationUnits:
-            json['teiSearchOrganisationUnits'].toString(),
-        organisationUnits: json['organisationUnits']
+            jsonData['teiSearchOrganisationUnits'].toString(),
+        organisationUnits: jsonData['organisationUnits']
             .map<UserOrganisationUnit>((orgUnit) => UserOrganisationUnit(
-                id: '${json['id']}_${orgUnit['id']}',
-                name: '${json['id']}_${orgUnit['id']}',
+                id: '${jsonData['id']}_${orgUnit['id']}',
+                name: '${jsonData['id']}_${orgUnit['id']}',
                 orgUnit: orgUnit['id'],
-                user: json['id'],
+                user: jsonData['id'],
                 type: 'DATA_VIEW',
-                dirty: json['dirty'] ?? false))
+                dirty: jsonData['dirty'] ?? false))
             .toList(),
-        authorities: (json['authorities'] ?? [])
+        authorities: (jsonData['authorities'] ?? [])
             .map<UserAuthority>((authority) => UserAuthority(
-                id: '${json['id']}_$authority',
-                name: '${json['id']}_$authority',
+                id: '${jsonData['id']}_$authority',
+                name: '${jsonData['id']}_$authority',
                 authority: authority,
-                user: json['id'],
-                dirty: json['dirty'] ?? false))
+                user: jsonData['id'],
+                dirty: jsonData['dirty'] ?? false))
             .toList(),
-        dataViewOrganisationUnits: json['dataViewOrganisationUnits'],
-        programs: json['programs'].toString(),
-        dataSets: json['datasets'].toString(),
-        isLoggedIn: json['isLoggedIn'],
-        dirty: json['dirty'] ?? false);
+        roles: (jsonData['userCredentials']?['userRoles'] ?? [])
+            .map<UserRole>((role) => UserRole(
+                id: '${jsonData['id']}_${role['id']}',
+                name: role['name'],
+                user: jsonData['id'],
+                dirty: jsonData['dirty'] ?? true))
+            .toList(),
+        dataViewOrganisationUnits: jsonData['dataViewOrganisationUnits'],
+        programs: jsonData['programs'].toString(),
+        dataSets: jsonData['datasets'].toString(),
+        isLoggedIn: jsonData['isLoggedIn'],
+        dirty: jsonData['dirty'] ?? false);
   }
 
   Map<String, dynamic> toJson() {
@@ -185,6 +206,7 @@ class User extends BaseEntity {
     data['teiSearchOrganisationUnits'] = this.teiSearchOrganisationUnits;
     data['organisationUnits'] = this.organisationUnits;
     data['authorities'] = this.authorities;
+    data['roles'] = this.roles;
     data['dataViewOrganisationUnits'] = this.dataViewOrganisationUnits;
     data['programs'] = this.programs;
     data['isLoggedIn'] = this.isLoggedIn;

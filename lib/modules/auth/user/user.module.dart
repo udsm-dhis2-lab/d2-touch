@@ -1,13 +1,16 @@
 import 'package:d2_touch/modules/auth/user/entities/user_authority.entity.dart';
+import 'package:d2_touch/modules/auth/user/entities/user_role.entity.dart';
 import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
 import 'package:d2_touch/modules/auth/user/queries/user_authority.query.dart';
 import 'package:d2_touch/modules/auth/user/queries/user_organisation_unit.query.dart';
+import 'package:d2_touch/modules/auth/user/queries/user_role.query.dart';
 
 class UserModule {
   static createTables() async {
     await UserQuery().createTable();
     await UserOrganisationUnitQuery().createTable();
     await UserAuthorityQuery().createTable();
+    await UserRoleQuery().createTable();
   }
 
   static logOut() async {}
@@ -17,4 +20,6 @@ class UserModule {
   UserOrganisationUnitQuery userOrganisationUnit = UserOrganisationUnitQuery();
 
   UserAuthorityQuery userAuthority = UserAuthorityQuery();
+
+  UserRoleQuery userRole = UserRoleQuery();
 }

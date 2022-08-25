@@ -136,7 +136,7 @@ class Event extends BaseEntity {
                   ...event,
                   "id": '${json['event']}_${event['dataElement']}',
                   "event": json['event'],
-                  "dirty": false
+                  "dirty": json['dirty']
                 }))
             .toList(),
         dirty: json['dirty']);
@@ -187,6 +187,7 @@ class Event extends BaseEntity {
 
     if (event.programStage != null &&
         event.programStage.runtimeType != String) {
+      eventToUpload['programStage'] = event.programStage['id'];
       eventToUpload['program'] = event.programStage['program'];
     }
 
