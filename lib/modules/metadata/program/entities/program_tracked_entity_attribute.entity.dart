@@ -75,10 +75,11 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
       Map<String, dynamic> jsonData) {
     final optionSetValueCount =
         jsonData['trackedEntityAttribute']?['optionSet']?['options']?.length;
+    final attribute =
+        jsonData['attribute'] ?? jsonData['trackedEntityAttribute']?['id'];
     return ProgramTrackedEntityAttribute(
         id: jsonData['id'],
-        attribute:
-            jsonData['attribute'] ?? jsonData['trackedEntityAttribute']?['id'],
+        attribute: attribute,
         renderOptionsAsRadio: jsonData['renderOptionsAsRadio'],
         name: jsonData['trackedEntityAttribute']?['name'] ?? jsonData['name'],
         displayName: jsonData['trackedEntityAttribute']?['displayName'] ??
@@ -105,8 +106,9 @@ class ProgramTrackedEntityAttribute extends BaseEntity {
                 [])
             .map((option) => AttributeOption.fromJson({
                   ...option,
-                  'id': '${option['id']}_${jsonData['id']}}',
+                  'id': '${option['id']}_${jsonData['id']}_$attribute',
                   'programTrackedEntityAttribute': jsonData['id'],
+                  'attribute': attribute,
                   'dirty': false
                 }))
             .toList(),
