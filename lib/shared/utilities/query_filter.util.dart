@@ -6,11 +6,15 @@ class QueryFilter {
   QueryCondition condition;
   dynamic value;
   String? filterCondition;
+  String? key;
+  String? keyValue;
   QueryFilter(
       {required this.attribute,
       required this.condition,
       required this.value,
-      this.filterCondition});
+      this.filterCondition,
+      this.key,
+      this.keyValue});
 
   static String? getWhereParameters(
       List<Column> columns, List<QueryFilter>? filters) {
@@ -35,7 +39,7 @@ class QueryFilter {
           return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
 
         case QueryCondition.Ilike:
-          return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value, isLikeFilter: true, filterCondition: filter.filterCondition)}';
+          return '${filter.attribute} LIKE ${QueryFilter.getTypedValue(attributeColumn, filter.value, isLikeFilter: true, filterCondition: filter.filterCondition, key: filter.key, keyValue: filter.keyValue)}';
 
         case QueryCondition.LessThan:
           return '${filter.attribute} < ${QueryFilter.getTypedValue(attributeColumn, filter.value)}';
@@ -109,11 +113,17 @@ class QueryFilter {
   }
 
   static getTypedValue(Column attributeColumn, dynamic value,
-      {bool? isLikeFilter, String? filterCondition}) {
+      {bool? isLikeFilter,
+      String? filterCondition,
+      String? key,
+      String? keyValue}) {
     switch (attributeColumn.columnType) {
       case 'TEXT':
         return getTextFiler(value,
-            isLikeFilter: isLikeFilter, filterCondition: filterCondition);
+            isLikeFilter: isLikeFilter,
+            filterCondition: filterCondition,
+            key: key,
+            keyValue: keyValue);
       case 'BOOLEAN':
         return value == true ? 1 : 0;
       default:
@@ -122,19 +132,41 @@ class QueryFilter {
   }
 
   static getTextFiler(dynamic value,
-      {bool? isLikeFilter, String? filterCondition}) {
+      {bool? isLikeFilter,
+      String? filterCondition,
+      String? key,
+      String? keyValue}) {
     if (isLikeFilter == false || isLikeFilter == null) {
       return '"$value"';
     }
-    switch (filterCondition) {
-      case 'startsWith':
-        return '"$value%"';
-      case 'endsWith':
-        return '"%$value"';
-      case 'includes':
-        return '"%$value%"';
-      default:
-        return '"%$value%"';
+    if (key != null && keyValue != null) {
+      return filterWithAdditionalAttributes(value,
+          key: key, keyValue: keyValue);
+    } else {
+      switch (filterCondition) {
+        case 'startsWith':
+          return '"$value%"';
+        case 'endsWith':
+          return '"%$value"';
+        case 'includes':
+          return '"%$value%"';
+        default:
+          return '"%$value%"';
+      }
     }
+  }
+}
+
+filterWithAdditionalAttributes(dynamic value,
+    {String? filterCondition, String? key, String? keyValue}) {
+  switch (filterCondition) {
+    case 'startsWith':
+      return '"$value%" AND $key = "$keyValue"';
+    case 'endsWith':
+      return '"%$value" AND "$key" = "$keyValue"';
+    case 'includes':
+      return '"%$value%" AND $key = "$keyValue"';
+    default:
+      return '"%$value%" AND $key = "$keyValue"';
   }
 }
