@@ -1,4 +1,11 @@
-## [1.0.0-beta.1] - 01/04/2022
+## [1.0.0-beta.11] - 09/09/2022
+
+- Add attribute column on attribute option table
+- Add attribute column on attribute option table
+- Improve datavalue set sync
+- Add option to include additional search params
+
+## [1.0.0-beta.11] - 01/04/2022
 
 - Support validation rule execution
 - Bug fixes and improvement
