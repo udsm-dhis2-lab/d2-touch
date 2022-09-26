@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/auth/user/entities/user_authority.entity.dart';
 import 'package:d2_touch/modules/auth/user/entities/user_organisation_unit.entity.dart';
@@ -20,6 +18,9 @@ class User extends BaseEntity {
 
   @Column(nullable: true)
   final String? surname;
+
+  @Column(nullable: true)
+  final String? phoneNumber;
 
   @Column(nullable: true)
   final String? token;
@@ -88,6 +89,7 @@ class User extends BaseEntity {
       this.refreshToken,
       this.tokenExpiry,
       this.authType,
+      this.phoneNumber,
       required this.isLoggedIn,
       required bool dirty})
       : super(
@@ -110,6 +112,7 @@ class User extends BaseEntity {
         tokenExpiry: jsonData['tokenExpiry'],
         authType: jsonData['authType'],
         name: jsonData['name'],
+        phoneNumber: jsonData['phoneNumber'],
         baseUrl: jsonData['baseUrl'],
         created: jsonData['created'],
         lastUpdated: jsonData['lastUpdated'],
@@ -146,6 +149,7 @@ class User extends BaseEntity {
         firstName: jsonData['firstName'],
         surname: jsonData['surname'],
         name: jsonData['name'],
+        phoneNumber: jsonData['phoneNumber'],
         baseUrl: jsonData['baseUrl'],
         created: jsonData['created'],
         lastUpdated: jsonData['lastUpdated'],
@@ -196,6 +200,7 @@ class User extends BaseEntity {
     data['surname'] = this.surname;
     data['username'] = this.username;
     data['password'] = this.password;
+    data['phoneNumber'] = this.phoneNumber;
     data['created'] = this.created;
     data['lastUpdated'] = this.lastUpdated;
     data['token'] = this.token;
