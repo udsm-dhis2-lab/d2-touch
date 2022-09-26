@@ -96,12 +96,16 @@ class BaseQuery<T extends BaseEntity> {
   ilike(
       {required String attribute,
       required dynamic value,
-      String? filterCondition}) {
+      String? filterCondition,
+      String? key,
+      String? keyValue}) {
     this.filters?.add(QueryFilter(
         attribute: attribute,
         condition: QueryCondition.Ilike,
         value: value,
-        filterCondition: filterCondition));
+        filterCondition: filterCondition,
+        key: key,
+        keyValue: keyValue));
     return this;
   }
 

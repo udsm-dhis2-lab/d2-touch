@@ -32,6 +32,9 @@ class User extends BaseEntity {
   final String? refreshToken;
 
   @Column(nullable: true)
+  final String? phoneNumber;
+
+  @Column(nullable: true)
   final int? tokenExpiry;
 
   @Column(nullable: true)
@@ -114,6 +117,7 @@ class User extends BaseEntity {
         name: jsonData['name'],
         phoneNumber: jsonData['phoneNumber'],
         baseUrl: jsonData['baseUrl'],
+         phoneNumber: jsonData['phoneNumber'],
         created: jsonData['created'],
         lastUpdated: jsonData['lastUpdated'],
         teiSearchOrganisationUnits:
@@ -153,6 +157,7 @@ class User extends BaseEntity {
         baseUrl: jsonData['baseUrl'],
         created: jsonData['created'],
         lastUpdated: jsonData['lastUpdated'],
+         phoneNumber: jsonData['phoneNumber'],
         token: jsonData['token'],
         tokenType: jsonData['tokenType'],
         refreshToken: jsonData['refreshToken'],
@@ -206,6 +211,7 @@ class User extends BaseEntity {
     data['token'] = this.token;
     data['tokenType'] = this.tokenType;
     data['refreshToken'] = this.refreshToken;
+    data['phoneNumber'] = this.phoneNumber;
     data['tokenExpiry'] = this.tokenExpiry;
     data['authType'] = this.authType;
     data['teiSearchOrganisationUnits'] = this.teiSearchOrganisationUnits;
