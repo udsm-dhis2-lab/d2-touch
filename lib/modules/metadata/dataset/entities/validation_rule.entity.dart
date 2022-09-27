@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'data_set.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'validationrule', apiResourceName: 'validationRules')
-class ValidationRule extends BaseEntity {
+class ValidationRule extends IdentifiableEntity {
   @Column(nullable: true)
   String? description;
 

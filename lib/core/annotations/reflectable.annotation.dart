@@ -10,7 +10,8 @@ class AnnotationReflection extends Reflectable {
             metadataCapability,
             staticInvokeCapability,
             typeRelationsCapability,
-            typeCapability);
+            typeCapability,
+            superclassQuantifyCapability);
 }
 
 const AnnotationReflectable = AnnotationReflection();

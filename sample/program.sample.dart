@@ -178,6 +178,26 @@ final Map<String, dynamic> samplePrograms = {
           },
           "attributeValues": []
         }
+      ],
+      "programSections": [
+        {
+          "lastUpdated": "2022-09-27T08:28:25.092",
+          "created": "2022-09-27T08:28:25.092",
+          "name": "Demographic",
+          "id": "nMI6gs7iEsx",
+          "displayName": "Demographic",
+          "sortOrder": 0,
+          "renderType": {
+            "MOBILE": {"type": "LISTING"},
+            "DESKTOP": {"type": "LISTING"}
+          },
+          "displayFormName": "Demographic",
+          "trackedEntityAttributes": [
+            {"attribute": "w75KJ2mc4zz"},
+            {"attribute": "cejWyOfXge6"},
+            {"attribute": "zDhUuAYrxNC"}
+          ]
+        }
       ]
     },
     {

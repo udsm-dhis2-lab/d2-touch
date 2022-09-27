@@ -1,10 +1,10 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'attributeoption', apiResourceName: 'attributeOptions')
-class AttributeOption extends BaseEntity {
+class AttributeOption extends IdentifiableEntity {
   @Column()
   String attribute;
   @ManyToOne(

@@ -2,11 +2,11 @@ import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage_data_element.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage_section.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'programstage', apiResourceName: 'programStages')
-class ProgramStage extends BaseEntity {
+class ProgramStage extends IdentifiableEntity {
   @Column(type: ColumnType.INTEGER)
   int sortOrder;
 

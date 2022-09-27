@@ -24,19 +24,19 @@ void main() async {
   test('should return columns based on entity definition', () {
     expect(columns, [
       'id TEXT PRIMARY KEY NOT NULL',
+      'dirty BOOLEAN NOT NULL',
+      'lastUpdated TEXT',
+      'created TEXT',
       'name TEXT NOT NULL',
       'displayName TEXT',
       'shortName TEXT',
-      'lastUpdated TEXT',
-      'created TEXT',
       'code TEXT',
-      'dirty BOOLEAN NOT NULL',
       'level INTEGER NOT NULL',
       'path TEXT NOT NULL',
       'externalAccess BOOLEAN',
       'openingDate TEXT NOT NULL',
       'geometry TEXT',
-      'parent TEXT',
+      'parent TEXT'
     ]);
   });
 
@@ -48,7 +48,7 @@ void main() async {
 
   test('should return create query expression', () {
     expect(repository.createQuery,
-        'CREATE TABLE IF NOT EXISTS organisationunit (id TEXT PRIMARY KEY NOT NULL, name TEXT NOT NULL, displayName TEXT, shortName TEXT, lastUpdated TEXT, created TEXT, code TEXT, dirty BOOLEAN NOT NULL, level INTEGER NOT NULL, path TEXT NOT NULL, externalAccess BOOLEAN, openingDate TEXT NOT NULL, geometry TEXT, parent TEXT)');
+        'CREATE TABLE IF NOT EXISTS organisationunit (id TEXT PRIMARY KEY NOT NULL, dirty BOOLEAN NOT NULL, lastUpdated TEXT, created TEXT, name TEXT NOT NULL, displayName TEXT, shortName TEXT, code TEXT, level INTEGER NOT NULL, path TEXT NOT NULL, externalAccess BOOLEAN, openingDate TEXT NOT NULL, geometry TEXT, parent TEXT)');
   });
 
   await repository.create(database: db);

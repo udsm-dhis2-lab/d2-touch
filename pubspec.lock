@@ -288,7 +288,6 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.12.12"
   material_color_utilities:
     dependency: transitive
@@ -297,9 +296,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.5"
-=======
-    version: "0.12.11"
->>>>>>> 849a4df5879bc7989caf3d58d4b19f01f859da3e
   meta:
     dependency: transitive
     description:
@@ -612,11 +608,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.4.12"
-=======
-    version: "0.4.3"
->>>>>>> 849a4df5879bc7989caf3d58d4b19f01f859da3e
   timing:
     dependency: transitive
     description:

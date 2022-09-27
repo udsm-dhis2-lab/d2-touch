@@ -44,6 +44,20 @@ class Entity {
   static List<Column> getEntityColumns(
       ClassMirror entityClassMirror, bool ignoreRelationColumns) {
     List<Column> columns = [];
+
+    for (String key
+        in entityClassMirror.superclass!.superclass!.declarations.keys) {
+      var value = entityClassMirror.superclass!.superclass!.declarations[key];
+
+      if (value is VariableMirror) {
+        VariableMirror variableMirror = value;
+        Column column =
+            Column.getColumn(variableMirror, key, ignoreRelationColumns)
+                as Column;
+        columns.add(column);
+      }
+    }
+
     for (String key in entityClassMirror.superclass!.declarations.keys) {
       var value = entityClassMirror.superclass!.declarations[key];
 

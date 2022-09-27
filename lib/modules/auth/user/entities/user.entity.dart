@@ -2,11 +2,11 @@ import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/auth/user/entities/user_authority.entity.dart';
 import 'package:d2_touch/modules/auth/user/entities/user_organisation_unit.entity.dart';
 import 'package:d2_touch/modules/auth/user/entities/user_role.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'user', apiResourceName: 'users')
-class User extends BaseEntity {
+class User extends IdentifiableEntity {
   @Column(nullable: true)
   final String? username;
 
@@ -30,9 +30,6 @@ class User extends BaseEntity {
 
   @Column(nullable: true)
   final String? refreshToken;
-
-  @Column(nullable: true)
-  final String? phoneNumber;
 
   @Column(nullable: true)
   final int? tokenExpiry;
@@ -117,7 +114,6 @@ class User extends BaseEntity {
         name: jsonData['name'],
         phoneNumber: jsonData['phoneNumber'],
         baseUrl: jsonData['baseUrl'],
-         phoneNumber: jsonData['phoneNumber'],
         created: jsonData['created'],
         lastUpdated: jsonData['lastUpdated'],
         teiSearchOrganisationUnits:
@@ -157,7 +153,6 @@ class User extends BaseEntity {
         baseUrl: jsonData['baseUrl'],
         created: jsonData['created'],
         lastUpdated: jsonData['lastUpdated'],
-         phoneNumber: jsonData['phoneNumber'],
         token: jsonData['token'],
         tokenType: jsonData['tokenType'],
         refreshToken: jsonData['refreshToken'],

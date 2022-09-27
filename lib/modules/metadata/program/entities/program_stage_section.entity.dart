@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(
     tableName: 'programstagesection', apiResourceName: 'programStageSections')
-class ProgramStageSection extends BaseEntity {
+class ProgramStageSection extends IdentifiableEntity {
   @ManyToOne(table: ProgramStage, joinColumnName: 'programStage')
   dynamic programStage;
 

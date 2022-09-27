@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'enrollment.entity.dart';
 import 'event.entity.dart';
@@ -11,7 +11,7 @@ import 'tracked_entity_attribute_value.entity.dart';
 @Entity(
     tableName: 'trackedEntityInstance',
     apiResourceName: 'trackedEntityInstances')
-class TrackedEntityInstance extends BaseEntity {
+class TrackedEntityInstance extends IdentifiableEntity {
   @Column()
   String orgUnit;
 

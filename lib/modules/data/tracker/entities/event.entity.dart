@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'enrollment.entity.dart';
 import 'event_data_value.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'event', apiResourceName: 'events')
-class Event extends BaseEntity {
+class Event extends IdentifiableEntity {
   @Column()
   String? event;
 

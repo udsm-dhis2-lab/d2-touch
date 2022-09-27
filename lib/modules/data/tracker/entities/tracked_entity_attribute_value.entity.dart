@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'tracked-entity.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'trackedEntityAttributeValue', apiResourceName: 'attributes')
-class TrackedEntityAttributeValue extends BaseEntity {
+class TrackedEntityAttributeValue extends IdentifiableEntity {
   @Column()
   String attribute;
   @Column()
