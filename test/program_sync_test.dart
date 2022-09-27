@@ -115,5 +115,6 @@ void main() async {
     expect(programStageElementOptions.length, 48);
     expect(programRuleVariables.length, 4);
     expect(programSections.length, 1);
+    expect(attributes.length, 2);
   });
 }
