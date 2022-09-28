@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage_section_data_element.entity.dart';
@@ -40,12 +38,19 @@ class ProgramStageSection extends IdentifiableEntity {
       this.renderType,
       this.dataElements,
       this.programStage})
-      : super(id: id, dirty: dirty);
+      : super(
+            id: id,
+            name: name,
+            displayName: displayName,
+            dirty: dirty,
+            created: created,
+            lastUpdated: lastUpdated);
 
   factory ProgramStageSection.fromJson(Map<String, dynamic> jsonData) {
     final renderType = jsonData['renderType'] is String
         ? jsonData['renderType']
         : jsonData['renderType']?['MOBILE']?['type'];
+
     return ProgramStageSection(
         id: jsonData['id'],
         dirty: jsonData['dirty'],
@@ -71,7 +76,7 @@ class ProgramStageSection extends IdentifiableEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
     data['id'] = this.id;
-    data['id'] = this.dirty;
+    data['dirty'] = this.dirty;
     data['name'] = this.name;
     data['displayName'] = this.displayName;
     data['formName'] = this.formName;

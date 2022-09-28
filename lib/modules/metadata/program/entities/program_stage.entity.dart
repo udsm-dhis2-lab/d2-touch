@@ -79,8 +79,8 @@ class ProgramStage extends IdentifiableEntity {
       required this.hideDueDate,
       required this.minDaysFromStart,
       required this.program,
-      required this.programStageDataElements,
-      required this.programStageSections,
+      this.programStageDataElements,
+      this.programStageSections,
       required this.repeatable,
       this.description,
       required dirty})

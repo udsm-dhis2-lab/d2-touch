@@ -140,7 +140,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
                   relationItem[relationDataItem['referencedColumn']] ==
                   queryResult['id'])
               .toList();
-
           resultMap[relationDataItem['relation']] = availableRelationData;
         });
 

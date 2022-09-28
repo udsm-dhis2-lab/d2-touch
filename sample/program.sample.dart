@@ -1790,6 +1790,46 @@ final Map<String, dynamic> sampleFilteredPrograms = {
           "blockEntryForm": false,
           "enableUserAssignment": false,
           "minDaysFromStart": 0,
+          "programStageSections": [
+            {
+              "lastUpdated": "2022-09-27T13:39:48.343",
+              "id": "ZHqPiqrLStC",
+              "created": "2022-09-27T13:39:48.343",
+              "name": "Demographic",
+              "displayName": "Demographic",
+              "externalAccess": false,
+              "renderType": {
+                "MOBILE": {"type": "LISTING"},
+                "DESKTOP": {"type": "LISTING"}
+              },
+              "displayFormName": "Demographic",
+              "sortOrder": 0,
+              "favorite": false,
+              "access": {
+                "read": true,
+                "update": true,
+                "externalize": false,
+                "delete": true,
+                "write": true,
+                "manage": true
+              },
+              "lastUpdatedBy": {
+                "displayName": "John Traore",
+                "id": "xE7jOejl9FI",
+                "username": "admin"
+              },
+              "programStage": {"id": "A03MvHHogjR"},
+              "favorites": [],
+              "programIndicators": [],
+              "translations": [],
+              "dataElements": [
+                {"dataElement": "a3kGcGDCuk6"}
+              ],
+              "userGroupAccesses": [],
+              "attributeValues": [],
+              "userAccesses": []
+            }
+          ],
           "programStageDataElements": [
             {
               "lastUpdated": "2021-09-16T09:49:07.716",
@@ -2133,6 +2173,7 @@ final Map<String, dynamic> sampleFilteredPrograms = {
           "blockEntryForm": false,
           "enableUserAssignment": false,
           "minDaysFromStart": 6,
+          "programStageSections": [],
           "programStageDataElements": [
             {
               "lastUpdated": "2021-09-16T09:49:07.727",
