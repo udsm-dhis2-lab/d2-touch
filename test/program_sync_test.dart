@@ -8,6 +8,7 @@ import 'package:d2_touch/modules/metadata/program/entities/program_section_attri
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage_data_element.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage_data_element_option.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_stage_section.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_rule_variable.query.dart';
@@ -16,6 +17,7 @@ import 'package:d2_touch/modules/metadata/program/queries/program_section_attrib
 import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage_data_element.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage_data_element_option.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_stage_section.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -47,7 +49,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/programs.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables[id,name,displayName,created,lastUpdated,programRuleVariableSourceType,useCodeForOptionSet,program,dataElement,trackedEntityAttribute,progamStage],programTrackedEntityAttributes[id,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,displayName,formName,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]],programSections[id,name,created,lastUpdated,displayName,renderType,displayFormName,sortOrder,trackedEntityAttributes[id~rename(attribute)]],programStages[id,name,created,lastUpdated,formType,generatedByEnrollmentDate,displayFormName,sortOrder,hideDueDate,enableUserAssignment,minDaysFromStart,executionDateLabel,preGenerateUID,displayName,description,displayExecutionDateLabel,openAfterEnrollment,repeatable,featureType,remindCompleted,displayGenerateEventBox,validationStrategy,autoGenerateEvent,blockEntryForm,programStageDataElements[id,created,lastUpdated,displayInReports,skipSynchronization,renderOptionsAsRadio,allowFutureDate,compulsory,allowProvidedElseWhere,sortOrder,dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/programs.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables[id,name,displayName,created,lastUpdated,programRuleVariableSourceType,useCodeForOptionSet,program,dataElement,trackedEntityAttribute,progamStage],programTrackedEntityAttributes[id,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,displayName,formName,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]],programSections[id,name,created,lastUpdated,displayName,renderType,displayFormName,sortOrder,trackedEntityAttributes[id~rename(attribute)]],programStages[id,name,created,lastUpdated,formType,generatedByEnrollmentDate,displayFormName,sortOrder,hideDueDate,enableUserAssignment,minDaysFromStart,executionDateLabel,preGenerateUID,displayName,description,displayExecutionDateLabel,openAfterEnrollment,repeatable,featureType,remindCompleted,displayGenerateEventBox,validationStrategy,autoGenerateEvent,blockEntryForm,programStageSections[id,name,displayName,displayFormName,created,lastUpdated,renderType,sortOrder,dataElements[id~rename(dataElement)]],programStageDataElements[id,created,lastUpdated,displayInReports,skipSynchronization,renderOptionsAsRadio,allowFutureDate,compulsory,allowProvidedElseWhere,sortOrder,dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]]&paging=false',
     (server) => server.reply(200, samplePrograms),
   );
 
@@ -75,7 +77,7 @@ void main() async {
   });
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/programs.json?filter=id:in:[IpHINAT79UX]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables[id,name,displayName,created,lastUpdated,programRuleVariableSourceType,useCodeForOptionSet,program,dataElement,trackedEntityAttribute,progamStage],programTrackedEntityAttributes[id,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,displayName,formName,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]],programSections[id,name,created,lastUpdated,displayName,renderType,displayFormName,sortOrder,trackedEntityAttributes[id~rename(attribute)]],programStages[id,name,created,lastUpdated,formType,generatedByEnrollmentDate,displayFormName,sortOrder,hideDueDate,enableUserAssignment,minDaysFromStart,executionDateLabel,preGenerateUID,displayName,description,displayExecutionDateLabel,openAfterEnrollment,repeatable,featureType,remindCompleted,displayGenerateEventBox,validationStrategy,autoGenerateEvent,blockEntryForm,programStageDataElements[id,created,lastUpdated,displayInReports,skipSynchronization,renderOptionsAsRadio,allowFutureDate,compulsory,allowProvidedElseWhere,sortOrder,dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/programs.json?filter=id:in:[IpHINAT79UX]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables[id,name,displayName,created,lastUpdated,programRuleVariableSourceType,useCodeForOptionSet,program,dataElement,trackedEntityAttribute,progamStage],programTrackedEntityAttributes[id,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,displayName,formName,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]],programSections[id,name,created,lastUpdated,displayName,renderType,displayFormName,sortOrder,trackedEntityAttributes[id~rename(attribute)]],programStages[id,name,created,lastUpdated,formType,generatedByEnrollmentDate,displayFormName,sortOrder,hideDueDate,enableUserAssignment,minDaysFromStart,executionDateLabel,preGenerateUID,displayName,description,displayExecutionDateLabel,openAfterEnrollment,repeatable,featureType,remindCompleted,displayGenerateEventBox,validationStrategy,autoGenerateEvent,blockEntryForm,programStageSections[id,name,displayName,displayFormName,created,lastUpdated,renderType,sortOrder,dataElements[id~rename(dataElement)]],programStageDataElements[id,created,lastUpdated,displayInReports,skipSynchronization,renderOptionsAsRadio,allowFutureDate,compulsory,allowProvidedElseWhere,sortOrder,dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]]&paging=false',
     (server) => server.reply(200, sampleFilteredPrograms),
   );
 
@@ -104,8 +106,11 @@ void main() async {
   List<ProgramSection> programSections =
       await ProgramSectionQuery().withAttributes().get();
 
-  List<ProgramSectionAttribute> attributes =
+  List<ProgramSectionAttribute> programSectionAttributes =
       await ProgramSectionAttributeQuery().get();
+
+  List<ProgramStageSection> programStageSections =
+      await ProgramStageSectionQuery().withDataElements().get();
 
   test(
       'should store all program stages, their elements and options per selected program',
@@ -115,6 +120,8 @@ void main() async {
     expect(programStageElementOptions.length, 48);
     expect(programRuleVariables.length, 4);
     expect(programSections.length, 1);
-    expect(attributes.length, 2);
+    expect(programSectionAttributes.length, 3);
+    expect(programStageSections.length, 1);
+    expect(programStageSections[0].dataElements?.length, 1);
   });
 }

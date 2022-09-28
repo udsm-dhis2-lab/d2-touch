@@ -8,6 +8,7 @@ import 'package:d2_touch/modules/metadata/program/queries/program_section_attrib
 import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage_data_element.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage_section.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_stage_section_data_element.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_tracked_entity_attribute.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/tracked_entity_attribute.query.dart';
 
@@ -18,6 +19,7 @@ class ProgramModule {
     await ProgramQuery().createTable();
     await ProgramStageQuery().createTable();
     await ProgramStageSectionQuery().createTable();
+    await ProgramStageSectionDataElementQuery().createTable();
     await ProgramStageDataElementOptionQuery().createTable();
     await AttributeOptionQuery().createTable();
     await ProgramTrackedEntityAttributeQuery().createTable();
