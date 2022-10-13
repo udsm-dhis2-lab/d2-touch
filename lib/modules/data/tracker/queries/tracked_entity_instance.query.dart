@@ -8,6 +8,7 @@ import 'package:d2_touch/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked-entity.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/models/tracked_entity_instance_import_summary.model.dart';
 import 'package:d2_touch/modules/data/tracker/queries/attribute_reserved_value.query.dart';
 import 'package:d2_touch/modules/data/tracker/queries/enrollment.query.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';
@@ -429,7 +430,9 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         trackedEntityInstance.syncFailed = syncFailed;
         trackedEntityInstance.lastSyncDate =
             DateTime.now().toIso8601String().split('.')[0];
-        trackedEntityInstance.lastSyncSummary = importSummary.toString();
+
+        trackedEntityInstance.lastSyncSummary =
+            TrackedEntityInstanceImportSummary.fromJson(importSummary);
         queue.add(() =>
             TrackedEntityInstanceQuery().setData(trackedEntityInstance).save());
       }

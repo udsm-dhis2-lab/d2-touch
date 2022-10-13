@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/modules/data/tracker/models/tracked_entity_instance_import_summary.model.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'enrollment.entity.dart';
@@ -36,8 +37,8 @@ class TrackedEntityInstance extends IdentifiableEntity {
   @Column(nullable: true)
   bool? transfer;
 
-  @Column(nullable: true)
-  String? lastSyncSummary;
+  @Column(nullable: true, type: ColumnType.TEXT)
+  TrackedEntityInstanceImportSummary? lastSyncSummary;
 
   @Column(nullable: true)
   String? lastSyncDate;
@@ -83,8 +84,10 @@ class TrackedEntityInstance extends IdentifiableEntity {
   factory TrackedEntityInstance.fromJson(Map<String, dynamic> json) {
     final attributes = json['attributes'];
 
-    const JsonEncoder encoder = JsonEncoder();
-    final dynamic lastSyncSummary = encoder.convert(json['lastSyncSummary']);
+    final dynamic lastSyncSummary = json['lastSyncSummary'] != null
+        ? TrackedEntityInstanceImportSummary.fromJson(
+            jsonDecode(json['lastSyncSummary']))
+        : null;
 
     return TrackedEntityInstance(
         id: json['id'] ?? json['trackedEntityInstance'],
@@ -132,7 +135,11 @@ class TrackedEntityInstance extends IdentifiableEntity {
     data['deleted'] = this.deleted;
     data['synced'] = this.synced;
     data['syncFailed'] = this.syncFailed;
-    data['lastSyncSummary'] = this.lastSyncSummary;
+    data['lastSyncSummary'] = this.lastSyncSummary != null
+        ? jsonEncode(
+            (this.lastSyncSummary as TrackedEntityInstanceImportSummary)
+                ?.responseSummary)
+        : null;
     data['lastSyncDate'] = this.lastSyncDate;
     data['inactive'] = this.inactive;
     data['enrollments'] = this.enrollments;
