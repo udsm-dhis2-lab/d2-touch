@@ -35,7 +35,7 @@ class Event extends IdentifiableEntity {
   @Column(nullable: true)
   bool? syncFailed;
 
-  @Column(nullable: true)
+  @Column(nullable: true, type: ColumnType.TEXT)
   EventImportSummary? lastSyncSummary;
 
   @Column(nullable: true)

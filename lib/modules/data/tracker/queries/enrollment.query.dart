@@ -1,4 +1,5 @@
 import 'package:d2_touch/modules/data/tracker/entities/enrollment.entity.dart';
+import 'package:d2_touch/modules/data/tracker/models/enrollment_import_summary.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
@@ -53,7 +54,8 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
         enrollment.syncFailed = syncFailed;
         enrollment.lastSyncDate =
             DateTime.now().toIso8601String().split('.')[0].split('.')[0];
-        enrollment.lastSyncSummary = importSummary.toString();
+        enrollment.lastSyncSummary =
+            EnrollmentImportSummary.fromJson(importSummary);
         queue.add(() => EnrollmentQuery().setData(enrollment).save());
       }
     });
