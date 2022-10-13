@@ -4,6 +4,7 @@ import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
@@ -75,14 +76,14 @@ class EventQuery extends BaseQuery<Event> {
 
   @override
   Future create() async {
-    Event event = Event(  orgUnit: this.orgUnit as String,
+    Event event = Event(
+        orgUnit: this.orgUnit as String,
         status: 'ACTIVE',
         enrollment: this.enrollment,
         dirty: true,
         synced: false,
         programStage: this.programStage,
-        eventDate: DateTime.now().toIso8601String().split(".")[0]
-    );
+        eventDate: DateTime.now().toIso8601String().split(".")[0]);
 
     this.data = event;
 
@@ -188,7 +189,7 @@ class EventQuery extends BaseQuery<Event> {
         event.dirty = true;
         event.syncFailed = syncFailed;
         event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
-        event.lastSyncSummary = importSummary.toString();
+        event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
         queue.add(() => EventQuery().setData(event).save());
       }
     });

@@ -37,15 +37,15 @@ class HttpClient {
 
   static Future<HttpResponse> post(String resourceUrl, dynamic data,
       {String? baseUrl,
-        String? username,
-        String? password,
-        Database? database,
-        Dio? dioTestClient}) async {
+      String? username,
+      String? password,
+      Database? database,
+      Dio? dioTestClient}) async {
     HttpDetails httpDetails = await HttpDetails(
-        baseUrl: baseUrl,
-        username: username,
-        password: password,
-        database: database)
+            baseUrl: baseUrl,
+            username: username,
+            password: password,
+            database: database)
         .get();
 
     final dioClient = dioTestClient ??
@@ -54,7 +54,7 @@ class HttpClient {
             receiveTimeout: 100000,
             headers: {
               HttpHeaders.authorizationHeader:
-              '${httpDetails.authTokenType} ${httpDetails.authToken}',
+                  '${httpDetails.authTokenType} ${httpDetails.authToken}',
               HttpHeaders.contentTypeHeader: 'application/json'
             }));
 
@@ -78,15 +78,15 @@ class HttpClient {
 
   static Future<HttpResponse> put(String resourceUrl, dynamic? data,
       {String? baseUrl,
-        String? username,
-        String? password,
-        Database? database,
-        Dio? dioTestClient}) async {
+      String? username,
+      String? password,
+      Database? database,
+      Dio? dioTestClient}) async {
     HttpDetails httpDetails = await HttpDetails(
-        baseUrl: baseUrl,
-        username: username,
-        password: password,
-        database: database)
+            baseUrl: baseUrl,
+            username: username,
+            password: password,
+            database: database)
         .get();
 
     final dioClient = dioTestClient ??
@@ -95,14 +95,15 @@ class HttpClient {
             receiveTimeout: 100000,
             headers: {
               HttpHeaders.authorizationHeader:
-              '${httpDetails.authTokenType} ${httpDetails.authToken}',
+                  '${httpDetails.authTokenType} ${httpDetails.authToken}',
               HttpHeaders.contentTypeHeader: 'application/json'
             }));
 
     try {
-      final Response<dynamic> response = data == null ? await dioClient
-          .put('${httpDetails.baseUrl}/api/$resourceUrl') : await dioClient
-          .put('${httpDetails.baseUrl}/api/$resourceUrl', data: data);
+      final Response<dynamic> response = data == null
+          ? await dioClient.put('${httpDetails.baseUrl}/api/$resourceUrl')
+          : await dioClient.put('${httpDetails.baseUrl}/api/$resourceUrl',
+              data: data);
 
       return HttpResponse(
           statusCode: response.statusCode ?? 500, body: response.data);
@@ -118,18 +119,17 @@ class HttpClient {
     }
   }
 
-
   static Future<HttpResponse> get(String resourceUrl,
       {String? baseUrl,
-        String? username,
-        String? password,
-        Database? database,
-        Dio? dioTestClient}) async {
+      String? username,
+      String? password,
+      Database? database,
+      Dio? dioTestClient}) async {
     HttpDetails httpDetails = await HttpDetails(
-        baseUrl: baseUrl,
-        username: username,
-        password: password,
-        database: database)
+            baseUrl: baseUrl,
+            username: username,
+            password: password,
+            database: database)
         .get();
 
     final dioClient = dioTestClient ??
@@ -138,12 +138,12 @@ class HttpClient {
             receiveTimeout: 100000,
             headers: {
               HttpHeaders.authorizationHeader:
-              '${httpDetails.authTokenType} ${httpDetails.authToken}',
+                  '${httpDetails.authTokenType} ${httpDetails.authToken}',
             }));
 
     try {
       final Response<dynamic> response =
-      await dioClient.get('${httpDetails.baseUrl}/api/$resourceUrl');
+          await dioClient.get('${httpDetails.baseUrl}/api/$resourceUrl');
 
       return HttpResponse(
           statusCode: response.statusCode ?? 500, body: response.data);
@@ -189,10 +189,11 @@ class HttpClient {
   //   return response;
   // }
 
-  static Future<String> getHttpDetails({String? baseUrl,
-    String? username,
-    String? password,
-    Database? database}) async {
+  static Future<String> getHttpDetails(
+      {String? baseUrl,
+      String? username,
+      String? password,
+      Database? database}) async {
     if (username != null && password != null) {
       return base64Encode(utf8.encode('$username:$password'));
     }
