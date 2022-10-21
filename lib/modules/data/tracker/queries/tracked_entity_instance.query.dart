@@ -202,7 +202,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
     TrackedEntityInstance trackedEntityInstance = TrackedEntityInstance(
       orgUnit: this.orgUnit as String,
-      dirty: true,
+      dirty: false,
       trackedEntityType: program.trackedEntityType as String,
     );
 
