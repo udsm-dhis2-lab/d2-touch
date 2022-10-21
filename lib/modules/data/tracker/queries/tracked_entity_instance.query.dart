@@ -387,10 +387,20 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           trackedEntityInstance, eventUploadPayload);
     }).toList();
 
+    // print("payyyyyyyyyyyyyyyyyyyyyyyyyy");
+    // print(trackedEntityInstanceUploadPayload.toString());
+
+    // print(this.apiResourceName);
+
 
     final response = await HttpClient.post(this.apiResourceName as String,
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
+
+    // print("----------------------------");
+
+    // printWrapped(response.body.toString());
+    // print("----------------------------");
 
 
     final List<Future<HttpResponse>> transferApis = trackedEntityInstances
@@ -465,5 +475,10 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return await TrackedEntityInstanceQuery()
         .byIds(trackedEntityInstanceIds)
         .get();
+  }
+
+  void printWrapped(String text) {
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 }

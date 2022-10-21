@@ -20,6 +20,7 @@ class EventQuery extends BaseQuery<Event> {
   String? program;
   String? programStage;
   String? enrollment;
+
   EventQuery({Database? database}) : super(database: database);
 
   EventQuery withDataValues() {
@@ -70,12 +71,15 @@ class EventQuery extends BaseQuery<Event> {
   @override
   Future<String> dhisUrl() {
     return Future.value(
-        'events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
+        'events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this
+            .orgUnit}&program=${this.program}${this.programStage != null
+            ? '&programStage=${this.programStage}'
+            : ''}&order=eventDate:desc&pageSize=100&page=1');
   }
 
   @override
   Future create() async {
-    Event event = Event(  orgUnit: this.orgUnit as String,
+    Event event = Event(orgUnit: this.orgUnit as String,
         status: 'ACTIVE',
         enrollment: this.enrollment,
         dirty: true,
@@ -97,7 +101,8 @@ class EventQuery extends BaseQuery<Event> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Retrieving ${this.apiResourceName?.toLowerCase()} from phone database....',
+            'Retrieving ${this.apiResourceName
+                ?.toLowerCase()} from phone database....',
             status: '',
             percentage: 0),
         false);
@@ -110,7 +115,8 @@ class EventQuery extends BaseQuery<Event> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${events.length} ${this.apiResourceName?.toLowerCase()} retrieved successfully',
+            '${events.length} ${this.apiResourceName
+                ?.toLowerCase()} retrieved successfully',
             status: '',
             percentage: 50),
         false);
@@ -119,7 +125,8 @@ class EventQuery extends BaseQuery<Event> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Uploading ${events.length} ${this.apiResourceName?.toLowerCase()} into the server...',
+            'Uploading ${events.length} ${this.apiResourceName
+                ?.toLowerCase()} into the server...',
             status: '',
             percentage: 51),
         false);
@@ -138,7 +145,7 @@ class EventQuery extends BaseQuery<Event> {
         .get();
 
     List<ProgramStage> programStages =
-        await ProgramStageQuery().byIds(eventProgramStageIds).get();
+    await ProgramStageQuery().byIds(eventProgramStageIds).get();
 
     final eventUploadPayload = events.map((event) {
       event.dataValues = eventDataValues
@@ -150,15 +157,26 @@ class EventQuery extends BaseQuery<Event> {
       return Event.toUpload(event);
     }).toList();
 
+    // print("**********************************************");
+    // printWrapped(eventUploadPayload.toString());
+    // print("************************************************");
+
     final response = await HttpClient.post(
         this.apiResourceName as String, {'events': eventUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
+
+    // print("----------------------------");
+
+    // printWrapped(response.body.toString());
+    // print("----------------------------");
+
 
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Upload for ${events.length} ${this.apiResourceName?.toLowerCase()} is completed.',
+            'Upload for ${events.length} ${this.apiResourceName
+                ?.toLowerCase()} is completed.',
             status: '',
             percentage: 75),
         true);
@@ -172,14 +190,14 @@ class EventQuery extends BaseQuery<Event> {
         true);
 
     final List<dynamic> importSummaries =
-        (response.body?['response']?['importSummaries'] ?? []).toList();
+    (response.body?['response']?['importSummaries'] ?? []).toList();
 
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 
     events.forEach((event) {
       final importSummary = importSummaries.lastWhere((summary) =>
-          summary['reference'] != null && summary['reference'] == event.id);
+      summary['reference'] != null && summary['reference'] == event.id);
 
       if (importSummary != null) {
         availableItemCount++;
@@ -208,5 +226,10 @@ class EventQuery extends BaseQuery<Event> {
         true);
 
     return await EventQuery().byIds(eventIds).get();
+  }
+
+  void printWrapped(String text) {
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 }
