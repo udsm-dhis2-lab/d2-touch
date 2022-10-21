@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'user.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'userRoles', apiResourceName: 'userRoles')
-class UserRole extends BaseEntity {
+class UserRole extends IdentifiableEntity {
   @ManyToOne(joinColumnName: 'user', table: User)
   dynamic user;
 

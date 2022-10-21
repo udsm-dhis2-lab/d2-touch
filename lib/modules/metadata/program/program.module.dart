@@ -3,10 +3,14 @@ import 'package:d2_touch/modules/metadata/program/queries/program.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_rule.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_rule_action.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_rule_variable.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_section.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_section_attribute.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage_data_element.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage_section.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_stage_section_data_element.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_tracked_entity_attribute.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/tracked_entity_attribute.query.dart';
 
 import 'queries/program_stage_data_element_option.query.dart';
 
@@ -15,6 +19,7 @@ class ProgramModule {
     await ProgramQuery().createTable();
     await ProgramStageQuery().createTable();
     await ProgramStageSectionQuery().createTable();
+    await ProgramStageSectionDataElementQuery().createTable();
     await ProgramStageDataElementOptionQuery().createTable();
     await AttributeOptionQuery().createTable();
     await ProgramTrackedEntityAttributeQuery().createTable();
@@ -22,6 +27,9 @@ class ProgramModule {
     await ProgramRuleQuery().createTable();
     await ProgramRuleActionQuery().createTable();
     await ProgramRuleVariableQuery().createTable();
+    await ProgramSectionQuery().createTable();
+    await TrackedEntityAttributeQuery().createTable();
+    await ProgramSectionAttributeQuery().createTable();
   }
 
   ProgramQuery get program => ProgramQuery();
@@ -48,4 +56,12 @@ class ProgramModule {
 
   ProgramRuleVariableQuery get programRuleVariable =>
       ProgramRuleVariableQuery();
+
+  ProgramSectionQuery get programSection => ProgramSectionQuery();
+
+  ProgramSectionAttributeQuery get programSectionAttribute =>
+      ProgramSectionAttributeQuery();
+
+  TrackedEntityAttributeQuery get trackedEntityAttribute =>
+      TrackedEntityAttributeQuery();
 }

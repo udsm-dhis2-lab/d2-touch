@@ -39,7 +39,6 @@ void main() async {
       'me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets');
   // final callTwo = await HttpClient.get('users.json');
 
-  print(callOne.body);
   // print(callTwo.body);
 
   test('should do something', () {

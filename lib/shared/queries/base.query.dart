@@ -1,6 +1,6 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/base.entity.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/utilities/dhis-url-generator.util.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';

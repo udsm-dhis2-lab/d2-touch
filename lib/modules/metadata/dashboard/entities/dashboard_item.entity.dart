@@ -1,10 +1,10 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/dashboard/entities/dashboard.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'dashboarditem', apiResourceName: 'dashboardItems')
-class DashboardItem extends BaseEntity {
+class DashboardItem extends IdentifiableEntity {
   @Column(type: ColumnType.TEXT, nullable: true)
   String? type;
 

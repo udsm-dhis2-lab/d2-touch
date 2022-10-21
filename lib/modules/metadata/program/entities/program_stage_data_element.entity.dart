@@ -1,13 +1,13 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage_data_element_option.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(
     tableName: 'programstagedataelement',
     apiResourceName: 'programStageDataElements')
-class ProgramStageDataElement extends BaseEntity {
+class ProgramStageDataElement extends IdentifiableEntity {
   @Column(nullable: true)
   String? formName;
 

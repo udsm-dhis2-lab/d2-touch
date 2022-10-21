@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_element.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(
     tableName: 'datasetelementoption', apiResourceName: 'dataSetElementOptions')
-class DataSetElementOption extends BaseEntity {
+class DataSetElementOption extends IdentifiableEntity {
   @ManyToOne(table: DataSetElement, joinColumnName: 'dataSetElement')
   dynamic dataSetElement;
 

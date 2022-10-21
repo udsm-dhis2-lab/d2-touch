@@ -4,6 +4,7 @@ import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
@@ -71,22 +72,19 @@ class EventQuery extends BaseQuery<Event> {
   @override
   Future<String> dhisUrl() {
     return Future.value(
-        'events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this
-            .orgUnit}&program=${this.program}${this.programStage != null
-            ? '&programStage=${this.programStage}'
-            : ''}&order=eventDate:desc&pageSize=100&page=1');
+        'events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
   }
 
   @override
   Future create() async {
-    Event event = Event(orgUnit: this.orgUnit as String,
+    Event event = Event(
+        orgUnit: this.orgUnit as String,
         status: 'ACTIVE',
         enrollment: this.enrollment,
         dirty: true,
         synced: false,
         programStage: this.programStage,
-        eventDate: DateTime.now().toIso8601String().split(".")[0]
-    );
+        eventDate: DateTime.now().toIso8601String().split(".")[0]);
 
     this.data = event;
 
@@ -101,8 +99,7 @@ class EventQuery extends BaseQuery<Event> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            'Retrieving ${this.apiResourceName
-                ?.toLowerCase()} from phone database....',
+                'Retrieving ${this.apiResourceName?.toLowerCase()} from phone database....',
             status: '',
             percentage: 0),
         false);
@@ -115,8 +112,7 @@ class EventQuery extends BaseQuery<Event> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            '${events.length} ${this.apiResourceName
-                ?.toLowerCase()} retrieved successfully',
+                '${events.length} ${this.apiResourceName?.toLowerCase()} retrieved successfully',
             status: '',
             percentage: 50),
         false);
@@ -125,8 +121,7 @@ class EventQuery extends BaseQuery<Event> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            'Uploading ${events.length} ${this.apiResourceName
-                ?.toLowerCase()} into the server...',
+                'Uploading ${events.length} ${this.apiResourceName?.toLowerCase()} into the server...',
             status: '',
             percentage: 51),
         false);
@@ -145,7 +140,7 @@ class EventQuery extends BaseQuery<Event> {
         .get();
 
     List<ProgramStage> programStages =
-    await ProgramStageQuery().byIds(eventProgramStageIds).get();
+        await ProgramStageQuery().byIds(eventProgramStageIds).get();
 
     final eventUploadPayload = events.map((event) {
       event.dataValues = eventDataValues
@@ -170,13 +165,11 @@ class EventQuery extends BaseQuery<Event> {
     // printWrapped(response.body.toString());
     // print("----------------------------");
 
-
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            'Upload for ${events.length} ${this.apiResourceName
-                ?.toLowerCase()} is completed.',
+                'Upload for ${events.length} ${this.apiResourceName?.toLowerCase()} is completed.',
             status: '',
             percentage: 75),
         true);
@@ -190,14 +183,14 @@ class EventQuery extends BaseQuery<Event> {
         true);
 
     final List<dynamic> importSummaries =
-    (response.body?['response']?['importSummaries'] ?? []).toList();
+        (response.body?['response']?['importSummaries'] ?? []).toList();
 
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 
     events.forEach((event) {
       final importSummary = importSummaries.lastWhere((summary) =>
-      summary['reference'] != null && summary['reference'] == event.id);
+          summary['reference'] != null && summary['reference'] == event.id);
 
       if (importSummary != null) {
         availableItemCount++;
@@ -206,7 +199,7 @@ class EventQuery extends BaseQuery<Event> {
         event.dirty = true;
         event.syncFailed = syncFailed;
         event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
-        event.lastSyncSummary = importSummary.toString();
+        event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
         queue.add(() => EventQuery().setData(event).save());
       }
     });

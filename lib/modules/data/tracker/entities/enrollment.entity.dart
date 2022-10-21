@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/modules/data/tracker/models/enrollment_import_summary.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'event.entity.dart';
 import 'tracked-entity.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'enrollment', apiResourceName: 'enrollments')
-class Enrollment extends BaseEntity {
+class Enrollment extends IdentifiableEntity {
   @Column()
   String? enrollment;
 
@@ -34,8 +37,8 @@ class Enrollment extends BaseEntity {
   @Column(nullable: true)
   bool? syncFailed;
 
-  @Column(nullable: true)
-  String? lastSyncSummary;
+  @Column(nullable: true, type: ColumnType.TEXT)
+  EnrollmentImportSummary? lastSyncSummary;
 
   @Column(nullable: true)
   String? lastSyncDate;
@@ -79,6 +82,9 @@ class Enrollment extends BaseEntity {
   }
 
   factory Enrollment.fromJson(Map<String, dynamic> json) {
+    final dynamic lastSyncSummary = json['lastSyncSummary'] != null
+        ? EnrollmentImportSummary.fromJson(jsonDecode(json['lastSyncSummary']))
+        : null;
     return Enrollment(
         id: json['enrollment'],
         enrollment: json['enrollment'],
@@ -93,7 +99,7 @@ class Enrollment extends BaseEntity {
         status: json['status'],
         synced: json['synced'],
         syncFailed: json['syncFailed'],
-        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncSummary: lastSyncSummary,
         lastSyncDate: json['lastSyncDate'],
         events: List<dynamic>.from(json['events'] ?? [])
             .map((event) => Event.fromJson({
@@ -119,7 +125,11 @@ class Enrollment extends BaseEntity {
     data['status'] = this.status;
     data['synced'] = this.synced;
     data['syncFailed'] = this.syncFailed;
-    data['lastSyncSummary'] = this.lastSyncSummary;
+    data['lastSyncSummary'] = this.lastSyncSummary != null
+        ? jsonEncode(
+            (this.lastSyncSummary as EnrollmentImportSummary)?.responseSummary)
+        : null;
+    ;
     data['lastSyncDate'] = this.lastSyncDate;
     data['events'] = this.events ?? [];
     data['trackedEntityInstance'] = this.trackedEntityInstance;

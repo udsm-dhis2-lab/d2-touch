@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'data_set_element.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'dataset', apiResourceName: 'dataSets')
-class DataSet extends BaseEntity {
+class DataSet extends IdentifiableEntity {
   @Column(type: ColumnType.INTEGER)
   int timelyDays;
 

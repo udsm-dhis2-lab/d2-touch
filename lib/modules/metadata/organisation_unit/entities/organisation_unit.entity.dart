@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/column.annotation.dart';
 import 'package:d2_touch/core/annotations/entity.annotation.dart';
 import 'package:d2_touch/core/annotations/reflectable.annotation.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'organisationunit', apiResourceName: 'organisationUnits')
-class OrganisationUnit extends BaseEntity {
+class OrganisationUnit extends IdentifiableEntity {
   @Column(type: ColumnType.INTEGER)
   int? level;
 

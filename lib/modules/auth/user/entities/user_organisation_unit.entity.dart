@@ -1,12 +1,12 @@
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'user.entity.dart';
 
 @AnnotationReflectable
 @Entity(
     tableName: 'userOrganisationUnit', apiResourceName: 'userOrganisationUnits')
-class UserOrganisationUnit extends BaseEntity {
+class UserOrganisationUnit extends IdentifiableEntity {
   @Column()
   final String orgUnit;
 

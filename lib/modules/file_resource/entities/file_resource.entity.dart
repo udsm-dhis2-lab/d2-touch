@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'fileResource', apiResourceName: 'fileResources')
-class FileResource extends BaseEntity {
+class FileResource extends IdentifiableEntity {
   @Column(nullable: true)
   String? resourceId;
 

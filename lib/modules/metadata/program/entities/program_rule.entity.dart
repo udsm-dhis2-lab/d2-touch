@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_action.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'programrule', apiResourceName: 'programRules')
-class ProgramRule extends BaseEntity {
+class ProgramRule extends IdentifiableEntity {
   @Column()
   String condition;
 

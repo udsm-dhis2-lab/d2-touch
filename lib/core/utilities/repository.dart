@@ -1,7 +1,7 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/database/database_manager.dart';
 import 'package:d2_touch/core/utilities/repository_util.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/base.entity.dart';
 import 'package:d2_touch/shared/utilities/merge_mode.util.dart';
 import 'package:d2_touch/shared/utilities/query_filter.util.dart';
 import 'package:d2_touch/shared/utilities/query_filter_condition.util.dart';
@@ -500,10 +500,9 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         Map<String, dynamic> localData = result.toJson();
         Map<String, dynamic> entityMap = entity.toJson();
 
-        if(!localData['synced']){
+        if (!localData['synced']) {
           entityMap['synced'] = localData['synced'];
         }
-        
 
         localData.keys.forEach((key) {
           if (entityMap[key] == null) {
