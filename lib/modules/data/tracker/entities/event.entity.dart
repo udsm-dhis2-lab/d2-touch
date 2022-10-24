@@ -158,7 +158,7 @@ class Event extends IdentifiableEntity {
     data['syncFailed'] = this.syncFailed;
     data['lastSyncSummary'] = this.lastSyncSummary != null
         ? jsonEncode(
-            (this.lastSyncSummary as EventImportSummary)?.responseSummary)
+            (this.lastSyncSummary as EventImportSummary).responseSummary)
         : null;
     ;
     data['lastSyncDate'] = this.lastSyncDate;

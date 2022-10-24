@@ -138,7 +138,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
     data['lastSyncSummary'] = this.lastSyncSummary != null
         ? jsonEncode(
             (this.lastSyncSummary as TrackedEntityInstanceImportSummary)
-                ?.responseSummary)
+                .responseSummary)
         : null;
     data['lastSyncDate'] = this.lastSyncDate;
     data['inactive'] = this.inactive;

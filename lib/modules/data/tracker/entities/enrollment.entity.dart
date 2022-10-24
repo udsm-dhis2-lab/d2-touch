@@ -127,7 +127,7 @@ class Enrollment extends IdentifiableEntity {
     data['syncFailed'] = this.syncFailed;
     data['lastSyncSummary'] = this.lastSyncSummary != null
         ? jsonEncode(
-            (this.lastSyncSummary as EnrollmentImportSummary)?.responseSummary)
+            (this.lastSyncSummary as EnrollmentImportSummary).responseSummary)
         : null;
     ;
     data['lastSyncDate'] = this.lastSyncDate;
