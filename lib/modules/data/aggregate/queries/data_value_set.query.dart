@@ -15,6 +15,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   String? orgUnit;
   String? dataSet;
   String? period;
+
   DataValueSetQuery({Database? database}) : super(database: database) {
     this.mergeMode = MergeMode.Merge;
   }
@@ -78,7 +79,8 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   @override
   Future<String> dhisUrl() {
     return Future.value(
-        'dataValueSets.json?dataSet=${this.dataSet}&period=${this.period}&orgUnit=${this.orgUnit}');
+        'dataValueSets.json?dataSet=${this.dataSet}&period=${this
+            .period}&orgUnit=${this.orgUnit}');
   }
 
   @override
@@ -88,7 +90,8 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Downloading ${this.apiResourceName?.toLowerCase()} from the server....',
+            'Downloading ${this.apiResourceName
+                ?.toLowerCase()} from the server....',
             status: '',
             percentage: 0),
         false);
@@ -103,7 +106,8 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) downloaded successfully',
+            '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this
+                .orgUnit}-${this.period}) downloaded successfully',
             status: '',
             percentage: 50),
         false);
@@ -116,7 +120,9 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Saving ${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) into phone database...',
+            'Saving ${this.apiResourceName?.toLowerCase()}(${this
+                .dataSet}-${this.orgUnit}-${this
+                .period}) into phone database...',
             status: '',
             percentage: 51),
         false);
@@ -127,7 +133,9 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) successifully saved into the database',
+            '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this
+                .orgUnit}-${this
+                .period}) successifully saved into the database',
             status: '',
             percentage: 100),
         true);
@@ -152,7 +160,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
       dataValueSetIds.add(dataValueSet.id as String);
       availableItemCount++;
       queue.add(
-          () => this.uploadOne(dataValueSet, dioTestClient: dioTestClient));
+              () => this.uploadOne(dataValueSet, dioTestClient: dioTestClient));
     });
 
     if (availableItemCount == 0) {
@@ -170,6 +178,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     final response = await HttpClient.post(
         this.apiResourceName as String, uploadFormat,
         database: this.database, dioTestClient: dioTestClient);
+
 
     final importSummary = response.body;
     final syncFailed = importSummary['status'] == 'ERROR';

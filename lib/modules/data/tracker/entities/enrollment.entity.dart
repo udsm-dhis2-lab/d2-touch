@@ -24,7 +24,6 @@ class Enrollment extends IdentifiableEntity {
 
   @Column()
   String orgUnit;
-
   @Column()
   String program;
 
