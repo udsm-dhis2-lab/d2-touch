@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/data/tracker/models/enrollment_import_summary.dart';
+import 'package:d2_touch/shared/entities/geometry.entity.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'event.entity.dart';
@@ -39,6 +40,9 @@ class Enrollment extends IdentifiableEntity {
   @Column(nullable: true, type: ColumnType.TEXT)
   EnrollmentImportSummary? lastSyncSummary;
 
+  @Column(nullable: true, type: ColumnType.TEXT)
+  Geometry? geometry;
+
   @Column(nullable: true)
   String? lastSyncDate;
 
@@ -65,6 +69,7 @@ class Enrollment extends IdentifiableEntity {
       this.synced,
       this.syncFailed,
       this.lastSyncSummary,
+      this.geometry,
       this.lastSyncDate,
       this.events,
       this.trackedEntityInstance})
@@ -84,6 +89,11 @@ class Enrollment extends IdentifiableEntity {
     final dynamic lastSyncSummary = json['lastSyncSummary'] != null
         ? EnrollmentImportSummary.fromJson(jsonDecode(json['lastSyncSummary']))
         : null;
+
+    final Geometry? geometry = json["geometry"] != null
+        ? Geometry.fromJson(jsonDecode(json["geometry"]))
+        : null;
+
     return Enrollment(
         id: json['enrollment'],
         enrollment: json['enrollment'],
@@ -99,6 +109,7 @@ class Enrollment extends IdentifiableEntity {
         synced: json['synced'],
         syncFailed: json['syncFailed'],
         lastSyncSummary: lastSyncSummary,
+        geometry: geometry,
         lastSyncDate: json['lastSyncDate'],
         events: List<dynamic>.from(json['events'] ?? [])
             .map((event) => Event.fromJson({
@@ -129,6 +140,8 @@ class Enrollment extends IdentifiableEntity {
             (this.lastSyncSummary as EnrollmentImportSummary).responseSummary)
         : null;
     ;
+    data['geometry'] =
+        this.geometry != null ? jsonEncode(this.geometry?.toJson()) : null;
     data['lastSyncDate'] = this.lastSyncDate;
     data['events'] = this.events ?? [];
     data['trackedEntityInstance'] = this.trackedEntityInstance;
@@ -145,6 +158,8 @@ class Enrollment extends IdentifiableEntity {
     return {
       "enrollment": enrollment.enrollment,
       "trackedEntityInstance": enrollment.trackedEntityInstance,
+      "geometry":
+          enrollment.geometry != null ? enrollment.geometry?.toJson() : null,
       "orgUnit": enrollment.orgUnit,
       "program": enrollment.program,
       "enrollmentDate": enrollment.enrollmentDate,

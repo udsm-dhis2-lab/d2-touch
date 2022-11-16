@@ -152,18 +152,10 @@ class EventQuery extends BaseQuery<Event> {
       return Event.toUpload(event);
     }).toList();
 
-    // print("**********************************************");
-    // printWrapped(eventUploadPayload.toString());
-    // print("************************************************");
-
     final response = await HttpClient.post(
         this.apiResourceName as String, {'events': eventUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
 
-    // print("----------------------------");
-
-    // printWrapped(response.body.toString());
-    // print("----------------------------");
 
     callback(
         RequestProgress(

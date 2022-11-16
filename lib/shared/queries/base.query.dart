@@ -236,6 +236,7 @@ class BaseQuery<T extends BaseEntity> {
   }
 
   Future<List<T>> _fetchOnline({Dio? dioTestClient}) async {
+
     final dhisUrl = await this.dhisUrl();
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
@@ -248,12 +249,15 @@ class BaseQuery<T extends BaseEntity> {
       ClassMirror classMirror =
       AnnotationReflectable.reflectType(T) as ClassMirror;
 
-      return classMirror.newInstance('fromJson', [dataItem]) as T;
+      var x = classMirror.newInstance('fromJson', [dataItem]) as T;
+
+      return x;
     }).toList();
   }
 
   Future<List<T>?> download(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
+
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -264,7 +268,9 @@ class BaseQuery<T extends BaseEntity> {
             percentage: 0),
         false);
 
+
     this.data = await this._fetchOnline(dioTestClient: dioTestClient);
+
 
     callback(
         RequestProgress(
