@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/data/tracker/models/enrollment_import_summary.dart';
-import 'package:d2_touch/shared/entities/geometry.entity.dart';
+import 'package:d2_touch/modules/data/tracker/models/geometry.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'event.entity.dart';
@@ -90,8 +90,15 @@ class Enrollment extends IdentifiableEntity {
         ? EnrollmentImportSummary.fromJson(jsonDecode(json['lastSyncSummary']))
         : null;
 
+    // print(json['lastSyncSummary']);
+    // print("888888888888888888888888888888888888");
+
+    // print(json["geometry"].runtimeType);
+    // print(json["geometry"]);
+    // print(json["geometry"].runtimeType == String);
+
     final Geometry? geometry = json["geometry"] != null
-        ? Geometry.fromJson(jsonDecode(json["geometry"]))
+        ? Geometry.fromJson(json["geometry"].runtimeType == String? jsonDecode(json["geometry"]): json["geometry"])
         : null;
 
     return Enrollment(
@@ -141,7 +148,7 @@ class Enrollment extends IdentifiableEntity {
         : null;
     ;
     data['geometry'] =
-        this.geometry != null ? jsonEncode(this.geometry?.toJson()) : null;
+        this.geometry != null ? jsonEncode(this.geometry?.geometryData) : null;
     data['lastSyncDate'] = this.lastSyncDate;
     data['events'] = this.events ?? [];
     data['trackedEntityInstance'] = this.trackedEntityInstance;

@@ -1,11 +1,11 @@
 class Geometry {
   String type;
-  String latitude;
-  String longitude;
+  double latitude;
+  double longitude;
+  Map<String, dynamic> geometryData;
 
   Geometry(
-      {required this.type, required this.latitude, required this.longitude})
-      : super();
+      {required this.type, required this.latitude, required this.longitude, required this.geometryData});
 
   factory Geometry.fromJson(Map<String, dynamic> jsonData) {
     return Geometry(
@@ -15,7 +15,8 @@ class Geometry {
         longitude: jsonData["coordinates"]?.length > 1
             ? jsonData["coordinates"][0]
             : "",
-        type: jsonData["type"]);
+        type: jsonData["type"],
+        geometryData:  jsonData);
   }
 
   Map<String, dynamic> toJson() {
