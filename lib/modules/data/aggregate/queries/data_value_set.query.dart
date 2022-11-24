@@ -79,8 +79,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   @override
   Future<String> dhisUrl() {
     return Future.value(
-        'dataValueSets.json?dataSet=${this.dataSet}&period=${this
-            .period}&orgUnit=${this.orgUnit}');
+        'dataValueSets.json?dataSet=${this.dataSet}&period=${this.period}&orgUnit=${this.orgUnit}');
   }
 
   @override
@@ -90,8 +89,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            'Downloading ${this.apiResourceName
-                ?.toLowerCase()} from the server....',
+                'Downloading ${this.apiResourceName?.toLowerCase()} from the server....',
             status: '',
             percentage: 0),
         false);
@@ -102,12 +100,15 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
     final data = response.body;
 
+    print(
+        "data resp ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+    printWrapped(data.toString());
+
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this
-                .orgUnit}-${this.period}) downloaded successfully',
+                '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) downloaded successfully',
             status: '',
             percentage: 50),
         false);
@@ -120,9 +121,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            'Saving ${this.apiResourceName?.toLowerCase()}(${this
-                .dataSet}-${this.orgUnit}-${this
-                .period}) into phone database...',
+                'Saving ${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) into phone database...',
             status: '',
             percentage: 51),
         false);
@@ -133,9 +132,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this
-                .orgUnit}-${this
-                .period}) successifully saved into the database',
+                '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) successifully saved into the database',
             status: '',
             percentage: 100),
         true);
@@ -160,7 +157,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
       dataValueSetIds.add(dataValueSet.id as String);
       availableItemCount++;
       queue.add(
-              () => this.uploadOne(dataValueSet, dioTestClient: dioTestClient));
+          () => this.uploadOne(dataValueSet, dioTestClient: dioTestClient));
     });
 
     if (availableItemCount == 0) {
@@ -175,10 +172,16 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   uploadOne(DataValueSet dataValueSet, {Dio? dioTestClient}) async {
     final uploadFormat = DataValueSet.toUpload(dataValueSet);
 
+    print(
+        "the body : #########################################################");
+    printWrapped(uploadFormat.toString());
+
     final response = await HttpClient.post(
         this.apiResourceName as String, uploadFormat,
         database: this.database, dioTestClient: dioTestClient);
 
+    print("the resp :: ****************************************************");
+    printWrapped(response.body.toString());
 
     final importSummary = response.body;
     final syncFailed = importSummary['status'] == 'ERROR';
@@ -189,5 +192,10 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     dataValueSet.lastSyncSummary = importSummary.toString();
 
     return DataValueSetQuery().setData(dataValueSet).save();
+  }
+
+  void printWrapped(String text) {
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 }
