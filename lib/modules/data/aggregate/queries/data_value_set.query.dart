@@ -101,9 +101,6 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
     final data = response.body;
 
-    print(
-        "data resp ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-    printWrapped(data.toString());
 
     callback(
         RequestProgress(
@@ -173,16 +170,11 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   uploadOne(DataValueSet dataValueSet, {Dio? dioTestClient}) async {
     final uploadFormat = DataValueSet.toUpload(dataValueSet);
 
-    print(
-        "the body : #########################################################");
-    printWrapped(uploadFormat.toString());
 
     final response = await HttpClient.post(
         this.apiResourceName as String, uploadFormat,
         database: this.database, dioTestClient: dioTestClient);
 
-    print("the resp :: ****************************************************");
-    printWrapped(response.body.toString());
 
 
     final importSummary = response.body;

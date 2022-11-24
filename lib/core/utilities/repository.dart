@@ -538,13 +538,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         Map<String, dynamic> localData = result.toJson();
         Map<String, dynamic> entityMap = entity.toJson();
 
-        // print("ttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
-        // print(entityMap);
-
-        // print("llllllllllllllllllllllllllllllllllllllllllllll");
-        // print(localData);
-
+      
         // if (!localData['synced']) {
+
+       
 
         if (saveOptions?.skipLocalSyncStatus == null ||
             saveOptions?.skipLocalSyncStatus == false) {
