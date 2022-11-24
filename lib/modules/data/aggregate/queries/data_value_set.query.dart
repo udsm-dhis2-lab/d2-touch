@@ -6,6 +6,7 @@ import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:d2_touch/shared/utilities/merge_mode.util.dart';
+import 'package:d2_touch/shared/utilities/save_option.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
@@ -183,6 +184,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     print("the resp :: ****************************************************");
     printWrapped(response.body.toString());
 
+
     final importSummary = response.body;
     final syncFailed = importSummary['status'] == 'ERROR';
     dataValueSet.synced = !syncFailed;
@@ -191,7 +193,9 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     dataValueSet.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
     dataValueSet.lastSyncSummary = importSummary.toString();
 
-    return DataValueSetQuery().setData(dataValueSet).save();
+    return DataValueSetQuery()
+        .setData(dataValueSet)
+        .save(saveOptions: SaveOptions(skipLocalSyncStatus: true));
   }
 
   void printWrapped(String text) {

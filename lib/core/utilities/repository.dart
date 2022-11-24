@@ -10,6 +10,7 @@ import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../shared/utilities/save_option.util.dart';
 import 'query_expression.dart';
 
 abstract class BaseRepository<T extends BaseEntity> {
@@ -475,7 +476,12 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {required List<T> entities,
       Database? database,
       int? chunk,
-      required MergeMode mergeMode}) async {
+// <<<<<<< HEAD
+//       required MergeMode mergeMode}) async {
+// =======
+      required MergeMode mergeMode,
+      SaveOptions? saveOptions}) async {
+// >>>>>>> 63e83b144c34e5b66cf32be8d6fd2509d57c558a
     final Database db = database != null ? database : await this.database;
 
     if (entities.isEmpty) {
@@ -485,8 +491,16 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final queue = Queue(parallel: chunk ?? 500);
 
     entities.forEach((T entity) {
-      queue.add(
-          () => saveOne(entity: entity, database: db, mergeMode: mergeMode));
+// <<<<<<< HEAD
+//       queue.add(
+//           () => saveOne(entity: entity, database: db, mergeMode: mergeMode));
+// =======
+      queue.add(() => saveOne(
+          entity: entity,
+          database: db,
+          mergeMode: mergeMode,
+          saveOptions: saveOptions));
+// >>>>>>> 63e83b144c34e5b66cf32be8d6fd2509d57c558a
     });
 
     await queue.onComplete;
@@ -498,7 +512,12 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   Future<int> saveOne(
       {required T entity,
       Database? database,
-      required MergeMode mergeMode}) async {
+// <<<<<<< HEAD
+//       required MergeMode mergeMode}) async {
+// =======
+      required MergeMode mergeMode,
+      SaveOptions? saveOptions}) async {
+// >>>>>>> 63e83b144c34e5b66cf32be8d6fd2509d57c558a
     final Database db = database != null ? database : await this.database;
 
     var result = await this.findById(id: entity.id as String, database: db);
@@ -519,13 +538,17 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         Map<String, dynamic> localData = result.toJson();
         Map<String, dynamic> entityMap = entity.toJson();
 
-        print("ttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
-        print(entityMap);
+        // print("ttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
+        // print(entityMap);
 
-        print("llllllllllllllllllllllllllllllllllllllllllllll");
-        print(localData);
+        // print("llllllllllllllllllllllllllllllllllllllllllllll");
+        // print(localData);
 
-        if (!localData['synced']) {
+        // if (!localData['synced']) {
+
+        if (saveOptions?.skipLocalSyncStatus == null ||
+            saveOptions?.skipLocalSyncStatus == false) {
+
           entityMap['synced'] = localData['synced'];
         }
 
@@ -702,5 +725,13 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         .rawQuery('SELECT COUNT(*) as count FROM ${this.entity.tableName}');
 
     return countResult[0]['count'] as int;
+  }
+
+  Future<List<Map>> rawQuery({required String query}) async {
+    final Database db = await this.database;
+
+    final List<Map> queryResult = await db.rawQuery(query.toString());
+
+    return queryResult;
   }
 }
