@@ -6,6 +6,7 @@ import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:d2_touch/shared/utilities/merge_mode.util.dart';
+import 'package:d2_touch/shared/utilities/save_option.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
@@ -79,8 +80,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   @override
   Future<String> dhisUrl() {
     return Future.value(
-        'dataValueSets.json?dataSet=${this.dataSet}&period=${this
-            .period}&orgUnit=${this.orgUnit}');
+        'dataValueSets.json?dataSet=${this.dataSet}&period=${this.period}&orgUnit=${this.orgUnit}');
   }
 
   @override
@@ -90,8 +90,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            'Downloading ${this.apiResourceName
-                ?.toLowerCase()} from the server....',
+                'Downloading ${this.apiResourceName?.toLowerCase()} from the server....',
             status: '',
             percentage: 0),
         false);
@@ -106,8 +105,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this
-                .orgUnit}-${this.period}) downloaded successfully',
+                '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) downloaded successfully',
             status: '',
             percentage: 50),
         false);
@@ -120,9 +118,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            'Saving ${this.apiResourceName?.toLowerCase()}(${this
-                .dataSet}-${this.orgUnit}-${this
-                .period}) into phone database...',
+                'Saving ${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) into phone database...',
             status: '',
             percentage: 51),
         false);
@@ -133,9 +129,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-            '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this
-                .orgUnit}-${this
-                .period}) successifully saved into the database',
+                '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) successifully saved into the database',
             status: '',
             percentage: 100),
         true);
@@ -160,7 +154,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
       dataValueSetIds.add(dataValueSet.id as String);
       availableItemCount++;
       queue.add(
-              () => this.uploadOne(dataValueSet, dioTestClient: dioTestClient));
+          () => this.uploadOne(dataValueSet, dioTestClient: dioTestClient));
     });
 
     if (availableItemCount == 0) {
@@ -179,7 +173,6 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         this.apiResourceName as String, uploadFormat,
         database: this.database, dioTestClient: dioTestClient);
 
-
     final importSummary = response.body;
     final syncFailed = importSummary['status'] == 'ERROR';
     dataValueSet.synced = !syncFailed;
@@ -188,6 +181,8 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     dataValueSet.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
     dataValueSet.lastSyncSummary = importSummary.toString();
 
-    return DataValueSetQuery().setData(dataValueSet).save();
+    return DataValueSetQuery()
+        .setData(dataValueSet)
+        .save(saveOptions: SaveOptions(skipLocalSyncStatus: true));
   }
 }

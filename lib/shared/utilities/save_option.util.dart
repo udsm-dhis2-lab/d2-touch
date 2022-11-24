@@ -1,7 +1,7 @@
 class SaveOptions {
-  bool preferExisting;
-  bool throwConflictOnExist;
+  bool? skipLocalSyncStatus;
 
-  SaveOptions(
-      {required this.preferExisting, required this.throwConflictOnExist});
+  SaveOptions({
+    this.skipLocalSyncStatus,
+  });
 }

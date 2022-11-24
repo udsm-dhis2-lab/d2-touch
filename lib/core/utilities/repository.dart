@@ -10,6 +10,7 @@ import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../shared/utilities/save_option.util.dart';
 import 'query_expression.dart';
 
 abstract class BaseRepository<T extends BaseEntity> {
@@ -475,7 +476,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {required List<T> entities,
       Database? database,
       int? chunk,
-      required MergeMode mergeMode}) async {
+      required MergeMode mergeMode,
+      SaveOptions? saveOptions}) async {
     final Database db = database != null ? database : await this.database;
 
     if (entities.isEmpty) {
@@ -485,8 +487,11 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final queue = Queue(parallel: chunk ?? 500);
 
     entities.forEach((T entity) {
-      queue.add(
-          () => saveOne(entity: entity, database: db, mergeMode: mergeMode));
+      queue.add(() => saveOne(
+          entity: entity,
+          database: db,
+          mergeMode: mergeMode,
+          saveOptions: saveOptions));
     });
 
     await queue.onComplete;
@@ -498,7 +503,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   Future<int> saveOne(
       {required T entity,
       Database? database,
-      required MergeMode mergeMode}) async {
+      required MergeMode mergeMode,
+      SaveOptions? saveOptions}) async {
     final Database db = database != null ? database : await this.database;
 
     var result = await this.findById(id: entity.id as String, database: db);
@@ -519,9 +525,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         Map<String, dynamic> localData = result.toJson();
         Map<String, dynamic> entityMap = entity.toJson();
 
-        // if (!localData['synced'] ) {
-        //   entityMap['synced'] = localData['synced'];
-        // }
+        if (saveOptions?.skipLocalSyncStatus == null ||
+            saveOptions?.skipLocalSyncStatus == false) {
+          entityMap['synced'] = localData['synced'];
+        }
 
         localData.keys.forEach((key) {
           if (entityMap[key] == null) {
