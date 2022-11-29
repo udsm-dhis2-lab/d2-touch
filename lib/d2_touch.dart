@@ -199,10 +199,11 @@ class D2Touch {
     return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }
 
-  static Future<List<Map>> rawQuery({required String query}) async {
+  static Future<List<Map>> rawQuery(
+      {required String query, required List args}) async {
     final Database db = await DatabaseManager.instance.database;
 
-    final List<Map> queryResult = await db.rawQuery(query.toString());
+    final List<Map> queryResult = await db.rawQuery(query.toString(), args);
 
     return queryResult;
   }
