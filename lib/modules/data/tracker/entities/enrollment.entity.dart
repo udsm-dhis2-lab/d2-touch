@@ -25,6 +25,7 @@ class Enrollment extends IdentifiableEntity {
 
   @Column()
   String orgUnit;
+
   @Column()
   String program;
 
@@ -53,32 +54,31 @@ class Enrollment extends IdentifiableEntity {
       joinColumnName: 'trackedEntityInstance', table: TrackedEntityInstance)
   dynamic trackedEntityInstance;
 
-  Enrollment(
-      {String? id,
-      String? name,
-      String? created,
-      String? lastUpdated,
-      this.enrollment,
-      this.incidentDate,
-      this.enrollmentDate,
-      required this.trackedEntityType,
-      required this.orgUnit,
-      required this.program,
-      required bool dirty,
-      this.status,
-      this.synced,
-      this.syncFailed,
-      this.lastSyncSummary,
-      this.geometry,
-      this.lastSyncDate,
-      this.events,
-      this.trackedEntityInstance})
+  Enrollment({String? id,
+    String? name,
+    String? created,
+    String? lastUpdated,
+    this.enrollment,
+    this.incidentDate,
+    this.enrollmentDate,
+    required this.trackedEntityType,
+    required this.orgUnit,
+    required this.program,
+    required bool dirty,
+    this.status,
+    this.synced,
+    this.syncFailed,
+    this.lastSyncSummary,
+    this.geometry,
+    this.lastSyncDate,
+    this.events,
+    this.trackedEntityInstance})
       : super(
-            id: id,
-            name: name,
-            created: created,
-            lastUpdated: lastUpdated,
-            dirty: dirty) {
+      id: id,
+      name: name,
+      created: created,
+      lastUpdated: lastUpdated,
+      dirty: dirty) {
     this.enrollment = this.enrollment ?? this.id;
     this.name = this.name ?? this.enrollment;
     this.incidentDate = this.incidentDate ?? this.created;
@@ -98,7 +98,9 @@ class Enrollment extends IdentifiableEntity {
     // print(json["geometry"].runtimeType == String);
 
     final Geometry? geometry = json["geometry"] != null
-        ? Geometry.fromJson(json["geometry"].runtimeType == String? jsonDecode(json["geometry"]): json["geometry"])
+        ? Geometry.fromJson(json["geometry"].runtimeType == String
+        ? jsonDecode(json["geometry"])
+        : json["geometry"])
         : null;
 
     return Enrollment(
@@ -119,11 +121,12 @@ class Enrollment extends IdentifiableEntity {
         geometry: geometry,
         lastSyncDate: json['lastSyncDate'],
         events: List<dynamic>.from(json['events'] ?? [])
-            .map((event) => Event.fromJson({
-                  ...event,
-                  'dirty': json['dirty'] ?? false,
-                  'synced': json['synced'] ?? false
-                }))
+            .map((event) =>
+            Event.fromJson({
+              ...event,
+              'dirty': json['dirty'] ?? false,
+              'synced': json['synced'] ?? false
+            }))
             .toList(),
         trackedEntityInstance: json['trackedEntityInstance'],
         dirty: json['dirty'] ?? false);
@@ -144,11 +147,11 @@ class Enrollment extends IdentifiableEntity {
     data['syncFailed'] = this.syncFailed;
     data['lastSyncSummary'] = this.lastSyncSummary != null
         ? jsonEncode(
-            (this.lastSyncSummary as EnrollmentImportSummary).responseSummary)
+        (this.lastSyncSummary as EnrollmentImportSummary).responseSummary)
         : null;
     ;
     data['geometry'] =
-        this.geometry != null ? jsonEncode(this.geometry?.geometryData) : null;
+    this.geometry != null ? jsonEncode(this.geometry?.geometryData) : null;
     data['lastSyncDate'] = this.lastSyncDate;
     data['events'] = this.events ?? [];
     data['trackedEntityInstance'] = this.trackedEntityInstance;
@@ -161,12 +164,12 @@ class Enrollment extends IdentifiableEntity {
 
   static toUpload(Enrollment enrollment, List<Event>? events) {
     final filteredEvents =
-        (events ?? []).where((event) => event.enrollment == enrollment.id);
+    (events ?? []).where((event) => event.enrollment == enrollment.id);
     return {
       "enrollment": enrollment.enrollment,
       "trackedEntityInstance": enrollment.trackedEntityInstance,
       "geometry":
-          enrollment.geometry != null ? enrollment.geometry?.toJson() : null,
+      enrollment.geometry != null ? enrollment.geometry?.toJson() : null,
       "orgUnit": enrollment.orgUnit,
       "program": enrollment.program,
       "enrollmentDate": enrollment.enrollmentDate,

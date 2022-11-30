@@ -171,7 +171,6 @@ class D2Touch {
       Dio? dioTestClient}) async {
     final uri = Uri.parse(instanceUrl).host;
     final String databaseName = '$uri';
-
     await D2Touch.initialize(
         databaseName: databaseName,
         inMemory: inMemory,
@@ -183,6 +182,7 @@ class D2Touch {
             sharedPreferenceInstance ?? SharedPreferences.getInstance());
 
     AuthToken token = AuthToken.fromJson(tokenObject);
+
     userObject['token'] = token.accessToken;
     userObject['tokenType'] = token.tokenType;
     userObject['tokenExpiry'] = token.expiresIn;
@@ -190,6 +190,7 @@ class D2Touch {
     userObject['isLoggedIn'] = true;
     userObject['dirty'] = true;
     userObject['baseUrl'] = instanceUrl;
+    userObject['authType'] = "token";
 
     final user = User.fromApi(userObject);
     await UserQuery().setData(user).save();

@@ -185,8 +185,12 @@ class User extends IdentifiableEntity {
                 dirty: jsonData['dirty'] ?? true))
             .toList(),
         dataViewOrganisationUnits: jsonData['dataViewOrganisationUnits'],
-        programs: jsonData['programs'].toString(),
-        dataSets: jsonData['datasets'].toString(),
+        programs: jsonData['programs'] != null
+            ? jsonData['programs'].toString()
+            : null,
+        dataSets: jsonData['datasets'] != null
+            ? jsonData['datasets'].toString()
+            : null,
         isLoggedIn: jsonData['isLoggedIn'],
         dirty: jsonData['dirty'] ?? false);
   }
