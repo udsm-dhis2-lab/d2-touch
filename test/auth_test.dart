@@ -10,30 +10,42 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
+import '../sample/current_user.sample.dart';
 import 'auth_test.reflectable.dart';
 
-import '../sample/current_user.sample.dart';
-
 void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SharedPreferences.setMockInitialValues({});
+  // initializeReflectable();
+  // sqfliteFfiInit();
+
+  // await D2Touch.initialize(databaseFactory: databaseFactoryFfi);
+
+  // var databaseFactory = databaseFactoryFfi;
+
+  // var db = await databaseFactory.openDatabase(inMemoryDatabasePath);
+
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.setMockInitialValues({});
   initializeReflectable();
   sqfliteFfiInit();
 
-  await D2Touch.initialize(databaseFactory: databaseFactoryFfi);
-
   var databaseFactory = databaseFactoryFfi;
+
+  await D2Touch.initialize(
+      databaseFactory: databaseFactoryFfi, databaseName: 'flutter_test');
+
   var db = await databaseFactory.openDatabase(inMemoryDatabasePath);
 
   UserQuery userQuery = UserQuery(database: db);
 
-  List<User?>? users;
+  User? userResponse;
   try {
-    users = await userQuery.get();
+    userResponse = await userQuery.getOne();
   } catch (e) {}
 
   test('should not initialize database if no database name is supplied', () {
-    expect(users, null);
+    expect(userResponse, null);
   });
 
   final isAuthenticated = await D2Touch.isAuthenticated(
@@ -47,7 +59,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
+    'https://play.dhis2.org/2.35.11/api/me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,phoneNumber,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
     (server) => server.reply(200, userData),
   );
 
@@ -61,21 +73,21 @@ void main() async {
   final user =
       await D2Touch.userModule.user.withAuthorities().withRoles().getOne();
 
-  // test('should successfully authenticate user on online login', () {
-  //   expect(onlineLogIn, LoginResponseStatus.ONLINE_LOGIN_SUCCESS);
-  // });
+  test('should successfully authenticate user on online login', () {
+    expect(onlineLogIn, LoginResponseStatus.ONLINE_LOGIN_SUCCESS);
+  });
 
-  // test('should return appropriate user roles for a user', () {
-  //   expect(user?.roles?.length, 13);
-  // });
+  test('should return appropriate user roles for a user', () {
+    expect(user?.roles?.length, 13);
+  });
 
-  // final logOutResponse = await D2Touch.logOut();
+  final logOutResponse = await D2Touch.logOut();
 
-  // final isAuthenticatedAfterLogout = await D2Touch.isAuthenticated(
-  //     sharedPreferenceInstance: SharedPreferences.getInstance());
+  final isAuthenticatedAfterLogout = await D2Touch.isAuthenticated(
+      sharedPreferenceInstance: SharedPreferences.getInstance());
 
-  // test('should successfully log out user', () {
-  //   expect(logOutResponse, true);
-  //   expect(isAuthenticatedAfterLogout, false);
-  // });
+  test('should successfully log out user', () {
+    expect(logOutResponse, true);
+    expect(isAuthenticatedAfterLogout, false);
+  });
 }

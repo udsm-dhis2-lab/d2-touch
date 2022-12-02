@@ -379,7 +379,6 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           trackedEntityInstance, eventUploadPayload);
     }).toList();
 
-
     final response = await HttpClient.post(this.apiResourceName as String,
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
