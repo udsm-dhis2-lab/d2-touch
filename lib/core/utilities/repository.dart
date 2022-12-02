@@ -325,7 +325,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
 
-    final saveDataResponse = db.insert(this.entity.tableName, data);
+    final saveDataResponse = await db.insert(this.entity.tableName, data);
 
     if (this.oneToManyColumns.isEmpty) {
       return saveDataResponse;
@@ -476,12 +476,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {required List<T> entities,
       Database? database,
       int? chunk,
-// <<<<<<< HEAD
-//       required MergeMode mergeMode}) async {
-// =======
       required MergeMode mergeMode,
       SaveOptions? saveOptions}) async {
-// >>>>>>> 63e83b144c34e5b66cf32be8d6fd2509d57c558a
     final Database db = database != null ? database : await this.database;
 
     if (entities.isEmpty) {
@@ -491,16 +487,11 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final queue = Queue(parallel: chunk ?? 500);
 
     entities.forEach((T entity) {
-// <<<<<<< HEAD
-//       queue.add(
-//           () => saveOne(entity: entity, database: db, mergeMode: mergeMode));
-// =======
       queue.add(() => saveOne(
           entity: entity,
           database: db,
           mergeMode: mergeMode,
           saveOptions: saveOptions));
-// >>>>>>> 63e83b144c34e5b66cf32be8d6fd2509d57c558a
     });
 
     await queue.onComplete;
@@ -512,12 +503,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   Future<int> saveOne(
       {required T entity,
       Database? database,
-// <<<<<<< HEAD
-//       required MergeMode mergeMode}) async {
-// =======
       required MergeMode mergeMode,
       SaveOptions? saveOptions}) async {
-// >>>>>>> 63e83b144c34e5b66cf32be8d6fd2509d57c558a
     final Database db = database != null ? database : await this.database;
 
     var result = await this.findById(id: entity.id as String, database: db);
@@ -538,14 +525,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         Map<String, dynamic> localData = result.toJson();
         Map<String, dynamic> entityMap = entity.toJson();
 
-      
-        // if (!localData['synced']) {
-
-       
-
         if (saveOptions?.skipLocalSyncStatus == null ||
             saveOptions?.skipLocalSyncStatus == false) {
-
           entityMap['synced'] = localData['synced'];
         }
 
@@ -599,7 +580,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     Map<String, dynamic> data = this
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
-    final saveDataResponse = db.update(
+    final saveDataResponse = await db.update(
       this.entity.tableName,
       data,
       where: "id = ?",
