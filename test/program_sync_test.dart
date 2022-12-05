@@ -71,6 +71,10 @@ void main() async {
           .withOptions()
           .get();
 
+  programTrackedEntityAttributes.forEach((attribute) {
+    print(attribute.translation);
+  });
+
   test('should store all incoming program metadata', () {
     expect(programs.length, 14);
     expect(programTrackedEntityAttributes.length, 4);

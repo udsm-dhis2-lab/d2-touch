@@ -45,7 +45,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/organisationUnits.json?filter=path:ilike:ImspTQPwCqd&rootJunction=OR&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,level,path,externalAccess,openingDate,geometry,parent&paging=false',
+    'https://play.dhis2.org/2.35.11/api/organisationUnits.json?filter=path:ilike:ImspTQPwCqd&rootJunction=OR&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,level,path,externalAccess,openingDate,geometry,parent&paging=false',
     (server) => server.reply(200, dhisOrganisationUnits),
   );
 

@@ -108,7 +108,33 @@ final Map<String, dynamic> samplePrograms = {
             "aggregationType": "NONE",
             "generated": false,
             "unique": false,
-            "optionSetValue": false
+            "optionSetValue": false,
+            "translations": [
+              {"property": "NAME", "locale": "en", "value": "First name"},
+              {
+                "property": "DESCRIPTION",
+                "locale": "en",
+                "value": "First name"
+              },
+              {"property": "SHORT_NAME", "locale": "en", "value": "First name"},
+              {
+                "property": "FORM_NAME",
+                "locale": "sw",
+                "value": "Jina la kwanza"
+              },
+              {
+                "property": "SHORT_NAME",
+                "locale": "sw",
+                "value": "Jina la kwanza"
+              },
+              {"property": "FORM_NAME", "locale": "en", "value": "First name"},
+              {
+                "property": "DESCRIPTION",
+                "locale": "sw",
+                "value": "Jina la kwanza"
+              },
+              {"property": "NAME", "locale": "sw", "value": "Jina la kwanza"}
+            ]
           },
           "attributeValues": []
         },

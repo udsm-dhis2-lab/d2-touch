@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/attribute_option.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
+import 'package:d2_touch/modules/metadata/program/models/translation.model.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
@@ -68,8 +71,14 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
       this.optionSetValueCount,
       this.optionSetName,
       this.options,
-      required bool dirty})
-      : super(id: id, name: name, displayName: displayName, dirty: dirty);
+      required bool dirty,
+      List<dynamic>? translations})
+      : super(
+            id: id,
+            name: name,
+            displayName: displayName,
+            dirty: dirty,
+            translations: translations);
 
   factory ProgramTrackedEntityAttribute.fromJson(
       Map<String, dynamic> jsonData) {
@@ -77,6 +86,17 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
         jsonData['trackedEntityAttribute']?['optionSet']?['options']?.length;
     final attribute =
         jsonData['attribute'] ?? jsonData['trackedEntityAttribute']?['id'];
+
+    final translationObject = jsonData['trackedEntityAttribute']
+            ?['translations'] ??
+        jsonData['translationString'];
+
+    final dynamic translations = translationObject != null
+        ? translationObject is String
+            ? jsonDecode(translationObject)
+            : translationObject
+        : null;
+
     return ProgramTrackedEntityAttribute(
         id: jsonData['id'],
         attribute: attribute,
@@ -112,7 +132,8 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
                   'dirty': false
                 }))
             .toList(),
-        dirty: jsonData['dirty']);
+        dirty: jsonData['dirty'],
+        translations: translations);
   }
 
   Map<String, dynamic> toJson() {
@@ -134,6 +155,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
     data['optionSetName'] = this.optionSetName;
     data['options'] = this.options;
     data['optionSetValueCount'] = this.optionSetValueCount;
+    data['translations'] = jsonEncode(this.translations);
     return data;
   }
 }
