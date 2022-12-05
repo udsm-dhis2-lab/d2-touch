@@ -1,6 +1,6 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
-import 'package:d2_touch/modules/auth/user/queries/user_organisation_unit.query.dart';
+import 'package:d2_touch/modules/auth/queries/user_organisation_unit.query.dart';
 import 'package:d2_touch/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';

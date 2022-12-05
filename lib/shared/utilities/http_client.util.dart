@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
-import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
+import 'package:d2_touch/modules/auth/entities/user.entity.dart';
+import 'package:d2_touch/modules/auth/queries/user.query.dart';
 import 'package:d2_touch/shared/utilities/http-details.util.dart';
 import 'package:dio/dio.dart';
 import 'package:sqflite/sqflite.dart';

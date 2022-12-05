@@ -1,6 +1,7 @@
 library d2_touch;
 
-import 'package:d2_touch/modules/auth/user/user.module.dart';
+import 'package:d2_touch/core/database/database.util.dart';
+import 'package:d2_touch/modules/auth/user.module.dart';
 import 'package:d2_touch/modules/data/aggregate/aggregate.module.dart';
 import 'package:d2_touch/modules/data/tracker/tracked_entity_instance.module.dart';
 import 'package:d2_touch/modules/file_resource/file_resource.module.dart';
@@ -16,11 +17,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'core/database/database_manager.dart';
-import 'modules/auth/user/entities/user.entity.dart';
-import 'modules/auth/user/models/auth-token.model.dart';
-import 'modules/auth/user/models/login-response.model.dart';
-import 'modules/auth/user/queries/user.query.dart';
-import 'modules/auth/user/queries/user_organisation_unit.query.dart';
+import 'modules/auth/entities/user.entity.dart';
+import 'modules/auth/models/auth-token.model.dart';
+import 'modules/auth/models/login-response.model.dart';
+import 'modules/auth/queries/user.query.dart';
+import 'modules/auth/queries/user_organisation_unit.query.dart';
 import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
 
@@ -29,7 +30,8 @@ class D2Touch {
       {String? databaseName,
       bool? inMemory,
       DatabaseFactory? databaseFactory}) async {
-    final newDatabaseName = databaseName ?? await D2Touch.getDatabaseName();
+    final newDatabaseName =
+        databaseName ?? await DatabaseUtil.getDatabaseName();
     if (newDatabaseName != null) {
       DatabaseManager(
           databaseName: newDatabaseName,
@@ -56,7 +58,7 @@ class D2Touch {
       bool? inMemory,
       DatabaseFactory? databaseFactory}) async {
     WidgetsFlutterBinding.ensureInitialized();
-    final databaseName = await D2Touch.getDatabaseName(
+    final databaseName = await DatabaseUtil.getDatabaseName(
         sharedPreferenceInstance: sharedPreferenceInstance);
 
     if (databaseName == null) {
@@ -71,23 +73,6 @@ class D2Touch {
     User? user = await D2Touch.userModule.user.getOne();
 
     return user?.isLoggedIn ?? false;
-  }
-
-  static Future<String?> getDatabaseName(
-      {Future<SharedPreferences>? sharedPreferenceInstance}) async {
-    WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences prefs =
-        await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
-    return prefs.getString('databaseName');
-  }
-
-  static Future<bool> setDatabaseName(
-      {required String databaseName,
-      Future<SharedPreferences>? sharedPreferenceInstance}) async {
-    WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences prefs =
-        await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
-    return prefs.setString('databaseName', databaseName);
   }
 
   static Future<LoginResponseStatus> logIn(
@@ -122,7 +107,7 @@ class D2Touch {
         inMemory: inMemory,
         databaseFactory: databaseFactory);
 
-    await D2Touch.setDatabaseName(
+    await DatabaseUtil.setDatabaseName(
         databaseName: databaseName,
         sharedPreferenceInstance:
             sharedPreferenceInstance ?? SharedPreferences.getInstance());
@@ -176,7 +161,7 @@ class D2Touch {
         inMemory: inMemory,
         databaseFactory: databaseFactory);
 
-    await D2Touch.setDatabaseName(
+    await DatabaseUtil.setDatabaseName(
         databaseName: databaseName,
         sharedPreferenceInstance:
             sharedPreferenceInstance ?? SharedPreferences.getInstance());

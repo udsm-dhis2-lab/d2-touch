@@ -1,5 +1,7 @@
+import 'dart:convert';
+
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/modules/metadata/program/models/translation.model.dart';
+import 'package:d2_touch/shared/models/translation.model.dart';
 import 'package:d2_touch/shared/entities/base.entity.dart';
 
 @AnnotationReflectable
@@ -17,7 +19,7 @@ class IdentifiableEntity extends BaseEntity {
   final String? code;
 
   @Column(nullable: true, type: ColumnType.TEXT)
-  List<dynamic>? translations;
+  dynamic translations;
 
   IdentifiableEntity(
       {String? id,
@@ -30,7 +32,13 @@ class IdentifiableEntity extends BaseEntity {
       this.code,
       this.translations})
       : super(
-            id: id, dirty: dirty, created: created, lastUpdated: lastUpdated) {}
+            id: id, dirty: dirty, created: created, lastUpdated: lastUpdated) {
+    this.translations = this.translations != null
+        ? translation is String
+            ? jsonDecode(this.translations)
+            : this.translations
+        : null;
+  }
 
   Translation? get translation {
     return this.translations != null

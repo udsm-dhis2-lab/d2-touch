@@ -1,5 +1,5 @@
-import 'package:d2_touch/modules/auth/user/entities/user_organisation_unit.entity.dart';
-import 'package:d2_touch/modules/auth/user/queries/user_organisation_unit.query.dart';
+import 'package:d2_touch/modules/auth/entities/user_organisation_unit.entity.dart';
+import 'package:d2_touch/modules/auth/queries/user_organisation_unit.query.dart';
 import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
