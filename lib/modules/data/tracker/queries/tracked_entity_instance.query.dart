@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/auth/user/queries/user_organisation_unit.query.dart';
@@ -392,7 +390,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             dioTestClient: dioTestClient))
         .toList();
 
-    final results = await Future.wait(transferApis);
+    await Future.wait(transferApis);
 
     callback(
         RequestProgress(

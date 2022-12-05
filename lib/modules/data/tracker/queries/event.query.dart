@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
@@ -155,7 +153,6 @@ class EventQuery extends BaseQuery<Event> {
     final response = await HttpClient.post(
         this.apiResourceName as String, {'events': eventUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
-
 
     callback(
         RequestProgress(
