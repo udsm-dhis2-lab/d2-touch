@@ -13,7 +13,13 @@ final Map<Object, dynamic> sampleTrackedEntityInstanceUpload = {
         {
           "enrollment": "RiNIt1yJoge",
           "trackedEntityInstance": "VYhjy99cyVv",
-          "geometry": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              39.24570033075514,
+              -6.841304466305611
+            ]
+          },
           "orgUnit": "DiszpKrYNg8",
           "program": "IpHINAT79UW",
           "enrollmentDate": "2023-12-29T12:05:00.000",
