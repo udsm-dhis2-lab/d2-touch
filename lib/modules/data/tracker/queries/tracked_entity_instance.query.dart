@@ -380,7 +380,6 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           trackedEntityInstance, eventUploadPayload);
     }).toList();
 
-
     final response = await HttpClient.post(this.apiResourceName as String,
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
@@ -394,7 +393,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             dioTestClient: dioTestClient))
         .toList();
 
-    final results = await Future.wait(transferApis);
+    await Future.wait(transferApis);
 
     callback(
         RequestProgress(

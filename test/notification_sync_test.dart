@@ -42,7 +42,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/messageConversations.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,status,messageType,lastMessage,read,messages[id,name,displayName,shortName,lastUpdated,created,code,dirty,sender,text,messageConversation]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,status,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,sender,text,messageConversation]&paging=false',
     (server) => server.reply(200, sampleMessageConversations),
   );
 
@@ -54,7 +54,7 @@ void main() async {
       await notificationQuery.get();
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/messageConversations.json?filter=read:eq:false&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,status,messageType,lastMessage,read,messages[id,name,displayName,shortName,lastUpdated,created,code,dirty,sender,text,messageConversation]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?filter=read:eq:false&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,status,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,sender,text,messageConversation]&paging=false',
     (server) => server.reply(200, sampleMessageConversations),
   );
 

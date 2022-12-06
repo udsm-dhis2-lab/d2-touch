@@ -25,6 +25,7 @@ class Enrollment extends IdentifiableEntity {
 
   @Column()
   String orgUnit;
+
   @Column()
   String program;
 
@@ -89,13 +90,6 @@ class Enrollment extends IdentifiableEntity {
     final dynamic lastSyncSummary = json['lastSyncSummary'] != null
         ? EnrollmentImportSummary.fromJson(jsonDecode(json['lastSyncSummary']))
         : null;
-
-    // print(json['lastSyncSummary']);
-    // print("888888888888888888888888888888888888");
-
-    // print(json["geometry"].runtimeType);
-    // print(json["geometry"]);
-    // print(json["geometry"].runtimeType == String);
 
     final Geometry? geometry = json["geometry"] != null
         ? Geometry.fromJson(json["geometry"].runtimeType == String

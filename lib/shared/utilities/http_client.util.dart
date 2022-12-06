@@ -76,7 +76,7 @@ class HttpClient {
     }
   }
 
-  static Future<HttpResponse> put(String resourceUrl, dynamic? data,
+  static Future<HttpResponse> put(String resourceUrl, dynamic data,
       {String? baseUrl,
       String? username,
       String? password,

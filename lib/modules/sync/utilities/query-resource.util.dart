@@ -1,5 +1,4 @@
 import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
-import 'package:d2_touch/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
 import 'package:sqflite/sqflite.dart';
 
 class QueryResource {
