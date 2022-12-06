@@ -98,7 +98,9 @@ class Enrollment extends IdentifiableEntity {
     // print(json["geometry"].runtimeType == String);
 
     final Geometry? geometry = json["geometry"] != null
-        ? Geometry.fromJson(json["geometry"].runtimeType == String? jsonDecode(json["geometry"]): json["geometry"])
+        ? Geometry.fromJson(json["geometry"].runtimeType == String
+            ? jsonDecode(json["geometry"])
+            : json["geometry"])
         : null;
 
     return Enrollment(
