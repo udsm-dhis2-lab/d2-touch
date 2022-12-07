@@ -3,18 +3,23 @@ import 'package:d2_touch/modules/metadata/data_element/entities/data_element.ent
 import 'package:d2_touch/modules/metadata/data_element/queries/data_element.query.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data_element_module_test.reflectable.dart';
 
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
   initializeReflectable();
   sqfliteFfiInit();
 
-  await D2Touch.initialize(
-      databaseFactory: databaseFactoryFfi, databaseName: 'flutter_test');
+  var sharedPreferenceInstance = await SharedPreferences.getInstance();
 
-  DataElementQuery dataElementQuery = D2Touch.dataElementModule.dataElement;
+  final d2 = await D2Touch.init(
+    databaseFactory: databaseFactoryFfi,
+    databaseName: 'flutter_test',
+    sharedPreferenceInstance: sharedPreferenceInstance,
+  );
 
   final dataElement = DataElement(
       id: 'test1',
@@ -24,13 +29,14 @@ void main() async {
       aggregationType: 'SUM',
       dirty: false);
 
-  var insertResult = await dataElementQuery.setData(dataElement).save();
+  var insertResult =
+      await d2.dataElementModule.dataElement.setData(dataElement).save();
 
   test('should return success if data is inserted into the database', () {
     expect(insertResult, 1);
   });
 
-  var result = await dataElementQuery.byId('test1').getOne();
+  var result = await d2.dataElementModule.dataElement.byId('test1').getOne();
 
   test('should return saved details', () {
     expect(result.id, 'test1');

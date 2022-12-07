@@ -40,9 +40,9 @@ class D2Touch implements D2TouchModel {
   D2Touch._internal();
 
   UserModule get userModule2 => UserModule(database: _database, locale: locale);
-
+  DataElementModule get dataElementModule =>
+      DataElementModule(database: _database);
   AuthModule get authModule => AuthModule(d2Instance: _d2Instance as D2Touch);
-
   HttpClientModule get httpClient => HttpClientModule(database: _database);
 
   static Future<D2Touch> init({
@@ -73,8 +73,6 @@ class D2Touch implements D2TouchModel {
             databaseFactory: databaseFactory,
             sharedPreferenceInstance:
                 _d2Instance?.sharedPreferenceInstance as SharedPreferences);
-
-        print("DATABASE ${_d2Instance!._database}");
       }
     }
 
@@ -259,6 +257,7 @@ class D2Touch implements D2TouchModel {
     return logOutSuccess;
   }
 
+  @deprecated
   static Future<LoginResponseStatus> setToken(
       {required String instanceUrl,
       required Map<String, dynamic> userObject,
@@ -317,8 +316,6 @@ class D2Touch implements D2TouchModel {
 
   static OrganisationUnitModule organisationUnitModule =
       OrganisationUnitModule();
-
-  static DataElementModule dataElementModule = DataElementModule();
 
   static DataSetModule dataSetModule = DataSetModule();
 
