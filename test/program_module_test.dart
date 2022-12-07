@@ -1,6 +1,8 @@
 import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/auth/entities/user.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_rule.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_rule_action.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_variable.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_section.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_section_attribute.entity.dart';
@@ -17,6 +19,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../sample/current_user.sample.dart';
 import '../sample/program.sample.dart';
+import '../sample/program_rule.sample.dart';
 import '../sample/program_stage.sample.dart';
 import 'program_module_test.reflectable.dart';
 
@@ -224,5 +227,27 @@ void main() async {
 
   test('should download and store all incoming program stage metadata', () {
     expect(updatedProgramStages.length, 5);
+  });
+
+  dioAdapter.onGet(
+    'https://play.dhis2.org/2.35.11/api/programRules.json?filter=program.id:in:[IpHINAT79UW]&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,condition,description,program,programRuleActions[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,content,data,displayContent,programRuleActionType,evaluationTime,description,dataElement,trackedEntityAttribute,programRule]&paging=false',
+    (server) => server.reply(200, sampleProgramRules),
+  );
+
+  await d2.programModule.programRule
+      .whereIn(attribute: 'program', values: ['IpHINAT79UW'], merge: false)
+      .download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  List<ProgramRule> programRules =
+      await d2.programModule.programRule.withActions().get();
+
+  List<ProgramRuleAction> programRuleActions =
+      await d2.programModule.programRuleAction.get();
+
+  test('should download and store all incoming program rule metadata', () {
+    expect(programRules.length, 4);
+    expect(programRuleActions.length, 4);
   });
 }
