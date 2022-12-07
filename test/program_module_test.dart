@@ -1,5 +1,12 @@
 import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/auth/entities/user.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked-entity.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:d2_touch/modules/engine/program_rule/models/tracker_rule_result.model.dart';
+import 'package:d2_touch/modules/engine/program_rule/tracker_rule_engine.dart';
+import 'package:d2_touch/modules/engine/program_rule/utilities/program_rule_engine.util.dart';
+import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_action.entity.dart';
@@ -21,6 +28,7 @@ import '../sample/current_user.sample.dart';
 import '../sample/program.sample.dart';
 import '../sample/program_rule.sample.dart';
 import '../sample/program_stage.sample.dart';
+import '../sample/reserved_values.sample.dart';
 import 'program_module_test.reflectable.dart';
 
 void main() async {
@@ -249,5 +257,108 @@ void main() async {
   test('should download and store all incoming program rule metadata', () {
     expect(programRules.length, 4);
     expect(programRuleActions.length, 4);
+  });
+
+  List<AttributeReservedValue> attributeResrvedValues = [];
+  sampleReservedValues.forEach((reservedValue) {
+    attributeResrvedValues.add(
+        AttributeReservedValue.fromJson({...reservedValue, 'dirty': false}));
+  });
+
+  await d2.trackerModule.attributeReservedValue
+      .setData(attributeResrvedValues)
+      .save();
+
+  final TrackedEntityInstance trackedEntityInstance = await d2
+      .trackerModule.trackedEntityInstance
+      .byProgram('IpHINAT79UW')
+      .byOrgUnit('fnei293faf')
+      .create();
+
+  final trackedEntityAttributeValues = [
+    TrackedEntityAttributeValue(
+        dirty: true,
+        attribute: 'w75KJ2mc4zz',
+        trackedEntityInstance: trackedEntityInstance.trackedEntityInstance,
+        value: 'First name'),
+    TrackedEntityAttributeValue(
+        dirty: true,
+        attribute: 'cejWyOfXge6',
+        trackedEntityInstance: trackedEntityInstance.trackedEntityInstance,
+        value: 'Female')
+  ];
+
+  await d2.trackerModule.trackedEntityAttributeValue
+      .setData(trackedEntityAttributeValues)
+      .save();
+
+  final TrackedEntityInstance createdInstance = await d2
+      .trackerModule.trackedEntityInstance
+      .byId(trackedEntityInstance.id as String)
+      .withEnrollments()
+      .withAttributes()
+      .getOne();
+
+  final executedProgramRuleActions = (await d2.engine.tracker.execute(
+          program: 'IpHINAT79UW', trackedEntityInstance: createdInstance))
+      .programRuleActions;
+
+  final lastNameRuleAction = executedProgramRuleActions
+      .lastWhere((element) => element.trackedEntityAttribute == 'zDhUuAYrxNC');
+
+  test('should return action with signal to assign last name', () {
+    expect(lastNameRuleAction.programRuleActionType, 'ASSIGN');
+    expect(lastNameRuleAction.data, 'Last Name');
+  });
+
+  final secondTrackedEntityAttributeValue = TrackedEntityAttributeValue(
+      dirty: true,
+      attribute: 'cejWyOfXge6',
+      trackedEntityInstance: trackedEntityInstance.trackedEntityInstance,
+      value: 'Male');
+
+  await d2.trackerModule.trackedEntityAttributeValue
+      .setData(secondTrackedEntityAttributeValue)
+      .save();
+
+  final TrackedEntityInstance updatedInstance = await d2
+      .trackerModule.trackedEntityInstance
+      .byId(trackedEntityInstance.id as String)
+      .withEnrollments()
+      .withAttributes()
+      .getOne();
+
+  final secondProgramRuleActions = (await d2.engine.tracker.execute(
+    trackedEntityInstance: createdInstance,
+    program: 'IpHINAT79UW',
+  ))
+      .programRuleActions;
+
+  final secondLastNameRuleAction = secondProgramRuleActions
+      .lastWhere((element) => element.trackedEntityAttribute == 'zDhUuAYrxNC');
+
+  test('should return action with signal not to assign last name', () {
+    expect(secondLastNameRuleAction.programRuleActionType, '');
+  });
+
+  await d2.trackerModule.trackedEntityAttributeValue
+      .setData(TrackedEntityAttributeValue(
+          dirty: true,
+          attribute: 'cejWyOfXge6',
+          trackedEntityInstance: updatedInstance.trackedEntityInstance,
+          value: 'Female'))
+      .save();
+
+  TrackerRuleResult trackerRuleResult = await d2.engine.tracker.execute(
+    trackedEntityInstance: createdInstance,
+    program: 'IpHINAT79UW',
+  );
+
+  final lastNameAttributeValue = trackerRuleResult
+      .trackedEntityInstance.attributes
+      ?.lastWhere((attribute) => attribute.attribute == 'zDhUuAYrxNC');
+
+  test('should assign last name', () {
+    expect(lastNameAttributeValue?.value, 'Last Name');
   });
 }

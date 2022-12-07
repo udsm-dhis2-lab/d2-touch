@@ -11,9 +11,12 @@ import 'package:d2_touch/modules/metadata/program/entities/program_rule_variable
 import 'package:d2_touch/modules/metadata/program/queries/program_rule.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_rule_variable.query.dart';
 import 'package:queue/queue.dart';
+import 'package:sqflite/sqflite.dart';
 
 class EventRuleEngine {
-  static Future<EventRuleResult> execute(
+  late Database database;
+  EventRuleEngine({required this.database});
+  Future<EventRuleResult> execute(
       {required Event event,
       required String program,
       EventDataValue? changedEventDataValue}) async {

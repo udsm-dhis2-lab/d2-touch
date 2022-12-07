@@ -6,6 +6,7 @@ import 'package:d2_touch/modules/auth/auth.module.dart';
 import 'package:d2_touch/modules/auth/user.module.dart';
 import 'package:d2_touch/modules/data/aggregate/aggregate.module.dart';
 import 'package:d2_touch/modules/data/tracker/tracked_entity_instance.module.dart';
+import 'package:d2_touch/modules/engine/engine.module.dart';
 import 'package:d2_touch/modules/engine/http/http.module.dart';
 import 'package:d2_touch/modules/file_resource/file_resource.module.dart';
 import 'package:d2_touch/modules/metadata/dataset/data_set.module.dart';
@@ -45,8 +46,15 @@ class D2Touch implements D2TouchModel {
       DataElementModule(database: _database);
 
   ProgramModule get programModule => ProgramModule(database: _database);
+
+  TrackedEntityInstanceModule get trackerModule =>
+      TrackedEntityInstanceModule(database: _database);
+
   AuthModule get authModule => AuthModule(d2Instance: _d2Instance as D2Touch);
+
   HttpClientModule get httpClient => HttpClientModule(database: _database);
+
+  EngineModule get engine => EngineModule(database: _database as Database);
 
   static Future<D2Touch> init({
     String? locale,
@@ -323,9 +331,6 @@ class D2Touch implements D2TouchModel {
   static DataSetModule dataSetModule = DataSetModule();
 
   static DashboardModule dashboardModule = DashboardModule();
-
-  static TrackedEntityInstanceModule trackerModule =
-      TrackedEntityInstanceModule();
 
   static AggregateModule aggregateModule = AggregateModule();
 

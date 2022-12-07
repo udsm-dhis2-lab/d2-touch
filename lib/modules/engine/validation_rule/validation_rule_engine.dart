@@ -9,9 +9,12 @@ import 'package:d2_touch/modules/engine/validation_rule/models/validation_rule_r
 import 'package:d2_touch/modules/metadata/dataset/entities/validation_rule.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/validation_rule.query.dart';
 import 'package:expressions/expressions.dart';
+import 'package:sqflite/sqflite.dart';
 
 class ValidationRuleEngine {
-  static Future<ValidationRuleResult> execute(
+  late Database database;
+  ValidationRuleEngine({required this.database});
+  Future<ValidationRuleResult> execute(
       {required DataValueSet dataValueSet,
       required String dataSet,
       DataValue? changedDataValue}) async {
