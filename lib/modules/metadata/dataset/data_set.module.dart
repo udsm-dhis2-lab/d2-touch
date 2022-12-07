@@ -5,6 +5,8 @@ import 'package:d2_touch/modules/metadata/dataset/queries/validation_rule.query.
 import 'package:sqflite/sqflite.dart';
 
 class DataSetModule {
+  Database? database;
+  DataSetModule({this.database, String? locale});
   static createTables({required Database database}) async {
     await DataSetQuery(database: database).createTable();
     await DataSetElementQuery(database: database).createTable();
@@ -12,12 +14,14 @@ class DataSetModule {
     await ValidationRuleQuery(database: database).createTable();
   }
 
-  DataSetQuery get dataSet => DataSetQuery();
+  DataSetQuery get dataSet => DataSetQuery(database: database);
 
-  DataSetElementQuery get dataSetElement => DataSetElementQuery();
+  DataSetElementQuery get dataSetElement =>
+      DataSetElementQuery(database: database);
 
   DataSetElementOptionQuery get dataSetElementOption =>
-      DataSetElementOptionQuery();
+      DataSetElementOptionQuery(database: database);
 
-  ValidationRuleQuery get validationRule => ValidationRuleQuery();
+  ValidationRuleQuery get validationRule =>
+      ValidationRuleQuery(database: database);
 }

@@ -163,7 +163,9 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
       await queue.onComplete;
     }
 
-    return await DataValueSetQuery().byIds(dataValueSetIds).get();
+    return await DataValueSetQuery(database: database)
+        .byIds(dataValueSetIds)
+        .get();
   }
 
   uploadOne(DataValueSet dataValueSet, {Dio? dioTestClient}) async {
@@ -181,7 +183,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     dataValueSet.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
     dataValueSet.lastSyncSummary = importSummary.toString();
 
-    return DataValueSetQuery()
+    return DataValueSetQuery(database: database)
         .setData(dataValueSet)
         .save(saveOptions: SaveOptions(skipLocalSyncStatus: true));
   }

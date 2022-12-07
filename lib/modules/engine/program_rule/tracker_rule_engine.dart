@@ -17,18 +17,18 @@ class TrackerRuleEngine {
       {required TrackedEntityInstance trackedEntityInstance,
       required String program,
       TrackedEntityAttributeValue? changedAttributeValue}) async {
-    List<ProgramRule> programRules = await ProgramRuleQuery()
+    List<ProgramRule> programRules = await ProgramRuleQuery(database: database)
         .withActions()
         .where(attribute: 'program', value: program)
         .get();
 
     List<ProgramRuleVariable> programRuleVariables =
-        await ProgramRuleVariableQuery()
+        await ProgramRuleVariableQuery(database: database)
             .where(attribute: 'program', value: program)
             .get();
 
     List<TrackedEntityAttributeValue> attributes =
-        await TrackedEntityAttributeValueQuery()
+        await TrackedEntityAttributeValueQuery(database: database)
             .where(
                 attribute: 'trackedEntityInstance',
                 value: trackedEntityInstance.trackedEntityInstance)
@@ -47,7 +47,7 @@ class TrackerRuleEngine {
     programRuleActions.forEach((programRuleAction) {
       if (programRuleAction.programRuleActionType == 'ASSIGN') {
         availableItemCount++;
-        queue.add(() => TrackedEntityAttributeValueQuery()
+        queue.add(() => TrackedEntityAttributeValueQuery(database: database)
             .setData(TrackedEntityAttributeValue(
                 dirty: true,
                 attribute: programRuleAction.trackedEntityAttribute as String,
@@ -65,7 +65,7 @@ class TrackerRuleEngine {
     }
 
     TrackedEntityInstance updatedTrackedEntityInstance =
-        await TrackedEntityInstanceQuery()
+        await TrackedEntityInstanceQuery(database: database)
             .withAttributes()
             .withEnrollments()
             .byId(trackedEntityInstance.id as String)

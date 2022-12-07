@@ -134,12 +134,15 @@ class EventQuery extends BaseQuery<Event> {
       eventProgramStageIds.add(event.programStage);
     });
 
-    List<EventDataValue> eventDataValues = await EventDataValueQuery()
-        .whereIn(attribute: 'event', values: eventIds, merge: false)
-        .get();
+    List<EventDataValue> eventDataValues =
+        await EventDataValueQuery(database: database)
+            .whereIn(attribute: 'event', values: eventIds, merge: false)
+            .get();
 
     List<ProgramStage> programStages =
-        await ProgramStageQuery().byIds(eventProgramStageIds).get();
+        await ProgramStageQuery(database: database)
+            .byIds(eventProgramStageIds)
+            .get();
 
     final eventUploadPayload = events.map((event) {
       event.dataValues = eventDataValues
@@ -190,7 +193,7 @@ class EventQuery extends BaseQuery<Event> {
         event.syncFailed = syncFailed;
         event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
         event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
-        queue.add(() => EventQuery().setData(event).save());
+        queue.add(() => EventQuery(database: database).setData(event).save());
       }
     });
 
@@ -208,7 +211,7 @@ class EventQuery extends BaseQuery<Event> {
             percentage: 100),
         true);
 
-    return await EventQuery().byIds(eventIds).get();
+    return await EventQuery(database: database).byIds(eventIds).get();
   }
 
   void printWrapped(String text) {

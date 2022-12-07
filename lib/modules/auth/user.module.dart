@@ -6,16 +6,12 @@ import 'package:sqflite/sqflite.dart';
 
 class UserModule {
   Database? database;
-  UserModule({this.database, String? locale}) {}
+  UserModule({this.database, String? locale});
   static createTables({required Database database}) async {
     await UserQuery(database: database).createTable();
     await UserOrganisationUnitQuery(database: database).createTable();
     await UserAuthorityQuery(database: database).createTable();
     await UserRoleQuery(database: database).createTable();
-  }
-
-  dispose() {
-    database = null;
   }
 
   UserQuery get user => UserQuery(database: database);

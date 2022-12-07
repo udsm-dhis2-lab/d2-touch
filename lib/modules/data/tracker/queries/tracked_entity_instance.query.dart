@@ -136,7 +136,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   @override
   get({Dio? dioTestClient, bool? online}) async {
     if (this.program != null) {
-      EnrollmentQuery enrollmentQuery = EnrollmentQuery();
+      EnrollmentQuery enrollmentQuery = EnrollmentQuery(database: database);
 
       enrollmentQuery.where(attribute: 'program', value: this.program);
 
@@ -194,7 +194,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
   @override
   Future create() async {
-    final Program program = await ProgramQuery()
+    final Program program = await ProgramQuery(database: database)
         .byId(this.program as String)
         .withAttributes()
         .getOne();
@@ -224,7 +224,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
     await Future.wait(reservedAttributes.map((attribute) async {
       final AttributeReservedValue? attributeReservedValue =
-          await AttributeReservedValueQuery()
+          await AttributeReservedValueQuery(database: database)
               .where(attribute: 'attribute', value: attribute.attribute)
               .getOne();
 
@@ -239,7 +239,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             trackedEntityInstance: trackedEntityInstance.trackedEntityInstance,
             value: attributeReservedValue.value));
 
-        await AttributeReservedValueQuery()
+        await AttributeReservedValueQuery(database: database)
             .byId(attributeReservedValue.id as String)
             .delete();
       }
@@ -258,7 +258,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
   Future<String> dhisUrl() async {
     if (this.useUserOrgUnit == true) {
-      final userOrgUnits = await UserOrganisationUnitQuery().get();
+      final userOrgUnits =
+          await UserOrganisationUnitQuery(database: database).get();
 
       this.orgUnit =
           userOrgUnits.map((userOrgUnit) => userOrgUnit.orgUnit).join(';');
@@ -346,7 +347,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       return trackedEntityInstance.id as String;
     }).toList();
 
-    final List<Event> events = await EventQuery()
+    final List<Event> events = await EventQuery(database: database)
         .whereIn(attribute: 'enrollment', values: enrollmentIds, merge: false)
         .withDataValues()
         .get();
@@ -361,7 +362,9 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     });
 
     List<ProgramStage> programStages =
-        await ProgramStageQuery().byIds(eventProgramStageIds).get();
+        await ProgramStageQuery(database: database)
+            .byIds(eventProgramStageIds)
+            .get();
 
     final eventUploadPayload = events.map((event) {
       if (programStages.length > 0) {
@@ -432,8 +435,9 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
         trackedEntityInstance.lastSyncSummary =
             TrackedEntityInstanceImportSummary.fromJson(importSummary);
-        queue.add(() =>
-            TrackedEntityInstanceQuery().setData(trackedEntityInstance).save());
+        queue.add(() => TrackedEntityInstanceQuery(database: database)
+            .setData(trackedEntityInstance)
+            .save());
       }
     });
 
@@ -451,7 +455,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             percentage: 100),
         true);
 
-    return await TrackedEntityInstanceQuery()
+    return await TrackedEntityInstanceQuery(database: database)
         .byIds(trackedEntityInstanceIds)
         .get();
   }

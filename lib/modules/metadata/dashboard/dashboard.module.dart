@@ -3,11 +3,14 @@ import 'package:d2_touch/modules/metadata/dashboard/queries/dashboard_item.query
 import 'package:sqflite/sqflite.dart';
 
 class DashboardModule {
+  Database? database;
+  DashboardModule({this.database, String? locale});
   static createTables({required Database database}) async {
     await DashboardQuery(database: database).createTable();
     await DashboardItemQuery(database: database).createTable();
   }
 
-  DashboardQuery get dashboard => DashboardQuery();
-  DashboardItemQuery get dashboardItem => DashboardItemQuery();
+  DashboardQuery get dashboard => DashboardQuery(database: database);
+  DashboardItemQuery get dashboardItem =>
+      DashboardItemQuery(database: database);
 }

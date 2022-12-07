@@ -4,13 +4,15 @@ import 'package:sqflite/sqflite.dart';
 import 'queries/message.query.dart';
 
 class NotificationModule {
+  Database? database;
+  NotificationModule({this.database, String? locale});
   static createTables({required Database database}) async {
     await MessageConversationQuery(database: database).createTable();
     await MessageQuery(database: database).createTable();
   }
 
   MessageConversationQuery get messageConversation =>
-      MessageConversationQuery();
+      MessageConversationQuery(database: database);
 
-  MessageQuery get message => MessageQuery();
+  MessageQuery get message => MessageQuery(database: database);
 }

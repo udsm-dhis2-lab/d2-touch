@@ -3,6 +3,7 @@ import 'package:d2_touch/modules/auth/models/auth-token.model.dart';
 import 'package:d2_touch/modules/auth/models/login-response.model.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'entities/user.entity.dart';
 
@@ -11,7 +12,8 @@ class AuthModule {
   AuthModule({required this.d2Instance});
 
   Future<bool> isAuthenticated() async {
-    if (d2Instance.database == null) {
+    final Database? database = await d2Instance.databaseInstance?.database;
+    if (database == null) {
       return false;
     }
 
@@ -42,7 +44,7 @@ class AuthModule {
     final uri = Uri.parse(url).host;
     final String databaseName = '${username}_$uri';
 
-    d2Instance.database = await d2Instance.setDatabase(
+    await d2Instance.setDatabase(
         databaseName: databaseName,
         inMemory: d2Instance.inMemory,
         databaseFactory: d2Instance.databaseFactory,
@@ -89,7 +91,7 @@ class AuthModule {
     final uri = Uri.parse(instanceUrl).host;
     final String databaseName = '$uri';
 
-    d2Instance.database = await d2Instance.setDatabase(
+    d2Instance.databaseInstance = await d2Instance.setDatabase(
         databaseName: databaseName,
         inMemory: d2Instance.inMemory,
         databaseFactory: d2Instance.databaseFactory,

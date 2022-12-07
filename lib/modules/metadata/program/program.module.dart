@@ -16,6 +16,8 @@ import 'package:sqflite/sqflite.dart';
 import 'queries/program_stage_data_element_option.query.dart';
 
 class ProgramModule {
+  Database? database;
+  ProgramModule({this.database, String? locale});
   static createTables({required Database database}) async {
     await ProgramQuery(database: database).createTable();
     await ProgramStageQuery(database: database).createTable();
@@ -33,36 +35,39 @@ class ProgramModule {
     await ProgramSectionAttributeQuery(database: database).createTable();
   }
 
-  ProgramQuery get program => ProgramQuery();
+  ProgramQuery get program => ProgramQuery(database: database);
 
-  ProgramStageQuery get programStage => ProgramStageQuery();
+  ProgramStageQuery get programStage => ProgramStageQuery(database: database);
 
   ProgramTrackedEntityAttributeQuery get programTrackedEntityAttribute =>
-      ProgramTrackedEntityAttributeQuery();
+      ProgramTrackedEntityAttributeQuery(database: database);
 
-  AttributeOptionQuery get attributeOption => AttributeOptionQuery();
+  AttributeOptionQuery get attributeOption =>
+      AttributeOptionQuery(database: database);
 
   ProgramStageSectionQuery get programStageSection =>
-      ProgramStageSectionQuery();
+      ProgramStageSectionQuery(database: database);
 
   ProgramStageDataElementQuery get programStageDataElement =>
-      ProgramStageDataElementQuery();
+      ProgramStageDataElementQuery(database: database);
 
   ProgramStageDataElementOptionQuery get programStageDataElementOption =>
-      ProgramStageDataElementOptionQuery();
+      ProgramStageDataElementOptionQuery(database: database);
 
-  ProgramRuleQuery get programRule => ProgramRuleQuery();
+  ProgramRuleQuery get programRule => ProgramRuleQuery(database: database);
 
-  ProgramRuleActionQuery get programRuleAction => ProgramRuleActionQuery();
+  ProgramRuleActionQuery get programRuleAction =>
+      ProgramRuleActionQuery(database: database);
 
   ProgramRuleVariableQuery get programRuleVariable =>
-      ProgramRuleVariableQuery();
+      ProgramRuleVariableQuery(database: database);
 
-  ProgramSectionQuery get programSection => ProgramSectionQuery();
+  ProgramSectionQuery get programSection =>
+      ProgramSectionQuery(database: database);
 
   ProgramSectionAttributeQuery get programSectionAttribute =>
-      ProgramSectionAttributeQuery();
+      ProgramSectionAttributeQuery(database: database);
 
   TrackedEntityAttributeQuery get trackedEntityAttribute =>
-      TrackedEntityAttributeQuery();
+      TrackedEntityAttributeQuery(database: database);
 }

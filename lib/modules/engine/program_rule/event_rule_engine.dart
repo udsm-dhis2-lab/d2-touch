@@ -17,19 +17,20 @@ class EventRuleEngine {
       {required Event event,
       required String program,
       EventDataValue? changedEventDataValue}) async {
-    List<ProgramRule> programRules = await ProgramRuleQuery()
+    List<ProgramRule> programRules = await ProgramRuleQuery(database: database)
         .withActions()
         .where(attribute: 'program', value: program)
         .get();
 
     List<ProgramRuleVariable> programRuleVariables =
-        await ProgramRuleVariableQuery()
+        await ProgramRuleVariableQuery(database: database)
             .where(attribute: 'program', value: program)
             .get();
 
-    List<EventDataValue> eventDataValues = await EventDataValueQuery()
-        .where(attribute: 'event', value: event.id)
-        .get();
+    List<EventDataValue> eventDataValues =
+        await EventDataValueQuery(database: database)
+            .where(attribute: 'event', value: event.id)
+            .get();
 
     final dataValueEntities =
         DataValueEntities.fromEventDataValues(eventDataValues);
@@ -45,7 +46,7 @@ class EventRuleEngine {
     programRuleActions.forEach((programRuleAction) {
       if (programRuleAction.programRuleActionType == 'ASSIGN') {
         availableItemCount++;
-        queue.add(() => EventDataValueQuery()
+        queue.add(() => EventDataValueQuery(database: database)
             .setData(EventDataValue(
                 dirty: true,
                 dataElement: programRuleAction.dataElement as String,
@@ -61,8 +62,10 @@ class EventRuleEngine {
       await queue.onComplete;
     }
 
-    Event updatedEvent =
-        await EventQuery().withDataValues().byId(event.id as String).getOne();
+    Event updatedEvent = await EventQuery(database: database)
+        .withDataValues()
+        .byId(event.id as String)
+        .getOne();
 
     return EventRuleResult(
         event: updatedEvent, programRuleActions: programRuleActions);

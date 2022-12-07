@@ -29,15 +29,16 @@ import 'modules/metadata/data_element/data_element.module.dart';
 
 class D2Touch implements D2TouchModel {
   String locale = 'en';
-  Database? database;
+  Database? _database;
   bool? inMemory;
   DatabaseFactory? databaseFactory;
   late SharedPreferences sharedPreferenceInstance;
+  DatabaseManager? databaseInstance;
   static D2Touch? _d2Instance;
 
   D2Touch._internal();
 
-  UserModule get userModule2 => UserModule(database: database, locale: locale);
+  UserModule get userModule2 => UserModule(database: _database, locale: locale);
 
   AuthModule get authModule => AuthModule(d2Instance: _d2Instance as D2Touch);
 
@@ -63,28 +64,32 @@ class D2Touch implements D2TouchModel {
           databaseName ?? await DatabaseUtil.getDatabaseName();
 
       if (newDatabaseName != null) {
-        _d2Instance?.database = await _d2Instance?.setDatabase(
+        await _d2Instance?.setDatabase(
             databaseName: newDatabaseName,
             inMemory: inMemory,
             databaseFactory: databaseFactory,
             sharedPreferenceInstance:
                 _d2Instance?.sharedPreferenceInstance as SharedPreferences);
+
+        print("DATABASE ${_d2Instance!._database}");
       }
     }
 
     return _d2Instance as D2Touch;
   }
 
+// TODO: Need to understand more on how to dispose and singleton
   Future<void> dispose() async {
     // locale = 'en';
-    // database = null;
+    _database = null;
     // inMemory = null;
     // databaseFactory = null;
+    await databaseInstance!.dispose();
     _d2Instance = null;
     await sharedPreferenceInstance.clear();
   }
 
-  Future<Database> setDatabase({
+  Future<DatabaseManager> setDatabase({
     required String databaseName,
     bool? inMemory,
     DatabaseFactory? databaseFactory,
@@ -99,7 +104,9 @@ class D2Touch implements D2TouchModel {
         inMemory: inMemory,
         databaseFactory: databaseFactory);
 
-    final database = await DatabaseManager.instance.database;
+    final databaseInstance = DatabaseManager.instance;
+
+    final database = await databaseInstance!.database;
 
     await UserModule.createTables(database: database);
     await OrganisationUnitModule.createTables(database: database);
@@ -113,7 +120,10 @@ class D2Touch implements D2TouchModel {
     await NotificationModule.createTables(database: database);
     await FileResourceModule.createTables(database: database);
 
-    return database;
+    _d2Instance?.databaseInstance = databaseInstance;
+    _d2Instance!._database = database;
+
+    return databaseInstance;
   }
 
   @deprecated
@@ -129,7 +139,7 @@ class D2Touch implements D2TouchModel {
           inMemory: inMemory,
           databaseFactory: databaseFactory);
 
-      final database = await DatabaseManager.instance.database;
+      final database = await DatabaseManager.instance!.database;
       await UserModule.createTables(database: database);
       await OrganisationUnitModule.createTables(database: database);
       await DataElementModule.createTables(database: database);
@@ -207,7 +217,9 @@ class D2Touch implements D2TouchModel {
         databaseName: databaseName,
         sharedPreferenceInstance: preferenceInstance);
 
-    UserQuery userQuery = UserQuery();
+    final database = await DatabaseManager.instance!.database;
+
+    UserQuery userQuery = UserQuery(database: database);
 
     Map<String, dynamic> userData = userResponse.body;
     userData['password'] = password;
@@ -220,7 +232,9 @@ class D2Touch implements D2TouchModel {
     final user = User.fromApi(userData);
     await userQuery.setData(user).save();
 
-    await UserOrganisationUnitQuery().setData(user.organisationUnits).save();
+    await UserOrganisationUnitQuery(database: database)
+        .setData(user.organisationUnits)
+        .save();
 
     return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }
@@ -274,17 +288,22 @@ class D2Touch implements D2TouchModel {
     userObject['baseUrl'] = instanceUrl;
     userObject['authType'] = "token";
 
-    final user = User.fromApi(userObject);
-    await UserQuery().setData(user).save();
+    final database = await DatabaseManager.instance!.database;
 
-    await UserOrganisationUnitQuery().setData(user.organisationUnits).save();
+    final user = User.fromApi(userObject);
+    await UserQuery(database: database).setData(user).save();
+
+    await UserOrganisationUnitQuery(database: database)
+        .setData(user.organisationUnits)
+        .save();
 
     return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }
 
+  @deprecated
   static Future<List<Map>> rawQuery(
       {required String query, required List args}) async {
-    final Database db = await DatabaseManager.instance.database;
+    final Database db = await DatabaseManager.instance!.database;
 
     final List<Map> queryResult = await db.rawQuery(query.toString(), args);
 

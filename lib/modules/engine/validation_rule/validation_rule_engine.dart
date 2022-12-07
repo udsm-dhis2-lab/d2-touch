@@ -17,11 +17,12 @@ class ValidationRuleEngine {
       DataValue? changedDataValue}) async {
     List<ValidationRuleAction> validationRuleActions = [];
 
-    List<ValidationRule> validationRules = await ValidationRuleQuery()
-        .where(attribute: 'dataSet', value: dataSet)
-        .get();
+    List<ValidationRule> validationRules =
+        await ValidationRuleQuery(database: database)
+            .where(attribute: 'dataSet', value: dataSet)
+            .get();
 
-    List<DataValue> dataValues = await DataValueQuery()
+    List<DataValue> dataValues = await DataValueQuery(database: database)
         .where(attribute: 'dataValueSet', value: dataValueSet.id)
         .get();
 

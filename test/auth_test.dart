@@ -20,14 +20,12 @@ void main() async {
   initializeReflectable();
   sqfliteFfiInit();
 
-  var databaseFactory = databaseFactoryFfi;
-
-  var db = await databaseFactory.openDatabase(inMemoryDatabasePath);
   var sharedPreferenceInstance = await SharedPreferences.getInstance();
 
   final d2 = await D2Touch.init(
       sharedPreferenceInstance: sharedPreferenceInstance,
-      databaseFactory: databaseFactory);
+      databaseFactory: databaseFactoryFfi,
+      inMemory: true);
 
   final isAuthenticated = await d2.authModule.isAuthenticated();
 
@@ -69,16 +67,15 @@ void main() async {
   });
 
   await d2.dispose();
+
   final d2TokenBased = await D2Touch.init(
       sharedPreferenceInstance: sharedPreferenceInstance,
-      databaseFactory: databaseFactory);
+      databaseFactory: databaseFactoryFfi);
 
-  // print((await d2TokenBased.userModule2.user.getOne())?.toJson());
-
-  // await d2TokenBased.authModule.setToken(
-  //     instanceUrl: 'https://dev.dhis2.udsm.ac.tz',
-  //     userObject: userData,
-  //     tokenObject: wrongSampleAuthToken);
+  await d2TokenBased.authModule.setToken(
+      instanceUrl: 'https://dev.dhis2.udsm.ac.tz',
+      userObject: userData,
+      tokenObject: wrongSampleAuthToken);
 
   // User? userWithToken = await d2TokenBased.userModule2.user.getOne();
 

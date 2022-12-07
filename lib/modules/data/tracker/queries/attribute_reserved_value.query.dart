@@ -29,7 +29,7 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
             percentage: 0),
         false);
     List<ProgramTrackedEntityAttribute> reservedAttributes =
-        await ProgramTrackedEntityAttributeQuery()
+        await ProgramTrackedEntityAttributeQuery(database: database)
             .where(attribute: 'generated', value: true)
             .get();
 
@@ -73,15 +73,16 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
             status: '',
             percentage: 100),
         true);
-    return await AttributeReservedValueQuery().get();
+    return await AttributeReservedValueQuery(database: database).get();
   }
 
   downloadReservedValueByAttribute(
       ProgramTrackedEntityAttribute reservedAttribute,
       {Dio? dioTestClient}) async {
-    final int reservedCount = await AttributeReservedValueQuery()
-        .where(attribute: 'attribute', value: reservedAttribute.attribute)
-        .count();
+    final int reservedCount =
+        await AttributeReservedValueQuery(database: database)
+            .where(attribute: 'attribute', value: reservedAttribute.attribute)
+            .count();
 
     final numberToReserve = 100 - reservedCount;
 
@@ -101,6 +102,8 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
           AttributeReservedValue.fromJson({...reservedResult, 'dirty': false}));
     });
 
-    return AttributeReservedValueQuery().setData(reservedValues).save();
+    return AttributeReservedValueQuery(database: database)
+        .setData(reservedValues)
+        .save();
   }
 }

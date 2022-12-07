@@ -12,7 +12,7 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
 
   Future<List<OrganisationUnit>>? getUserOrgUnits() async {
     final List<UserOrganisationUnit> userOrgUnits =
-        await UserOrganisationUnitQuery().get();
+        await UserOrganisationUnitQuery(database: database).get();
 
     final userOrgUnitIds =
         userOrgUnits.map((orgUnit) => orgUnit.orgUnit).toList();
@@ -33,7 +33,7 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
         false);
 
     final List<UserOrganisationUnit> userOrgUnits =
-        await UserOrganisationUnitQuery().get();
+        await UserOrganisationUnitQuery(database: database).get();
 
     callback(
         RequestProgress(

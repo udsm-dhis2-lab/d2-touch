@@ -8,6 +8,8 @@ import 'queries/tracked_entity_attribute_value.query.dart';
 import 'queries/tracked_entity_instance.query.dart';
 
 class TrackedEntityInstanceModule {
+  Database? database;
+  TrackedEntityInstanceModule({this.database, String? locale});
   static createTables({required Database database}) async {
     await TrackedEntityInstanceQuery(database: database).createTable();
     await TrackedEntityAttributeValueQuery(database: database).createTable();
@@ -18,17 +20,18 @@ class TrackedEntityInstanceModule {
   }
 
   TrackedEntityInstanceQuery get trackedEntityInstance =>
-      TrackedEntityInstanceQuery();
+      TrackedEntityInstanceQuery(database: database);
 
   TrackedEntityAttributeValueQuery get trackedEntityAttributeValue =>
-      TrackedEntityAttributeValueQuery();
+      TrackedEntityAttributeValueQuery(database: database);
 
-  EventQuery get event => EventQuery();
+  EventQuery get event => EventQuery(database: database);
 
-  EnrollmentQuery get enrollment => EnrollmentQuery();
+  EnrollmentQuery get enrollment => EnrollmentQuery(database: database);
 
   AttributeReservedValueQuery get attributeReservedValue =>
-      AttributeReservedValueQuery();
+      AttributeReservedValueQuery(database: database);
 
-  EventDataValueQuery get eventDataValue => EventDataValueQuery();
+  EventDataValueQuery get eventDataValue =>
+      EventDataValueQuery(database: database);
 }
