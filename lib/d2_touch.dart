@@ -40,8 +40,11 @@ class D2Touch implements D2TouchModel {
   D2Touch._internal();
 
   UserModule get userModule2 => UserModule(database: _database, locale: locale);
+
   DataElementModule get dataElementModule =>
       DataElementModule(database: _database);
+
+  ProgramModule get programModule => ProgramModule(database: _database);
   AuthModule get authModule => AuthModule(d2Instance: _d2Instance as D2Touch);
   HttpClientModule get httpClient => HttpClientModule(database: _database);
 
@@ -318,8 +321,6 @@ class D2Touch implements D2TouchModel {
       OrganisationUnitModule();
 
   static DataSetModule dataSetModule = DataSetModule();
-
-  static ProgramModule programModule = ProgramModule();
 
   static DashboardModule dashboardModule = DashboardModule();
 
