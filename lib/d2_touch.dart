@@ -6,6 +6,7 @@ import 'package:d2_touch/modules/auth/auth.module.dart';
 import 'package:d2_touch/modules/auth/user.module.dart';
 import 'package:d2_touch/modules/data/aggregate/aggregate.module.dart';
 import 'package:d2_touch/modules/data/tracker/tracked_entity_instance.module.dart';
+import 'package:d2_touch/modules/engine/http/http.module.dart';
 import 'package:d2_touch/modules/file_resource/file_resource.module.dart';
 import 'package:d2_touch/modules/metadata/dataset/data_set.module.dart';
 import 'package:d2_touch/modules/metadata/option_set/option_set.module.dart';
@@ -41,6 +42,8 @@ class D2Touch implements D2TouchModel {
   UserModule get userModule2 => UserModule(database: _database, locale: locale);
 
   AuthModule get authModule => AuthModule(d2Instance: _d2Instance as D2Touch);
+
+  HttpClientModule get httpClient => HttpClientModule(database: _database);
 
   static Future<D2Touch> init({
     String? locale,

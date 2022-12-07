@@ -109,8 +109,6 @@ class AuthModule {
     userObject['authType'] = "token";
 
     final user = User.fromApi(userObject);
-    print("NEW:: ${(await d2Instance.userModule2.user.getOne())?.toJson()}");
-    // print("DATA TO SAVE:: ${user.toJson()}");
 
     await d2Instance.userModule2.user.setData(user).save();
 
