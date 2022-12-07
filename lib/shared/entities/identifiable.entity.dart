@@ -33,11 +33,11 @@ class IdentifiableEntity extends BaseEntity {
       this.translations})
       : super(
             id: id, dirty: dirty, created: created, lastUpdated: lastUpdated) {
-    this.translations = this.translations != null
-        ? translation is String
-            ? jsonDecode(this.translations)
-            : this.translations
-        : null;
+    if (this.translations != null) {
+      this.translations = translations is String
+          ? jsonDecode(this.translations)
+          : this.translations;
+    }
   }
 
   Translation? get translation {
