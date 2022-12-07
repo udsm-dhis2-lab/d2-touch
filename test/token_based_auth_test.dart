@@ -1,6 +1,6 @@
 import 'package:d2_touch/d2_touch.dart';
-import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
-import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
+import 'package:d2_touch/modules/auth/entities/user.entity.dart';
+import 'package:d2_touch/modules/auth/queries/user.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';

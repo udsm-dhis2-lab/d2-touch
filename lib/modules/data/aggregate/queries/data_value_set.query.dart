@@ -22,7 +22,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   }
 
   DataValueSetQuery withDataValues() {
-    final dataValue = Repository<DataValue>();
+    final dataValue = Repository<DataValue>(database: database as Database);
 
     final Column? relationColumn = dataValue.columns.firstWhere((column) {
       return column.relation?.referencedEntity?.tableName == this.tableName;
@@ -101,7 +101,6 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
     final data = response.body;
 
-
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -170,12 +169,9 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   uploadOne(DataValueSet dataValueSet, {Dio? dioTestClient}) async {
     final uploadFormat = DataValueSet.toUpload(dataValueSet);
 
-
     final response = await HttpClient.post(
         this.apiResourceName as String, uploadFormat,
         database: this.database, dioTestClient: dioTestClient);
-
-
 
     final importSummary = response.body;
     final syncFailed = importSummary['status'] == 'ERROR';

@@ -1,6 +1,6 @@
 import 'package:d2_touch/d2_touch.dart';
-import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
-import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
+import 'package:d2_touch/modules/auth/entities/user.entity.dart';
+import 'package:d2_touch/modules/auth/queries/user.query.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_variable.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_section.entity.dart';

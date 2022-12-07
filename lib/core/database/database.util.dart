@@ -18,10 +18,14 @@ class DatabaseUtil {
  */
   static Future<bool> setDatabaseName(
       {required String databaseName,
-      Future<SharedPreferences>? sharedPreferenceInstance}) async {
-    WidgetsFlutterBinding.ensureInitialized();
+      required SharedPreferences sharedPreferenceInstance}) async {
+    return sharedPreferenceInstance.setString('databaseName', databaseName);
+  }
+
+  static Future<void> removeDatabaseName(
+      {Future<SharedPreferences>? sharedPreferenceInstance}) async {
     SharedPreferences prefs =
         await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
-    return prefs.setString('databaseName', databaseName);
+    await prefs.remove('databaseName');
   }
 }

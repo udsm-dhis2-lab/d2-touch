@@ -23,7 +23,8 @@ class EventQuery extends BaseQuery<Event> {
   EventQuery({Database? database}) : super(database: database);
 
   EventQuery withDataValues() {
-    final eventDataValue = Repository<EventDataValue>();
+    final eventDataValue =
+        Repository<EventDataValue>(database: database as Database);
 
     final Column? relationColumn = eventDataValue.columns.firstWhere((column) {
       return column.relation?.referencedEntity?.tableName == this.tableName;

@@ -11,25 +11,26 @@ import 'package:d2_touch/modules/metadata/program/queries/program_stage_section.
 import 'package:d2_touch/modules/metadata/program/queries/program_stage_section_data_element.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_tracked_entity_attribute.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/tracked_entity_attribute.query.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'queries/program_stage_data_element_option.query.dart';
 
 class ProgramModule {
-  static createTables() async {
-    await ProgramQuery().createTable();
-    await ProgramStageQuery().createTable();
-    await ProgramStageSectionQuery().createTable();
-    await ProgramStageSectionDataElementQuery().createTable();
-    await ProgramStageDataElementOptionQuery().createTable();
-    await AttributeOptionQuery().createTable();
-    await ProgramTrackedEntityAttributeQuery().createTable();
-    await ProgramStageDataElementQuery().createTable();
-    await ProgramRuleQuery().createTable();
-    await ProgramRuleActionQuery().createTable();
-    await ProgramRuleVariableQuery().createTable();
-    await ProgramSectionQuery().createTable();
-    await TrackedEntityAttributeQuery().createTable();
-    await ProgramSectionAttributeQuery().createTable();
+  static createTables({required Database database}) async {
+    await ProgramQuery(database: database).createTable();
+    await ProgramStageQuery(database: database).createTable();
+    await ProgramStageSectionQuery(database: database).createTable();
+    await ProgramStageSectionDataElementQuery(database: database).createTable();
+    await ProgramStageDataElementOptionQuery(database: database).createTable();
+    await AttributeOptionQuery(database: database).createTable();
+    await ProgramTrackedEntityAttributeQuery(database: database).createTable();
+    await ProgramStageDataElementQuery(database: database).createTable();
+    await ProgramRuleQuery(database: database).createTable();
+    await ProgramRuleActionQuery(database: database).createTable();
+    await ProgramRuleVariableQuery(database: database).createTable();
+    await ProgramSectionQuery(database: database).createTable();
+    await TrackedEntityAttributeQuery(database: database).createTable();
+    await ProgramSectionAttributeQuery(database: database).createTable();
   }
 
   ProgramQuery get program => ProgramQuery();

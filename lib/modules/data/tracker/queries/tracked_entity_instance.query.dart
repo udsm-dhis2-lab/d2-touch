@@ -36,7 +36,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   List<QueryFilter>? attributeFilters = [];
 
   TrackedEntityInstanceQuery withAttributes() {
-    final attributeValue = Repository<TrackedEntityAttributeValue>();
+    final attributeValue =
+        Repository<TrackedEntityAttributeValue>(database: database as Database);
 
     final Column? relationColumn = attributeValue.columns.firstWhere((column) {
       return column.relation?.referencedEntity?.tableName == this.tableName;
@@ -63,7 +64,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   }
 
   TrackedEntityInstanceQuery withEnrollments() {
-    final enrollment = Repository<Enrollment>();
+    final enrollment = Repository<Enrollment>(database: database as Database);
     final Column? relationColumn = enrollment.columns.firstWhere((column) =>
         column.relation?.referencedEntity?.tableName == this.tableName);
 

@@ -12,7 +12,8 @@ class UserQuery extends BaseQuery<User> {
   UserQuery({Database? database}) : super(database: database);
 
   UserQuery withOrganisationUnit() {
-    final userOrganisationUnit = Repository<UserOrganisationUnit>();
+    final userOrganisationUnit =
+        Repository<UserOrganisationUnit>(database: database as Database);
     final Column? relationColumn = userOrganisationUnit.columns.firstWhere(
         (column) =>
             column.relation?.referencedEntity?.tableName == this.tableName);
@@ -37,7 +38,8 @@ class UserQuery extends BaseQuery<User> {
   }
 
   UserQuery withAuthorities() {
-    final userAuthority = Repository<UserAuthority>();
+    final userAuthority =
+        Repository<UserAuthority>(database: database as Database);
     final Column? relationColumn = userAuthority.columns.firstWhere((column) =>
         column.relation?.referencedEntity?.tableName == this.tableName);
 
@@ -59,7 +61,7 @@ class UserQuery extends BaseQuery<User> {
   }
 
   UserQuery withRoles() {
-    final userRole = Repository<UserRole>();
+    final userRole = Repository<UserRole>(database: database as Database);
     final Column? relationColumn = userRole.columns.firstWhere((column) =>
         column.relation?.referencedEntity?.tableName == this.tableName);
 

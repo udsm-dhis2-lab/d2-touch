@@ -1,6 +1,8 @@
 library d2_touch;
 
 import 'package:d2_touch/core/database/database.util.dart';
+import 'package:d2_touch/core/models/d2_touch.model.dart';
+import 'package:d2_touch/modules/auth/auth.module.dart';
 import 'package:d2_touch/modules/auth/user.module.dart';
 import 'package:d2_touch/modules/data/aggregate/aggregate.module.dart';
 import 'package:d2_touch/modules/data/tracker/tracked_entity_instance.module.dart';
@@ -25,7 +27,96 @@ import 'modules/auth/queries/user_organisation_unit.query.dart';
 import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
 
-class D2Touch {
+class D2Touch implements D2TouchModel {
+  String locale = 'en';
+  Database? database;
+  bool? inMemory;
+  DatabaseFactory? databaseFactory;
+  late SharedPreferences sharedPreferenceInstance;
+  static D2Touch? _d2Instance;
+
+  D2Touch._internal();
+
+  UserModule get userModule2 => UserModule(database: database, locale: locale);
+
+  AuthModule get authModule => AuthModule(d2Instance: _d2Instance as D2Touch);
+
+  static Future<D2Touch> init({
+    String? locale,
+    String? databaseName,
+    bool? inMemory,
+    DatabaseFactory? databaseFactory,
+    SharedPreferences? sharedPreferenceInstance,
+  }) async {
+    if (_d2Instance == null) {
+      _d2Instance = D2Touch._internal();
+
+      if (locale != null) {
+        _d2Instance?.locale = locale;
+      }
+      _d2Instance?.inMemory = inMemory;
+      _d2Instance?.databaseFactory = databaseFactory;
+      _d2Instance?.sharedPreferenceInstance =
+          sharedPreferenceInstance ?? await SharedPreferences.getInstance();
+
+      final newDatabaseName =
+          databaseName ?? await DatabaseUtil.getDatabaseName();
+
+      if (newDatabaseName != null) {
+        _d2Instance?.database = await _d2Instance?.setDatabase(
+            databaseName: newDatabaseName,
+            inMemory: inMemory,
+            databaseFactory: databaseFactory,
+            sharedPreferenceInstance:
+                _d2Instance?.sharedPreferenceInstance as SharedPreferences);
+      }
+    }
+
+    return _d2Instance as D2Touch;
+  }
+
+  Future<void> dispose() async {
+    // locale = 'en';
+    // database = null;
+    // inMemory = null;
+    // databaseFactory = null;
+    _d2Instance = null;
+    await sharedPreferenceInstance.clear();
+  }
+
+  Future<Database> setDatabase({
+    required String databaseName,
+    bool? inMemory,
+    DatabaseFactory? databaseFactory,
+    required SharedPreferences sharedPreferenceInstance,
+  }) async {
+    await DatabaseUtil.setDatabaseName(
+        databaseName: databaseName,
+        sharedPreferenceInstance: sharedPreferenceInstance);
+
+    DatabaseManager(
+        databaseName: databaseName,
+        inMemory: inMemory,
+        databaseFactory: databaseFactory);
+
+    final database = await DatabaseManager.instance.database;
+
+    await UserModule.createTables(database: database);
+    await OrganisationUnitModule.createTables(database: database);
+    await DataElementModule.createTables(database: database);
+    await DataSetModule.createTables(database: database);
+    await ProgramModule.createTables(database: database);
+    await DashboardModule.createTables(database: database);
+    await TrackedEntityInstanceModule.createTables(database: database);
+    await AggregateModule.createTables(database: database);
+    await OptionSetModule.createTables(database: database);
+    await NotificationModule.createTables(database: database);
+    await FileResourceModule.createTables(database: database);
+
+    return database;
+  }
+
+  @deprecated
   static Future<void> initialize(
       {String? databaseName,
       bool? inMemory,
@@ -38,21 +129,22 @@ class D2Touch {
           inMemory: inMemory,
           databaseFactory: databaseFactory);
 
-      await DatabaseManager.instance.database;
-      await UserModule.createTables();
-      await OrganisationUnitModule.createTables();
-      await DataElementModule.createTables();
-      await DataSetModule.createTables();
-      await ProgramModule.createTables();
-      await DashboardModule.createTables();
-      await TrackedEntityInstanceModule.createTables();
-      await AggregateModule.createTables();
-      await OptionSetModule.createTables();
-      await NotificationModule.createTables();
-      await FileResourceModule.createTables();
+      final database = await DatabaseManager.instance.database;
+      await UserModule.createTables(database: database);
+      await OrganisationUnitModule.createTables(database: database);
+      await DataElementModule.createTables(database: database);
+      await DataSetModule.createTables(database: database);
+      await ProgramModule.createTables(database: database);
+      await DashboardModule.createTables(database: database);
+      await TrackedEntityInstanceModule.createTables(database: database);
+      await AggregateModule.createTables(database: database);
+      await OptionSetModule.createTables(database: database);
+      await NotificationModule.createTables(database: database);
+      await FileResourceModule.createTables(database: database);
     }
   }
 
+  @deprecated
   static Future<bool> isAuthenticated(
       {Future<SharedPreferences>? sharedPreferenceInstance,
       bool? inMemory,
@@ -75,6 +167,7 @@ class D2Touch {
     return user?.isLoggedIn ?? false;
   }
 
+  @deprecated
   static Future<LoginResponseStatus> logIn(
       {required String username,
       required String password,
@@ -107,10 +200,12 @@ class D2Touch {
         inMemory: inMemory,
         databaseFactory: databaseFactory);
 
+    final preferenceInstance =
+        await sharedPreferenceInstance ?? await SharedPreferences.getInstance();
+
     await DatabaseUtil.setDatabaseName(
         databaseName: databaseName,
-        sharedPreferenceInstance:
-            sharedPreferenceInstance ?? SharedPreferences.getInstance());
+        sharedPreferenceInstance: preferenceInstance);
 
     UserQuery userQuery = UserQuery();
 
@@ -130,6 +225,7 @@ class D2Touch {
     return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }
 
+  @deprecated
   static Future<bool> logOut() async {
     WidgetsFlutterBinding.ensureInitialized();
     bool logOutSuccess = false;
@@ -161,10 +257,11 @@ class D2Touch {
         inMemory: inMemory,
         databaseFactory: databaseFactory);
 
+    final preferenceInstance =
+        await sharedPreferenceInstance ?? await SharedPreferences.getInstance();
     await DatabaseUtil.setDatabaseName(
         databaseName: databaseName,
-        sharedPreferenceInstance:
-            sharedPreferenceInstance ?? SharedPreferences.getInstance());
+        sharedPreferenceInstance: preferenceInstance);
 
     AuthToken token = AuthToken.fromJson(tokenObject);
 

@@ -72,7 +72,9 @@ class DatabaseManager {
     await db.execute("PRAGMA foreign_keys = ON");
   }
 
-  closeDatabase() {}
+  closeDatabase() {
+    _databaseInstance.closeDatabase();
+  }
 
   void _createDatabase(Database database, int version) async {}
 }

@@ -1,6 +1,6 @@
 import 'package:d2_touch/d2_touch.dart';
-import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
-import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
+import 'package:d2_touch/modules/auth/entities/user.entity.dart';
+import 'package:d2_touch/modules/auth/queries/user.query.dart';
 import 'package:d2_touch/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/queries/attribute_reserved_value.query.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';

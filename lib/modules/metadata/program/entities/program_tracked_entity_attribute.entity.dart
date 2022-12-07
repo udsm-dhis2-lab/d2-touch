@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/attribute_option.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
-import 'package:d2_touch/shared/models/translation.model.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
