@@ -1,32 +1,29 @@
 import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/auth/entities/user.entity.dart';
-import 'package:d2_touch/modules/auth/queries/user.query.dart';
+import 'package:d2_touch/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked-entity.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
-import 'package:d2_touch/modules/data/tracker/queries/enrollment.query.dart';
-import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';
-import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
-import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
-import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_instance.query.dart';
 import 'package:d2_touch/modules/file_resource/entities/file_resource.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
 import 'package:d2_touch/shared/utilities/orgunit_mode.util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+import '../sample/current_user.sample.dart';
 import '../sample/file_resource.sample.dart';
+import '../sample/program.sample.dart';
+import '../sample/reserved_values.sample.dart';
 import '../sample/tracked_entity_import_summary.sample.dart';
 import '../sample/tracked_entity_instance_upload.sample.dart';
-import 'tracked_entity_instance_sync_test.reflectable.dart';
-
 import '../sample/tracked_entity_instances.sample.dart';
-import '../sample/current_user.sample.dart';
+import 'tracked_entity_instance_sync_test.reflectable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -284,5 +281,63 @@ void main() async {
 
     expect(unSuccessfulImports.length, 1);
     expect(unSuccessfulImports[0].lastSyncSummary != null, true);
+  });
+
+  List<Program> programs = [];
+  samplePrograms['programs'].forEach((program) {
+    programs.add(Program.fromJson({...program, 'dirty': false}));
+  });
+
+  await d2.programModule.program.setData(programs).save();
+
+  List<AttributeReservedValue> attributeReservedValues = [];
+  sampleReservedValues.forEach((reservedValue) {
+    attributeReservedValues.add(
+        AttributeReservedValue.fromJson({...reservedValue, 'dirty': false}));
+  });
+
+  await d2.trackerModule.attributeReservedValue
+      .setData(attributeReservedValues)
+      .save();
+
+  final TrackedEntityInstance trackedEntityInstanceWithReservedValue = await d2
+      .trackerModule.trackedEntityInstance
+      .byProgram('IpHINAT79UW')
+      .byOrgUnit('fnei293faf')
+      .create();
+
+  final TrackedEntityInstance createdInstance = await d2
+      .trackerModule.trackedEntityInstance
+      .byId(trackedEntityInstanceWithReservedValue.id as String)
+      .withEnrollments()
+      .withAttributes()
+      .getOne();
+
+  test('should return created tracked entity instance with generated values',
+      () {
+    expect(createdInstance.id, trackedEntityInstanceWithReservedValue.id);
+    expect(createdInstance.orgUnit, 'fnei293faf');
+    expect(
+        (trackedEntityInstanceWithReservedValue.attributes ?? [])
+            .lastWhere((attribute) => attribute.attribute == 'lZGmxYbs97q')
+            .attribute,
+        'lZGmxYbs97q');
+    expect(createdInstance.enrollments?.length, 1);
+  });
+
+  dioAdapter.onGet(
+    'https://play.dhis2.org/2.35.11/api/trackedEntityAttributes/lZGmxYbs97q/generateAndReserve?numberToReserve=1',
+    (server) => server.reply(200, sampleReservedValues),
+  );
+
+  await d2.trackerModule.attributeReservedValue.download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  List<AttributeReservedValue> downloadedAttributeReservedValues =
+      await d2.trackerModule.attributeReservedValue.get();
+
+  test('should store all incoming data value sets', () {
+    expect(downloadedAttributeReservedValues.length, 100);
   });
 }
