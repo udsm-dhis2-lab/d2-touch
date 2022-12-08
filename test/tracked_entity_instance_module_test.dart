@@ -23,7 +23,7 @@ import '../sample/reserved_values.sample.dart';
 import '../sample/tracked_entity_import_summary.sample.dart';
 import '../sample/tracked_entity_instance_upload.sample.dart';
 import '../sample/tracked_entity_instances.sample.dart';
-import 'tracked_entity_instance_sync_test.reflectable.dart';
+import 'tracked_entity_instance_module_test.reflectable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
