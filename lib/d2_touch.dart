@@ -47,8 +47,13 @@ class D2Touch implements D2TouchModel {
 
   ProgramModule get programModule => ProgramModule(database: _database);
 
+  DataSetModule get dataSetModule => DataSetModule(database: _database);
+
   TrackedEntityInstanceModule get trackerModule =>
       TrackedEntityInstanceModule(database: _database);
+
+  OrganisationUnitModule get organisationUnitModule =>
+      OrganisationUnitModule(database: _database);
 
   AuthModule get authModule => AuthModule(d2Instance: _d2Instance as D2Touch);
 
@@ -324,11 +329,6 @@ class D2Touch implements D2TouchModel {
   }
 
   static UserModule userModule = UserModule();
-
-  static OrganisationUnitModule organisationUnitModule =
-      OrganisationUnitModule();
-
-  static DataSetModule dataSetModule = DataSetModule();
 
   static DashboardModule dashboardModule = DashboardModule();
 

@@ -4,9 +4,6 @@ import 'package:d2_touch/modules/data/tracker/entities/attribute_reserved_value.
 import 'package:d2_touch/modules/data/tracker/entities/tracked-entity.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:d2_touch/modules/engine/program_rule/models/tracker_rule_result.model.dart';
-import 'package:d2_touch/modules/engine/program_rule/tracker_rule_engine.dart';
-import 'package:d2_touch/modules/engine/program_rule/utilities/program_rule_engine.util.dart';
-import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_action.entity.dart';
@@ -21,8 +18,8 @@ import 'package:d2_touch/modules/metadata/program/entities/program_tracked_entit
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../sample/current_user.sample.dart';
 import '../sample/program.sample.dart';
