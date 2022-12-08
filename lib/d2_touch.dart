@@ -55,6 +55,9 @@ class D2Touch implements D2TouchModel {
   OrganisationUnitModule get organisationUnitModule =>
       OrganisationUnitModule(database: _database);
 
+  FileResourceModule get fileResourceModule =>
+      FileResourceModule(database: _database);
+
   AuthModule get authModule => AuthModule(d2Instance: _d2Instance as D2Touch);
 
   HttpClientModule get httpClient => HttpClientModule(database: _database);
@@ -337,6 +340,4 @@ class D2Touch implements D2TouchModel {
   static NotificationModule notificationModule = NotificationModule();
 
   static OptionSetModule optionSetModule = OptionSetModule();
-
-  static FileResourceModule fileResourceModule = FileResourceModule();
 }

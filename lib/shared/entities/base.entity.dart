@@ -20,6 +20,10 @@ class BaseEntity {
     this.created =
         this.created ?? DateTime.now().toIso8601String().split('.')[0];
     this.lastUpdated = this.lastUpdated ?? this.created;
+
+    if (dirty) {
+      this.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
+    }
   }
 
   static fromJson(Map<String, dynamic> json) {

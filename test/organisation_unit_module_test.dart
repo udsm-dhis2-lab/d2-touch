@@ -1,14 +1,10 @@
 import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/auth/entities/user.entity.dart';
-import 'package:d2_touch/modules/auth/queries/user.query.dart';
-import 'package:d2_touch/modules/auth/queries/user_organisation_unit.query.dart';
 import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
-import 'package:d2_touch/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../sample/current_user.sample.dart';
