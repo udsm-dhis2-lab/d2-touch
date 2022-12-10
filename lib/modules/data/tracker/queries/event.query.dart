@@ -3,9 +3,7 @@ import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
-import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
-import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
@@ -23,7 +21,8 @@ class EventQuery extends BaseQuery<Event> {
   EventQuery({Database? database}) : super(database: database);
 
   EventQuery withDataValues() {
-    final eventDataValue = Repository<EventDataValue>();
+    final eventDataValue =
+        Repository<EventDataValue>(database: database as Database);
 
     final Column? relationColumn = eventDataValue.columns.firstWhere((column) {
       return column.relation?.referencedEntity?.tableName == this.tableName;
@@ -33,7 +32,7 @@ class EventQuery extends BaseQuery<Event> {
       ColumnRelation relation = ColumnRelation(
           referencedColumn: relationColumn.relation?.attributeName,
           attributeName: 'dataValues',
-          primaryKey: this.primaryKey?.name,
+          primaryKey: primaryKey?.name,
           relationType: RelationType.OneToMany,
           referencedEntity: Entity.getEntityDefinition(
               AnnotationReflectable.reflectType(EventDataValue) as ClassMirror),
@@ -41,8 +40,20 @@ class EventQuery extends BaseQuery<Event> {
               AnnotationReflectable.reflectType(EventDataValue) as ClassMirror,
               false));
 
-      this.relations.add(relation);
+      relations.add(relation);
     }
+
+    return this;
+  }
+
+  EventQuery withProgramStage() {
+    final programStage =
+        Repository<ProgramStage>(database: database as Database);
+    final Column relationColumn = repository.columns.firstWhere((column) =>
+        column.relation?.referencedEntity?.tableName ==
+        programStage.entity.tableName);
+
+    relations.add(relationColumn.relation as ColumnRelation);
 
     return this;
   }
@@ -104,6 +115,7 @@ class EventQuery extends BaseQuery<Event> {
     List<Event> events = await this
         .where(attribute: 'synced', value: false)
         .where(attribute: 'dirty', value: true)
+        .withDataValues()
         .get();
 
     callback(
@@ -124,29 +136,9 @@ class EventQuery extends BaseQuery<Event> {
             percentage: 51),
         false);
 
-    List<String> eventIds = [];
-    List<String> eventProgramStageIds = [];
-    events.forEach((event) {
-      eventIds.add(event.id as String);
-
-      eventProgramStageIds.removeWhere((id) => id == event.programStage);
-      eventProgramStageIds.add(event.programStage);
-    });
-
-    List<EventDataValue> eventDataValues = await EventDataValueQuery()
-        .whereIn(attribute: 'event', values: eventIds, merge: false)
-        .get();
-
-    List<ProgramStage> programStages =
-        await ProgramStageQuery().byIds(eventProgramStageIds).get();
+    List<String> eventIds = events.map((event) => event.id as String).toList();
 
     final eventUploadPayload = events.map((event) {
-      event.dataValues = eventDataValues
-          .where((dataValue) => dataValue.event == event.id)
-          .toList();
-      event.programStage = programStages
-          .lastWhere((programStage) => programStage.id == event.programStage)
-          .toJson();
       return Event.toUpload(event);
     }).toList();
 
@@ -189,7 +181,7 @@ class EventQuery extends BaseQuery<Event> {
         event.syncFailed = syncFailed;
         event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
         event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
-        await queue.add(() => EventQuery().setData(event).save());
+        queue.add(() => EventQuery(database: database).setData(event).save());
       }
     }
 
@@ -225,11 +217,7 @@ class EventQuery extends BaseQuery<Event> {
             percentage: 100),
         true);
 
-    // START: IMPROVE APPROACH
-    // final fetchedEvents = (await EventQuery().byIds(eventIds).get());
-    // return await EventQuery().byIds(eventIds).get();
-    // END: IMPROVE APPROACH
-    return events;
+    return await EventQuery(database: database).byIds(eventIds).get();
   }
 
   void printWrapped(String text) {

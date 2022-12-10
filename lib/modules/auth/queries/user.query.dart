@@ -1,9 +1,9 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
-import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
-import 'package:d2_touch/modules/auth/user/entities/user_authority.entity.dart';
-import 'package:d2_touch/modules/auth/user/entities/user_organisation_unit.entity.dart';
-import 'package:d2_touch/modules/auth/user/entities/user_role.entity.dart';
+import 'package:d2_touch/modules/auth/entities/user.entity.dart';
+import 'package:d2_touch/modules/auth/entities/user_authority.entity.dart';
+import 'package:d2_touch/modules/auth/entities/user_organisation_unit.entity.dart';
+import 'package:d2_touch/modules/auth/entities/user_role.entity.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
@@ -12,7 +12,8 @@ class UserQuery extends BaseQuery<User> {
   UserQuery({Database? database}) : super(database: database);
 
   UserQuery withOrganisationUnit() {
-    final userOrganisationUnit = Repository<UserOrganisationUnit>();
+    final userOrganisationUnit =
+        Repository<UserOrganisationUnit>(database: database as Database);
     final Column? relationColumn = userOrganisationUnit.columns.firstWhere(
         (column) =>
             column.relation?.referencedEntity?.tableName == this.tableName);
@@ -37,7 +38,8 @@ class UserQuery extends BaseQuery<User> {
   }
 
   UserQuery withAuthorities() {
-    final userAuthority = Repository<UserAuthority>();
+    final userAuthority =
+        Repository<UserAuthority>(database: database as Database);
     final Column? relationColumn = userAuthority.columns.firstWhere((column) =>
         column.relation?.referencedEntity?.tableName == this.tableName);
 
@@ -59,7 +61,7 @@ class UserQuery extends BaseQuery<User> {
   }
 
   UserQuery withRoles() {
-    final userRole = Repository<UserRole>();
+    final userRole = Repository<UserRole>(database: database as Database);
     final Column? relationColumn = userRole.columns.firstWhere((column) =>
         column.relation?.referencedEntity?.tableName == this.tableName);
 

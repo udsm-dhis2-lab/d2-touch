@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:d2_touch/modules/auth/user/entities/user.entity.dart';
-import 'package:d2_touch/modules/auth/user/queries/user.query.dart';
+import 'package:d2_touch/modules/auth/entities/user.entity.dart';
+import 'package:d2_touch/modules/auth/queries/user.query.dart';
 import 'package:sqflite/sqflite.dart';
 
 class HttpDetails {

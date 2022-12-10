@@ -24,7 +24,7 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
         .map((trackedEntityInstance) => trackedEntityInstance.id as String)
         .toList();
 
-    final List<Event> events = await EventQuery()
+    final List<Event> events = await EventQuery(database: database)
         .whereIn(attribute: 'enrollment', values: enrollmentIds, merge: false);
 
     final enrollmentUploadPayload = enrollments.map((enrollment) {
@@ -56,7 +56,8 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
             DateTime.now().toIso8601String().split('.')[0].split('.')[0];
         enrollment.lastSyncSummary =
             EnrollmentImportSummary.fromJson(importSummary);
-        queue.add(() => EnrollmentQuery().setData(enrollment).save());
+        queue.add(() =>
+            EnrollmentQuery(database: database).setData(enrollment).save());
       }
     });
 
@@ -66,6 +67,6 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
       await queue.onComplete;
     }
 
-    return await EnrollmentQuery().byIds(enrollmentIds).get();
+    return await EnrollmentQuery(database: database).byIds(enrollmentIds).get();
   }
 }

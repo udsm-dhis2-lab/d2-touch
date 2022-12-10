@@ -16,7 +16,7 @@ void main() async {
   var databaseFactory = databaseFactoryFfi;
   var db = await databaseFactory.openDatabase(inMemoryDatabasePath);
 
-  final repository = Repository<OrganisationUnit>();
+  final repository = Repository<OrganisationUnit>(database: db);
 
   final columns =
       repository.columns.map((column) => column.columnQueryExpresion);

@@ -10,7 +10,8 @@ class DataSetElementQuery extends BaseQuery<DataSetElement> {
   DataSetElementQuery({Database? database}) : super(database: database);
 
   DataSetElementQuery withOptions() {
-    final dataElementOption = Repository<DataSetElementOption>();
+    final dataElementOption =
+        Repository<DataSetElementOption>(database: database as Database);
 
     final Column? relationColumn = dataElementOption.columns.firstWhere(
         (column) =>
