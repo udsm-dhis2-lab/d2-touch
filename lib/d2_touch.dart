@@ -60,6 +60,9 @@ class D2Touch implements D2TouchModel {
 
   AggregateModule get aggregateModule => AggregateModule(database: _database);
 
+  NotificationModule get notificationModule =>
+      NotificationModule(database: _database);
+
   AuthModule get authModule => AuthModule(d2Instance: _d2Instance as D2Touch);
 
   HttpClientModule get httpClient => HttpClientModule(database: _database);
@@ -336,8 +339,6 @@ class D2Touch implements D2TouchModel {
   static UserModule userModule = UserModule();
 
   static DashboardModule dashboardModule = DashboardModule();
-
-  static NotificationModule notificationModule = NotificationModule();
 
   static OptionSetModule optionSetModule = OptionSetModule();
 }

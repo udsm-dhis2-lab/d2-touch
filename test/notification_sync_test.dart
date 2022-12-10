@@ -13,7 +13,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../sample/current_user.sample.dart';
 import '../sample/message_conversation.sample.dart';
-import 'dataset_sync_test.reflectable.dart';
+import 'notification_sync_test.reflectable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,44 +21,43 @@ void main() async {
   initializeReflectable();
   sqfliteFfiInit();
 
-  var databaseFactory = databaseFactoryFfi;
+  var sharedPreferenceInstance = await SharedPreferences.getInstance();
 
-  await D2Touch.initialize(
-      databaseFactory: databaseFactoryFfi, databaseName: 'flutter_test');
-
-  var db = await databaseFactory.openDatabase(inMemoryDatabasePath);
-
-  UserQuery userQuery = UserQuery(database: db);
+  final d2 = await D2Touch.init(
+    databaseFactory: databaseFactoryFfi,
+    databaseName: 'flutter_test',
+    sharedPreferenceInstance: sharedPreferenceInstance,
+  );
 
   userData['password'] = 'district';
   userData['isLoggedIn'] = true;
   userData['username'] = 'admin';
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.11';
   final user = User.fromApi(userData);
-  await userQuery.setData(user).save();
-  final notificationQuery = MessageConversationQuery(database: db);
+  await d2.userModule2.user.setData(user).save();
 
   final dio = Dio(BaseOptions());
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/messageConversations.json?fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,status,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,sender,text,messageConversation]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,status,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,sender,text,messageConversation]&paging=false',
     (server) => server.reply(200, sampleMessageConversations),
   );
 
-  await notificationQuery.download((progress, complete) {
+  await d2.notificationModule.messageConversation.download(
+      (progress, complete) {
     print(progress.message);
   }, dioTestClient: dio);
 
   List<MessageConversation> messageConversations =
-      await notificationQuery.get();
+      await d2.notificationModule.messageConversation.get();
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/messageConversations.json?filter=read:eq:false&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,status,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,sender,text,messageConversation]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?filter=read:eq:false&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,status,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,sender,text,messageConversation]&paging=false',
     (server) => server.reply(200, sampleMessageConversations),
   );
 
-  final onlineNotifications = await notificationQuery
+  final onlineNotifications = await d2.notificationModule.messageConversation
       .where(attribute: 'read', value: false)
       .get(online: true, dioTestClient: dio);
 
