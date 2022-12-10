@@ -2,6 +2,9 @@ import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/auth/entities/user.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:d2_touch/modules/file_resource/entities/file_resource.entity.dart';
+import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,6 +14,9 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../sample/current_user.sample.dart';
 import '../sample/file_resource.sample.dart';
+import '../sample/org_unit.sample.dart';
+import '../sample/program.sample.dart';
+import '../sample/program_stage.sample.dart';
 import '../sample/tracked_entity_instances.sample.dart';
 import 'file_resource_test.reflectable.dart';
 
@@ -34,6 +40,28 @@ void main() async {
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.14';
   final user = User.fromApi(userData);
   await d2.userModule2.user.setData(user).save();
+
+  List<Program> programs = List.from((samplePrograms['programs'] ?? []))
+      .map<Program>((program) => Program.fromJson(program))
+      .toList();
+
+  await d2.programModule.program.setData(programs).save();
+
+  List<ProgramStage> programStages = List.from(
+          (sampleProgramStages['programStages'] ?? []))
+      .map<ProgramStage>((programStage) => ProgramStage.fromJson(programStage))
+      .toList();
+
+  await d2.programModule.programStage.setData(programStages).save();
+
+  List<OrganisationUnit> organisationUnits = List.from(
+          sampleOrganisationUnits['organisationUnits'] ?? [])
+      .map<OrganisationUnit>((orgUnit) => OrganisationUnit.fromJson(orgUnit))
+      .toList();
+
+  await d2.organisationUnitModule.organisationUnit
+      .setData(organisationUnits)
+      .save();
 
   final dio = Dio(BaseOptions());
   final dioAdapter = DioAdapter(dio: dio);

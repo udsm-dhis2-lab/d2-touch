@@ -158,10 +158,6 @@ void main() async {
   List<ProgramTrackedEntityAttribute> programTrackedEntityAttributes =
       await d2.programModule.programTrackedEntityAttribute.withOptions().get();
 
-  programTrackedEntityAttributes.forEach((attribute) {
-    print(attribute.translation);
-  });
-
   test('should store all incoming program metadata', () {
     expect(programs.length, 15);
     expect(programTrackedEntityAttributes.length, 4);
@@ -208,7 +204,7 @@ void main() async {
   test(
       'should store all program stages, their elements and options per selected program',
       () {
-    expect(programStages.length, 3);
+    expect(programStages.length, 2);
     expect(programStageElements.length, 22);
     expect(programStageElementOptions.length, 48);
     expect(programRuleVariables.length, 4);
@@ -231,7 +227,7 @@ void main() async {
       await d2.programModule.programStage.get();
 
   test('should download and store all incoming program stage metadata', () {
-    expect(updatedProgramStages.length, 5);
+    expect(updatedProgramStages.length, 3);
   });
 
   dioAdapter.onGet(

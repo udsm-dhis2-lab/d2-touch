@@ -333,7 +333,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       return saveDataResponse;
     }
 
-    final queue = Queue(parallel: 50);
+    final reltionQueue = Queue(parallel: 1);
     num availableItemCount = 0;
 
     this.oneToManyColumns.forEach((Column column) {
@@ -341,7 +341,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       if (data.isNotEmpty) {
         availableItemCount++;
         data.forEach((dataItem) {
-          queue.add(() => saveRelationData(
+          reltionQueue.add(() => saveRelationData(
               columnRelation: column.relation as ColumnRelation,
               entity: dataItem,
               database: db));
@@ -350,11 +350,11 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     });
 
     if (availableItemCount == 0) {
-      queue.cancel();
+      reltionQueue.cancel();
       return saveDataResponse;
     }
 
-    await queue.onComplete;
+    await reltionQueue.onComplete;
     return saveDataResponse;
   }
 
