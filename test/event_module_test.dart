@@ -1,6 +1,7 @@
 import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/auth/entities/user.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
+import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:dio/dio.dart';
@@ -14,10 +15,11 @@ import '../sample/current_user.sample.dart';
 import '../sample/event.sample.dart';
 import '../sample/event_import_summary.sample.dart';
 import '../sample/event_upload.sample.dart';
+import '../sample/org_unit.sample.dart';
 import '../sample/program.sample.dart';
 import '../sample/program_stage.sample.dart';
 import '../sample/tracked_entity_instances.sample.dart';
-import 'event_sync_test.reflectable.dart';
+import 'event_module_test.reflectable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +39,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=DiszpKrYNg8&program=IpHINAT79UW&programStage=ZzYYXq4fJie&order=eventDate:desc&pageSize=100&page=1',
+    'https://play.dhis2.org/2.35.11/api/events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=Rp268JB6Ne4&program=IpHINAT79UW&programStage=ZzYYXq4fJie&order=eventDate:desc&pageSize=100&page=1',
     (server) => server.reply(200, sampleEvents),
   );
 
@@ -61,8 +63,17 @@ void main() async {
 
   await d2.programModule.programStage.setData(programStages).save();
 
+  List<OrganisationUnit> organisationUnits = List.from(
+          sampleOrganisationUnits['organisationUnits'] ?? [])
+      .map<OrganisationUnit>((orgUnit) => OrganisationUnit.fromJson(orgUnit))
+      .toList();
+
+  await d2.organisationUnitModule.organisationUnit
+      .setData(organisationUnits)
+      .save();
+
   await d2.trackerModule.event
-      .byOrgUnit('DiszpKrYNg8')
+      .byOrgUnit('Rp268JB6Ne4')
       .byProgram('IpHINAT79UW')
       .byProgramStage('ZzYYXq4fJie')
       .download((progress, complete) {
@@ -114,5 +125,22 @@ void main() async {
 
     expect(unSuccessfulImports.length, 1);
     expect(unSuccessfulImports[0].lastSyncSummary != null, true);
+  });
+
+  final Event eventWithoutEnrollment = await d2.trackerModule.event
+      .byProgramStage('A03MvHH7gjR')
+      .byOrgUnit('Rp268JB6Ne4')
+      .create();
+
+  final Event? createdEventWithoutEnrollment = await d2.trackerModule.event
+      .byId(eventWithoutEnrollment.id as String)
+      .getOne();
+
+  print(createdEventWithoutEnrollment?.orgUnit);
+
+  test('should return created event without enrollment', () {
+    expect(createdEventWithoutEnrollment?.id, eventWithoutEnrollment.id);
+    expect(createdEventWithoutEnrollment?.orgUnit, 'Rp268JB6Ne4');
+    expect(createdEventWithoutEnrollment?.programStage, 'A03MvHH7gjR');
   });
 }
