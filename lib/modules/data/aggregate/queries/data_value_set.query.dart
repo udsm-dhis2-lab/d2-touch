@@ -176,6 +176,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         database: this.database, dioTestClient: dioTestClient);
 
     final importSummary = response.body;
+
     final syncFailed = importSummary['status'] == 'ERROR';
     dataValueSet.synced = !syncFailed;
     dataValueSet.dirty = syncFailed;
