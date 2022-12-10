@@ -69,7 +69,7 @@ class DatabaseManager {
 
   _onConfigure(Database db) async {
     // Add support for cascade delete
-    await db.execute("PRAGMA foreign_keys = ON");
+    await db.execute("PRAGMA foreign_keys = OFF");
   }
 
   closeDatabase() {}

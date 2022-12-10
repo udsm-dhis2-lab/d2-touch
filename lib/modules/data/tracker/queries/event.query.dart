@@ -78,7 +78,7 @@ class EventQuery extends BaseQuery<Event> {
     Event event = Event(
         orgUnit: this.orgUnit as String,
         status: 'ACTIVE',
-        enrollment: this.enrollment,
+        enrollment: this.enrollment ?? '',
         dirty: true,
         synced: false,
         programStage: this.programStage,
@@ -177,7 +177,7 @@ class EventQuery extends BaseQuery<Event> {
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 
-    events.forEach((event) {
+    for (var event in events) {
       final importSummary = importSummaries.lastWhere((summary) =>
           summary['reference'] != null && summary['reference'] == event.id);
 
@@ -189,9 +189,27 @@ class EventQuery extends BaseQuery<Event> {
         event.syncFailed = syncFailed;
         event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
         event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
-        queue.add(() => EventQuery().setData(event).save());
+        await queue.add(() => EventQuery().setData(event).save());
       }
-    });
+    }
+
+    // ! START: IMPROVE APPROACH
+    // events.forEach((event) {
+    //   final importSummary = importSummaries.lastWhere((summary) =>
+    //       summary['reference'] != null && summary['reference'] == event.id);
+
+    //   if (importSummary != null) {
+    //     availableItemCount++;
+    //     final syncFailed = importSummary['status'] == 'ERROR';
+    //     event.synced = !syncFailed;
+    //     event.dirty = true;
+    //     event.syncFailed = syncFailed;
+    //     event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
+    //     event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
+    //     queue.add(() => EventQuery().setData(event).save());
+    //   }
+    // });
+    // ! END: IMPROVE APPROACH
 
     if (availableItemCount == 0) {
       queue.cancel();
@@ -207,7 +225,11 @@ class EventQuery extends BaseQuery<Event> {
             percentage: 100),
         true);
 
-    return await EventQuery().byIds(eventIds).get();
+    // START: IMPROVE APPROACH
+    // final fetchedEvents = (await EventQuery().byIds(eventIds).get());
+    // return await EventQuery().byIds(eventIds).get();
+    // END: IMPROVE APPROACH
+    return events;
   }
 
   void printWrapped(String text) {
