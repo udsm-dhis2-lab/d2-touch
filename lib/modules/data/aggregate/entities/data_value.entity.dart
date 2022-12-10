@@ -1,12 +1,12 @@
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 import 'package:d2_touch/shared/utilities/object.util.dart';
 
 import 'data_value_set.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'datavalue', apiResourceName: 'dataValues')
-class DataValue extends BaseEntity {
+class DataValue extends IdentifiableEntity {
   @Column(type: ColumnType.TEXT)
   String dataElement;
 
@@ -58,7 +58,7 @@ class DataValue extends BaseEntity {
 
   factory DataValue.fromJson(Map<String, dynamic> json) {
     final id = json['id'] ??
-        '${json['dataElement']}_${json['categoryOptionCombo']}_${json['dataValueSet']}}';
+        '${json['dataElement']}_${json['categoryOptionCombo']}_${json['dataValueSet']}';
     return DataValue(
         id: id,
         name: json['name'] ?? id,

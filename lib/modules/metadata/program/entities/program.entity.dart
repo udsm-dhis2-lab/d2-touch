@@ -1,13 +1,14 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_variable.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_section.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'program_tracked_entity_attribute.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'program', apiResourceName: 'programs')
-class Program extends BaseEntity {
+class Program extends IdentifiableEntity {
   @Column(type: ColumnType.TEXT)
   String programType;
 
@@ -81,6 +82,9 @@ class Program extends BaseEntity {
   @OneToMany(table: ProgramStage)
   List<ProgramStage>? programStages;
 
+  @OneToMany(table: ProgramSection)
+  List<ProgramSection>? programSections;
+
   Program(
       {required String id,
       String? created,
@@ -102,6 +106,7 @@ class Program extends BaseEntity {
       this.organisationUnits,
       this.programRuleVariables,
       this.programStages,
+      this.programSections,
       this.selectEnrollmentDatesInFuture,
       this.description,
       this.selectIncidentDatesInFuture,
@@ -147,14 +152,10 @@ class Program extends BaseEntity {
         incidentDateLabel: json['incidentDateLabel'],
         onlyEnrollOnce: json['onlyEnrollOnce'],
         organisationUnits: json['organisationUnits']?.toString() ?? null,
-        programRuleVariables:
-            List<dynamic>.from(json['programRuleVariables'] ?? [])
-                .map((programRuleVariable) => ProgramRuleVariable.fromJson({
-                      ...programRuleVariable,
-                      'program': json['id'],
-                      'dirty': false
-                    }))
-                .toList(),
+        programRuleVariables: List<dynamic>.from(json['programRuleVariables'] ?? [])
+            .map((programRuleVariable) => ProgramRuleVariable.fromJson(
+                {...programRuleVariable, 'program': json['id'], 'dirty': false}))
+            .toList(),
         programType: json['programType'],
         selectEnrollmentDatesInFuture: json['selectEnrollmentDatesInFuture'],
         selectIncidentDatesInFuture: json['selectIncidentDatesInFuture'],
@@ -167,14 +168,15 @@ class Program extends BaseEntity {
             .map((programStage) => ProgramStage.fromJson(
                 {...programStage, 'program': json['id'], 'dirty': false}))
             .toList(),
+        programSections: List<dynamic>.from(json['programSections'] ?? [])
+            .map((programSection) => ProgramSection.fromJson(
+                {...programSection, 'program': json['id'], 'dirty': false}))
+            .toList(),
         programTrackedEntityAttributes:
             List<dynamic>.from(json['programTrackedEntityAttributes'] ?? [])
                 .map((programTrackedEntityAttribute) =>
-                    ProgramTrackedEntityAttribute.fromJson({
-                      ...programTrackedEntityAttribute,
-                      'program': json['id'],
-                      'dirty': false
-                    }))
+                    ProgramTrackedEntityAttribute.fromJson(
+                        {...programTrackedEntityAttribute, 'program': json['id'], 'dirty': false}))
                 .toList());
   }
 
@@ -200,6 +202,7 @@ class Program extends BaseEntity {
     data['onlyEnrollOnce'] = this.onlyEnrollOnce;
     data['organisationUnits'] = this.organisationUnits;
     data['programStages'] = this.programStages;
+    data['programSections'] = this.programSections;
     data['programTrackedEntityAttributes'] =
         this.programTrackedEntityAttributes;
     data['programRuleVariables'] = this.programRuleVariables;

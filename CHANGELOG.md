@@ -1,3 +1,5 @@
+## [1.0.2] - 17/09/2022
+
 ## [1.0.0-beta.13] - 09/09/2022
 
 - Add attribute column on attribute option table

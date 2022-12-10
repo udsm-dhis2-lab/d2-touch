@@ -86,8 +86,7 @@ class ValidationRuleEngine {
         Expression leftSideExpression =
             Expression.parse(leftSideConditionForEvaluation);
         final leftSideEvaluator = const ExpressionEvaluator();
-        var leftSideEvaluationResult = leftSideEvaluator.eval(
-            leftSideExpression, nonTotalEvaluationContext);
+        leftSideEvaluator.eval(leftSideExpression, nonTotalEvaluationContext);
       } catch (e) {
         skipLeftSideExpression =
             leftSide['missingValueStrategy'] == 'SKIP_IF_ANY_VALUE_MISSING';
@@ -98,8 +97,7 @@ class ValidationRuleEngine {
         Expression rightSideExpression =
             Expression.parse(rightSideConditionForEvaluation);
         final rightSideEvaluator = const ExpressionEvaluator();
-        var rightSideEvaluationResult = rightSideEvaluator.eval(
-            rightSideExpression, nonTotalEvaluationContext);
+        rightSideEvaluator.eval(rightSideExpression, nonTotalEvaluationContext);
       } catch (e) {
         skipRightSideExpression =
             rightSide['missingValueStrategy'] == 'SKIP_IF_ANY_VALUE_MISSING';

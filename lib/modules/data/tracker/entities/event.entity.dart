@@ -1,15 +1,16 @@
 import 'dart:convert';
 
 import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'enrollment.entity.dart';
 import 'event_data_value.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'event', apiResourceName: 'events')
-class Event extends BaseEntity {
+class Event extends IdentifiableEntity {
   @Column()
   String? event;
 
@@ -34,8 +35,8 @@ class Event extends BaseEntity {
   @Column(nullable: true)
   bool? syncFailed;
 
-  @Column(nullable: true)
-  String? lastSyncSummary;
+  @Column(nullable: true, type: ColumnType.TEXT)
+  EventImportSummary? lastSyncSummary;
 
   @Column(nullable: true)
   String? lastSyncDate;
@@ -107,8 +108,9 @@ class Event extends BaseEntity {
   }
 
   factory Event.fromJson(Map<String, dynamic> json) {
-    const JsonEncoder encoder = JsonEncoder();
-    final dynamic lastSyncSummary = encoder.convert(json['lastSyncSummary']);
+    final dynamic lastSyncSummary = json['lastSyncSummary'] != null
+        ? EventImportSummary.fromJson(jsonDecode(json['lastSyncSummary']))
+        : null;
     return Event(
         id: json['event'],
         name: json['event'],
@@ -154,7 +156,11 @@ class Event extends BaseEntity {
     data['deleted'] = this.deleted;
     data['synced'] = this.synced;
     data['syncFailed'] = this.syncFailed;
-    data['lastSyncSummary'] = this.lastSyncSummary;
+    data['lastSyncSummary'] = this.lastSyncSummary != null
+        ? jsonEncode(
+            (this.lastSyncSummary as EventImportSummary).responseSummary)
+        : null;
+    ;
     data['lastSyncDate'] = this.lastSyncDate;
     data['storedBy'] = this.storedBy;
     data['coordinate'] = this.coordinate;

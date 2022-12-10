@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'event.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'eventDataValue', apiResourceName: 'dataValues')
-class EventDataValue extends BaseEntity {
+class EventDataValue extends IdentifiableEntity {
   @Column()
   String dataElement;
 

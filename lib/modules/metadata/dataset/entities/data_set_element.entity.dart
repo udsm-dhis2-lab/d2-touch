@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_element_option.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'datasetelement', apiResourceName: 'dataSetElements')
-class DataSetElement extends BaseEntity {
+class DataSetElement extends IdentifiableEntity {
   @Column()
   String dataElementId;
 

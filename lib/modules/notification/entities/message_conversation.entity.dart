@@ -1,12 +1,12 @@
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'message.entity.dart';
 
 @AnnotationReflectable
 @Entity(
     tableName: 'messageconversation', apiResourceName: 'messageConversations')
-class MessageConversation extends BaseEntity {
+class MessageConversation extends IdentifiableEntity {
   @Column(type: ColumnType.TEXT)
   String status;
 

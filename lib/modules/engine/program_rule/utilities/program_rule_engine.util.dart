@@ -7,13 +7,13 @@ import 'package:expressions/expressions.dart';
 class ProgramRuleEngine {
   static _getEvaluationContext(
       {required Map<String, DataValueObject> dataValueEntities,
-      required List<ProgramRuleVariable> programRuleVariables}) {
+        required List<ProgramRuleVariable> programRuleVariables}) {
     Map<String, dynamic> evaluationContext = {};
 
     programRuleVariables.forEach((programRuleVariable) {
       final value = dataValueEntities[
-              programRuleVariable.trackedEntityAttribute ??
-                  programRuleVariable.dataElement]
+      programRuleVariable.trackedEntityAttribute ??
+          programRuleVariable.dataElement]
           ?.value;
 
       evaluationContext = {
@@ -56,25 +56,28 @@ class ProgramRuleEngine {
 
   static List<ProgramRuleAction> execute(
       {required Map<String, DataValueObject> dataValueEntities,
-      required List<ProgramRule> programRules,
-      required List<ProgramRuleVariable> programRuleVariables}) {
+        required List<ProgramRule> programRules,
+        required List<ProgramRuleVariable> programRuleVariables}) {
     List<ProgramRuleAction> programRulesActions = [];
 
     Map<String, dynamic> evaluationContext =
-        ProgramRuleEngine._getEvaluationContext(
-            dataValueEntities: dataValueEntities,
-            programRuleVariables: programRuleVariables);
+    ProgramRuleEngine._getEvaluationContext(
+        dataValueEntities: dataValueEntities,
+        programRuleVariables: programRuleVariables);
 
     programRules.forEach((programRule) {
-      String ruleConditionForEvaluation = programRule.condition
-          .replaceAll("#{", "")
-          .replaceAll("A{", "")
-          .replaceAll("}", "");
+      String ruleConditionForEvaluation = programRule.condition;
+      // .replaceAll("#{", "")
+      // .replaceAll("A{", "")
+      // .replaceAll("}", "");
 
       evaluationContext.keys.forEach((key) {
         final value = evaluationContext[key];
         ruleConditionForEvaluation = ruleConditionForEvaluation.replaceAll(
-            key, ProgramRuleEngine._parseRuleValue(value));
+            "#{" + key + "}", ProgramRuleEngine._parseRuleValue(value));
+
+        ruleConditionForEvaluation = ruleConditionForEvaluation.replaceAll(
+            "A{" + key + "}", ProgramRuleEngine._parseRuleValue(value));
       });
 
       try {
@@ -84,11 +87,11 @@ class ProgramRuleEngine {
         var evaluationResult = evaluator.eval(expression, evaluationContext);
 
         final newProgramRuleActions =
-            programRule.programRuleActions?.map((ruleAction) {
+        programRule.programRuleActions?.map((ruleAction) {
           return ProgramRuleAction.fromJson({
             ...ruleAction.toJson(),
             'programRuleActionType':
-                evaluationResult == true ? ruleAction.programRuleActionType : ""
+            evaluationResult == true ? ruleAction.programRuleActionType : ""
           });
         }).toList();
 
@@ -98,7 +101,7 @@ class ProgramRuleEngine {
         ]);
       } catch (e) {
         final newProgramRuleActions =
-            programRule.programRuleActions?.map((ruleAction) {
+        programRule.programRuleActions?.map((ruleAction) {
           return ProgramRuleAction.fromJson(
               {...ruleAction.toJson(), 'programRuleActionType': ''});
         }).toList();
@@ -108,8 +111,10 @@ class ProgramRuleEngine {
           ...(newProgramRuleActions as List<ProgramRuleAction>)
         ]);
       }
-    });
+    }
+    );
 
-    return programRulesActions;
+    return
+      programRulesActions;
   }
 }

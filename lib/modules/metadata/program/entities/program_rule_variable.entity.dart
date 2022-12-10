@@ -1,11 +1,11 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(
     tableName: 'programrulevariable', apiResourceName: 'programRuleVariables')
-class ProgramRuleVariable extends BaseEntity {
+class ProgramRuleVariable extends IdentifiableEntity {
   @Column()
   String programRuleVariableSourceType;
 

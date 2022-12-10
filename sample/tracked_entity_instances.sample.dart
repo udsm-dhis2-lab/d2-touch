@@ -35,6 +35,10 @@ final Map<Object, dynamic> sampleTrackedEntityInstances = {
           "status": "ACTIVE",
           "notes": [],
           "relationships": [],
+          "geometry": {
+            "type": "Point",
+            "coordinates": [39.24570033075514, -6.841304466305611]
+          },
           "attributes": [],
           "events": [
             {

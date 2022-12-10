@@ -1,12 +1,12 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage_data_element.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(
     tableName: 'programstagedataelementoption',
     apiResourceName: 'programStageDataElementOptions')
-class ProgramStageDataElementOption extends BaseEntity {
+class ProgramStageDataElementOption extends IdentifiableEntity {
   @ManyToOne(
       table: ProgramStageDataElement, joinColumnName: 'programStageDataElement')
   dynamic programStageDataElement;

@@ -59,9 +59,17 @@ class DatabaseManager {
     String path = join(documentDirectory.path, databaseName + '.db');
 
     var database = inMemory
-        ? await openDatabase(inMemoryDatabasePath)
-        : await openDatabase(path, version: version, onCreate: _createDatabase);
+        ? await openDatabase(inMemoryDatabasePath, onConfigure: _onConfigure)
+        : await openDatabase(path,
+            version: version,
+            onCreate: _createDatabase,
+            onConfigure: _onConfigure);
     return database;
+  }
+
+  _onConfigure(Database db) async {
+    // Add support for cascade delete
+    await db.execute("PRAGMA foreign_keys = OFF");
   }
 
   closeDatabase() {}

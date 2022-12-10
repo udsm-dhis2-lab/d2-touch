@@ -15,7 +15,7 @@ class Geometry {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['type'] = this.type;
-    data['coordinates'] = this.coordinates;
+    data['coordinates'] = this.coordinates?.map((e) => e.toString()).toList();
     return data;
   }
 

@@ -1,6 +1,6 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/base.entity.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/utilities/dhis-url-generator.util.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
@@ -201,18 +201,20 @@ class BaseQuery<T extends BaseEntity> {
     return results.length > 0 ? results[0] : null;
   }
 
-  Future<int> save({SaveOptions? saveOptions}) {
+  Future<int> save({SaveOptions? saveOptions}) async {
     if (this.data is List) {
       return this.repository.saveMany(
           entities: this.data as List<T>,
           database: this.database,
-          mergeMode: this._mergeMode);
+          mergeMode: this._mergeMode,
+          saveOptions: saveOptions);
     }
 
     return this.repository.saveOne(
         entity: this.data as T,
         database: this.database,
-        mergeMode: this._mergeMode);
+        mergeMode: this._mergeMode,
+        saveOptions: saveOptions);
   }
 
   Future delete() {
@@ -250,7 +252,9 @@ class BaseQuery<T extends BaseEntity> {
       ClassMirror classMirror =
           AnnotationReflectable.reflectType(T) as ClassMirror;
 
-      return classMirror.newInstance('fromJson', [dataItem]) as T;
+      var x = classMirror.newInstance('fromJson', [dataItem]) as T;
+
+      return x;
     }).toList();
   }
 

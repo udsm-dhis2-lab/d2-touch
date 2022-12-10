@@ -1,10 +1,10 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/program/entities/attribute_option.entity.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'optionset', apiResourceName: 'optionSets')
-class OptionSet extends BaseEntity {
+class OptionSet extends IdentifiableEntity {
   @OneToMany(table: AttributeOption)
   List<AttributeOption>? options;
 

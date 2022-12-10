@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
@@ -20,6 +19,7 @@ class EventQuery extends BaseQuery<Event> {
   String? program;
   String? programStage;
   String? enrollment;
+
   EventQuery({Database? database}) : super(database: database);
 
   EventQuery withDataValues() {
@@ -75,14 +75,14 @@ class EventQuery extends BaseQuery<Event> {
 
   @override
   Future create() async {
-    Event event = Event(  orgUnit: this.orgUnit as String,
+    Event event = Event(
+        orgUnit: this.orgUnit as String,
         status: 'ACTIVE',
-        enrollment: this.enrollment,
+        enrollment: this.enrollment ?? '',
         dirty: true,
         synced: false,
         programStage: this.programStage,
-        eventDate: DateTime.now().toIso8601String().split(".")[0]
-    );
+        eventDate: DateTime.now().toIso8601String().split(".")[0]);
 
     this.data = event;
 
@@ -177,7 +177,7 @@ class EventQuery extends BaseQuery<Event> {
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 
-    events.forEach((event) {
+    for (var event in events) {
       final importSummary = importSummaries.lastWhere((summary) =>
           summary['reference'] != null && summary['reference'] == event.id);
 
@@ -188,10 +188,28 @@ class EventQuery extends BaseQuery<Event> {
         event.dirty = true;
         event.syncFailed = syncFailed;
         event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
-        event.lastSyncSummary = importSummary.toString();
-        queue.add(() => EventQuery().setData(event).save());
+        event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
+        await queue.add(() => EventQuery().setData(event).save());
       }
-    });
+    }
+
+    // ! START: IMPROVE APPROACH
+    // events.forEach((event) {
+    //   final importSummary = importSummaries.lastWhere((summary) =>
+    //       summary['reference'] != null && summary['reference'] == event.id);
+
+    //   if (importSummary != null) {
+    //     availableItemCount++;
+    //     final syncFailed = importSummary['status'] == 'ERROR';
+    //     event.synced = !syncFailed;
+    //     event.dirty = true;
+    //     event.syncFailed = syncFailed;
+    //     event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
+    //     event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
+    //     queue.add(() => EventQuery().setData(event).save());
+    //   }
+    // });
+    // ! END: IMPROVE APPROACH
 
     if (availableItemCount == 0) {
       queue.cancel();
@@ -207,6 +225,15 @@ class EventQuery extends BaseQuery<Event> {
             percentage: 100),
         true);
 
-    return await EventQuery().byIds(eventIds).get();
+    // START: IMPROVE APPROACH
+    // final fetchedEvents = (await EventQuery().byIds(eventIds).get());
+    // return await EventQuery().byIds(eventIds).get();
+    // END: IMPROVE APPROACH
+    return events;
+  }
+
+  void printWrapped(String text) {
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 }

@@ -25,10 +25,9 @@ import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
 
 class D2Touch {
-  static Future<void> initialize(
-      {String? databaseName,
-      bool? inMemory,
-      DatabaseFactory? databaseFactory}) async {
+  static Future<void> initialize({String? databaseName,
+    bool? inMemory,
+    DatabaseFactory? databaseFactory}) async {
     final newDatabaseName = databaseName ?? await D2Touch.getDatabaseName();
     if (newDatabaseName != null) {
       DatabaseManager(
@@ -53,8 +52,8 @@ class D2Touch {
 
   static Future<bool> isAuthenticated(
       {Future<SharedPreferences>? sharedPreferenceInstance,
-      bool? inMemory,
-      DatabaseFactory? databaseFactory}) async {
+        bool? inMemory,
+        DatabaseFactory? databaseFactory}) async {
     WidgetsFlutterBinding.ensureInitialized();
     final databaseName = await D2Touch.getDatabaseName(
         sharedPreferenceInstance: sharedPreferenceInstance);
@@ -77,37 +76,32 @@ class D2Touch {
       {Future<SharedPreferences>? sharedPreferenceInstance}) async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs =
-        await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
+    await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
     return prefs.getString('databaseName');
   }
 
-  static Future<bool> setDatabaseName(
-      {required String databaseName,
-      Future<SharedPreferences>? sharedPreferenceInstance}) async {
+  static Future<bool> setDatabaseName({required String databaseName,
+    Future<SharedPreferences>? sharedPreferenceInstance}) async {
     WidgetsFlutterBinding.ensureInitialized();
     SharedPreferences prefs =
-        await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
+    await (sharedPreferenceInstance ?? SharedPreferences.getInstance());
     return prefs.setString('databaseName', databaseName);
   }
 
-  static Future<LoginResponseStatus> logIn(
-      {required String username,
-      required String password,
-      required String url,
-      Future<SharedPreferences>? sharedPreferenceInstance,
-      bool? inMemory,
-      DatabaseFactory? databaseFactory,
-      Dio? dioTestClient}) async {
+  static Future<LoginResponseStatus> logIn({required String username,
+    required String password,
+    required String url,
+    Future<SharedPreferences>? sharedPreferenceInstance,
+    bool? inMemory,
+    DatabaseFactory? databaseFactory,
+    Dio? dioTestClient}) async {
     WidgetsFlutterBinding.ensureInitialized();
     HttpResponse userResponse = await HttpClient.get(
-        'me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
+        'me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,phoneNumber,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
         baseUrl: url,
         username: username,
         password: password,
         dioTestClient: dioTestClient);
-
-    print("----------------------------------------------------------------------------------");
-    print(userResponse.body);
 
     if (userResponse.statusCode == 401) {
       return LoginResponseStatus.WRONG_CREDENTIALS;
@@ -117,7 +111,9 @@ class D2Touch {
       return LoginResponseStatus.SERVER_ERROR;
     }
 
-    final uri = Uri.parse(url).host;
+    final uri = Uri
+        .parse(url)
+        .host;
     final String databaseName = '${username}_$uri';
 
     await D2Touch.initialize(
@@ -128,7 +124,7 @@ class D2Touch {
     await D2Touch.setDatabaseName(
         databaseName: databaseName,
         sharedPreferenceInstance:
-            sharedPreferenceInstance ?? SharedPreferences.getInstance());
+        sharedPreferenceInstance ?? SharedPreferences.getInstance());
 
     UserQuery userQuery = UserQuery();
 
@@ -164,17 +160,17 @@ class D2Touch {
     return logOutSuccess;
   }
 
-  static Future<LoginResponseStatus> setToken(
-      {required String instanceUrl,
-      required Map<String, dynamic> userObject,
-      required Map<String, dynamic> tokenObject,
-      Future<SharedPreferences>? sharedPreferenceInstance,
-      bool? inMemory,
-      DatabaseFactory? databaseFactory,
-      Dio? dioTestClient}) async {
-    final uri = Uri.parse(instanceUrl).host;
+  static Future<LoginResponseStatus> setToken({required String instanceUrl,
+    required Map<String, dynamic> userObject,
+    required Map<String, dynamic> tokenObject,
+    Future<SharedPreferences>? sharedPreferenceInstance,
+    bool? inMemory,
+    DatabaseFactory? databaseFactory,
+    Dio? dioTestClient}) async {
+    final uri = Uri
+        .parse(instanceUrl)
+        .host;
     final String databaseName = '$uri';
-
     await D2Touch.initialize(
         databaseName: databaseName,
         inMemory: inMemory,
@@ -183,9 +179,21 @@ class D2Touch {
     await D2Touch.setDatabaseName(
         databaseName: databaseName,
         sharedPreferenceInstance:
-            sharedPreferenceInstance ?? SharedPreferences.getInstance());
+        sharedPreferenceInstance ?? SharedPreferences.getInstance());
 
     AuthToken token = AuthToken.fromJson(tokenObject);
+
+    List<dynamic> authorities = [];
+
+    userObject['userCredentials']['userRoles'].forEach((role) {
+
+      List<dynamic> authoritiesToAdd = role["authorities"].map((auth) {
+        return auth as String;
+      }).toList();
+
+      authorities.addAll(authoritiesToAdd);
+    });
+
     userObject['token'] = token.accessToken;
     userObject['tokenType'] = token.tokenType;
     userObject['tokenExpiry'] = token.expiresIn;
@@ -193,6 +201,8 @@ class D2Touch {
     userObject['isLoggedIn'] = true;
     userObject['dirty'] = true;
     userObject['baseUrl'] = instanceUrl;
+    userObject['authType'] = "token";
+    userObject['authorities'] = authorities;
 
     final user = User.fromApi(userObject);
     await UserQuery().setData(user).save();
@@ -202,10 +212,19 @@ class D2Touch {
     return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }
 
+  static Future<List<Map>> rawQuery(
+      {required String query, required List args}) async {
+    final Database db = await DatabaseManager.instance.database;
+
+    final List<Map> queryResult = await db.rawQuery(query.toString(), args);
+
+    return queryResult;
+  }
+
   static UserModule userModule = UserModule();
 
   static OrganisationUnitModule organisationUnitModule =
-      OrganisationUnitModule();
+  OrganisationUnitModule();
 
   static DataElementModule dataElementModule = DataElementModule();
 
@@ -216,7 +235,7 @@ class D2Touch {
   static DashboardModule dashboardModule = DashboardModule();
 
   static TrackedEntityInstanceModule trackerModule =
-      TrackedEntityInstanceModule();
+  TrackedEntityInstanceModule();
 
   static AggregateModule aggregateModule = AggregateModule();
 

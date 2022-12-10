@@ -6,6 +6,7 @@ import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:d2_touch/shared/utilities/merge_mode.util.dart';
+import 'package:d2_touch/shared/utilities/save_option.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
@@ -15,6 +16,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   String? orgUnit;
   String? dataSet;
   String? period;
+
   DataValueSetQuery({Database? database}) : super(database: database) {
     this.mergeMode = MergeMode.Merge;
   }
@@ -99,6 +101,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
     final data = response.body;
 
+
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -167,9 +170,12 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   uploadOne(DataValueSet dataValueSet, {Dio? dioTestClient}) async {
     final uploadFormat = DataValueSet.toUpload(dataValueSet);
 
+
     final response = await HttpClient.post(
         this.apiResourceName as String, uploadFormat,
         database: this.database, dioTestClient: dioTestClient);
+
+
 
     final importSummary = response.body;
     final syncFailed = importSummary['status'] == 'ERROR';
@@ -179,6 +185,13 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     dataValueSet.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
     dataValueSet.lastSyncSummary = importSummary.toString();
 
-    return DataValueSetQuery().setData(dataValueSet).save();
+    return DataValueSetQuery()
+        .setData(dataValueSet)
+        .save(saveOptions: SaveOptions(skipLocalSyncStatus: true));
+  }
+
+  void printWrapped(String text) {
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 }

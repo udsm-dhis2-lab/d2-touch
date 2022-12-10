@@ -13,6 +13,13 @@ final Map<Object, dynamic> sampleTrackedEntityInstanceUpload = {
         {
           "enrollment": "RiNIt1yJoge",
           "trackedEntityInstance": "VYhjy99cyVv",
+          "geometry": {
+            "type": "Point",
+            "coordinates": [
+              39.24570033075514,
+              -6.841304466305611
+            ]
+          },
           "orgUnit": "DiszpKrYNg8",
           "program": "IpHINAT79UW",
           "enrollmentDate": "2023-12-29T12:05:00.000",
@@ -57,6 +64,7 @@ final Map<Object, dynamic> sampleTrackedEntityInstanceUpload = {
         {
           "enrollment": "JMgRZyeLWOo",
           "trackedEntityInstance": "PQfMcpmXeFE",
+          "geometry": null,
           "orgUnit": "DiszpKrYNg8",
           "program": "IpHINAT79UW",
           "enrollmentDate": "2022-03-06T00:00:00.000",
@@ -66,6 +74,7 @@ final Map<Object, dynamic> sampleTrackedEntityInstanceUpload = {
         {
           "enrollment": "Yf47yST5FF2",
           "trackedEntityInstance": "PQfMcpmXeFE",
+          "geometry": null,
           "orgUnit": "DiszpKrYNg8",
           "program": "ur1Edk5Oe2n",
           "enrollmentDate": "2022-02-09T12:27:48.637",

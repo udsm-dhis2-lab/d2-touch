@@ -1,7 +1,7 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/database/database_manager.dart';
 import 'package:d2_touch/core/utilities/repository_util.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/base.entity.dart';
 import 'package:d2_touch/shared/utilities/merge_mode.util.dart';
 import 'package:d2_touch/shared/utilities/query_filter.util.dart';
 import 'package:d2_touch/shared/utilities/query_filter_condition.util.dart';
@@ -10,41 +10,61 @@ import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../shared/utilities/save_option.util.dart';
 import 'query_expression.dart';
 
 abstract class BaseRepository<T extends BaseEntity> {
   List<Column> get columns;
+
   List<Column> get oneToManyColumns;
+
   Entity get entity;
+
   String get createQuery;
+
   Future<Database> get database;
+
   Future<dynamic> create({Database database});
+
   Future<int> count({Database database});
+
   Future<List<T>> find(
       {String? id,
       List<QueryFilter>? filters,
       List<String>? fields,
       Map<String, SortOrder>? sortOrder,
       Database? database});
+
   Future<T?> findById(
       {required String id, List<String>? fields, Database? database});
+
   Future<List<T>> findAll(
       {List<QueryFilter> filters,
       List<String> fields,
       Map<String, SortOrder> sortOrder});
+
   Future<int> insertOne({required T entity, Database? database});
+
   Future<int> insertMany({required List<T> entities, Database? database});
+
   Future<int> updateOne({required T entity, Database database});
+
   Future<int> updateMany({required List<T> entities, Database database});
+
   Future<int> saveMany(
       {required List<T> entities,
       Database database,
       required MergeMode mergeMode});
+
   Future<int> saveOne(
       {required T entity, Database database, required MergeMode mergeMode});
+
   Future<int> deleteById({required String id, Database database});
+
   Future<int> deleteByIds({required List<String> ids, Database database});
+
   Future<int> deleteAll({Database database});
+
   Map<String, dynamic> sanitizeIncomingData(
       {required Map<String, dynamic> entity, required List<Column> columns});
 }
@@ -305,7 +325,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
 
-    final saveDataResponse = db.insert(this.entity.tableName, data);
+    final saveDataResponse = await db.insert(this.entity.tableName, data);
 
     if (this.oneToManyColumns.isEmpty) {
       return saveDataResponse;
@@ -456,7 +476,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       {required List<T> entities,
       Database? database,
       int? chunk,
-      required MergeMode mergeMode}) async {
+      required MergeMode mergeMode,
+      SaveOptions? saveOptions}) async {
     final Database db = database != null ? database : await this.database;
 
     if (entities.isEmpty) {
@@ -466,8 +487,11 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final queue = Queue(parallel: chunk ?? 500);
 
     entities.forEach((T entity) {
-      queue.add(
-          () => saveOne(entity: entity, database: db, mergeMode: mergeMode));
+      queue.add(() => saveOne(
+          entity: entity,
+          database: db,
+          mergeMode: mergeMode,
+          saveOptions: saveOptions));
     });
 
     await queue.onComplete;
@@ -479,7 +503,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   Future<int> saveOne(
       {required T entity,
       Database? database,
-      required MergeMode mergeMode}) async {
+      required MergeMode mergeMode,
+      SaveOptions? saveOptions}) async {
     final Database db = database != null ? database : await this.database;
 
     var result = await this.findById(id: entity.id as String, database: db);
@@ -500,10 +525,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         Map<String, dynamic> localData = result.toJson();
         Map<String, dynamic> entityMap = entity.toJson();
 
-        if(!localData['synced']){
+        if (saveOptions?.skipLocalSyncStatus == null ||
+            saveOptions?.skipLocalSyncStatus == false) {
           entityMap['synced'] = localData['synced'];
         }
-        
 
         localData.keys.forEach((key) {
           if (entityMap[key] == null) {
@@ -555,7 +580,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     Map<String, dynamic> data = this
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : await this.database;
-    final saveDataResponse = db.update(
+    final saveDataResponse = await db.update(
       this.entity.tableName,
       data,
       where: "id = ?",
@@ -678,5 +703,13 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         .rawQuery('SELECT COUNT(*) as count FROM ${this.entity.tableName}');
 
     return countResult[0]['count'] as int;
+  }
+
+  Future<List<Map>> rawQuery({required String query}) async {
+    final Database db = await this.database;
+
+    final List<Map> queryResult = await db.rawQuery(query.toString());
+
+    return queryResult;
   }
 }

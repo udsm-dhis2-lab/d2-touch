@@ -50,7 +50,7 @@ class QueryExpression {
       {required String foreignColumn,
       required String referencedTable,
       required String referencedColumn}) {
-    return 'FOREIGN KEY ($foreignColumn) REFERENCES $referencedTable ($referencedColumn)';
+    return 'FOREIGN KEY ($foreignColumn) REFERENCES $referencedTable ($referencedColumn) ON DELETE CASCADE';
   }
 
   static getSelectExpression(

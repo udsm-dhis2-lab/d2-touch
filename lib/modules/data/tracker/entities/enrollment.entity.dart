@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/modules/data/tracker/models/enrollment_import_summary.dart';
+import 'package:d2_touch/modules/data/tracker/models/geometry.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'event.entity.dart';
 import 'tracked-entity.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'enrollment', apiResourceName: 'enrollments')
-class Enrollment extends BaseEntity {
+class Enrollment extends IdentifiableEntity {
   @Column()
   String? enrollment;
 
@@ -34,8 +38,11 @@ class Enrollment extends BaseEntity {
   @Column(nullable: true)
   bool? syncFailed;
 
-  @Column(nullable: true)
-  String? lastSyncSummary;
+  @Column(nullable: true, type: ColumnType.TEXT)
+  EnrollmentImportSummary? lastSyncSummary;
+
+  @Column(nullable: true, type: ColumnType.TEXT)
+  Geometry? geometry;
 
   @Column(nullable: true)
   String? lastSyncDate;
@@ -63,6 +70,7 @@ class Enrollment extends BaseEntity {
       this.synced,
       this.syncFailed,
       this.lastSyncSummary,
+      this.geometry,
       this.lastSyncDate,
       this.events,
       this.trackedEntityInstance})
@@ -79,6 +87,16 @@ class Enrollment extends BaseEntity {
   }
 
   factory Enrollment.fromJson(Map<String, dynamic> json) {
+    final dynamic lastSyncSummary = json['lastSyncSummary'] != null
+        ? EnrollmentImportSummary.fromJson(jsonDecode(json['lastSyncSummary']))
+        : null;
+
+    final Geometry? geometry = json["geometry"] != null
+        ? Geometry.fromJson(json["geometry"].runtimeType == String
+            ? jsonDecode(json["geometry"])
+            : json["geometry"])
+        : null;
+
     return Enrollment(
         id: json['enrollment'],
         enrollment: json['enrollment'],
@@ -93,7 +111,8 @@ class Enrollment extends BaseEntity {
         status: json['status'],
         synced: json['synced'],
         syncFailed: json['syncFailed'],
-        lastSyncSummary: json['lastSyncSummary'],
+        lastSyncSummary: lastSyncSummary,
+        geometry: geometry,
         lastSyncDate: json['lastSyncDate'],
         events: List<dynamic>.from(json['events'] ?? [])
             .map((event) => Event.fromJson({
@@ -119,7 +138,13 @@ class Enrollment extends BaseEntity {
     data['status'] = this.status;
     data['synced'] = this.synced;
     data['syncFailed'] = this.syncFailed;
-    data['lastSyncSummary'] = this.lastSyncSummary;
+    data['lastSyncSummary'] = this.lastSyncSummary != null
+        ? jsonEncode(
+            (this.lastSyncSummary as EnrollmentImportSummary).responseSummary)
+        : null;
+    ;
+    data['geometry'] =
+        this.geometry != null ? jsonEncode(this.geometry?.geometryData) : null;
     data['lastSyncDate'] = this.lastSyncDate;
     data['events'] = this.events ?? [];
     data['trackedEntityInstance'] = this.trackedEntityInstance;
@@ -136,6 +161,8 @@ class Enrollment extends BaseEntity {
     return {
       "enrollment": enrollment.enrollment,
       "trackedEntityInstance": enrollment.trackedEntityInstance,
+      "geometry":
+          enrollment.geometry != null ? enrollment.geometry?.toJson() : null,
       "orgUnit": enrollment.orgUnit,
       "program": enrollment.program,
       "enrollmentDate": enrollment.enrollmentDate,

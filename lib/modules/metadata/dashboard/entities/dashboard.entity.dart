@@ -1,9 +1,9 @@
 import 'package:d2_touch/core/annotations/index.dart';
-import 'package:d2_touch/shared/entities/base_entity.dart';
+import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'dashboard', apiResourceName: 'dashboards')
-class Dashboard extends BaseEntity {
+class Dashboard extends IdentifiableEntity {
   @Column(type: ColumnType.TEXT, name: 'formname', nullable: true)
   String? formName;
 

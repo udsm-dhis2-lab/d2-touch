@@ -45,7 +45,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/organisationUnits.json?filter=path:ilike:ImspTQPwCqd&rootJunction=OR&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,level,path,externalAccess,openingDate,geometry,parent&paging=false',
+    'https://play.dhis2.org/2.35.11/api/organisationUnits.json?filter=path:ilike:ImspTQPwCqd&rootJunction=OR&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,level,path,externalAccess,openingDate,geometry,parent&paging=false',
     (server) => server.reply(200, dhisOrganisationUnits),
   );
 
@@ -53,7 +53,8 @@ void main() async {
     print(progress.message);
   }, dioTestClient: dio);
 
-  List<OrganisationUnit> orgUnits = await organisationUnitQuery.get();
+  List<OrganisationUnit> orgUnits =
+      await D2Touch.organisationUnitModule.organisationUnit.get();
 
   test('should store all incoming organisation unit metadata', () {
     expect(orgUnits.length, 50);
