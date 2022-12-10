@@ -206,6 +206,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
               ? relationResult[0]
               : null
           : relationResult);
+
       resultMap['data'] = dataResult;
 
       return resultMap;
@@ -326,6 +327,9 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : this.database;
 
+    // // print("EVENT PROGRAM STAGE:: ${data}");
+    // final testData = await db.rawQuery("SELECT * FROM programstage");
+    // print("TEST DATA:: $T $testData");
     final saveDataResponse = await db.insert(this.entity.tableName, data);
 
     if (this.oneToManyColumns.isEmpty) {

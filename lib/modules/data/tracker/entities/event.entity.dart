@@ -5,7 +5,6 @@ import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
-import 'enrollment.entity.dart';
 import 'event_data_value.entity.dart';
 
 @AnnotationReflectable
@@ -65,7 +64,8 @@ class Event extends IdentifiableEntity {
   @ManyToOne(joinColumnName: 'programStage', table: ProgramStage)
   dynamic programStage;
 
-  @ManyToOne(joinColumnName: 'enrollment', table: Enrollment)
+  // @ManyToOne(joinColumnName: 'enrollment', table: Enrollment)
+  @Column(nullable: true)
   dynamic enrollment;
 
   @OneToMany(table: EventDataValue)
@@ -132,7 +132,7 @@ class Event extends IdentifiableEntity {
         notes: json['notes'].toString(),
         eventType: json['eventType'],
         programStage: json['programStage'],
-        enrollment: json['enrollment'] ?? '',
+        enrollment: json['enrollment'],
         dataValues: List<dynamic>.from(json['dataValues'] ?? [])
             .map((event) => EventDataValue.fromJson({
                   ...event,
@@ -170,7 +170,7 @@ class Event extends IdentifiableEntity {
     data['notes'] = this.notes;
     data['eventType'] = this.eventType;
     data['programStage'] = this.programStage;
-    data['enrollment'] = this.enrollment ?? '';
+    data['enrollment'] = this.enrollment;
     data['dataValues'] = this.dataValues;
     data['dirty'] = this.dirty;
     return data;

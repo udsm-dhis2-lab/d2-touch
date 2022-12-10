@@ -58,7 +58,8 @@ class DatabaseManager {
       if (databaseExist) {
         await databaseFactory?.deleteDatabase(databaseName);
       }
-      return databaseFactory?.openDatabase(databaseName);
+      return databaseFactory?.openDatabase(databaseName,
+          options: OpenDatabaseOptions(onConfigure: _onConfigure));
     }
 
     Directory documentDirectory = await getApplicationDocumentsDirectory();

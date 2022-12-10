@@ -113,7 +113,7 @@ void main() async {
   });
 
   var programStageResult = await d2.programModule.programStage
-      .byId('programstage1')
+      .byIds(['programstage1'])
       .withProgram()
       .getOne();
 
