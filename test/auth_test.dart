@@ -48,7 +48,7 @@ void main() async {
       url: 'https://play.dhis2.org/2.35.11',
       dioTestClient: dio);
 
-  final user = await d2.userModule2.user.withAuthorities().withRoles().getOne();
+  final user = await d2.userModule.user.withAuthorities().withRoles().getOne();
 
   test('should successfully authenticate user on online login', () {
     expect(onlineLogIn, LoginResponseStatus.ONLINE_LOGIN_SUCCESS);
@@ -78,7 +78,7 @@ void main() async {
       userObject: userData,
       tokenObject: wrongSampleAuthToken);
 
-  User? userWithToken = await d2TokenBased.userModule2.user.getOne();
+  User? userWithToken = await d2TokenBased.userModule.user.getOne();
 
   test('should get user information with authentication token', () async {
     expect(userWithToken, isNotNull);
@@ -108,7 +108,7 @@ void main() async {
       userObject: userData,
       tokenObject: correctSampleAuthToken);
 
-  User? userWithCorrectToken = await d2TokenBased.userModule2.user.getOne();
+  User? userWithCorrectToken = await d2TokenBased.userModule.user.getOne();
 
   test('should get user information with correct authentication token',
       () async {

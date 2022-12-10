@@ -39,7 +39,7 @@ void main() async {
   userData['username'] = 'admin';
   userData['baseUrl'] = 'https://play.dhis2.org/2.35.14';
   final user = User.fromApi(userData);
-  await d2.userModule2.user.setData(user).save();
+  await d2.userModule.user.setData(user).save();
 
   List<Program> programs = List.from((samplePrograms['programs'] ?? []))
       .map<Program>((program) => Program.fromJson(program))

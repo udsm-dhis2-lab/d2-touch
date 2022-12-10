@@ -17,5 +17,5 @@ abstract class D2TouchModel {
     required SharedPreferences sharedPreferenceInstance,
   });
 
-  UserModule get userModule2;
+  UserModule get userModule;
 }

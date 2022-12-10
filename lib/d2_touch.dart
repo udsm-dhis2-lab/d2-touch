@@ -40,7 +40,7 @@ class D2Touch implements D2TouchModel {
 
   D2Touch._internal();
 
-  UserModule get userModule2 => UserModule(database: _database, locale: locale);
+  UserModule get userModule => UserModule(database: _database, locale: locale);
 
   DataElementModule get dataElementModule =>
       DataElementModule(database: _database);
@@ -154,7 +154,7 @@ class D2Touch implements D2TouchModel {
   }
 
   @deprecated
-  static Future<void> initialize(
+  static Future<Database?> initialize(
       {String? databaseName,
       bool? inMemory,
       DatabaseFactory? databaseFactory}) async {
@@ -178,7 +178,11 @@ class D2Touch implements D2TouchModel {
       await OptionSetModule.createTables(database: database);
       await NotificationModule.createTables(database: database);
       await FileResourceModule.createTables(database: database);
+
+      return database;
     }
+
+    return null;
   }
 
   @deprecated
@@ -194,12 +198,12 @@ class D2Touch implements D2TouchModel {
       return false;
     }
 
-    await D2Touch.initialize(
+    Database? database = await D2Touch.initialize(
         databaseName: databaseName,
         inMemory: inMemory,
         databaseFactory: databaseFactory);
 
-    User? user = await D2Touch.userModule.user.getOne();
+    User? user = await UserQuery(database: database).getOne();
 
     return user?.isLoggedIn ?? false;
   }
@@ -270,13 +274,15 @@ class D2Touch implements D2TouchModel {
   static Future<bool> logOut() async {
     WidgetsFlutterBinding.ensureInitialized();
     bool logOutSuccess = false;
+
     try {
-      User? currentUser = await D2Touch.userModule.user.getOne();
+      Database database = await DatabaseManager.instance!.database;
+      User? currentUser = await UserQuery(database: database).getOne();
 
       currentUser?.isLoggedIn = false;
       currentUser?.dirty = true;
 
-      await D2Touch.userModule.user.setData(currentUser).save();
+      await UserQuery(database: database).setData(currentUser).save();
 
       logOutSuccess = true;
     } catch (e) {}
@@ -337,8 +343,4 @@ class D2Touch implements D2TouchModel {
 
     return queryResult;
   }
-
-  static UserModule userModule = UserModule();
-
-  static OptionSetModule optionSetModule = OptionSetModule();
 }

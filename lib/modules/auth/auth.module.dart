@@ -17,7 +17,7 @@ class AuthModule {
       return false;
     }
 
-    final User? user = await d2Instance.userModule2.user.getOne();
+    final User? user = await d2Instance.userModule.user.getOne();
     return user?.isLoggedIn ?? false;
   }
 
@@ -59,9 +59,9 @@ class AuthModule {
     userData['dirty'] = true;
 
     final user = User.fromApi(userData);
-    await d2Instance.userModule2.user.setData(user).save();
+    await d2Instance.userModule.user.setData(user).save();
 
-    await d2Instance.userModule2.userOrganisationUnit
+    await d2Instance.userModule.userOrganisationUnit
         .setData(user.organisationUnits)
         .save();
 
@@ -71,12 +71,12 @@ class AuthModule {
   Future<bool> logOut() async {
     bool logOutSuccess = false;
     try {
-      User? currentUser = await d2Instance.userModule2.user.getOne();
+      User? currentUser = await d2Instance.userModule.user.getOne();
 
       currentUser?.isLoggedIn = false;
       currentUser?.dirty = true;
 
-      await d2Instance.userModule2.user.setData(currentUser).save();
+      await d2Instance.userModule.user.setData(currentUser).save();
 
       logOutSuccess = true;
     } catch (e) {}
@@ -110,9 +110,9 @@ class AuthModule {
 
     final user = User.fromApi(userObject);
 
-    await d2Instance.userModule2.user.setData(user).save();
+    await d2Instance.userModule.user.setData(user).save();
 
-    await d2Instance.userModule2.userOrganisationUnit
+    await d2Instance.userModule.userOrganisationUnit
         .setData(user.organisationUnits)
         .save();
 
