@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/auth/queries/user_organisation_unit.query.dart';
@@ -352,33 +354,9 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         .withDataValues()
         .get();
 
-    List<String> eventIds = [];
-    List<String> eventProgramStageIds = [];
-    events.forEach((event) {
-      eventIds.add(event.id as String);
-
-      eventProgramStageIds.removeWhere((id) => id == event.programStage);
-      eventProgramStageIds.add(event.programStage);
-    });
-
-    List<ProgramStage> programStages =
-        await ProgramStageQuery(database: database)
-            .byIds(eventProgramStageIds)
-            .get();
-
-    final eventUploadPayload = events.map((event) {
-      if (programStages.length > 0) {
-        event.programStage = programStages
-            .lastWhere((programStage) => programStage.id == event.programStage)
-            .toJson();
-      }
-      return event;
-    }).toList();
-
     final trackedEntityInstanceUploadPayload =
         trackedEntityInstances.map((trackedEntityInstance) {
-      return TrackedEntityInstance.toUpload(
-          trackedEntityInstance, eventUploadPayload);
+      return TrackedEntityInstance.toUpload(trackedEntityInstance, events);
     }).toList();
 
     final response = await HttpClient.post(this.apiResourceName as String,

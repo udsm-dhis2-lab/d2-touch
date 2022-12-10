@@ -139,25 +139,9 @@ class EventQuery extends BaseQuery<Event> {
             percentage: 51),
         false);
 
-    List<String> eventIds = [];
-    List<String> eventProgramStageIds = [];
-
-    events.forEach((event) {
-      eventIds.add(event.id as String);
-
-      eventProgramStageIds.removeWhere((id) => id == event.programStage);
-      eventProgramStageIds.add(event.programStage);
-    });
-
-    List<ProgramStage> programStages =
-        await ProgramStageQuery(database: database)
-            .byIds(eventProgramStageIds)
-            .get();
+    List<String> eventIds = events.map((event) => event.id as String).toList();
 
     final eventUploadPayload = events.map((event) {
-      event.programStage = programStages
-          .firstWhere((programStage) => programStage.id == event.programStage)
-          .toJson();
       return Event.toUpload(event);
     }).toList();
 

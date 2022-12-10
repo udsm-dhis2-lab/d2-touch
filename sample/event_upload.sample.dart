@@ -17,8 +17,7 @@ final Map<Object, dynamic> sampleEventUpload = {
         {"dataElement": "wQLfBvPrXqq", "value": "NVP only"},
         {"dataElement": "a3kGcGDCuk6", "value": "2"},
         {"dataElement": "UXz7xuGCEhU", "value": "3228"}
-      ],
-      "program": "IpHINAT79UW"
+      ]
     },
     {
       "event": "NUE7a9V9dxi",
@@ -36,8 +35,7 @@ final Map<Object, dynamic> sampleEventUpload = {
         {"dataElement": "wQLfBvPrXqq", "value": "NVP only"},
         {"dataElement": "a3kGcGDCuk6", "value": "1"},
         {"dataElement": "UXz7xuGCEhU", "value": "3190"}
-      ],
-      "program": "IpHINAT79UW"
+      ]
     }
   ]
 };
