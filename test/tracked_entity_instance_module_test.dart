@@ -196,7 +196,7 @@ void main() async {
     expect(ulteredAttributeValue.value, finalAttributeValue.value);
   });
 
-  final res = await d2.trackerModule.trackedEntityAttributeValue
+  await d2.trackerModule.trackedEntityAttributeValue
       .setData(TrackedEntityAttributeValue.fromJson(
           {...secondAttributes[0].toJson(), "value": 'Female', "dirty": true}))
       .save();
@@ -237,8 +237,7 @@ void main() async {
     (server) => server.reply(200, sampleTrackedEntityInstances),
   );
 
-  List<TrackedEntityInstance>? listByOuMode = await d2
-      .trackerModule.trackedEntityInstance
+  await d2.trackerModule.trackedEntityInstance
       .byUserOrgUnit()
       .byProgram('IpHINAT79UW')
       .withOuMode(OrgUnitMode.DESCENDANTS)
@@ -257,9 +256,6 @@ void main() async {
       .toList();
 
   await d2.fileResourceModule.fileResource.setData(fileResources).save();
-
-  final List<FileResource> savedFileResources =
-      await d2.fileResourceModule.fileResource.get();
 
   final TrackedEntityInstance trackedEntityInstance =
       TrackedEntityInstance.fromJson({
@@ -359,4 +355,6 @@ void main() async {
   test('should store all incoming data value sets', () {
     expect(downloadedAttributeReservedValues.length, 100);
   });
+
+  d2.dispose();
 }

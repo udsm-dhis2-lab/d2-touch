@@ -1,18 +1,15 @@
 import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/auth/entities/user.entity.dart';
 import 'package:d2_touch/modules/auth/models/login-response.model.dart';
-import 'package:d2_touch/modules/auth/queries/user.query.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:d2_touch/shared/utilities/http_client.util.dart';
 
-import '../sample/current_user.sample.dart';
 import '../sample/auth-token.sample.dart';
+import '../sample/current_user.sample.dart';
 import 'auth_test.reflectable.dart';
 
 void main() async {
@@ -130,4 +127,6 @@ void main() async {
     expect(validTokenResponse.statusCode, 200);
     expect(validTokenResponse.body['id'], 'xE7jOejl9FI');
   });
+
+  d2.dispose();
 }

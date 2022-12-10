@@ -143,4 +143,5 @@ void main() async {
     expect(createdEventWithoutEnrollment?.orgUnit, 'Rp268JB6Ne4');
     expect(createdEventWithoutEnrollment?.programStage, 'A03MvHH7gjR');
   });
+  d2.dispose();
 }

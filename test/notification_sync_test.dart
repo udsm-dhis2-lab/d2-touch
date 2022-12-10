@@ -62,4 +62,6 @@ void main() async {
     expect(messageConversations.length, 50);
     expect(onlineNotifications.length, 50);
   });
+
+  d2.dispose();
 }

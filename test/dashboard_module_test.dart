@@ -1,6 +1,5 @@
 import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/metadata/dashboard/entities/dashboard.entity.dart';
-import 'package:d2_touch/modules/metadata/dashboard/queries/dashboard.query.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -41,4 +40,6 @@ void main() async {
     expect(result.id, 'test1');
     expect(result.name, 'Dashboard 1');
   });
+
+  d2.dispose();
 }

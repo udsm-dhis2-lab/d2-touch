@@ -354,4 +354,6 @@ void main() async {
   test('should assign last name', () {
     expect(lastNameAttributeValue?.value, 'Last Name');
   });
+
+  d2.dispose();
 }

@@ -111,4 +111,6 @@ void main() async {
   test('should store dataset given the ids', () {
     expect(newDataSets.length, 2);
   });
+
+  d2.dispose();
 }

@@ -74,4 +74,6 @@ void main() async {
   test('should store all incoming data element metadata', () {
     expect(dataElements.length, 51);
   });
+
+  d2.dispose();
 }

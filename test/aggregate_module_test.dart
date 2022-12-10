@@ -175,4 +175,6 @@ void main() async {
   test('should return validation rule actions', () {
     expect(validationRuleResult.validationRuleActions.length, 1);
   });
+
+  d2.dispose();
 }

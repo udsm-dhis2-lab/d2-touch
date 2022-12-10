@@ -99,4 +99,6 @@ void main() async {
   test('should return result given parent id is passed where clause', () {
     expect(childOrgUnit?.parent, 'qtr8GGlm4gg');
   });
+
+  d2.dispose();
 }

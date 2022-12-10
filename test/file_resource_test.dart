@@ -125,4 +125,6 @@ void main() async {
       () {
     expect(attributeDataValue.value, resourceId);
   });
+
+  d2.dispose();
 }
