@@ -22,7 +22,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   }
 
   DataValueSetQuery withDataValues() {
-    final dataValue = Repository<DataValue>();
+    final dataValue = Repository<DataValue>(database: database as Database);
 
     final Column? relationColumn = dataValue.columns.firstWhere((column) {
       return column.relation?.referencedEntity?.tableName == this.tableName;
@@ -101,7 +101,6 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
     final data = response.body;
 
-
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -164,20 +163,20 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
       await queue.onComplete;
     }
 
-    return await DataValueSetQuery().byIds(dataValueSetIds).get();
+    return await DataValueSetQuery(database: database)
+        .byIds(dataValueSetIds)
+        .get();
   }
 
   uploadOne(DataValueSet dataValueSet, {Dio? dioTestClient}) async {
     final uploadFormat = DataValueSet.toUpload(dataValueSet);
 
-
     final response = await HttpClient.post(
         this.apiResourceName as String, uploadFormat,
         database: this.database, dioTestClient: dioTestClient);
 
-
-
     final importSummary = response.body;
+
     final syncFailed = importSummary['status'] == 'ERROR';
     dataValueSet.synced = !syncFailed;
     dataValueSet.dirty = syncFailed;
@@ -185,7 +184,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     dataValueSet.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
     dataValueSet.lastSyncSummary = importSummary.toString();
 
-    return DataValueSetQuery()
+    return DataValueSetQuery(database: database)
         .setData(dataValueSet)
         .save(saveOptions: SaveOptions(skipLocalSyncStatus: true));
   }

@@ -31,7 +31,7 @@ class BaseQuery<T extends BaseEntity> {
   MergeMode _mergeMode = MergeMode.Replace;
 
   BaseQuery({this.database}) {
-    this.repository = Repository<T>();
+    this.repository = Repository<T>(database: database as Database);
     this.tableName = repository.entity.tableName;
     this.apiResourceName = repository.entity.apiResourceName;
 

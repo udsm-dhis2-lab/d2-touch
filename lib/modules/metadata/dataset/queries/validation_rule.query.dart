@@ -15,7 +15,7 @@ class ValidationRuleQuery extends BaseQuery<ValidationRule> {
   Future<List<ValidationRule>?> download(
       Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
-    List<DataSet> dataSets = await DataSetQuery().get();
+    List<DataSet> dataSets = await DataSetQuery(database: database).get();
 
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
