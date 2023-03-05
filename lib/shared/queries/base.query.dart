@@ -62,6 +62,7 @@ class BaseQuery<T extends BaseEntity> {
     this.id = null;
     return this.whereIn(attribute: 'id', values: ids, merge: false);
   }
+  
 
   whereIn(
       {required String attribute,
@@ -243,6 +244,11 @@ class BaseQuery<T extends BaseEntity> {
     final dhisUrl = await this.dhisUrl();
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
+
+
+    print(dhisUrl);
+    print(response.statusCode);
+
 
     List data = response.body[this.apiResourceName]?.toList();
 
