@@ -29,6 +29,9 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
   bool mandatory;
 
   @Column(nullable: true)
+  bool? displayInList;
+
+  @Column(nullable: true)
   String? aggregationType;
 
   @Column(nullable: true)
@@ -52,32 +55,32 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
   @OneToMany(table: AttributeOption)
   List<AttributeOption>? options;
 
-  ProgramTrackedEntityAttribute(
-      {required String id,
-      required this.attribute,
-      required String name,
-      required this.sortOrder,
-      required this.valueType,
-      required this.mandatory,
-      this.formName,
-      String? displayName,
-      this.renderOptionsAsRadio,
-      this.aggregationType,
-      this.generated,
-      this.program,
-      this.isUnique,
-      this.optionSetValue,
-      this.optionSetValueCount,
-      this.optionSetName,
-      this.options,
-      required bool dirty,
-      List<dynamic>? translations})
+  ProgramTrackedEntityAttribute({required String id,
+    required this.attribute,
+    required String name,
+    required this.sortOrder,
+    required this.valueType,
+    required this.mandatory,
+    this.displayInList: false,
+    this.formName,
+    String? displayName,
+    this.renderOptionsAsRadio,
+    this.aggregationType,
+    this.generated,
+    this.program,
+    this.isUnique,
+    this.optionSetValue,
+    this.optionSetValueCount,
+    this.optionSetName,
+    this.options,
+    required bool dirty,
+    List<dynamic>? translations})
       : super(
-            id: id,
-            name: name,
-            displayName: displayName,
-            dirty: dirty,
-            translations: translations);
+      id: id,
+      name: name,
+      displayName: displayName,
+      dirty: dirty,
+      translations: translations);
 
   factory ProgramTrackedEntityAttribute.fromJson(
       Map<String, dynamic> jsonData) {
@@ -100,6 +103,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
             jsonData['formName'],
         program: jsonData['program'],
         valueType: jsonData['valueType'],
+        displayInList: jsonData["displayInList"] ?? null,
         sortOrder: jsonData['sortOrder'],
         mandatory: jsonData['mandatory'],
         aggregationType: jsonData['aggregationType'] ??
@@ -114,15 +118,16 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
         optionSetName: jsonData['optionSetName'] ??
             jsonData['trackedEntityAttribute']?['optionSet']?['name'],
         options: List<dynamic>.from(jsonData['options'] ??
-                jsonData['trackedEntityAttribute']?['optionSet']?['options'] ??
-                [])
-            .map((option) => AttributeOption.fromJson({
-                  ...option,
-                  'id': '${option['id']}_${jsonData['id']}_$attribute',
-                  'programTrackedEntityAttribute': jsonData['id'],
-                  'attribute': attribute,
-                  'dirty': false
-                }))
+            jsonData['trackedEntityAttribute']?['optionSet']?['options'] ??
+            [])
+            .map((option) =>
+            AttributeOption.fromJson({
+              ...option,
+              'id': '${option['id']}_${jsonData['id']}_$attribute',
+              'programTrackedEntityAttribute': jsonData['id'],
+              'attribute': attribute,
+              'dirty': false
+            }))
             .toList(),
         dirty: jsonData['dirty'],
         translations: translations);
@@ -136,6 +141,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
     data['displayName'] = this.displayName;
     data['formName'] = this.formName;
     data['sortOrder'] = this.sortOrder;
+    data['displayInList'] = this.displayInList;
     data['valueType'] = this.valueType;
     data['attribute'] = this.attribute;
     data['renderOptionsAsRadio'] = this.renderOptionsAsRadio;
