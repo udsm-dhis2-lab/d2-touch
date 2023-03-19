@@ -35,9 +35,6 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
   String? aggregationType;
 
   @Column(nullable: true)
-  String? code;
-
-  @Column(nullable: true)
   bool? generated;
 
   @Column(nullable: true)
@@ -58,33 +55,34 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
   @OneToMany(table: AttributeOption)
   List<AttributeOption>? options;
 
-  ProgramTrackedEntityAttribute({required String id,
-    required this.attribute,
-    required String name,
-    required this.sortOrder,
-    required this.valueType,
-    required this.mandatory,
-    this.displayInList: false,
-    this.formName,
-    String? displayName,
-    this.renderOptionsAsRadio,
-    this.aggregationType,
-    this.generated,
-    this.program,
-    this.isUnique,
-    this.optionSetValue,
-    this.optionSetValueCount,
-    this.optionSetName,
-    this.options,
-    required bool dirty,
-    this.code,
-    List<dynamic>? translations})
+  ProgramTrackedEntityAttribute(
+      {required String id,
+      required this.attribute,
+      required String name,
+      required this.sortOrder,
+      required this.valueType,
+      required this.mandatory,
+      this.displayInList: false,
+      this.formName,
+      String? displayName,
+      this.renderOptionsAsRadio,
+      this.aggregationType,
+      this.generated,
+      this.program,
+      this.isUnique,
+      this.optionSetValue,
+      this.optionSetValueCount,
+      this.optionSetName,
+      this.options,
+      required bool dirty,
+      String? code,
+      List<dynamic>? translations})
       : super(
-      id: id,
-      name: name,
-      displayName: displayName,
-      dirty: dirty,
-      translations: translations);
+            id: id,
+            name: name,
+            displayName: displayName,
+            dirty: dirty,
+            translations: translations);
 
   factory ProgramTrackedEntityAttribute.fromJson(
       Map<String, dynamic> jsonData) {
@@ -112,8 +110,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
         mandatory: jsonData['mandatory'],
         aggregationType: jsonData['aggregationType'] ??
             jsonData['trackedEntityAttribute']?['aggregationType'],
-        code: jsonData['code'] ??
-            jsonData['trackedEntityAttribute']?['code'],
+        code: jsonData['code'] ?? jsonData['trackedEntityAttribute']?['code'],
         generated: jsonData['generated'] ??
             jsonData['trackedEntityAttribute']?['generated'],
         isUnique: jsonData['isUnique'] ??
@@ -124,16 +121,15 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
         optionSetName: jsonData['optionSetName'] ??
             jsonData['trackedEntityAttribute']?['optionSet']?['name'],
         options: List<dynamic>.from(jsonData['options'] ??
-            jsonData['trackedEntityAttribute']?['optionSet']?['options'] ??
-            [])
-            .map((option) =>
-            AttributeOption.fromJson({
-              ...option,
-              'id': '${option['id']}_${jsonData['id']}_$attribute',
-              'programTrackedEntityAttribute': jsonData['id'],
-              'attribute': attribute,
-              'dirty': false
-            }))
+                jsonData['trackedEntityAttribute']?['optionSet']?['options'] ??
+                [])
+            .map((option) => AttributeOption.fromJson({
+                  ...option,
+                  'id': '${option['id']}_${jsonData['id']}_$attribute',
+                  'programTrackedEntityAttribute': jsonData['id'],
+                  'attribute': attribute,
+                  'dirty': false
+                }))
             .toList(),
         dirty: jsonData['dirty'],
         translations: translations);
