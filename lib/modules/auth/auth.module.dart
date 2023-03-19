@@ -14,19 +14,11 @@ class AuthModule {
   Future<bool> isAuthenticated() async {
     final Database? database = await d2Instance.databaseInstance?.database;
 
-    print("--------");
-    print(database);
-    print(d2Instance.databaseInstance);
-
     if (database == null) {
       return false;
     }
 
     final User? user = await d2Instance.userModule.user.getOne();
-
-    print(" whats whattt");
-    print(user);
-    print(user?.isLoggedIn);
 
     return user?.isLoggedIn ?? false;
   }
