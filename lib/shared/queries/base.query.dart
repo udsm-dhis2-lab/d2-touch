@@ -36,7 +36,7 @@ class BaseQuery<T extends BaseEntity> {
     this.apiResourceName = repository.entity.apiResourceName;
 
     Iterable<Column> newColumns = repository.columns.where((column) =>
-        column.relation == null ||
+    column.relation == null ||
         column.relation?.relationType != RelationType.OneToMany);
 
     this.fields = newColumns.map((column) => column.name ?? '').toList();
@@ -62,12 +62,11 @@ class BaseQuery<T extends BaseEntity> {
     this.id = null;
     return this.whereIn(attribute: 'id', values: ids, merge: false);
   }
-  
 
-  whereIn(
-      {required String attribute,
-      required List<String> values,
-      required bool merge}) {
+
+  whereIn({required String attribute,
+    required List<String> values,
+    required bool merge}) {
     if (merge) {
       this.filters?.add(QueryFilter(
           attribute: attribute, condition: QueryCondition.In, value: values));
@@ -94,12 +93,11 @@ class BaseQuery<T extends BaseEntity> {
     return this;
   }
 
-  ilike(
-      {required String attribute,
-      required dynamic value,
-      String? filterCondition,
-      String? key,
-      String? keyValue}) {
+  ilike({required String attribute,
+    required dynamic value,
+    String? filterCondition,
+    String? key,
+    String? keyValue}) {
     this.filters?.add(QueryFilter(
         attribute: attribute,
         condition: QueryCondition.Ilike,
@@ -245,18 +243,13 @@ class BaseQuery<T extends BaseEntity> {
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
-
-    print(dhisUrl);
-    print(response.statusCode);
-
-
     List data = response.body[this.apiResourceName]?.toList();
 
     return data.map((dataItem) {
       dataItem['dirty'] = false;
       dataItem['synced'] = true;
       ClassMirror classMirror =
-          AnnotationReflectable.reflectType(T) as ClassMirror;
+      AnnotationReflectable.reflectType(T) as ClassMirror;
 
       var x = classMirror.newInstance('fromJson', [dataItem]) as T;
 
@@ -270,7 +263,8 @@ class BaseQuery<T extends BaseEntity> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Downloading ${this.apiResourceName?.toLowerCase()} from the server....',
+            'Downloading ${this.apiResourceName
+                ?.toLowerCase()} from the server....',
             status: '',
             percentage: 0),
         false);
@@ -281,7 +275,8 @@ class BaseQuery<T extends BaseEntity> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} downloaded successfully',
+            '${data.length} ${this.apiResourceName
+                ?.toLowerCase()} downloaded successfully',
             status: '',
             percentage: 50),
         false);
@@ -290,7 +285,8 @@ class BaseQuery<T extends BaseEntity> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                'Saving ${data.length} ${this.apiResourceName?.toLowerCase()} into phone database...',
+            'Saving ${data.length} ${this.apiResourceName
+                ?.toLowerCase()} into phone database...',
             status: '',
             percentage: 51),
         false);
@@ -301,7 +297,8 @@ class BaseQuery<T extends BaseEntity> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} successifully saved into the database',
+            '${data.length} ${this.apiResourceName
+                ?.toLowerCase()} successifully saved into the database',
             status: '',
             percentage: 100),
         true);

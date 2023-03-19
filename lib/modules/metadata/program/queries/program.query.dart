@@ -15,9 +15,9 @@ class ProgramQuery extends BaseQuery<Program> {
 
   ProgramQuery withProgramStages() {
     final programStage =
-        Repository<ProgramStage>(database: database as Database);
+    Repository<ProgramStage>(database: database as Database);
     final Column? relationColumn = programStage.columns.firstWhere((column) =>
-        column.relation?.referencedEntity?.tableName == this.tableName);
+    column.relation?.referencedEntity?.tableName == this.tableName);
 
     if (relationColumn != null) {
       ColumnRelation relation = ColumnRelation(
@@ -40,8 +40,8 @@ class ProgramQuery extends BaseQuery<Program> {
     final programAttribute = Repository<ProgramTrackedEntityAttribute>(
         database: database as Database);
     final Column? relationColumn = programAttribute.columns.firstWhere(
-        (column) =>
-            column.relation?.referencedEntity?.tableName == this.tableName);
+            (column) =>
+        column.relation?.referencedEntity?.tableName == this.tableName);
 
     if (relationColumn != null) {
       ColumnRelation relation = ColumnRelation(
@@ -51,10 +51,10 @@ class ProgramQuery extends BaseQuery<Program> {
           relationType: RelationType.OneToMany,
           referencedEntity: Entity.getEntityDefinition(
               AnnotationReflectable.reflectType(ProgramTrackedEntityAttribute)
-                  as ClassMirror),
+              as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(ProgramTrackedEntityAttribute)
-                  as ClassMirror,
+              as ClassMirror,
               false));
       this.relations.add(relation);
     }
@@ -64,10 +64,10 @@ class ProgramQuery extends BaseQuery<Program> {
 
   ProgramQuery withProgramRuleVariables() {
     final programRuleVariable =
-        Repository<ProgramRuleVariable>(database: database as Database);
+    Repository<ProgramRuleVariable>(database: database as Database);
     final Column? relationColumn = programRuleVariable.columns.firstWhere(
-        (column) =>
-            column.relation?.referencedEntity?.tableName == this.tableName);
+            (column) =>
+        column.relation?.referencedEntity?.tableName == this.tableName);
 
     if (relationColumn != null) {
       ColumnRelation relation = ColumnRelation(
@@ -77,10 +77,10 @@ class ProgramQuery extends BaseQuery<Program> {
           relationType: RelationType.OneToMany,
           referencedEntity: Entity.getEntityDefinition(
               AnnotationReflectable.reflectType(ProgramRuleVariable)
-                  as ClassMirror),
+              as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(ProgramRuleVariable)
-                  as ClassMirror,
+              as ClassMirror,
               false));
       this.relations.add(relation);
     }
@@ -90,9 +90,9 @@ class ProgramQuery extends BaseQuery<Program> {
 
   ProgramQuery withSections() {
     final programSection =
-        Repository<ProgramSection>(database: database as Database);
+    Repository<ProgramSection>(database: database as Database);
     final Column? relationColumn = programSection.columns.firstWhere((column) =>
-        column.relation?.referencedEntity?.tableName == this.tableName);
+    column.relation?.referencedEntity?.tableName == this.tableName);
 
     if (relationColumn != null) {
       ColumnRelation relation = ColumnRelation(
@@ -113,10 +113,22 @@ class ProgramQuery extends BaseQuery<Program> {
 
   @override
   Future<String> dhisUrl() {
+    print("what are the filters - - - - - - - - - - - -");
+    print(this.filters);
+
     final apiFilter =
-        QueryFilter.getApiFilters(this.repository.columns, this.filters);
-    
+    QueryFilter.getApiFilters(this.repository.columns, this.filters);
+
+
+    print("the url - - - - - - - - - - - - - - - - - - - - - - ");
+    print(
+        'programs.json${apiFilter != null
+            ? '?$apiFilter&'
+            : '?'}fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables[id,name,displayName,created,lastUpdated,programRuleVariableSourceType,useCodeForOptionSet,program,dataElement,trackedEntityAttribute,progamStage],programTrackedEntityAttributes[id,displayInList,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,displayName,formName,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]],programSections[id,name,created,lastUpdated,displayName,renderType,displayFormName,sortOrder,trackedEntityAttributes[id~rename(attribute)]],programStages[id,name,created,lastUpdated,formType,generatedByEnrollmentDate,displayFormName,sortOrder,hideDueDate,enableUserAssignment,minDaysFromStart,executionDateLabel,preGenerateUID,displayName,description,displayExecutionDateLabel,openAfterEnrollment,repeatable,featureType,remindCompleted,displayGenerateEventBox,validationStrategy,autoGenerateEvent,blockEntryForm,programStageSections[id,name,displayName,displayFormName,created,lastUpdated,renderType,sortOrder,dataElements[id~rename(dataElement)]],programStageDataElements[id,created,lastUpdated,displayInReports,skipSynchronization,renderOptionsAsRadio,allowFutureDate,compulsory,allowProvidedElseWhere,sortOrder,dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]]&paging=false');
+
     return Future.value(
-        'programs.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables[id,name,displayName,created,lastUpdated,programRuleVariableSourceType,useCodeForOptionSet,program,dataElement,trackedEntityAttribute,progamStage],programTrackedEntityAttributes[id,displayInList,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,displayName,formName,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]],programSections[id,name,created,lastUpdated,displayName,renderType,displayFormName,sortOrder,trackedEntityAttributes[id~rename(attribute)]],programStages[id,name,created,lastUpdated,formType,generatedByEnrollmentDate,displayFormName,sortOrder,hideDueDate,enableUserAssignment,minDaysFromStart,executionDateLabel,preGenerateUID,displayName,description,displayExecutionDateLabel,openAfterEnrollment,repeatable,featureType,remindCompleted,displayGenerateEventBox,validationStrategy,autoGenerateEvent,blockEntryForm,programStageSections[id,name,displayName,displayFormName,created,lastUpdated,renderType,sortOrder,dataElements[id~rename(dataElement)]],programStageDataElements[id,created,lastUpdated,displayInReports,skipSynchronization,renderOptionsAsRadio,allowFutureDate,compulsory,allowProvidedElseWhere,sortOrder,dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]]&paging=false');
+        'programs.json${apiFilter != null
+            ? '?$apiFilter&'
+            : '?'}fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables[id,name,displayName,created,lastUpdated,programRuleVariableSourceType,useCodeForOptionSet,program,dataElement,trackedEntityAttribute,progamStage],programTrackedEntityAttributes[id,displayInList,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,displayName,formName,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]],programSections[id,name,created,lastUpdated,displayName,renderType,displayFormName,sortOrder,trackedEntityAttributes[id~rename(attribute)]],programStages[id,name,created,lastUpdated,formType,generatedByEnrollmentDate,displayFormName,sortOrder,hideDueDate,enableUserAssignment,minDaysFromStart,executionDateLabel,preGenerateUID,displayName,description,displayExecutionDateLabel,openAfterEnrollment,repeatable,featureType,remindCompleted,displayGenerateEventBox,validationStrategy,autoGenerateEvent,blockEntryForm,programStageSections[id,name,displayName,displayFormName,created,lastUpdated,renderType,sortOrder,dataElements[id~rename(dataElement)]],programStageDataElements[id,created,lastUpdated,displayInReports,skipSynchronization,renderOptionsAsRadio,allowFutureDate,compulsory,allowProvidedElseWhere,sortOrder,dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]]&paging=false');
   }
 }
