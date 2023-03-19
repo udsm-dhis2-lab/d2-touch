@@ -62,7 +62,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
       required this.sortOrder,
       required this.valueType,
       required this.mandatory,
-      this.displayInList: false,
+      this.displayInList = false,
       this.formName,
       String? displayName,
       this.renderOptionsAsRadio,
