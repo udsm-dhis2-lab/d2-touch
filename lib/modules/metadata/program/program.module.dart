@@ -1,5 +1,6 @@
 import 'package:d2_touch/modules/metadata/program/queries/attribute_option.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_relationship.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_rule.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_rule_action.query.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_rule_variable.query.dart';
@@ -33,6 +34,7 @@ class ProgramModule {
     await ProgramSectionQuery(database: database).createTable();
     await TrackedEntityAttributeQuery(database: database).createTable();
     await ProgramSectionAttributeQuery(database: database).createTable();
+    await ProgramRelationshipQuery(database: database).createTable();
   }
 
   ProgramQuery get program => ProgramQuery(database: database);
@@ -70,4 +72,7 @@ class ProgramModule {
 
   TrackedEntityAttributeQuery get trackedEntityAttribute =>
       TrackedEntityAttributeQuery(database: database);
+
+  ProgramRelationshipQuery get programRelationship =>
+      ProgramRelationshipQuery(database: database);
 }
