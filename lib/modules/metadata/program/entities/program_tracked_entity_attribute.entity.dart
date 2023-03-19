@@ -35,6 +35,9 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
   String? aggregationType;
 
   @Column(nullable: true)
+  String? code;
+
+  @Column(nullable: true)
   bool? generated;
 
   @Column(nullable: true)
@@ -74,6 +77,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
     this.optionSetName,
     this.options,
     required bool dirty,
+    this.code,
     List<dynamic>? translations})
       : super(
       id: id,
@@ -108,6 +112,8 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
         mandatory: jsonData['mandatory'],
         aggregationType: jsonData['aggregationType'] ??
             jsonData['trackedEntityAttribute']?['aggregationType'],
+        code: jsonData['code'] ??
+            jsonData['trackedEntityAttribute']?['code'],
         generated: jsonData['generated'] ??
             jsonData['trackedEntityAttribute']?['generated'],
         isUnique: jsonData['isUnique'] ??
@@ -148,6 +154,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
     data['mandatory'] = this.mandatory;
     data['aggregationType'] = this.aggregationType;
     data['generated'] = this.generated;
+    data['code'] = this.code;
     data['isUnique'] = this.isUnique;
     data['optionSetValue'] = this.optionSetValue;
     data['optionSetName'] = this.optionSetName;
