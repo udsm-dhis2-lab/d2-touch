@@ -80,6 +80,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
       : super(
             id: id,
             name: name,
+            code: code,
             displayName: displayName,
             dirty: dirty,
             translations: translations);
@@ -110,7 +111,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
         mandatory: jsonData['mandatory'],
         aggregationType: jsonData['aggregationType'] ??
             jsonData['trackedEntityAttribute']?['aggregationType'],
-        code: jsonData['code'] ?? jsonData['trackedEntityAttribute']?['code'],
+        code: jsonData['trackedEntityAttribute']?['code'] ?? jsonData['code'],
         generated: jsonData['generated'] ??
             jsonData['trackedEntityAttribute']?['generated'],
         isUnique: jsonData['isUnique'] ??
