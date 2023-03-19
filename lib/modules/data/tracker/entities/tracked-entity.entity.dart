@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_instance_relationship.entity.dart';
 import 'package:d2_touch/modules/data/tracker/models/tracked_entity_instance_import_summary.model.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
@@ -49,25 +50,29 @@ class TrackedEntityInstance extends IdentifiableEntity {
   @OneToMany(table: Enrollment)
   List<Enrollment>? enrollments;
 
-  TrackedEntityInstance(
-      {String? id,
-      String? name,
-      String? created,
-      String? lastUpdated,
-      required this.orgUnit,
-      required bool dirty,
-      required this.trackedEntityType,
-      this.trackedEntityInstance,
-      this.deleted,
-      this.synced,
-      this.syncFailed,
-      this.lastSyncSummary,
-      this.lastSyncDate,
-      this.inactive,
-      this.enrollments,
-      this.attributes,
-      this.transfer})
-      : super(
+  @OneToMany(table: TrackedEntityInstanceRelationship)
+  List<TrackedEntityInstanceRelationship>? relationships;
+
+  TrackedEntityInstance({
+    String? id,
+    String? name,
+    String? created,
+    String? lastUpdated,
+    required this.orgUnit,
+    required bool dirty,
+    required this.trackedEntityType,
+    this.trackedEntityInstance,
+    this.deleted,
+    this.synced,
+    this.syncFailed,
+    this.lastSyncSummary,
+    this.lastSyncDate,
+    this.inactive,
+    this.enrollments,
+    this.attributes,
+    this.transfer,
+    this.relationships,
+  }) : super(
             id: id,
             name: name,
             created: created,
@@ -122,6 +127,13 @@ class TrackedEntityInstance extends IdentifiableEntity {
                   'dirty': attribute['dirty'] ?? false
                 }))
             .toList(),
+        relationships: List<dynamic>.from(json['relationships'] ?? [])
+            .map((relationship) => TrackedEntityInstanceRelationship.fromJson({
+                  ...relationship,
+                  'dirty': relationship['dirty'] ?? json['dirty'] ?? false,
+                  'synced': json['synced']
+                }))
+            .toList(),
         dirty: json['dirty']);
   }
 
@@ -148,6 +160,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
     data['created'] = this.created;
     data['lastUpdated'] = this.lastUpdated;
     data['transfer'] = this.transfer;
+    data['trackedEntityRelationships'] = this.relationships;
     return data;
   }
 
