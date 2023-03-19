@@ -244,9 +244,6 @@ class BaseQuery<T extends BaseEntity> {
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
-  
-    print(response.body);
-
     List data = response.body[this.apiResourceName]?.toList();
 
     return data.map((dataItem) {

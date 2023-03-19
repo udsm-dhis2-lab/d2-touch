@@ -26,6 +26,7 @@ import '../sample/program.sample.dart';
 import '../sample/program_rule.sample.dart';
 import '../sample/program_stage.sample.dart';
 import '../sample/reserved_values.sample.dart';
+import '../sample/program_relationship_sample.dart';
 import 'program_module_test.reflectable.dart';
 
 void main() async {
@@ -353,6 +354,22 @@ void main() async {
 
   test('should assign last name', () {
     expect(lastNameAttributeValue?.value, 'Last Name');
+  });
+
+  dioAdapter.onGet(
+      'https://play.dhis2.org/2.35.11/api/relationshipTypes.json?fields=id,name,toConstraint[program[id,code,name]],fromConstraint[program[id,name,code]]&filter=fromConstraint.program.id:eq:qDkgAbB5Jlk&paging=false',
+      (server) => server.reply(200, sampleProgramRelationship));
+
+  await d2.programModule.programRelationship
+      .byFromProgram('qDkgAbB5Jlk')
+      .download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  final relationships = await d2.programModule.programRelationship.get();
+
+  test('should return relationships', () {
+    expect(relationships?.length, 3);
   });
 
   d2.dispose();

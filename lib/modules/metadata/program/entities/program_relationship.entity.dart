@@ -3,7 +3,7 @@ import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(
-    tableName: 'programRelationship', apiResourceName: 'programRelationships')
+    tableName: 'programRelationship', apiResourceName: 'relationshipTypes')
 class ProgramRelationship extends IdentifiableEntity {
   @Column()
   String fromProgram;
@@ -25,8 +25,8 @@ class ProgramRelationship extends IdentifiableEntity {
         id: json['id'],
         name: json['name'],
         displayName: json['displayName'],
-        fromProgram: json['fromProgram'],
-        toProgram: json['toProgram'],
+        fromProgram: json['fromProgram'] ?? json['fromConstraint']['program']['id'],
+        toProgram: json['toProgram'] ?? json['toConstraint']['program']['id'],
         dirty: json['dirty']);
   }
 
