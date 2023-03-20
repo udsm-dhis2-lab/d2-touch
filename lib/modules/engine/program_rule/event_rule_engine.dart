@@ -1,3 +1,4 @@
+import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';
@@ -46,16 +47,18 @@ class EventRuleEngine {
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 
-    programRuleActions.forEach((programRuleAction) {
+    programRuleActions.forEach((programRuleAction) async {
       if (programRuleAction.programRuleActionType == 'ASSIGN') {
         availableItemCount++;
-        queue.add(() => EventDataValueQuery(database: database)
-            .setData(EventDataValue(
-                dirty: true,
-                dataElement: programRuleAction.dataElement as String,
-                event: event.id,
-                value: programRuleAction.data as String))
-            .save());
+        if (programRuleAction.dataElement != null) {
+          queue.add(() => EventDataValueQuery(database: database)
+              .setData(EventDataValue(
+                  dirty: true,
+                  dataElement: programRuleAction.dataElement as String,
+                  event: event.id,
+                  value: programRuleAction.data as String))
+              .save());
+        }
       }
     });
 
