@@ -1,5 +1,7 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/auth/entities/user_authority.entity.dart';
+import 'package:d2_touch/modules/auth/entities/user_group.entity.dart';
+import 'package:d2_touch/modules/auth/entities/user_group_user.entity.dart';
 import 'package:d2_touch/modules/auth/entities/user_organisation_unit.entity.dart';
 import 'package:d2_touch/modules/auth/entities/user_role.entity.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
@@ -64,6 +66,9 @@ class User extends IdentifiableEntity {
   @Column()
   bool isLoggedIn;
 
+  @OneToMany(table: UserGroupUser)
+  List<UserGroup>? userGroups;
+
   User(
       {required String id,
       this.username,
@@ -90,6 +95,7 @@ class User extends IdentifiableEntity {
       this.tokenExpiry,
       this.authType,
       this.phoneNumber,
+      this.userGroups,
       required this.isLoggedIn,
       required bool dirty})
       : super(
@@ -113,7 +119,7 @@ class User extends IdentifiableEntity {
         authType: jsonData['authType'],
         name: jsonData['name'],
         phoneNumber: jsonData['phoneNumber'],
-        baseUrl: jsonData['baseUrl'],
+        baseUrl: jsonData['baseUrl'] ?? '',
         created: jsonData['created'],
         lastUpdated: jsonData['lastUpdated'],
         teiSearchOrganisationUnits:
@@ -138,6 +144,7 @@ class User extends IdentifiableEntity {
         programs: jsonData['programs'].toString(),
         dataSets: jsonData['datasets'].toString(),
         isLoggedIn: jsonData['isLoggedIn'],
+        userGroups: jsonData['userGroups'],
         dirty: jsonData['dirty']);
   }
 
@@ -150,7 +157,7 @@ class User extends IdentifiableEntity {
         surname: jsonData['surname'],
         name: jsonData['name'],
         phoneNumber: jsonData['phoneNumber'],
-        baseUrl: jsonData['baseUrl'],
+        baseUrl: jsonData['baseUrl'] ?? '',
         created: jsonData['created'],
         lastUpdated: jsonData['lastUpdated'],
         token: jsonData['token'],
@@ -191,7 +198,7 @@ class User extends IdentifiableEntity {
         dataSets: jsonData['datasets'] != null
             ? jsonData['datasets'].toString()
             : null,
-        isLoggedIn: jsonData['isLoggedIn'],
+        isLoggedIn: jsonData['isLoggedIn'] ?? false,
         dirty: jsonData['dirty'] ?? false);
   }
 
@@ -222,6 +229,7 @@ class User extends IdentifiableEntity {
     data['isLoggedIn'] = this.isLoggedIn;
     data['baseUrl'] = this.baseUrl;
     data['dirty'] = this.dirty;
+    data['userGroups'] = this.userGroups;
 
     return data;
   }
