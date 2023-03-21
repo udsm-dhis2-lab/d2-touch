@@ -52,7 +52,7 @@ void main() async {
   });
 
   dioAdapter.onGet(
-      'https://play.dhis2.org/2.35.11/api/users.json?fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,username,password,firstName,surname,phoneNumber,token,tokenType,refreshToken,tokenExpiry,authType,baseUrl,teiSearchOrganisationUnits,organisationUnits[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,orgUnit,type,user],authorities[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,authority,user],roles[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,user],dataViewOrganisationUnits,programs,dataSets,isLoggedIn,userGroups[id,dirty,lastUpdated,created,userId,groupId]&paging=false',
+      'https://play.dhis2.org/2.35.11/api/users.json?fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,username,password,firstName,surname,phoneNumber,token,tokenType,refreshToken,tokenExpiry,authType,baseUrl,teiSearchOrganisationUnits,organisationUnits[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,orgUnit,type,user],authorities[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,authority,user],roles[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,user],dataViewOrganisationUnits,programs,dataSets,isLoggedIn,gender,jobTitle,userGroups[id,dirty,lastUpdated,created,userId,groupId]&paging=false',
       (server) => server.reply(200, usersSample));
 
   await d2.userModule.user.download((progress, complete) {
@@ -65,7 +65,7 @@ void main() async {
   });
 
 dioAdapter.onGet(
-      'https://play.dhis2.org/2.35.11/api/users.json?userGroups.id:in:[Kk12LkEWtXp]&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,username,password,firstName,surname,phoneNumber,token,tokenType,refreshToken,tokenExpiry,authType,baseUrl,teiSearchOrganisationUnits,organisationUnits[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,orgUnit,type,user],authorities[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,authority,user],roles[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,user],dataViewOrganisationUnits,programs,dataSets,isLoggedIn,userGroups[id,dirty,lastUpdated,created,userId,groupId]&paging=false',
+      'https://play.dhis2.org/2.35.11/api/users.json?filter=userGroups.id:in:[Kk12LkEWtXp]&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,username,password,firstName,surname,phoneNumber,token,tokenType,refreshToken,tokenExpiry,authType,baseUrl,teiSearchOrganisationUnits,organisationUnits[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,orgUnit,type,user],authorities[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,authority,user],roles[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,user],dataViewOrganisationUnits,programs,dataSets,isLoggedIn,gender,jobTitle,userGroups[id,dirty,lastUpdated,created,userId,groupId]&paging=false',
       (server) => server.reply(200, usersSample));
 
   await d2.userModule.user.byGroups(userGroupsId: ["Kk12LkEWtXp"], filterMode: 'id').download((progress, complete) {
@@ -78,7 +78,7 @@ dioAdapter.onGet(
   });
 
   dioAdapter.onGet(
-      'https://play.dhis2.org/2.35.11/api/users.json?userGroups.code:in:[78ghtZ]&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,username,password,firstName,surname,phoneNumber,token,tokenType,refreshToken,tokenExpiry,authType,baseUrl,teiSearchOrganisationUnits,organisationUnits[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,orgUnit,type,user],authorities[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,authority,user],roles[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,user],dataViewOrganisationUnits,programs,dataSets,isLoggedIn,userGroups[id,dirty,lastUpdated,created,userId,groupId]&paging=false',
+      'https://play.dhis2.org/2.35.11/api/users.json?filter=userGroups.code:in:[78ghtZ]&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,username,password,firstName,surname,phoneNumber,token,tokenType,refreshToken,tokenExpiry,authType,baseUrl,teiSearchOrganisationUnits,organisationUnits[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,orgUnit,type,user],authorities[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,authority,user],roles[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,user],dataViewOrganisationUnits,programs,dataSets,isLoggedIn,gender,jobTitle,userGroups[id,dirty,lastUpdated,created,userId,groupId]&paging=false',
       (server) => server.reply(200, usersSample));
 
   await d2.userModule.user.byGroups(userGroupsId: ["78ghtZ"], filterMode: 'code').download((progress, complete) {

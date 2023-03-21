@@ -66,6 +66,12 @@ class User extends IdentifiableEntity {
   @Column()
   bool isLoggedIn;
 
+  @Column(nullable: true)
+  final String? gender;
+
+  @Column()
+  String? jobTitle;
+
   @OneToMany(table: UserGroupUser)
   List<UserGroup>? userGroups;
 
@@ -77,6 +83,8 @@ class User extends IdentifiableEntity {
       required this.surname,
       required String name,
       required this.baseUrl,
+      this.gender,
+      this.jobTitle,
       String? shortName,
       String? displayName,
       String? code,
@@ -108,6 +116,8 @@ class User extends IdentifiableEntity {
   factory User.fromJson(Map<String, dynamic> jsonData) {
     return User(
         id: jsonData['id'],
+        gender: jsonData['gender'] ?? '',
+        jobTitle: jsonData['jobTitle'] ?? '',
         username: jsonData['username'],
         password: jsonData['password'],
         firstName: jsonData['firstName'],
@@ -151,6 +161,8 @@ class User extends IdentifiableEntity {
   factory User.fromApi(Map<String, dynamic> jsonData) {
     return User(
         id: jsonData['id'],
+        gender: jsonData['gender'] ?? '',
+        jobTitle: jsonData['jobTitle'] ?? '',
         username: jsonData['username'],
         password: jsonData['password'],
         firstName: jsonData['firstName'],
@@ -206,6 +218,8 @@ class User extends IdentifiableEntity {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
     data['id'] = this.id;
+    data['gender'] = this.gender;
+    data['jobTitle'] = this.jobTitle;
     data['name'] = this.name;
     data['firstName'] = this.firstName;
     data['surname'] = this.surname;
