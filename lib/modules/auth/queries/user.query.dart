@@ -177,7 +177,7 @@ class UserQuery extends BaseQuery<User> {
     String apiFilter = '';
 
     if (userGroupsId != null && filterMode != null)
-      apiFilter = 'userGroups.$filterMode:in:$userGroupsId';
+      apiFilter = 'filter=userGroups.$filterMode:in:$userGroupsId';
 
     return Future.value(
         '${this.query.resourceName}.json${apiFilter != "" ? '?$apiFilter&' : '?'}fields=${apiFields.join(',')}&paging=false');
