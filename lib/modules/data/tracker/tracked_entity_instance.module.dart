@@ -1,3 +1,4 @@
+import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_instance_relationship.query.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'queries/attribute_reserved_value.query.dart';
@@ -17,6 +18,8 @@ class TrackedEntityInstanceModule {
     await EnrollmentQuery(database: database).createTable();
     await AttributeReservedValueQuery(database: database).createTable();
     await EventDataValueQuery(database: database).createTable();
+    await TrackedEntityInstanceRelationshipQuery(database: database)
+        .createTable();
   }
 
   TrackedEntityInstanceQuery get trackedEntityInstance =>
@@ -34,4 +37,8 @@ class TrackedEntityInstanceModule {
 
   EventDataValueQuery get eventDataValue =>
       EventDataValueQuery(database: database);
+
+  TrackedEntityInstanceRelationshipQuery
+      get trackedEntityInstanceRelationship =>
+          TrackedEntityInstanceRelationshipQuery(database: database);
 }
