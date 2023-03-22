@@ -48,9 +48,8 @@ class EventRuleEngine {
     num availableItemCount = 0;
 
     programRuleActions.forEach((programRuleAction) async {
-      if (programRuleAction.programRuleActionType == 'ASSIGN') {
-        availableItemCount++;
-        if (programRuleAction.dataElement != null) {
+      if (programRuleAction.programRuleActionType == 'ASSIGN' && programRuleAction.dataElement != null) {
+                  availableItemCount++;
           queue.add(() => EventDataValueQuery(database: database)
               .setData(EventDataValue(
                   dirty: true,
@@ -58,7 +57,6 @@ class EventRuleEngine {
                   event: event.id,
                   value: programRuleAction.data as String))
               .save());
-        }
       }
     });
 
