@@ -1,10 +1,17 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/auth/entities/user_group_user.entity.dart';
+import 'package:d2_touch/shared/entities/base.entity.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
 @Entity(tableName: 'userGroup', apiResourceName: 'userGroups')
 class UserGroup extends IdentifiableEntity{
+
+@AnnotationReflectable
+@Entity(tableName: 'userGroup', apiResourceName: 'userGroups')
+class UserGroup extends BaseEntity {
+  @Column()
+  String name;
 
   @OneToMany(table: UserGroupUser)
   List<UserGroupUser>? userGroupUsers;
