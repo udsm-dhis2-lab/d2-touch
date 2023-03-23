@@ -1,3 +1,12 @@
+## [1.0.3] - 23/03/2023
+### Fixes
+- Improve events program rules queueing on failing rules response
+- Fix error with missing code column in user authority
+
+### New
+- Add job title and phone number properties to user entity
+- Add data store module
+
 ## [1.0.2] - 17/09/2022
 
 ## [1.0.0-beta.13] - 09/09/2022

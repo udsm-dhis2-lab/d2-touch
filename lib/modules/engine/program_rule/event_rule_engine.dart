@@ -1,4 +1,3 @@
-import 'package:d2_touch/d2_touch.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';

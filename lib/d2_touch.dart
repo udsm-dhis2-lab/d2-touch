@@ -349,7 +349,7 @@ class D2Touch implements D2TouchModel {
     return LoginResponseStatus.ONLINE_LOGIN_SUCCESS;
   }
 
-  @deprecated
+  @Deprecated('Use [EngineModule] instead.')
   static Future<List<Map>> rawQuery(
       {required String query, required List args}) async {
     final Database db = await DatabaseManager.instance!.database;
