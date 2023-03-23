@@ -5,6 +5,7 @@ import 'package:d2_touch/core/models/d2_touch.model.dart';
 import 'package:d2_touch/modules/auth/auth.module.dart';
 import 'package:d2_touch/modules/auth/user.module.dart';
 import 'package:d2_touch/modules/data/aggregate/aggregate.module.dart';
+import 'package:d2_touch/modules/data/data_store/data_store_entity.module.dart';
 import 'package:d2_touch/modules/data/tracker/tracked_entity_instance.module.dart';
 import 'package:d2_touch/modules/engine/engine.module.dart';
 import 'package:d2_touch/modules/engine/http/http.module.dart';
@@ -70,6 +71,8 @@ class D2Touch implements D2TouchModel {
   HttpClientModule get httpClient => HttpClientModule(database: _database);
 
   EngineModule get engine => EngineModule(database: _database as Database);
+
+  DataStoreModule get dataStore => DataStoreModule(database: _database as Database);
 
   static Future<D2Touch> init({
     String? locale,
@@ -146,6 +149,7 @@ class D2Touch implements D2TouchModel {
     await OptionSetModule.createTables(database: database);
     await NotificationModule.createTables(database: database);
     await FileResourceModule.createTables(database: database);
+    await DataStoreModule.createTables(database: database);
 
     _d2Instance?.databaseInstance = databaseInstance;
     _d2Instance!._database = database;

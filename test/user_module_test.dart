@@ -31,7 +31,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-      'https://play.dhis2.org/2.35.11/api/userGroups.json?fields=id,dirty,lastUpdated,created,name,userGroupUsers[id,dirty,lastUpdated,created,userId,groupId]&paging=false',
+      'https://play.dhis2.org/2.35.11/api/userGroups.json?fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,userGroupUsers[id,dirty,lastUpdated,created,userId,groupId]&paging=false',
       (server) => server.reply(200, sampleUserGroups));
 
   userData['password'] = 'district';
