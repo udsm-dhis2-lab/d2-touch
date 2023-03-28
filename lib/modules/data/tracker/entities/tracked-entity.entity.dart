@@ -160,7 +160,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
     data['created'] = this.created;
     data['lastUpdated'] = this.lastUpdated;
     data['transfer'] = this.transfer;
-    data['trackedEntityRelationships'] = this.relationships;
+    data['relationships'] = this.relationships;
     return data;
   }
 

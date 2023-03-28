@@ -19,19 +19,25 @@ class TrackedEntityInstanceRelationship extends BaseEntity {
 
   TrackedEntityInstanceRelationship(
       {String? id,
+      String? created,
+      String? lastUpdated,
       required this.fromTrackedInstance,
       required this.toTrackedInstance,
       required this.relationshipType,
       required bool dirty})
-      : super(id: id, dirty: dirty);
+      : super(id: id, dirty: dirty, created: created, lastUpdated: lastUpdated);
 
   factory TrackedEntityInstanceRelationship.fromJson(
       Map<String, dynamic> json) {
     return TrackedEntityInstanceRelationship(
         id: json['id'],
-        fromTrackedInstance: json['fromTrackedInstance'] ?? json['from']?['trackedEntityInstance']?['trackedEntityInstance'],
-        toTrackedInstance: json['toTrackedInstance'] ?? json['to']?['trackedEntityInstance']?['trackedEntityInstance'] ,
+        fromTrackedInstance: json['fromTrackedInstance'] ??
+            json['from']?['trackedEntityInstance']?['trackedEntityInstance'],
+        toTrackedInstance: json['toTrackedInstance'] ??
+            json['to']?['trackedEntityInstance']?['trackedEntityInstance'],
         relationshipType: json['relationshipType'],
+        created: json['created'],
+        lastUpdated: json['lastUpdated'],
         dirty: json['dirty']);
   }
 
@@ -42,6 +48,8 @@ class TrackedEntityInstanceRelationship extends BaseEntity {
     data['fromTrackedInstance'] = this.fromTrackedInstance;
     data['toTrackedInstance'] = this.toTrackedInstance;
     data['relationshipType'] = this.relationshipType;
+    data['created'] = this.created;
+    data['lastUpdated'] = this.lastUpdated;
     data['dirty'] = this.dirty;
 
     return data;
