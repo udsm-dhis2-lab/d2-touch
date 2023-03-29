@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/auth/queries/user_organisation_unit.query.dart';
@@ -6,13 +8,16 @@ import 'package:d2_touch/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked-entity.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_instance_relationship.entity.dart';
 import 'package:d2_touch/modules/data/tracker/models/tracked_entity_instance_import_summary.model.dart';
 import 'package:d2_touch/modules/data/tracker/queries/attribute_reserved_value.query.dart';
 import 'package:d2_touch/modules/data/tracker/queries/enrollment.query.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program.entity.dart';
+import 'package:d2_touch/modules/metadata/program/entities/program_relationship.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program.query.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_relationship.query.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
@@ -294,6 +299,134 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             }).join("&") as String)}';
 
     return Future.value(url);
+  }
+
+  @override
+  Future<List<TrackedEntityInstance>?> download(
+      Function(RequestProgress, bool) callback,
+      {Dio? dioTestClient}) async {
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Downloading ${this.apiResourceName?.toLowerCase()} from the server....',
+            status: '',
+            percentage: 0),
+        false);
+
+    this.data = await this.fetchOnline(dioTestClient: dioTestClient);
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                '${data.length} ${this.apiResourceName?.toLowerCase()} downloaded successfully',
+            status: '',
+            percentage: 50),
+        false);
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                'Saving ${data.length} ${this.apiResourceName?.toLowerCase()} into phone database...',
+            status: '',
+            percentage: 51),
+        false);
+
+    await this.save();
+
+    List<TrackedEntityInstanceRelationship> relationships = [];
+    data.forEach((dataItem) {
+      relationships = [...relationships, ...dataItem.relationships];
+    });
+
+    if (relationships.length > 0) {
+      await downloadRelatedTrackedEntityInstances(
+          relationships: relationships, dioTestClient: dioTestClient);
+    }
+
+    callback(
+        RequestProgress(
+            resourceName: this.apiResourceName as String,
+            message:
+                '${data.length} ${this.apiResourceName?.toLowerCase()} successifully saved into the database',
+            status: '',
+            percentage: 100),
+        true);
+
+    return this.data;
+  }
+
+  Future<List<TrackedEntityInstance>> downloadRelatedTrackedEntityInstances(
+      {required List<TrackedEntityInstanceRelationship> relationships,
+      Dio? dioTestClient}) async {
+    final requests = await Future.wait(relationships.map((relationship) async {
+      ProgramRelationship? programRelationship =
+          await ProgramRelationshipQuery(database: database)
+              .byId(relationship.relationshipType)
+              .getOne();
+
+      Map<String, dynamic> resultMap = {};
+      resultMap['trackedEntityInstance'] = relationship.toTrackedInstance;
+      resultMap['program'] = programRelationship?.toProgram;
+
+      return programRelationship?.toProgram != null ? resultMap : null;
+    }));
+
+    Map<String, List<String>> requestByProgram = {};
+    requests.forEach((request) {
+      if (request != null && request['program'] != null) {
+        requestByProgram[request['program']] = [
+          ...(requestByProgram[request['program']] ?? []),
+          request['trackedEntityInstance']
+        ];
+      }
+    });
+
+    final queue = Queue(parallel: 50);
+    num availableItemCount = 0;
+    requestByProgram.keys.forEach((String program) {
+      availableItemCount++;
+      queue.add(() => downloadByProgramAndInstances(
+          program: program,
+          trackedEntityInstances: requestByProgram[program] as List<String>,
+          dioTestClient: dioTestClient));
+    });
+
+    if (availableItemCount == 0) {
+      queue.cancel();
+    }
+
+    await queue.onComplete;
+
+    return [];
+  }
+
+  Future downloadByProgramAndInstances(
+      {required String program,
+      required List<String> trackedEntityInstances,
+      Dio? dioTestClient}) async {
+    final dhisUrl =
+        'trackedEntityInstances.json?program=${program}&fields=*&trackedEntityInstance=${trackedEntityInstances.join(";")}';
+
+    final response = await HttpClient.get(dhisUrl,
+        database: this.database, dioTestClient: dioTestClient);
+
+    data = response.body[this.apiResourceName]?.toList();
+
+    List<TrackedEntityInstance> trackedEntityInstanceData =
+        data.map<TrackedEntityInstance>((dataItem) {
+      Map<String, dynamic> dataMap = dataItem as Map<String, dynamic>;
+      dataMap['dirty'] = false;
+      dataMap['synced'] = true;
+
+      return TrackedEntityInstance.fromJson(dataMap);
+    }).toList();
+
+    await TrackedEntityInstanceQuery(database: database)
+        .setData(trackedEntityInstanceData)
+        .save();
   }
 
   Future<List<TrackedEntityInstance>?> upload(
