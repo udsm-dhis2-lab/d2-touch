@@ -10,6 +10,9 @@ class ProgramSectionAttribute extends BaseEntity {
   @Column()
   String attribute;
 
+  @Column()
+  int sortOrder;
+
   @ManyToOne(joinColumnName: 'programSection', table: ProgramSection)
   dynamic programSection;
 
@@ -19,6 +22,7 @@ class ProgramSectionAttribute extends BaseEntity {
       String? created,
       String? lastUpdated,
       required this.attribute,
+      required this.sortOrder,
       required this.programSection})
       : super(id: id, dirty: dirty, created: created, lastUpdated: lastUpdated);
 
@@ -27,6 +31,7 @@ class ProgramSectionAttribute extends BaseEntity {
         id: '${jsonData['programSection']}_${jsonData['attribute']}',
         dirty: jsonData['dirty'],
         attribute: jsonData['attribute'],
+        sortOrder: jsonData['sortOrder'],
         programSection: jsonData['programSection'],
         created: jsonData['created'],
         lastUpdated: jsonData['lastUpdated']);
@@ -38,6 +43,7 @@ class ProgramSectionAttribute extends BaseEntity {
     data['created'] = this.created;
     data['lastUpdated'] = this.lastUpdated;
     data['attribute'] = this.attribute;
+    data['sortOrder'] = this.sortOrder;
     data['programSection'] = this.programSection;
     data['dirty'] = this.dirty;
     return data;
