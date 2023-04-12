@@ -18,7 +18,14 @@ import '../../../shared/utilities/http_client.util.dart';
 class UserQuery extends BaseQuery<User> {
   List<String>? userGroupsId;
   String? filterMode;
-  UserQuery({Database? database, this.userGroupsId, this.filterMode})
+  String? orgUnitId;
+  bool? isFetchingWithOrgUnit;
+  UserQuery(
+      {Database? database,
+      this.userGroupsId,
+      this.filterMode,
+      this.orgUnitId,
+      this.isFetchingWithOrgUnit})
       : super(database: database);
 
   UserQuery withOrganisationUnit() {
@@ -98,6 +105,12 @@ class UserQuery extends BaseQuery<User> {
     return this;
   }
 
+  byOrgUnit({String? orgUnit}) {
+    this.orgUnitId = orgUnit;
+    this.isFetchingWithOrgUnit = true;
+    return this;
+  }
+
   @override
   Future<List<User>?> download(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
@@ -111,9 +124,9 @@ class UserQuery extends BaseQuery<User> {
         false);
 
     final dhisUrl = await this.dhisUrl();
+
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
-
     List data = response.body[this.apiResourceName]?.toList();
 
     this.data = data.map((dataItem) {
@@ -177,7 +190,8 @@ class UserQuery extends BaseQuery<User> {
     String apiFilter = '';
 
     if (userGroupsId != null && filterMode != null)
-      apiFilter = 'filter=userGroups.$filterMode:in:$userGroupsId';
+      apiFilter =
+          'filter=userGroups.$filterMode:in:$userGroupsId${this.isFetchingWithOrgUnit == true ? '${this.orgUnitId != null ? '&filter=organisationUnits.id:eq:${this.orgUnitId}&userOrgUnits=true&includeChildren=true' : '&userOrgUnits=true&includeChildren=true'}' : ''}';
 
     return Future.value(
         '${this.query.resourceName}.json${apiFilter != "" ? '?$apiFilter&' : '?'}fields=${apiFields.join(',')}&paging=false');
