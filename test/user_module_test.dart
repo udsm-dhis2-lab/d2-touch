@@ -90,4 +90,18 @@ dioAdapter.onGet(
     expect(usersByGroupCode.length, 60);
   });
 
+
+   dioAdapter.onGet(
+      'https://play.dhis2.org/2.35.11/api/users.json?filter=userGroups.code:in:[78ghtZ]&userOrgUnits=true&includeChildren=true&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,username,password,firstName,surname,phoneNumber,token,tokenType,refreshToken,tokenExpiry,authType,baseUrl,teiSearchOrganisationUnits,organisationUnits[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,orgUnit,type,user],authorities[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,authority,user],roles[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,user],dataViewOrganisationUnits,programs,dataSets,isLoggedIn,gender,jobTitle,userGroups[id,dirty,lastUpdated,created,userId,groupId]&paging=false',
+      (server) => server.reply(200, usersSample));
+
+  await d2.userModule.user.byGroups(userGroupsId: ["78ghtZ"], filterMode: 'code').byOrgUnit().download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  final usersByOrgUnit = await d2.userModule.userGroupUser.get();
+  test('should return all uses with the given group code and under the given org Unit', () {
+    expect(usersByOrgUnit.length, 60);
+  });
+
 }
