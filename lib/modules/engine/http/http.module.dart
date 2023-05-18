@@ -17,4 +17,19 @@ class HttpClientModule {
           password: password,
           database: database,
           dioTestClient: dioTestClient);
+
+  Future<HttpResponse> post(String resourceUrl, dynamic data,
+          {String? baseUrl,
+          String? username,
+          String? password,
+          Dio? dioTestClient}) =>
+      HttpClient.post(
+        resourceUrl,
+        data,
+        baseUrl: baseUrl,
+        username: username,
+        password: password,
+        database: database,
+        dioTestClient: dioTestClient,
+      );
 }

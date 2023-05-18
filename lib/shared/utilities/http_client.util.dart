@@ -144,7 +144,6 @@ class HttpClient {
     try {
       final Response<dynamic> response =
           await dioClient.get('${httpDetails.baseUrl}/api/$resourceUrl');
-
       return HttpResponse(
           statusCode: response.statusCode ?? 500, body: response.data);
     } on DioError catch (error) {
