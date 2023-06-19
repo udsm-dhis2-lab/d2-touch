@@ -53,7 +53,7 @@ class TrackerRuleEngine {
                 attribute: programRuleAction.trackedEntityAttribute as String,
                 trackedEntityInstance:
                     trackedEntityInstance.trackedEntityInstance,
-                value: programRuleAction.data as String))
+                value: programRuleAction.data.toString().replaceAll("\"", "")))
             .save());
       }
     });

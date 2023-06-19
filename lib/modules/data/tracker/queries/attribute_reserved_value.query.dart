@@ -94,6 +94,8 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
         database: this.database,
         dioTestClient: dioTestClient);
 
+    print('trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve')
+
     List<AttributeReservedValue> reservedValues = [];
 
     (response.body ?? []).forEach((reservedResult) {

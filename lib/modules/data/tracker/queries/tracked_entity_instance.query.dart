@@ -213,7 +213,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         program: program.id as String,
         trackedEntityInstance: trackedEntityInstance.trackedEntityInstance,
         status: 'ACTIVE',
-        dirty: true);
+        dirty: true);        
 
     trackedEntityInstance.enrollments = [enrollment];
 

@@ -44,6 +44,9 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
   @Column(nullable: true)
   String? optionSetName;
 
+  @Column(nullable: true)
+  bool? enabled;
+
   @ManyToOne(joinColumnName: 'program', table: Program)
   dynamic program;
 
@@ -67,6 +70,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
       this.optionSetValue,
       this.optionSetValueCount,
       this.optionSetName,
+      this.enabled,
       this.options,
       required bool dirty})
       : super(id: id, name: name, displayName: displayName, dirty: dirty);
@@ -101,6 +105,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
         optionSetValueCount: optionSetValueCount,
         optionSetName: jsonData['optionSetName'] ??
             jsonData['trackedEntityAttribute']?['optionSet']?['name'],
+        enabled: jsonData['enabled'] ?? true,
         options: List<dynamic>.from(jsonData['options'] ??
                 jsonData['trackedEntityAttribute']?['optionSet']?['options'] ??
                 [])
@@ -133,6 +138,7 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
     data['optionSetValue'] = this.optionSetValue;
     data['optionSetName'] = this.optionSetName;
     data['options'] = this.options;
+    data['enabled'] = this.enabled;
     data['optionSetValueCount'] = this.optionSetValueCount;
     return data;
   }

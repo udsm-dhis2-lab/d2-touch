@@ -50,7 +50,7 @@ class EventRuleEngine {
                 dirty: true,
                 dataElement: programRuleAction.dataElement as String,
                 event: event.id,
-                value: programRuleAction.data as String))
+                value: programRuleAction.data.toString().replaceAll("\"", "")))
             .save());
       }
     });
