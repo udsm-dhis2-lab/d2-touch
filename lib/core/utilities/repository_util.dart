@@ -13,6 +13,8 @@ class RepositoryUtil {
 
       if (value.runtimeType == int && column.type == ColumnType.BOOLEAN) {
         resultMap[column.name as String] = value == 1 ? true : false;
+      }else if (value.runtimeType == String && column.type == ColumnType.BOOLEAN) {
+        resultMap[column.name as String] = value == "1" ? true : false;
       } else if (column.relation != null) {
         resultMap[column.name as String] =
             column.relation?.relationType == RelationType.OneToMany
@@ -41,6 +43,10 @@ class RepositoryUtil {
               column.type == ColumnType.BOOLEAN) {
             relationMap[column.name as String] =
                 relationValue == 1 ? true : false;
+          }else if (relationValue.runtimeType == String &&
+              column.type == ColumnType.BOOLEAN) {
+            relationMap[column.name as String] =
+            relationValue == "1" ? true : false;
           } else {
             relationMap[column.name as String] = relationValue;
           }
@@ -59,6 +65,10 @@ class RepositoryUtil {
                 column.type == ColumnType.BOOLEAN) {
               relationMap[column.name as String] =
                   relationValue == 1 ? true : false;
+            }else if (relationValue.runtimeType == String &&
+                column.type == ColumnType.BOOLEAN) {
+              relationMap[column.name as String] =
+              relationValue == "1" ? true : false;
             } else {
               relationMap[column.name as String] = relationValue;
             }

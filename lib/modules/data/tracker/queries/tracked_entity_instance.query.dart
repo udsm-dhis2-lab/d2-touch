@@ -527,25 +527,92 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     num availableItemCount = 0;
 
     trackedEntityInstances.forEach((trackedEntityInstance) {
-      final importSummary = importSummaries.lastWhere(
-          (summary) => summary['reference'] == trackedEntityInstance.id,
-          orElse: (() => null));
 
-      if (importSummary != null) {
-        availableItemCount++;
-        final syncFailed = importSummary['status'] == 'ERROR';
-        trackedEntityInstance.synced = !syncFailed;
-        trackedEntityInstance.dirty = true;
-        trackedEntityInstance.syncFailed = syncFailed;
-        trackedEntityInstance.lastSyncDate =
-            DateTime.now().toIso8601String().split('.')[0];
-
+      bool syncFailed = true;
+      if(!((response.statusCode >= 200 && response.statusCode < 300) || response.statusCode == 409)){
+        syncFailed = true;
         trackedEntityInstance.lastSyncSummary =
-            TrackedEntityInstanceImportSummary.fromJson(importSummary);
-        queue.add(() => TrackedEntityInstanceQuery(database: database)
-            .setData(trackedEntityInstance)
-            .save());
+            TrackedEntityInstanceImportSummary.fromJson({
+              "responseType": "ImportSummary",
+              "status": "ERROR",
+              "reference":"",
+              "enrollments":{
+                "responseType": "ImportSummary",
+                "status": "ERROR",
+                "imported": 0,
+                "updated": 0,
+                "ignored": 1,
+                "deleted": 0,
+                "importSummaries:":[],
+                "total": 0
+              },
+              "importCount": {
+                "imported": 0,
+                "updated": 0,
+                "ignored": 1,
+                "deleted": 0
+              },
+              "total":0,
+              "importSummaries:":[],
+              "conflicts": [
+                {
+                  "object": "Server.ERROR",
+                  "value": "Server Error code:" + response.statusCode.toString()
+                }
+              ]
+            });
+      }else{
+        final importSummary = importSummaries.lastWhere(
+                (summary) => summary['reference'] == trackedEntityInstance.id,
+            orElse: (() => null));
+        if (importSummary != null) {
+          syncFailed = importSummary['status'] == 'ERROR';
+          trackedEntityInstance.lastSyncSummary =
+              TrackedEntityInstanceImportSummary.fromJson(importSummary);
+        }else{
+          syncFailed = true;
+          trackedEntityInstance.lastSyncSummary =
+              TrackedEntityInstanceImportSummary.fromJson({
+                "responseType": "ImportSummary",
+                "status": "ERROR",
+                "reference":"",
+                "enrollments":{
+                  "responseType": "ImportSummary",
+                  "status": "ERROR",
+                  "imported": 0,
+                  "updated": 0,
+                  "ignored": 1,
+                  "deleted": 0,
+                  "importSummaries:":[],
+                  "total": 0
+                },
+                "importCount": {
+                  "imported": 0,
+                  "updated": 0,
+                  "ignored": 1,
+                  "deleted": 0
+                },
+                "total":0,
+                "importSummaries:":[],
+                "conflicts": [
+                  {
+                    "object": "ImportSummary.DOES_NOT_EXIST",
+                    "value": "Invalid Import Summary"
+                  }
+                ]
+              });
+        }
       }
+      availableItemCount++;
+      trackedEntityInstance.synced = !syncFailed;
+      trackedEntityInstance.dirty = true;
+      trackedEntityInstance.syncFailed = syncFailed;
+      trackedEntityInstance.lastSyncDate =
+      DateTime.now().toIso8601String().split('.')[0];
+
+      queue.add(() => TrackedEntityInstanceQuery(database: database)
+          .setData(trackedEntityInstance)
+          .save());
     });
 
     if (availableItemCount == 0) {

@@ -170,19 +170,89 @@ class EventQuery extends BaseQuery<Event> {
     num availableItemCount = 0;
 
     for (var event in events) {
-      final importSummary = importSummaries.lastWhere((summary) =>
-          summary['reference'] != null && summary['reference'] == event.id);
 
-      if (importSummary != null) {
-        availableItemCount++;
-        final syncFailed = importSummary['status'] == 'ERROR';
-        event.synced = !syncFailed;
-        event.dirty = true;
-        event.syncFailed = syncFailed;
-        event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
-        event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
-        queue.add(() => EventQuery(database: database).setData(event).save());
+      bool syncFailed = true;
+      if(!((response.statusCode >= 200 && response.statusCode < 300) || response.statusCode == 409)){
+        syncFailed = true;
+        event.lastSyncSummary =
+            EventImportSummary.fromJson({
+              "responseType": "ImportSummary",
+              "status": "ERROR",
+              "reference":"",
+              "enrollments":{
+                "responseType": "ImportSummary",
+                "status": "ERROR",
+                "imported": 0,
+                "updated": 0,
+                "ignored": 1,
+                "deleted": 0,
+                "importSummaries:":[],
+                "total": 0
+              },
+              "importCount": {
+                "imported": 0,
+                "updated": 0,
+                "ignored": 1,
+                "deleted": 0
+              },
+              "total":0,
+              "importSummaries:":[],
+              "conflicts": [
+                {
+                  "object": "Server.ERROR",
+                  "value": "Server Error code:" + response.statusCode.toString()
+                }
+              ]
+            });
+      }else{
+        final importSummary = importSummaries.lastWhere(
+                (summary) => summary['reference'] == event.id,
+            orElse: (() => null));
+        if (importSummary != null) {
+          syncFailed = importSummary['status'] == 'ERROR';
+          event.lastSyncSummary =
+              EventImportSummary.fromJson(importSummary);
+        }else{
+          syncFailed = true;
+          event.lastSyncSummary =
+              EventImportSummary.fromJson({
+                "responseType": "ImportSummary",
+                "status": "ERROR",
+                "reference":"",
+                "enrollments":{
+                  "responseType": "ImportSummary",
+                  "status": "ERROR",
+                  "imported": 0,
+                  "updated": 0,
+                  "ignored": 1,
+                  "deleted": 0,
+                  "importSummaries:":[],
+                  "total": 0
+                },
+                "importCount": {
+                  "imported": 0,
+                  "updated": 0,
+                  "ignored": 1,
+                  "deleted": 0
+                },
+                "total":0,
+                "importSummaries:":[],
+                "conflicts": [
+                  {
+                    "object": "ImportSummary.DOES_NOT_EXIST",
+                    "value": "Invalid Import Summary"
+                  }
+                ]
+              });
+        }
       }
+      availableItemCount++;
+      event.synced = !syncFailed;
+      event.dirty = true;
+      event.syncFailed = syncFailed;
+      event.lastSyncDate =
+      DateTime.now().toIso8601String().split('.')[0];
+      queue.add(() => EventQuery(database: database).setData(event).save());
     }
 
     // ! START: IMPROVE APPROACH

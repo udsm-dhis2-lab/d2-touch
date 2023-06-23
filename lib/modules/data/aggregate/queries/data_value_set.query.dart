@@ -177,7 +177,12 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
     final importSummary = response.body;
 
-    final syncFailed = importSummary['status'] == 'ERROR';
+    bool syncFailed = true;
+    if(!((response.statusCode >= 200 && response.statusCode < 300) || response.statusCode == 409)){
+      syncFailed = true;
+    }else{
+      syncFailed = importSummary['status'] == 'ERROR';
+    }
     dataValueSet.synced = !syncFailed;
     dataValueSet.dirty = syncFailed;
     dataValueSet.syncFailed = syncFailed;
