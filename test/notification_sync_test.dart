@@ -63,5 +63,5 @@ void main() async {
     expect(onlineNotifications.length, 50);
   });
 
-  d2.dispose();
+  await d2.dispose();
 }

@@ -112,5 +112,5 @@ void main() async {
     expect(newDataSets.length, 2);
   });
 
-  d2.dispose();
+  await d2.dispose();
 }

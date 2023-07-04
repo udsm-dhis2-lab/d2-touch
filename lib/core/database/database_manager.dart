@@ -86,6 +86,7 @@ class DatabaseManager {
 
   dispose() async {
     await _database?.close();
+    await databaseFactory?.deleteDatabase(databaseName);
     _databaseInstance = null;
   }
 

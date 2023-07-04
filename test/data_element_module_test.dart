@@ -75,5 +75,5 @@ void main() async {
     expect(dataElements.length, 51);
   });
 
-  d2.dispose();
+  await d2.dispose();
 }

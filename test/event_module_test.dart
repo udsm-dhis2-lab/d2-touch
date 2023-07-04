@@ -29,11 +29,9 @@ void main() async {
 
   var sharedPreferenceInstance = await SharedPreferences.getInstance();
 
-  print(sharedPreferenceInstance.getKeys());
-
   final d2 = await D2Touch.init(
     databaseFactory: databaseFactoryFfi,
-    databaseName: 'flutter_test',
+    databaseName: 'flutter_test_event',
     sharedPreferenceInstance: sharedPreferenceInstance,
   );
 
@@ -145,5 +143,5 @@ void main() async {
     expect(createdEventWithoutEnrollment?.orgUnit, 'Rp268JB6Ne4');
     expect(createdEventWithoutEnrollment?.programStage, 'A03MvHH7gjR');
   });
-  d2.dispose();
+  await d2.dispose();
 }

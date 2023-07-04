@@ -372,5 +372,5 @@ void main() async {
     expect(relationships?.length, 3);
   });
 
-  d2.dispose();
+  await d2.dispose();
 }

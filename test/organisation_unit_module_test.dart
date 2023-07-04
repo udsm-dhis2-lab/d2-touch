@@ -100,5 +100,5 @@ void main() async {
     expect(childOrgUnit?.parent, 'qtr8GGlm4gg');
   });
 
-  d2.dispose();
+  await d2.dispose();
 }

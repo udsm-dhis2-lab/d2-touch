@@ -176,5 +176,5 @@ void main() async {
     expect(validationRuleResult.validationRuleActions.length, 1);
   });
 
-  d2.dispose();
+  await d2.dispose();
 }

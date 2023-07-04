@@ -41,5 +41,5 @@ void main() async {
     expect(result.name, 'Dashboard 1');
   });
 
-  d2.dispose();
+  await d2.dispose();
 }

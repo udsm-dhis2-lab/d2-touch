@@ -356,5 +356,5 @@ void main() async {
     expect(downloadedAttributeReservedValues.length, 100);
   });
 
-  d2.dispose();
+  await d2.dispose();
 }

@@ -128,6 +128,8 @@ class UserQuery extends BaseQuery<User> {
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
+    print(dhisUrl);
+
     List data = response.body[this.apiResourceName]?.toList();
 
     this.data = data.map((dataItem) {
@@ -191,10 +193,9 @@ class UserQuery extends BaseQuery<User> {
     String apiFilter = '';
 
     if (userGroupsId != null && filterMode != null)
-      apiFilter =
-          'filter=userGroups.$filterMode:in:$userGroupsId&userOrgUnits=${this.userOrgUnits}&includeChildren=${this.includeChildren}';
+      apiFilter = 'filter=userGroups.$filterMode:in:$userGroupsId';
 
     return Future.value(
-        '${this.query.resourceName}.json${apiFilter != "" ? '?$apiFilter&' : 'filter=userOrgUnits=${this.userOrgUnits}&includeChildren=${this.includeChildren}?'}fields=${apiFields.join(',')}&paging=false');
+        '${this.query.resourceName}.json${apiFilter != "" ? '?$apiFilter&' : '?'}fields=${apiFields.join(',')}&userOrgUnits=${this.userOrgUnits}&includeChildren=${this.includeChildren}&paging=false');
   }
 }
