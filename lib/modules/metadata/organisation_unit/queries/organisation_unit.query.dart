@@ -60,6 +60,7 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
 
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
+    print(dhisUrl);
 
     List data = response.body[this.apiResourceName]?.toList();
 

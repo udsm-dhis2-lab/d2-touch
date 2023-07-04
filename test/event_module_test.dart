@@ -29,6 +29,8 @@ void main() async {
 
   var sharedPreferenceInstance = await SharedPreferences.getInstance();
 
+  print(sharedPreferenceInstance.getKeys());
+
   final d2 = await D2Touch.init(
     databaseFactory: databaseFactoryFfi,
     databaseName: 'flutter_test',
