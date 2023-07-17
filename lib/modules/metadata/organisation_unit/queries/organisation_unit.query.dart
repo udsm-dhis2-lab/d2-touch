@@ -8,7 +8,8 @@ import 'package:dio/dio.dart';
 import 'package:sqflite/sqflite.dart';
 
 class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
-  OrganisationUnitQuery({Database? database}) : super(database: database);
+  OrganisationUnitQuery({Database? database})
+      : super(database: database, junctionOperator: 'OR');
 
   Future<List<OrganisationUnit>>? getUserOrgUnits() async {
     final List<UserOrganisationUnit> userOrgUnits =
@@ -60,7 +61,6 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
 
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
-    print(dhisUrl);
 
     List data = response.body[this.apiResourceName]?.toList();
 

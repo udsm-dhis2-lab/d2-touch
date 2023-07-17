@@ -128,8 +128,6 @@ class UserQuery extends BaseQuery<User> {
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
-    print(dhisUrl);
-
     List data = response.body[this.apiResourceName]?.toList();
 
     this.data = data.map((dataItem) {

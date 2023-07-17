@@ -25,12 +25,13 @@ class BaseQuery<T extends BaseEntity> {
   String? apiResourceName;
   String? singularResourceName;
   String? id;
+  String? junctionOperator;
   List<QueryFilter>? filters = [];
   Map<String, SortOrder> sortOrder = {};
   List<ColumnRelation> relations = [];
   MergeMode _mergeMode = MergeMode.Replace;
 
-  BaseQuery({this.database}) {
+  BaseQuery({this.database, this.junctionOperator}) {
     this.repository = Repository<T>(database: database as Database);
     this.tableName = repository.entity.tableName;
     this.apiResourceName = repository.entity.apiResourceName;
@@ -54,8 +55,8 @@ class BaseQuery<T extends BaseEntity> {
 
   byId(String id) {
     this.id = id;
-    this.filters = null;
-    return this;
+    this.filters = [];
+    return this.where(attribute: 'id', value: id);
   }
 
   byIds(List<String> ids) {
@@ -156,7 +157,10 @@ class BaseQuery<T extends BaseEntity> {
     if (this.id != null) {
       filters = [
         QueryFilter(
-            attribute: 'id', condition: QueryCondition.Equal, value: this.id)
+          attribute: 'id',
+          condition: QueryCondition.Equal,
+          value: this.id,
+        )
       ];
     }
 
@@ -167,7 +171,8 @@ class BaseQuery<T extends BaseEntity> {
         fields: this.fields as List<String>,
         filters: filters,
         relations: this.relations,
-        columns: this.repository.columns);
+        columns: this.repository.columns,
+        junctionOperator: this.junctionOperator);
   }
 
   Future<List<T>> get({Dio? dioTestClient, bool? online}) async {
