@@ -2,6 +2,7 @@ import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/aggregate/entities/data_value.entity.dart';
 import 'package:d2_touch/modules/data/aggregate/entities/data_value_set.entity.dart';
+import 'package:d2_touch/modules/data/aggregate/models/data_value_set_import_summary.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
@@ -190,7 +191,8 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
     dataValueSet.syncFailed = syncFailed;
     dataValueSet.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
     dataValueSet.lastUpdated = dataValueSet.lastSyncDate;
-    dataValueSet.lastSyncSummary = importSummary.toString();
+    dataValueSet.lastSyncSummary =
+        DataValueSetImportSummary.fromJson(importSummary);
 
     return DataValueSetQuery(database: database)
         .setData(dataValueSet)
