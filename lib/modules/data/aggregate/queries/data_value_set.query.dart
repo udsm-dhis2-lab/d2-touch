@@ -176,7 +176,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         this.apiResourceName as String, uploadFormat,
         database: this.database, dioTestClient: dioTestClient);
 
-    final importSummary = response.body;
+    final importSummary = response.body?['response'];
 
     bool syncFailed = true;
     if (!((response.statusCode >= 200 && response.statusCode < 300) ||

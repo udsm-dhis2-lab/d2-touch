@@ -1,5 +1,6 @@
 enum ImportAction { Updated, Ignored, Deleted, Created, Unkown }
 
+// TODO: Review this class and see if it is necessary or relevant
 class ImportActionUtil {
   static ImportAction getAction(dynamic importCount) {
     if (importCount['imported']! > 0) {
