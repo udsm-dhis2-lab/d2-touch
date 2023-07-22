@@ -1,10 +1,41 @@
+import 'package:d2_touch/core/annotations/column.annotation.dart';
+import 'package:d2_touch/core/annotations/entity.annotation.dart';
+import 'package:d2_touch/core/annotations/reflectable.annotation.dart';
+import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set.entity.dart';
+import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section.entity.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/query_filter.util.dart';
+import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataSetQuery extends BaseQuery<DataSet> {
   DataSetQuery({Database? database}) : super(database: database);
+
+  DataSetQuery withSections() {
+    final dataSetSection =
+        Repository<DataSetSection>(database: database as Database);
+
+    final Column? relationColumn = dataSetSection.columns.firstWhere((column) =>
+        column.relation?.referencedEntity?.tableName == this.tableName);
+
+    if (relationColumn != null) {
+      ColumnRelation relation = ColumnRelation(
+          referencedColumn: relationColumn.relation?.attributeName,
+          attributeName: 'sections',
+          primaryKey: this.primaryKey?.name,
+          relationType: RelationType.OneToMany,
+          referencedEntity: Entity.getEntityDefinition(
+              AnnotationReflectable.reflectType(DataSetSection) as ClassMirror),
+          referencedEntityColumns: Entity.getEntityColumns(
+              AnnotationReflectable.reflectType(DataSetSection) as ClassMirror,
+              false));
+
+      this.relations.add(relation);
+    }
+
+    return this;
+  }
 
   @override
   Future<String> dhisUrl() {

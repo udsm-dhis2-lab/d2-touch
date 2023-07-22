@@ -111,6 +111,15 @@ void main() async {
     expect(dataSetSectionDataElements.length, 2);
   });
 
+  DataSet? dataSetWithSections = await d2.dataSetModule.dataSet
+      .withSections()
+      .byId('lyLU2wR22tC')
+      .getOne();
+
+  test('should return data set sections for selected dataset', () {
+    expect(dataSetWithSections?.sections?.length, 2);
+  });
+
   dioAdapter.onGet(
     'https://play.dhis2.org/2.35.11/api/dataSets.json?filter=id:in:[BfMAe6Itzgt,VTdjfLXXmoi]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]&sections[id,name,displayName,sortOrder,showRowTotals,greyedFields,created,lastUpdated,dataElements[id]]&paging=false',
     (server) => server.reply(200, chunkedSampleDataSets),
