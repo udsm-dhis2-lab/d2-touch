@@ -17,6 +17,34 @@ final Map<String, dynamic> sampleDataSets = {
       "periodType": "Monthly",
       "openFuturePeriods": 0,
       "expiryDays": 0,
+      "sections": [
+        {
+          "lastUpdated": "2023-07-22T18:26:23.883",
+          "created": "2021-02-08T07:51:31.840",
+          "name": "Transfer",
+          "id": "tVBzSm6zYLv",
+          "displayName": "Transfer",
+          "sortOrder": 1,
+          "showRowTotals": false,
+          "greyedFields": [],
+          "dataElements": [
+            {"id": "soACnRV9gOI"}
+          ]
+        },
+        {
+          "lastUpdated": "2023-07-22T18:26:23.883",
+          "created": "2021-02-08T07:51:31.840",
+          "name": "Transfer",
+          "id": "ttyzSm6zYLv",
+          "displayName": "Transfer",
+          "sortOrder": 1,
+          "showRowTotals": false,
+          "greyedFields": [],
+          "dataElements": [
+            {"id": "gyudBBtgGCv"}
+          ]
+        },
+      ],
       "dataSetElements": [
         {
           "dataElement": {

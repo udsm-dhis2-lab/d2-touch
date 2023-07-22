@@ -1,4 +1,5 @@
 import 'package:d2_touch/core/annotations/index.dart';
+import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section.entity.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'data_set_element.entity.dart';
@@ -36,6 +37,9 @@ class DataSet extends IdentifiableEntity {
   @OneToMany(table: DataSetElement)
   List<DataSetElement>? dataSetElements;
 
+  @OneToMany(table: DataSetSection)
+  List<DataSetSection>? sections;
+
   DataSet(
       {required String id,
       String? created,
@@ -54,6 +58,7 @@ class DataSet extends IdentifiableEntity {
       this.description,
       this.fieldCombinationRequired,
       this.dataSetElements,
+      this.sections,
       required dirty,
       dynamic translations})
       : super(
@@ -94,6 +99,14 @@ class DataSet extends IdentifiableEntity {
                   'dataSet': json['id'],
                   'dirty': false
                 }))
+            .toList(),
+        sections: List<dynamic>.from(json['sections'] ?? [])
+            .map((section) => DataSetSection.fromJson({
+                  ...section,
+                  'id': '${json['id']}_${section['id']}',
+                  'dataSet': json['id'],
+                  'dirty': false
+                }))
             .toList());
   }
 
@@ -113,6 +126,7 @@ class DataSet extends IdentifiableEntity {
     data['periodType'] = this.periodType;
     data['openFuturePeriods'] = this.openFuturePeriods;
     data['dataSetElements'] = this.dataSetElements;
+    data['sections'] = this.sections;
     data['translations'] = this.translations;
     data['dirty'] = this.dirty;
 

@@ -1,6 +1,8 @@
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set.query.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set_element.query.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set_element_option.query.dart';
+import 'package:d2_touch/modules/metadata/dataset/queries/data_set_section.query.dart';
+import 'package:d2_touch/modules/metadata/dataset/queries/data_set_section_data_element.query.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/validation_rule.query.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -11,6 +13,8 @@ class DataSetModule {
     await DataSetQuery(database: database).createTable();
     await DataSetElementQuery(database: database).createTable();
     await DataSetElementOptionQuery(database: database).createTable();
+    await DataSetSectionQuery(database: database).createTable();
+    await DataSetSectionDataElementQuery(database: database).createTable();
     await ValidationRuleQuery(database: database).createTable();
   }
 
@@ -21,6 +25,12 @@ class DataSetModule {
 
   DataSetElementOptionQuery get dataSetElementOption =>
       DataSetElementOptionQuery(database: database);
+
+  DataSetSectionQuery get dataSetSection =>
+      DataSetSectionQuery(database: database);
+
+  DataSetSectionDataElementQuery get dataSetSectionDataElement =>
+      DataSetSectionDataElementQuery(database: database);
 
   ValidationRuleQuery get validationRule =>
       ValidationRuleQuery(database: database);

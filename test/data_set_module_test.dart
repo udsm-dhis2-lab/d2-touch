@@ -3,6 +3,8 @@ import 'package:d2_touch/modules/auth/entities/user.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_element.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_element_option.entity.dart';
+import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section.entity.dart';
+import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section_data_element.entity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
@@ -67,7 +69,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/dataSets.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/dataSets.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]&sections[id,name,displayName,sortOrder,showRowTotals,greyedFields,created,lastUpdated,dataElements[id]]&paging=false',
     (server) => server.reply(200, sampleDataSets),
   );
 
@@ -95,8 +97,22 @@ void main() async {
     expect(dataSetElementOptions.length, 4);
   });
 
+  List<DataSetSection> dataSetSections =
+      await d2.dataSetModule.dataSetSection.get();
+
+  test('should store all incoming data set sections', () {
+    expect(dataSetSections.length, 2);
+  });
+
+  List<DataSetSectionDataElement> dataSetSectionDataElements =
+      await d2.dataSetModule.dataSetSectionDataElement.get();
+
+  test('should store all incoming data set section elements', () {
+    expect(dataSetSectionDataElements.length, 2);
+  });
+
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/dataSets.json?filter=id:in:[BfMAe6Itzgt,VTdjfLXXmoi]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/dataSets.json?filter=id:in:[BfMAe6Itzgt,VTdjfLXXmoi]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]&sections[id,name,displayName,sortOrder,showRowTotals,greyedFields,created,lastUpdated,dataElements[id]]&paging=false',
     (server) => server.reply(200, chunkedSampleDataSets),
   );
 
