@@ -26,7 +26,7 @@ class DataSetSectionQuery extends BaseQuery<DataSetSection> {
     if (relationColumn != null) {
       ColumnRelation relation = ColumnRelation(
           referencedColumn: relationColumn.relation?.attributeName,
-          attributeName: 'sections',
+          attributeName: 'dataElements',
           primaryKey: this.primaryKey?.name,
           relationType: RelationType.OneToMany,
           referencedEntity: Entity.getEntityDefinition(
