@@ -28,7 +28,7 @@ final Map<String, dynamic> sampleDataSets = {
           "showRowTotals": false,
           "greyedFields": [],
           "dataElements": [
-            {"id": "soACnRV9gOI"}
+            {"dataElement": "soACnRV9gOI"}
           ]
         },
         {
@@ -41,7 +41,7 @@ final Map<String, dynamic> sampleDataSets = {
           "showRowTotals": false,
           "greyedFields": [],
           "dataElements": [
-            {"id": "gyudBBtgGCv"}
+            {"dataElement": "gyudBBtgGCv"}
           ]
         },
       ],

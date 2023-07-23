@@ -56,7 +56,7 @@ class DataSetSection extends IdentifiableEntity {
         dataElements: List<dynamic>.from(jsonData['dataElements'] ?? [])
             .map((dataElement) => DataSetSectionDataElement.fromJson({
                   ...dataElement,
-                  'dataElement': dataElement['id'],
+                  'dataElement': dataElement['dataElement'],
                   'dataSetSection': jsonData['id'],
                   'dirty': false
                 }))
