@@ -5,6 +5,7 @@ import 'package:d2_touch/modules/metadata/dataset/entities/data_set_element.enti
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_element_option.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section_data_element.entity.dart';
+import 'package:d2_touch/modules/metadata/dataset/entities/data_element_category_option_combo.entity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
@@ -69,7 +70,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/dataSets.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]],sections[id,name,displayName,sortOrder,showRowTotals,greyedFields,created,lastUpdated,dataElements[id~rename(dataElement)]]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/dataSets.json?fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,categoryCombo[id,name,displayName,categoryOptionCombos[id,code,name,displayName,displayFormName,ignoreApproval,created,lastUpdated]],optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]],sections[id,name,displayName,sortOrder,showRowTotals,greyedFields,created,lastUpdated,dataElements[id~rename(dataElement)]]&paging=false',
     (server) => server.reply(200, sampleDataSets),
   );
 
@@ -127,8 +128,16 @@ void main() async {
     expect(dataSetSectionWithElements?.dataElements?.length, 1);
   });
 
+  List<DataElementCategoryOptionCombo>? categoryOptionCombos =
+      await d2.dataSetModule.categoryOptionCombo.get();
+
+  test('should return category options combos available for the dataelements',
+      () {
+    expect(categoryOptionCombos?.length, 8);
+  });
+
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/dataSets.json?filter=id:in:[BfMAe6Itzgt,VTdjfLXXmoi]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]],sections[id,name,displayName,sortOrder,showRowTotals,greyedFields,created,lastUpdated,dataElements[id~rename(dataElement)]]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/dataSets.json?filter=id:in:[BfMAe6Itzgt,VTdjfLXXmoi]&fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,categoryCombo[id,name,displayName,categoryOptionCombos[id,code,name,displayName,displayFormName,ignoreApproval,created,lastUpdated]],optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]],sections[id,name,displayName,sortOrder,showRowTotals,greyedFields,created,lastUpdated,dataElements[id~rename(dataElement)]]&paging=false',
     (server) => server.reply(200, chunkedSampleDataSets),
   );
 

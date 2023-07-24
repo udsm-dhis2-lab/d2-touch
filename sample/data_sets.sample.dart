@@ -100,6 +100,93 @@ final Map<String, dynamic> sampleDataSets = {
                   "displayFormName": "Negative (Confirmed)"
                 }
               ]
+            },
+            "categoryCombo": {
+              "name": "IDSR (Case Age Sex)",
+              "id": "sbY37PWvJBp",
+              "displayName": "IDSR (Case Age Sex)",
+              "categoryOptionCombos": [
+                {
+                  "lastUpdated": "2022-11-09T11:37:08.921",
+                  "code": "Dth <5M",
+                  "created": "2012-05-23T22:16:57.711",
+                  "id": "LZsl9VW71qr",
+                  "ignoreApproval": false,
+                  "displayName": "Death , < 5, ME",
+                  "name": "Death , < 5, ME",
+                  "displayFormName": "Death , < 5, ME"
+                },
+                {
+                  "lastUpdated": "2022-11-09T11:37:08.921",
+                  "code": "CS >5M",
+                  "created": "2012-05-23T22:16:57.710",
+                  "id": "FRzeEpefSK8",
+                  "ignoreApproval": false,
+                  "displayName": "Case, > 5, ME",
+                  "name": "Case, > 5, ME",
+                  "displayFormName": "Case, > 5, ME"
+                },
+                {
+                  "lastUpdated": "2022-11-09T11:37:08.921",
+                  "code": "CS <5M",
+                  "created": "2012-05-23T22:16:57.713",
+                  "id": "AttDwO4xCIu",
+                  "ignoreApproval": false,
+                  "displayName": "Case, < 5, ME",
+                  "name": "Case, < 5, ME",
+                  "displayFormName": "Case, < 5, ME"
+                },
+                {
+                  "lastUpdated": "2022-11-09T11:37:08.921",
+                  "code": "Dth >5M",
+                  "created": "2012-05-23T22:16:57.711",
+                  "id": "lW9u3eKdMXH",
+                  "ignoreApproval": false,
+                  "displayName": "Death , > 5, ME",
+                  "name": "Death , > 5, ME",
+                  "displayFormName": "Death , > 5, ME"
+                },
+                {
+                  "lastUpdated": "2022-11-09T11:37:08.921",
+                  "code": "CS >5F",
+                  "created": "2012-05-23T22:16:57.712",
+                  "id": "q3GdT7f6iw9",
+                  "ignoreApproval": false,
+                  "displayName": "Case, > 5, KE",
+                  "name": "Case, > 5, KE",
+                  "displayFormName": "Case, > 5, KE"
+                },
+                {
+                  "lastUpdated": "2022-11-09T11:37:08.921",
+                  "code": "Dth <5F",
+                  "created": "2012-05-23T22:16:57.714",
+                  "id": "ifRTBcyGzHU",
+                  "ignoreApproval": false,
+                  "displayName": "Death , < 5, KE",
+                  "name": "Death , < 5, KE",
+                  "displayFormName": "Death , < 5, KE"
+                },
+                {
+                  "lastUpdated": "2022-11-09T11:37:08.921",
+                  "code": "Dth >5F",
+                  "created": "2012-05-23T22:16:57.710",
+                  "id": "Q8U3fXSfxY8",
+                  "ignoreApproval": false,
+                  "displayName": "Death , > 5, KE",
+                  "name": "Death , > 5, KE",
+                  "displayFormName": "Death , > 5, KE"
+                },
+                {
+                  "lastUpdated": "2022-11-09T11:37:08.921",
+                  "code": "CS <5F",
+                  "created": "2012-05-23T22:16:57.713",
+                  "id": "QInmZugn9JO",
+                  "ignoreApproval": false,
+                  "displayName": "Case, < 5, KE",
+                  "name": "Case, < 5, KE",
+                  "displayFormName": "Case, < 5, KE"
+                }
+              ]
             }
           }
         },

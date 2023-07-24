@@ -1,3 +1,4 @@
+import 'package:d2_touch/modules/metadata/dataset/queries/data_element_category_option_combo.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set.query.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set_element.query.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set_element_option.query.dart';
@@ -16,6 +17,7 @@ class DataSetModule {
     await DataSetSectionQuery(database: database).createTable();
     await DataSetSectionDataElementQuery(database: database).createTable();
     await ValidationRuleQuery(database: database).createTable();
+    await DataElementCategoryOptionComboQuery(database: database).createTable();
   }
 
   DataSetQuery get dataSet => DataSetQuery(database: database);
@@ -34,4 +36,7 @@ class DataSetModule {
 
   ValidationRuleQuery get validationRule =>
       ValidationRuleQuery(database: database);
+
+  DataElementCategoryOptionComboQuery get categoryOptionCombo =>
+      DataElementCategoryOptionComboQuery(database: database);
 }
