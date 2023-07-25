@@ -1,4 +1,4 @@
-import 'package:d2_touch/modules/metadata/dataset/queries/data_element_category_option_combo.entity.dart';
+import 'package:d2_touch/modules/metadata/dataset/queries/data_element_category_option_combo.query.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set.query.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set_element.query.dart';
 import 'package:d2_touch/modules/metadata/dataset/queries/data_set_element_option.query.dart';

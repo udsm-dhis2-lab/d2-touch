@@ -9,8 +9,11 @@ import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 @AnnotationReflectable
 @Entity(
     tableName: 'dataelementcategoryoptioncombo',
-    apiResourceName: 'dataElementCategoryOptionCombo')
+    apiResourceName: 'categoryOptionCombos')
 class DataElementCategoryOptionCombo extends IdentifiableEntity {
+  @Column()
+  String categoryOptionCombo;
+
   @Column(nullable: true)
   bool? ignoreApproval;
 
@@ -22,13 +25,14 @@ class DataElementCategoryOptionCombo extends IdentifiableEntity {
 
   DataElementCategoryOptionCombo(
       {required String id,
+      required this.categoryOptionCombo,
       String? created,
       String? lastUpdated,
       required String name,
       String? displayName,
       String? displayFormName,
       this.ignoreApproval,
-      required String code,
+      String? code,
       required this.dataSetElement,
       required bool dirty})
       : super(
@@ -42,8 +46,10 @@ class DataElementCategoryOptionCombo extends IdentifiableEntity {
 
   factory DataElementCategoryOptionCombo.fromJson(
       Map<String, dynamic> jsonData) {
+    print('DO WE HAVE CODE ${jsonData['code']}');
     return DataElementCategoryOptionCombo(
         id: jsonData['id'],
+        categoryOptionCombo: jsonData['categoryOptionCombo'],
         name: jsonData['name'],
         displayName: jsonData['displayName'],
         displayFormName: jsonData['displayFormName'],
@@ -56,6 +62,7 @@ class DataElementCategoryOptionCombo extends IdentifiableEntity {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['categoryOptionCombo'] = this.categoryOptionCombo;
     data['name'] = this.name;
     data['displayName'] = this.displayName;
     data['displayFormName'] = this.displayFormName;

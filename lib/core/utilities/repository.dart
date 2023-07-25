@@ -600,6 +600,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
     this.oneToManyColumns.forEach((Column column) {
       final List data = entity.toJson()[column.relation?.attributeName] ?? [];
+
       if (data.isNotEmpty) {
         availableItemCount++;
         data.forEach((dataItem) {

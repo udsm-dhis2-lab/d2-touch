@@ -40,7 +40,7 @@ class DataSetElement extends IdentifiableEntity {
                 json['options'] ?? json['optionSet']?['options'] ?? [])
             .map((option) => DataSetElementOption.fromJson({
                   ...option,
-                  'id': '${option['id']}_${json['id']}}',
+                  'id': '${option['id']}_${json['id']}',
                   'dataSetElement': json['id'],
                   'dirty': false
                 }))
@@ -51,7 +51,8 @@ class DataSetElement extends IdentifiableEntity {
             .map((categoryOptionCombo) =>
                 DataElementCategoryOptionCombo.fromJson({
                   ...categoryOptionCombo,
-                  'id': '${categoryOptionCombo['id']}_${json['id']}}',
+                  'categoryOptionCombo': categoryOptionCombo['id'],
+                  'id': '${categoryOptionCombo['id']}_${json['id']}',
                   'dataSetElement': json['id'],
                   'dirty': false
                 }))
