@@ -30,9 +30,14 @@ class IdentifiableEntity extends BaseEntity {
       String? lastUpdated,
       String? created,
       this.code,
-      this.translations})
+      this.translations,
+      bool? skipDateUpdate})
       : super(
-            id: id, dirty: dirty, created: created, lastUpdated: lastUpdated) {
+            id: id,
+            dirty: dirty,
+            created: created,
+            lastUpdated: lastUpdated,
+            skipDateUpdate: skipDateUpdate) {
     if (this.translations != null) {
       this.translations = translations is String
           ? jsonDecode(this.translations)

@@ -15,13 +15,20 @@ class BaseEntity {
   @Column(nullable: true)
   String? created;
 
-  BaseEntity({this.id, required this.dirty, this.created, this.lastUpdated}) {
+  bool? skipDateUpdate;
+
+  BaseEntity(
+      {this.id,
+      required this.dirty,
+      this.created,
+      this.lastUpdated,
+      this.skipDateUpdate = false}) {
     this.id = this.id ?? DhisUidGenerator.generate();
     this.created =
         this.created ?? DateTime.now().toIso8601String().split('.')[0];
     this.lastUpdated = this.lastUpdated ?? this.created;
 
-    if (dirty) {
+    if (dirty && (skipDateUpdate == null || skipDateUpdate == false)) {
       this.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
     }
   }

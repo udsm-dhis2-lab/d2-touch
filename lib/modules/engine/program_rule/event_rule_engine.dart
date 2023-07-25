@@ -47,15 +47,16 @@ class EventRuleEngine {
     num availableItemCount = 0;
 
     programRuleActions.forEach((programRuleAction) async {
-      if (programRuleAction.programRuleActionType == 'ASSIGN' && programRuleAction.dataElement != null) {
-                  availableItemCount++;
-          queue.add(() => EventDataValueQuery(database: database)
-              .setData(EventDataValue(
-                  dirty: true,
-                  dataElement: programRuleAction.dataElement as String,
-                  event: event.id,
-                  value: programRuleAction.data as String))
-              .save());
+      if (programRuleAction.programRuleActionType == 'ASSIGN' &&
+          programRuleAction.dataElement != null) {
+        availableItemCount++;
+        queue.add(() => EventDataValueQuery(database: database)
+            .setData(EventDataValue(
+                dirty: true,
+                dataElement: programRuleAction.dataElement as String,
+                event: event.id,
+                value: programRuleAction.data as String))
+            .save());
       }
     });
 

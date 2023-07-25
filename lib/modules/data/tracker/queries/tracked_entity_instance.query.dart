@@ -361,7 +361,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   Future<List<TrackedEntityInstance>> downloadRelatedTrackedEntityInstances(
       {required List<TrackedEntityInstanceRelationship> relationships,
       Dio? dioTestClient}) async {
-    final requests = await Future.wait(relationships.map((relationship) async {
+    final requests = (await Future.wait(relationships.map((relationship) async {
       ProgramRelationship? programRelationship =
           await ProgramRelationshipQuery(database: database)
               .byId(relationship.relationshipType)
@@ -372,7 +372,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       resultMap['program'] = programRelationship?.toProgram;
 
       return programRelationship?.toProgram != null ? resultMap : null;
-    }));
+    })))
+        .skipWhile((value) => value == null);
 
     Map<String, List<String>> requestByProgram = {};
     requests.forEach((request) {
@@ -396,9 +397,9 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
     if (availableItemCount == 0) {
       queue.cancel();
+    } else {
+      await queue.onComplete;
     }
-
-    await queue.onComplete;
 
     return [];
   }
@@ -527,80 +528,80 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     num availableItemCount = 0;
 
     trackedEntityInstances.forEach((trackedEntityInstance) {
-
       bool syncFailed = true;
-      if(!((response.statusCode >= 200 && response.statusCode < 300) || response.statusCode == 409)){
+      if (!((response.statusCode >= 200 && response.statusCode < 300) ||
+          response.statusCode == 409)) {
         syncFailed = true;
         trackedEntityInstance.lastSyncSummary =
             TrackedEntityInstanceImportSummary.fromJson({
-              "responseType": "ImportSummary",
-              "status": "ERROR",
-              "reference":"",
-              "enrollments":{
-                "responseType": "ImportSummary",
-                "status": "ERROR",
-                "imported": 0,
-                "updated": 0,
-                "ignored": 1,
-                "deleted": 0,
-                "importSummaries:":[],
-                "total": 0
-              },
-              "importCount": {
-                "imported": 0,
-                "updated": 0,
-                "ignored": 1,
-                "deleted": 0
-              },
-              "total":0,
-              "importSummaries:":[],
-              "conflicts": [
-                {
-                  "object": "Server.ERROR",
-                  "value": "Server Error code:" + response.statusCode.toString()
-                }
-              ]
-            });
-      }else{
+          "responseType": "ImportSummary",
+          "status": "ERROR",
+          "reference": "",
+          "enrollments": {
+            "responseType": "ImportSummary",
+            "status": "ERROR",
+            "imported": 0,
+            "updated": 0,
+            "ignored": 1,
+            "deleted": 0,
+            "importSummaries:": [],
+            "total": 0
+          },
+          "importCount": {
+            "imported": 0,
+            "updated": 0,
+            "ignored": 1,
+            "deleted": 0
+          },
+          "total": 0,
+          "importSummaries:": [],
+          "conflicts": [
+            {
+              "object": "Server.ERROR",
+              "value": "Server Error code:" + response.statusCode.toString()
+            }
+          ]
+        });
+      } else {
         final importSummary = importSummaries.lastWhere(
-                (summary) => summary['reference'] == trackedEntityInstance.id,
+            (summary) => summary['reference'] == trackedEntityInstance.id,
             orElse: (() => null));
         if (importSummary != null) {
           syncFailed = importSummary['status'] == 'ERROR';
           trackedEntityInstance.lastSyncSummary =
               TrackedEntityInstanceImportSummary.fromJson(importSummary);
-        }else{
+        } else {
           syncFailed = true;
           trackedEntityInstance.lastSyncSummary =
               TrackedEntityInstanceImportSummary.fromJson({
-                "responseType": "ImportSummary",
-                "status": "ERROR",
-                "reference":"",
-                "enrollments":{
-                  "responseType": "ImportSummary",
-                  "status": "ERROR",
-                  "imported": 0,
-                  "updated": 0,
-                  "ignored": 1,
-                  "deleted": 0,
-                  "importSummaries:":[],
-                  "total": 0
-                },
-                "importCount": {
-                  "imported": 0,
-                  "updated": 0,
-                  "ignored": 1,
-                  "deleted": 0
-                },
-                "total":0,
-                "importSummaries:":[],
-                "conflicts": [
-                  {
-                    "object": "ImportSummary.DOES_NOT_EXIST",
-                    "value": "Invalid Import Summary"
-                  }
-                ]
-              });
+            "responseType": "ImportSummary",
+            "status": "ERROR",
+            "reference": "",
+            "enrollments": {
+              "responseType": "ImportSummary",
+              "status": "ERROR",
+              "imported": 0,
+              "updated": 0,
+              "ignored": 1,
+              "deleted": 0,
+              "importSummaries:": [],
+              "total": 0
+            },
+            "importCount": {
+              "imported": 0,
+              "updated": 0,
+              "ignored": 1,
+              "deleted": 0
+            },
+            "total": 0,
+            "importSummaries:": [],
+            "conflicts": [
+              {
+                "object": "ImportSummary.DOES_NOT_EXIST",
+                "value": "Invalid Import Summary"
+              }
+            ]
+          });
         }
       }
       availableItemCount++;
@@ -608,7 +609,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       trackedEntityInstance.dirty = true;
       trackedEntityInstance.syncFailed = syncFailed;
       trackedEntityInstance.lastSyncDate =
-      DateTime.now().toIso8601String().split('.')[0];
+          DateTime.now().toIso8601String().split('.')[0];
 
       queue.add(() => TrackedEntityInstanceQuery(database: database)
           .setData(trackedEntityInstance)

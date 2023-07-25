@@ -46,7 +46,6 @@ class DataElementCategoryOptionCombo extends IdentifiableEntity {
 
   factory DataElementCategoryOptionCombo.fromJson(
       Map<String, dynamic> jsonData) {
-    print('DO WE HAVE CODE ${jsonData['code']}');
     return DataElementCategoryOptionCombo(
         id: jsonData['id'],
         categoryOptionCombo: jsonData['categoryOptionCombo'],

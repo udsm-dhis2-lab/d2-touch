@@ -53,30 +53,32 @@ class TrackedEntityInstance extends IdentifiableEntity {
   @OneToMany(table: TrackedEntityInstanceRelationship)
   List<TrackedEntityInstanceRelationship>? relationships;
 
-  TrackedEntityInstance({
-    String? id,
-    String? name,
-    String? created,
-    String? lastUpdated,
-    required this.orgUnit,
-    required bool dirty,
-    required this.trackedEntityType,
-    this.trackedEntityInstance,
-    this.deleted,
-    this.synced,
-    this.syncFailed,
-    this.lastSyncSummary,
-    this.lastSyncDate,
-    this.inactive,
-    this.enrollments,
-    this.attributes,
-    this.transfer,
-    this.relationships,
-  }) : super(
+  TrackedEntityInstance(
+      {String? id,
+      String? name,
+      String? created,
+      String? lastUpdated,
+      required this.orgUnit,
+      required bool dirty,
+      required this.trackedEntityType,
+      this.trackedEntityInstance,
+      this.deleted,
+      this.synced,
+      this.syncFailed,
+      this.lastSyncSummary,
+      this.lastSyncDate,
+      this.inactive,
+      this.enrollments,
+      this.attributes,
+      this.transfer,
+      this.relationships,
+      bool? skipDateUpdate})
+      : super(
             id: id,
             name: name,
             created: created,
             lastUpdated: lastUpdated,
+            skipDateUpdate: skipDateUpdate,
             dirty: dirty) {
     this.trackedEntityInstance = this.trackedEntityInstance ?? this.id;
   }
@@ -134,6 +136,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
                   'synced': json['synced']
                 }))
             .toList(),
+        skipDateUpdate: json['skipDateUpdate'],
         dirty: json['dirty']);
   }
 
