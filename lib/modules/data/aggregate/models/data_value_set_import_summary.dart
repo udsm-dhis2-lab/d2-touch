@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import 'dart:convert';
-
 import 'package:d2_touch/shared/models/import_action.model.dart';
 import 'package:d2_touch/shared/models/import_count.model.dart';
 import 'package:d2_touch/shared/models/import_status.model.dart';
