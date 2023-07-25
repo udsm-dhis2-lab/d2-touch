@@ -64,7 +64,7 @@ void main() async {
     expect(isAuthenticatedAfterLogout, false);
   });
 
-  await await d2.dispose();
+  await d2.dispose();
 
   final d2TokenBased = await D2Touch.init(
       sharedPreferenceInstance: sharedPreferenceInstance,
