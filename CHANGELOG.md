@@ -1,9 +1,24 @@
-## [1.0.3] - 23/03/2023
+## [1.1.0] - 06/08/2023
+
+- Add support to download program relationships
+- Add support to donwload and upload tracker relationships
+- Fix issue on clearing of shared preference on log out
+- Fix data synchronization issues when local data is in dirty state
+
 ### Fixes
+
+- Improve events program rules queueing on failing rules response
+- Fix error with missing code column in user authority
+
+## [1.0.3] - 23/03/2023
+
+### Fixes
+
 - Improve events program rules queueing on failing rules response
 - Fix error with missing code column in user authority
 
 ### New
+
 - Add job title and phone number properties to user entity
 - Add data store module
 
