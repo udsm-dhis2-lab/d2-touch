@@ -81,6 +81,7 @@ class AuthModule {
       await d2Instance.userModule.user.setData(currentUser).save();
 
       logOutSuccess = true;
+      await d2Instance.sharedPreferenceInstance.clear();
     } catch (e) {}
     return logOutSuccess;
   }
