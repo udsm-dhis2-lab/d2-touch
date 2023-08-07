@@ -1,3 +1,7 @@
+## [1.1.1] - 07/08/2023
+
+- Add support to upload relationships when uploading tracker entity instances
+
 ## [1.1.0] - 06/08/2023
 
 - Add support to download program relationships
