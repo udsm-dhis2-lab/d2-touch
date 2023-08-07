@@ -89,6 +89,32 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return this;
   }
 
+  TrackedEntityInstanceQuery withRelationships() {
+    final relationship = Repository<TrackedEntityInstanceRelationship>(
+        database: database as Database);
+    final Column? relationColumn = relationship.columns.firstWhere((column) =>
+        column.relation?.referencedEntity?.tableName == this.tableName);
+
+    if (relationColumn != null) {
+      ColumnRelation relation = ColumnRelation(
+          referencedColumn: relationColumn.relation?.attributeName,
+          attributeName: 'relationships',
+          primaryKey: this.primaryKey?.name,
+          relationType: RelationType.OneToMany,
+          referencedEntity: Entity.getEntityDefinition(
+              AnnotationReflectable.reflectType(
+                  TrackedEntityInstanceRelationship) as ClassMirror),
+          referencedEntityColumns: Entity.getEntityColumns(
+              AnnotationReflectable.reflectType(
+                  TrackedEntityInstanceRelationship) as ClassMirror,
+              false));
+
+      this.relations.add(relation);
+    }
+
+    return this;
+  }
+
   TrackedEntityInstanceQuery byOrgUnit(String orgUnit) {
     this.orgUnit = orgUnit;
     return this.where(attribute: 'orgUnit', value: orgUnit);
@@ -444,6 +470,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     List<TrackedEntityInstance> trackedEntityInstances = await this
         .withAttributes()
         .withEnrollments()
+        .withRelationships()
         .where(attribute: 'synced', value: false)
         .where(attribute: 'dirty', value: true)
         .get();

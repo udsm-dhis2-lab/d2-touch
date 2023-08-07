@@ -178,7 +178,11 @@ class TrackedEntityInstance extends IdentifiableEntity {
           .toList(),
       "enrollments": (trackedEntityInstance.enrollments ?? [])
           .map((enrollment) => Enrollment.toUpload(enrollment, events))
-          .toList()
+          .toList(),
+      "relationships": (trackedEntityInstance.relationships ?? [])
+          .map((relationship) =>
+              TrackedEntityInstanceRelationship.toUpload(relationship))
+          .toList(),
     };
   }
 }

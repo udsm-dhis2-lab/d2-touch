@@ -54,4 +54,24 @@ class TrackedEntityInstanceRelationship extends BaseEntity {
 
     return data;
   }
+
+  static toUpload(
+      TrackedEntityInstanceRelationship trackedEntityInstanceRelationship) {
+    return {
+      "relationshipType": trackedEntityInstanceRelationship.relationshipType,
+      "relationship": trackedEntityInstanceRelationship.id,
+      "from": {
+        "trackedEntityInstance": {
+          "trackedEntityInstance":
+              trackedEntityInstanceRelationship.fromTrackedInstance,
+        }
+      },
+      "to": {
+        "trackedEntityInstance": {
+          "trackedEntityInstance":
+              trackedEntityInstanceRelationship.toTrackedInstance
+        }
+      }
+    };
+  }
 }
