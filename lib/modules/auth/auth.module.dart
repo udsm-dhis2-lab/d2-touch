@@ -29,7 +29,7 @@ class AuthModule {
       required String url,
       Dio? dioTestClient}) async {
     HttpResponse userResponse = await HttpClient.get(
-        'me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,phoneNumber,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name],dataViewOrganisationUnits[id,code,name],userGroups[id,name],authorities,programs,dataSets',
+        'me.json?fields=id,name,created,lastUpdated,birthday,gender,displayName,jobTitle,surname,employer,email,firstName,phoneNumber,nationality,userCredentials[code,id,name,lastLogin,displayName,username,userRoles[id,name,code]],organisationUnits[id,code,name,parent],dataViewOrganisationUnits[id,code,name,parent],userGroups[id,name],authorities,programs,dataSets',
         baseUrl: url,
         username: username,
         password: password,

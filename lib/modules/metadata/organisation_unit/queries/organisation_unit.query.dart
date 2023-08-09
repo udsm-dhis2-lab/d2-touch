@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:sqflite/sqflite.dart';
 
 class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
+  bool? includeOtherParentChildren;
   OrganisationUnitQuery({Database? database})
       : super(database: database, junctionOperator: 'OR');
 
@@ -19,6 +20,11 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
         userOrgUnits.map((orgUnit) => orgUnit.orgUnit).toList();
 
     return this.byIds(userOrgUnitIds).get();
+  }
+
+  includeOtherParentChidren() {
+    includeOtherParentChildren = true;
+    return this;
   }
 
   @override
@@ -47,7 +53,13 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
 
     this.ilike(
         attribute: 'path',
-        value: userOrgUnits.map((orgUnit) => orgUnit.orgUnit).toList());
+        value: userOrgUnits
+            .map((orgUnit) => includeOtherParentChildren == true
+                ? orgUnit.parent
+                : orgUnit.orgUnit)
+            .where((orgUnit) => orgUnit != null)
+            .toList());
+
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
