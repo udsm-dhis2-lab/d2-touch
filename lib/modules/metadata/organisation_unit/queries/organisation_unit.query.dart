@@ -22,7 +22,7 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
     return this.byIds(userOrgUnitIds).get();
   }
 
-  includeOtherParentChidren() {
+  includeParentChildren() {
     includeOtherParentChildren = true;
     return this;
   }
@@ -34,7 +34,7 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
-            message: 'Ferching user assigned organisation units....',
+            message: 'Fetching user assigned organisation units....',
             status: '',
             percentage: 0),
         false);
@@ -55,7 +55,7 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
         attribute: 'path',
         value: userOrgUnits
             .map((orgUnit) => includeOtherParentChildren == true
-                ? orgUnit.parent
+                ? orgUnit.parent as String
                 : orgUnit.orgUnit)
             .where((orgUnit) => orgUnit != null)
             .toList());

@@ -53,6 +53,7 @@ class AuthModule {
         sharedPreferenceInstance: d2Instance.sharedPreferenceInstance);
 
     Map<String, dynamic> userData = userResponse.body;
+
     userData['password'] = password;
     userData['isLoggedIn'] = true;
     userData['username'] = username;

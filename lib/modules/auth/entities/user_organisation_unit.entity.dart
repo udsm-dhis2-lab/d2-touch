@@ -30,15 +30,11 @@ class UserOrganisationUnit extends IdentifiableEntity {
       : super(id: id, name: name, dirty: dirty);
 
   factory UserOrganisationUnit.fromJson(Map<String, dynamic> json) {
-    final parent = json['parent'].runtimeType is String
-        ? json['parent']
-        : json['parente']?['id'];
-
     return UserOrganisationUnit(
         id: json['id'],
         name: json['id'],
         orgUnit: json['orgUnit'],
-        parent: parent,
+        parent: json['parent'],
         user: json['user'],
         type: json['type'],
         dirty: json['dirty'].runtimeType == "String"
