@@ -37,7 +37,7 @@ void main() async {
   final dioAdapter = DioAdapter(dio: dio);
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/messageConversations.json?fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,status,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,sender,text,messageConversation]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,status,subject,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,sender,text,messageConversation]&paging=false',
     (server) => server.reply(200, sampleMessageConversations),
   );
 
@@ -50,7 +50,7 @@ void main() async {
       await d2.notificationModule.messageConversation.get();
 
   dioAdapter.onGet(
-    'https://play.dhis2.org/2.35.11/api/messageConversations.json?filter=read:eq:false&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,status,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,sender,text,messageConversation]&paging=false',
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?filter=read:eq:false&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,status,subject,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,sender,text,messageConversation]&paging=false',
     (server) => server.reply(200, sampleMessageConversations),
   );
 
@@ -61,6 +61,26 @@ void main() async {
   test('should store all incoming  notification', () {
     expect(messageConversations.length, 50);
     expect(onlineNotifications.length, 50);
+  });
+
+  dioAdapter.onGet(
+    'https://play.dhis2.org/2.35.11/api/messageConversations.json?filter=subject:ilike:Scheduler&fields=id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,status,subject,messageType,lastMessage,read,messages[id,dirty,lastUpdated,created,name,displayName,shortName,code,translations,sender,text,messageConversation]&paging=false',
+    (server) => server.reply(200, sampleFilteredMessageConversations),
+  );
+
+  await d2.notificationModule.messageConversation
+      .ilike(attribute: 'subject', value: 'Scheduler')
+      .download((progress, complete) {
+    print(progress.message);
+  }, dioTestClient: dio);
+
+  MessageConversation filteredMessageConversation = await d2
+      .notificationModule.messageConversation
+      .byId('u9gjt9pG88l')
+      .getOne();
+
+  test('should store all filtered  notification', () {
+    expect(filteredMessageConversation?.id, 'u9gjt9pG88l');
   });
 
   await d2.dispose();
