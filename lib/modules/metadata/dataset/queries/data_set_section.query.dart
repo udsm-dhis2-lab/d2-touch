@@ -8,6 +8,7 @@ import 'package:d2_touch/core/annotations/reflectable.annotation.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section_data_element.entity.dart';
+import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section_greyed_field.entity.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
@@ -34,6 +35,34 @@ class DataSetSectionQuery extends BaseQuery<DataSetSection> {
                   as ClassMirror),
           referencedEntityColumns: Entity.getEntityColumns(
               AnnotationReflectable.reflectType(DataSetSectionDataElement)
+                  as ClassMirror,
+              false));
+
+      this.relations.add(relation);
+    }
+
+    return this;
+  }
+
+  DataSetSectionQuery withGreyedFields() {
+    final dataSetSectionGreyedField =
+        Repository<DataSetSectionGreyedField>(database: database as Database);
+
+    final Column? relationColumn = dataSetSectionGreyedField.columns.firstWhere(
+        (column) =>
+            column.relation?.referencedEntity?.tableName == this.tableName);
+
+    if (relationColumn != null) {
+      ColumnRelation relation = ColumnRelation(
+          referencedColumn: relationColumn.relation?.attributeName,
+          attributeName: 'greyedFields',
+          primaryKey: this.primaryKey?.name,
+          relationType: RelationType.OneToMany,
+          referencedEntity: Entity.getEntityDefinition(
+              AnnotationReflectable.reflectType(DataSetSectionGreyedField)
+                  as ClassMirror),
+          referencedEntityColumns: Entity.getEntityColumns(
+              AnnotationReflectable.reflectType(DataSetSectionGreyedField)
                   as ClassMirror,
               false));
 

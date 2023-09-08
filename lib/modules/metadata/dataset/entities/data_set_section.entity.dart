@@ -5,6 +5,7 @@
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set.entity.dart';
 import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section_data_element.entity.dart';
+import 'package:d2_touch/modules/metadata/dataset/entities/data_set_section_greyed_field.entity.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 @AnnotationReflectable
@@ -22,6 +23,9 @@ class DataSetSection extends IdentifiableEntity {
   @OneToMany(table: DataSetSectionDataElement)
   List<DataSetSectionDataElement>? dataElements;
 
+  @OneToMany(table: DataSetSectionGreyedField)
+  List<DataSetSectionGreyedField>? greyedFields;
+
   DataSetSection(
       {required String id,
       required bool dirty,
@@ -32,7 +36,8 @@ class DataSetSection extends IdentifiableEntity {
       required this.sortOrder,
       this.showRowTotals,
       required this.dataSet,
-      this.dataElements})
+      this.dataElements,
+      this.greyedFields})
       : super(
           id: id,
           dirty: dirty,
@@ -60,6 +65,13 @@ class DataSetSection extends IdentifiableEntity {
                   'dataSetSection': jsonData['id'],
                   'dirty': false
                 }))
+            .toList(),
+        greyedFields: List<dynamic>.from(jsonData['greyedFields'] ?? [])
+            .map((greyedField) => DataSetSectionGreyedField.fromJson({
+                  ...greyedField,
+                  'dataSetSection': jsonData['id'],
+                  'dirty': false
+                }))
             .toList());
   }
 
@@ -75,6 +87,7 @@ class DataSetSection extends IdentifiableEntity {
     data['dataSet'] = this.dataSet;
     data['dirty'] = this.dirty;
     data['dataElements'] = this.dataElements;
+    data['greyedFields'] = this.greyedFields;
     return data;
   }
 }

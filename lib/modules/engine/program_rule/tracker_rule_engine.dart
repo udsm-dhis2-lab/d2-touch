@@ -20,7 +20,6 @@ class TrackerRuleEngine {
       {required TrackedEntityInstance trackedEntityInstance,
       required String program,
       TrackedEntityAttributeValue? changedAttributeValue}) async {
-    print('WE ARE REACHING HERE $program');
     List<ProgramRule> programRules = await ProgramRuleQuery(database: database)
         .withActions()
         .where(attribute: 'program', value: program)
