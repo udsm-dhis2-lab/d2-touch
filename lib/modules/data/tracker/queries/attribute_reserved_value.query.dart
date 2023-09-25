@@ -7,6 +7,15 @@ import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:d2_touch/shared/queries/base.query.dart';
+import 'package:d2_touch/modules/auth/user/queries/user_organisation_unit.query.dart';
+
+import 'dart:convert';
+import 'dart:core';
+import 'dart:developer' as developer;
+import 'package:d2_touch/modules/auth/user/queries/user_organisation_unit.query.dart';
+import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
+import 'package:d2_touch/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
 
 class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
   AttributeReservedValueQuery({Database? database}) : super(database: database);
@@ -76,6 +85,11 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
     return await AttributeReservedValueQuery().get();
   }
 
+  // This function sets criteria for an AGV (Automated Generated Value).
+  setCriteriaForAGV() async {
+    return this;
+  }
+
   downloadReservedValueByAttribute(
       ProgramTrackedEntityAttribute reservedAttribute,
       {Dio? dioTestClient}) async {
@@ -89,12 +103,31 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
       return null;
     }
 
-    final response = await HttpClient.get(
-        'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
-        database: this.database,
-        dioTestClient: dioTestClient);
+    List<OrganisationUnit>? userOrganisationUnitInfo =
+        await OrganisationUnitQuery().getUserOrgUnits();
 
-    print('trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve')
+    final response;
+
+    if (userOrganisationUnitInfo != null &&
+        userOrganisationUnitInfo.isNotEmpty) {
+      OrganisationUnit organisationUnit = userOrganisationUnitInfo[0];
+      String code = organisationUnit.code ?? '';
+      
+      response = await HttpClient.get(
+          'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve&ORG_UNIT_CODE=$code',
+          database: this.database,
+          dioTestClient: dioTestClient);
+    } else {
+      response = await HttpClient.get(
+          'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
+          database: this.database,
+          dioTestClient: dioTestClient);
+    }
+
+    // final response = await HttpClient.get(
+    //     'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
+    //     database: this.database,
+    //     dioTestClient: dioTestClient);
 
     List<AttributeReservedValue> reservedValues = [];
 
