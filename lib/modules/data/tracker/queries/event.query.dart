@@ -4,6 +4,7 @@ import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
+import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
@@ -138,10 +139,20 @@ class EventQuery extends BaseQuery<Event> {
 
     List<String> eventIds = events.map((event) => event.id as String).toList();
 
-    final eventUploadPayload = events.map((event) {
-      return Event.toUpload(event);
-    }).toList();
-
+    final eventUploadPayload = [];
+    for (Event event in events) {
+      if (event.programStage != null) {
+        ProgramStage programStage = await ProgramStageQuery(database: database)
+            .byId(event.programStage)
+            .getOne();
+        dynamic eventPayload = Event.toUpload(event);
+        eventPayload['program'] = programStage.program;
+        eventUploadPayload.add(eventPayload);
+      } else {
+        dynamic eventPayload = Event.toUpload(event);
+        eventUploadPayload.add(eventPayload);
+      }
+    }
     final response = await HttpClient.post(
         this.apiResourceName as String, {'events': eventUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
@@ -170,88 +181,84 @@ class EventQuery extends BaseQuery<Event> {
     num availableItemCount = 0;
 
     for (var event in events) {
-
       bool syncFailed = true;
-      if(!((response.statusCode >= 200 && response.statusCode < 300) || response.statusCode == 409)){
+      if (!((response.statusCode >= 200 && response.statusCode < 300) ||
+          response.statusCode == 409)) {
         syncFailed = true;
-        event.lastSyncSummary =
-            EventImportSummary.fromJson({
-              "responseType": "ImportSummary",
-              "status": "ERROR",
-              "reference":"",
-              "enrollments":{
-                "responseType": "ImportSummary",
-                "status": "ERROR",
-                "imported": 0,
-                "updated": 0,
-                "ignored": 1,
-                "deleted": 0,
-                "importSummaries:":[],
-                "total": 0
-              },
-              "importCount": {
-                "imported": 0,
-                "updated": 0,
-                "ignored": 1,
-                "deleted": 0
-              },
-              "total":0,
-              "importSummaries:":[],
-              "conflicts": [
-                {
-                  "object": "Server.ERROR",
-                  "value": "Server Error code:" + response.statusCode.toString()
-                }
-              ]
-            });
-      }else{
+        event.lastSyncSummary = EventImportSummary.fromJson({
+          "responseType": "ImportSummary",
+          "status": "ERROR",
+          "reference": "",
+          "enrollments": {
+            "responseType": "ImportSummary",
+            "status": "ERROR",
+            "imported": 0,
+            "updated": 0,
+            "ignored": 1,
+            "deleted": 0,
+            "importSummaries:": [],
+            "total": 0
+          },
+          "importCount": {
+            "imported": 0,
+            "updated": 0,
+            "ignored": 1,
+            "deleted": 0
+          },
+          "total": 0,
+          "importSummaries:": [],
+          "conflicts": [
+            {
+              "object": "Server.ERROR",
+              "value": "Server Error code:" + response.statusCode.toString()
+            }
+          ]
+        });
+      } else {
         final importSummary = importSummaries.lastWhere(
-                (summary) => summary['reference'] == event.id,
+            (summary) => summary['reference'] == event.id,
             orElse: (() => null));
         if (importSummary != null) {
           syncFailed = importSummary['status'] == 'ERROR';
-          event.lastSyncSummary =
-              EventImportSummary.fromJson(importSummary);
-        }else{
+          event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
+        } else {
           syncFailed = true;
-          event.lastSyncSummary =
-              EventImportSummary.fromJson({
-                "responseType": "ImportSummary",
-                "status": "ERROR",
-                "reference":"",
-                "enrollments":{
-                  "responseType": "ImportSummary",
-                  "status": "ERROR",
-                  "imported": 0,
-                  "updated": 0,
-                  "ignored": 1,
-                  "deleted": 0,
-                  "importSummaries:":[],
-                  "total": 0
-                },
-                "importCount": {
-                  "imported": 0,
-                  "updated": 0,
-                  "ignored": 1,
-                  "deleted": 0
-                },
-                "total":0,
-                "importSummaries:":[],
-                "conflicts": [
-                  {
-                    "object": "ImportSummary.DOES_NOT_EXIST",
-                    "value": "Invalid Import Summary"
-                  }
-                ]
-              });
+          event.lastSyncSummary = EventImportSummary.fromJson({
+            "responseType": "ImportSummary",
+            "status": "ERROR",
+            "reference": "",
+            "enrollments": {
+              "responseType": "ImportSummary",
+              "status": "ERROR",
+              "imported": 0,
+              "updated": 0,
+              "ignored": 1,
+              "deleted": 0,
+              "importSummaries:": [],
+              "total": 0
+            },
+            "importCount": {
+              "imported": 0,
+              "updated": 0,
+              "ignored": 1,
+              "deleted": 0
+            },
+            "total": 0,
+            "importSummaries:": [],
+            "conflicts": [
+              {
+                "object": "ImportSummary.DOES_NOT_EXIST",
+                "value": "Invalid Import Summary"
+              }
+            ]
+          });
         }
       }
       availableItemCount++;
       event.synced = !syncFailed;
       event.dirty = true;
       event.syncFailed = syncFailed;
-      event.lastSyncDate =
-      DateTime.now().toIso8601String().split('.')[0];
+      event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
       queue.add(() => EventQuery(database: database).setData(event).save());
     }
 

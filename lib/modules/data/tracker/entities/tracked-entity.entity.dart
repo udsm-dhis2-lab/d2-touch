@@ -169,6 +169,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
 
   static toUpload(
       TrackedEntityInstance trackedEntityInstance, List<Event>? events) {
+    print(jsonEncode(trackedEntityInstance.attributes));
     return {
       "trackedEntityType": trackedEntityInstance.trackedEntityType,
       "orgUnit": trackedEntityInstance.orgUnit,
