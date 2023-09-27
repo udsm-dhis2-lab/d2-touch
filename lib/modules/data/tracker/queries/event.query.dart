@@ -104,7 +104,7 @@ class EventQuery extends BaseQuery<Event> {
   }
 
   Future<List<Event>?> upload(Function(RequestProgress, bool) callback,
-      {Dio? dioTestClient}) async {
+      {Dio? dioTestClient, String? resource}) async {
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -154,8 +154,10 @@ class EventQuery extends BaseQuery<Event> {
       }
     }
     final response = await HttpClient.post(
-        this.apiResourceName as String, {'events': eventUploadPayload},
-        database: this.database, dioTestClient: dioTestClient);
+        resource ?? this.apiResourceName as String,
+        {'events': eventUploadPayload},
+        database: this.database,
+        dioTestClient: dioTestClient);
 
     callback(
         RequestProgress(
