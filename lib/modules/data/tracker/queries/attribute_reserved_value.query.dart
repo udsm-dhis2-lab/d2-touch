@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:convert';
+
 import 'package:d2_touch/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_tracked_entity_attribute.query.dart';
@@ -7,6 +10,9 @@ import 'package:d2_touch/shared/utilities/http_client.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:sqflite/sqflite.dart';
+
+import '../../../metadata/organisation_unit/entities/organisation_unit.entity.dart';
+import '../../../metadata/organisation_unit/queries/organisation_unit.query.dart';
 
 class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
   AttributeReservedValueQuery({Database? database}) : super(database: database);
@@ -90,10 +96,38 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
       return null;
     }
 
-    final response = await HttpClient.get(
-        'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
-        database: this.database,
-        dioTestClient: dioTestClient);
+    List<OrganisationUnit>? userOrganisationUnitInfo =
+        await OrganisationUnitQuery(database: database).getUserOrgUnits();
+
+    final response;
+
+    if (userOrganisationUnitInfo != null &&
+        userOrganisationUnitInfo.isNotEmpty) {
+      log(json.encode(userOrganisationUnitInfo).toString());
+      OrganisationUnit organisationUnit = userOrganisationUnitInfo[0];
+      String code = organisationUnit.code ?? '';
+
+      inspect("INSIDE IF-----------------");
+      response = await HttpClient.get(
+          'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve&ORG_UNIT_CODE=$code',
+          database: database,
+          dioTestClient: dioTestClient);
+      inspect("AFTER HTTP IF-----------------");
+    } else {
+      inspect("INSIDE ELSE-----------------");
+      response = await HttpClient.get(
+          'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
+          database: database,
+          dioTestClient: dioTestClient);
+    }
+
+    // log('message');
+    // log(json.decode(response.toString()));
+
+    // final response = await HttpClient.get(
+    //     'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
+    //     database: this.database,
+    //     dioTestClient: dioTestClient);
 
     List<AttributeReservedValue> reservedValues = [];
 

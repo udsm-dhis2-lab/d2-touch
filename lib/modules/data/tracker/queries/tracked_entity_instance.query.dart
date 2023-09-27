@@ -224,7 +224,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   @override
   Future create() async {
     final Program program = await ProgramQuery(database: database)
-        .byId(this.program as String)
+        .where(attribute: "code", value: "Malaria Case Registry (MCR)")
         .withAttributes()
         .getOne();
 
