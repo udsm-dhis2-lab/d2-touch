@@ -184,6 +184,7 @@ class Event extends IdentifiableEntity {
       "trackedEntityInstance": event.trackedEntityInstance,
       "orgUnit": event.orgUnit,
       "eventDate": event.eventDate,
+      "occurredAt": event.eventDate,
       "status": event.status,
       "storedBy": event.storedBy,
       "coordinate": event.coordinate,
