@@ -107,27 +107,17 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
       OrganisationUnit organisationUnit = userOrganisationUnitInfo[0];
       String code = organisationUnit.code ?? '';
 
-      inspect("INSIDE IF-----------------");
       response = await HttpClient.get(
           'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve&ORG_UNIT_CODE=$code',
           database: database,
           dioTestClient: dioTestClient);
-      inspect("AFTER HTTP IF-----------------");
+
     } else {
-      inspect("INSIDE ELSE-----------------");
       response = await HttpClient.get(
           'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
           database: database,
           dioTestClient: dioTestClient);
     }
-
-    // log('message');
-    // log(json.decode(response.toString()));
-
-    // final response = await HttpClient.get(
-    //     'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',
-    //     database: this.database,
-    //     dioTestClient: dioTestClient);
 
     List<AttributeReservedValue> reservedValues = [];
 
