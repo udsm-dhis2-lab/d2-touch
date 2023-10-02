@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:convert';
-
 import 'package:d2_touch/modules/data/tracker/entities/attribute_reserved_value.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_tracked_entity_attribute.entity.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_tracked_entity_attribute.query.dart';
@@ -103,7 +100,6 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
 
     if (userOrganisationUnitInfo != null &&
         userOrganisationUnitInfo.isNotEmpty) {
-      log(json.encode(userOrganisationUnitInfo).toString());
       OrganisationUnit organisationUnit = userOrganisationUnitInfo[0];
       String code = organisationUnit.code ?? '';
 

@@ -188,6 +188,7 @@ class Event extends IdentifiableEntity {
       "status": event.status,
       "storedBy": event.storedBy,
       "coordinate": event.coordinate,
+      "enrollment":event.enrollment,
       "dataValues": (event.dataValues ?? [])
           .map((event) => EventDataValue.toUpload(event))
           .toList()

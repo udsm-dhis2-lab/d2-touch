@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
@@ -153,11 +156,16 @@ class EventQuery extends BaseQuery<Event> {
         eventUploadPayload.add(eventPayload);
       }
     }
+
+    log("payload === ${jsonEncode(eventUploadPayload)}");
+
     final response = await HttpClient.post(
         resource ?? this.apiResourceName as String,
         {'events': eventUploadPayload},
         database: this.database,
         dioTestClient: dioTestClient);
+
+    log("response === ${jsonEncode(response.body).toString()}");
 
     callback(
         RequestProgress(
