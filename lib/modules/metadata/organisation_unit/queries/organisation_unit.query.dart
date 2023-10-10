@@ -57,6 +57,7 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
             .map((orgUnit) => includeOtherParentChildren == true
                 ? orgUnit.parent as String
                 : orgUnit.orgUnit)
+            // ignore: unnecessary_null_comparison
             .where((orgUnit) => orgUnit != null)
             .toList());
 

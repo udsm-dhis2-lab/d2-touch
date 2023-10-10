@@ -34,7 +34,6 @@ class AuthModule {
         username: username,
         password: password,
         dioTestClient: dioTestClient);
-
     if (userResponse.statusCode == 401) {
       return LoginResponseStatus.WRONG_CREDENTIALS;
     }

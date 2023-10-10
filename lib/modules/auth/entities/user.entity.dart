@@ -184,7 +184,8 @@ class User extends IdentifiableEntity {
                 id: '${jsonData['id']}_${orgUnit['id']}',
                 name: '${jsonData['id']}_${orgUnit['id']}',
                 orgUnit: orgUnit['id'],
-                parent: orgUnit['parent']['id'],
+                parent:
+                    orgUnit['parent'] != null ? orgUnit['parent']['id'] : null,
                 user: jsonData['id'],
                 type: 'DATA_VIEW',
                 dirty: jsonData['dirty'] ?? false))
