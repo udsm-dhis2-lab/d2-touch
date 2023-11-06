@@ -1,7 +1,9 @@
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event.query.dart';
 import 'package:d2_touch/modules/data/tracker/queries/event_data_value.query.dart';
+import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
 import 'package:d2_touch/modules/engine/program_rule/models/event_rule_result.model.dart';
 import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
 import 'package:d2_touch/modules/engine/program_rule/utilities/program_rule_engine.util.dart';
@@ -19,7 +21,8 @@ class EventRuleEngine {
   Future<EventRuleResult> execute(
       {required Event event,
       required String program,
-      EventDataValue? changedEventDataValue}) async {
+      EventDataValue? changedEventDataValue,
+      String? trackedEntityInstance}) async {
     List<ProgramRule> programRules = await ProgramRuleQuery(database: database)
         .withActions()
         .where(attribute: 'program', value: program)
@@ -35,8 +38,24 @@ class EventRuleEngine {
             .where(attribute: 'event', value: event.id)
             .get();
 
-    final dataValueEntities =
+    final evenDataValueEntities =
         DataValueEntities.fromEventDataValues(eventDataValues);
+    
+    Map<String, DataValueObject>? attrDataValueEntities;
+
+    if (trackedEntityInstance != null) {
+      List<TrackedEntityAttributeValue> attributes =
+          await TrackedEntityAttributeValueQuery(database: database)
+              .where(
+                  attribute: 'trackedEntityInstance',
+                  value: trackedEntityInstance)
+              .get();
+
+      attrDataValueEntities = DataValueEntities.fromAttributeValues(
+          attributes, inputEntities: evenDataValueEntities);
+    }
+
+    final dataValueEntities = attrDataValueEntities ?? evenDataValueEntities;
 
     List<ProgramRuleAction> programRuleActions = ProgramRuleEngine.execute(
         dataValueEntities: dataValueEntities,
