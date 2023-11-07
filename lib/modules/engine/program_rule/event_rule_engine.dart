@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
@@ -38,10 +41,8 @@ class EventRuleEngine {
             .where(attribute: 'event', value: event.id)
             .get();
 
-    final evenDataValueEntities =
+    Map<String, DataValueObject> dataValueEntities =
         DataValueEntities.fromEventDataValues(eventDataValues);
-    
-    Map<String, DataValueObject>? attrDataValueEntities;
 
     if (trackedEntityInstance != null) {
       List<TrackedEntityAttributeValue> attributes =
@@ -51,16 +52,15 @@ class EventRuleEngine {
                   value: trackedEntityInstance)
               .get();
 
-      attrDataValueEntities = DataValueEntities.fromAttributeValues(
-          attributes, inputEntities: evenDataValueEntities);
+      dataValueEntities = DataValueEntities.fromAttributeValues(attributes,
+          inputEntities: dataValueEntities);
     }
 
-    final dataValueEntities = attrDataValueEntities ?? evenDataValueEntities;
-
     List<ProgramRuleAction> programRuleActions = ProgramRuleEngine.execute(
-        dataValueEntities: dataValueEntities,
-        programRules: programRules,
-        programRuleVariables: programRuleVariables);
+      dataValueEntities: dataValueEntities,
+      programRules: programRules,
+      programRuleVariables: programRuleVariables,
+    );
 
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
