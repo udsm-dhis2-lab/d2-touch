@@ -10,7 +10,7 @@ import 'queries/tracked_entity_instance.query.dart';
 
 class TrackedEntityInstanceModule {
   Database? database;
-  TrackedEntityInstanceModule({this.database, String? locale});
+  TrackedEntityInstanceModule({this.database, String? locale, String? instanceVersion});
   static createTables({required Database database}) async {
     await TrackedEntityInstanceQuery(database: database).createTable();
     await TrackedEntityAttributeValueQuery(database: database).createTable();
