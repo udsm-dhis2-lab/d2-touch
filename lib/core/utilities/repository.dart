@@ -523,6 +523,9 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         return 0;
       }
 
+      
+
+
       T newEntity = entity;
 
       if (mergeMode == MergeMode.Merge) {

@@ -6,6 +6,7 @@ import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
+import 'package:d2_touch/modules/data/tracker/models/response.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
 import 'package:d2_touch/shared/models/request_progress.model.dart';
@@ -17,12 +18,14 @@ import 'package:reflectable/reflectable.dart';
 import 'package:sqflite/sqflite.dart';
 
 class EventQuery extends BaseQuery<Event> {
+  int? instanceVersion;
   String? orgUnit;
   String? program;
   String? programStage;
   String? enrollment;
 
-  EventQuery({Database? database}) : super(database: database);
+  EventQuery({Database? database, this.instanceVersion})
+      : super(database: database);
 
   EventQuery withDataValues() {
     final eventDataValue =
@@ -157,15 +160,11 @@ class EventQuery extends BaseQuery<Event> {
       }
     }
 
-    log("payload === ${jsonEncode(eventUploadPayload)}");
-
     final response = await HttpClient.post(
         resource ?? this.apiResourceName as String,
         {'events': eventUploadPayload},
         database: this.database,
         dioTestClient: dioTestClient);
-
-    log("response === ${jsonEncode(response.body).toString()}");
 
     callback(
         RequestProgress(
@@ -190,105 +189,47 @@ class EventQuery extends BaseQuery<Event> {
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 
-    for (var event in events) {
-      bool syncFailed = true;
-      if (!((response.statusCode >= 200 && response.statusCode < 300) ||
-          response.statusCode == 409)) {
-        syncFailed = true;
-        event.lastSyncSummary = EventImportSummary.fromJson({
-          "responseType": "ImportSummary",
-          "status": "ERROR",
-          "reference": "",
-          "enrollments": {
-            "responseType": "ImportSummary",
-            "status": "ERROR",
-            "imported": 0,
-            "updated": 0,
-            "ignored": 1,
-            "deleted": 0,
-            "importSummaries:": [],
-            "total": 0
-          },
-          "importCount": {
-            "imported": 0,
-            "updated": 0,
-            "ignored": 1,
-            "deleted": 0
-          },
-          "total": 0,
-          "importSummaries:": [],
-          "conflicts": [
-            {
-              "object": "Server.ERROR",
-              "value": "Server Error code:" + response.statusCode.toString()
-            }
-          ]
-        });
-      } else {
-        final importSummary = importSummaries.lastWhere(
-            (summary) => summary['reference'] == event.id,
-            orElse: (() => null));
+    if (instanceVersion != null && instanceVersion! >= 38) {
+      final lastestVersionResponse =
+          LatestVersionResponse.fromJson(response.body);
+
+      final objectReport = lastestVersionResponse
+          .bundleReport?.typeReportMap?.event?.objectReports;
+
+      events.forEach((event) {
+        final importSummary =
+            objectReport?.lastWhere((summary) => summary.uid == event.id);
+
         if (importSummary != null) {
-          syncFailed = importSummary['status'] == 'ERROR';
-          event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
-        } else {
-          syncFailed = true;
-          event.lastSyncSummary = EventImportSummary.fromJson({
-            "responseType": "ImportSummary",
-            "status": "ERROR",
-            "reference": "",
-            "enrollments": {
-              "responseType": "ImportSummary",
-              "status": "ERROR",
-              "imported": 0,
-              "updated": 0,
-              "ignored": 1,
-              "deleted": 0,
-              "importSummaries:": [],
-              "total": 0
-            },
-            "importCount": {
-              "imported": 0,
-              "updated": 0,
-              "ignored": 1,
-              "deleted": 0
-            },
-            "total": 0,
-            "importSummaries:": [],
-            "conflicts": [
-              {
-                "object": "ImportSummary.DOES_NOT_EXIST",
-                "value": "Invalid Import Summary"
-              }
-            ]
-          });
+          availableItemCount++;
+          final syncFailed = lastestVersionResponse.status == 'ERROR';
+          event.synced = !syncFailed;
+          event.dirty = true;
+          event.syncFailed = syncFailed;
+          event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
+          event.lastUpdated = event.lastSyncDate;
+          queue.add(() => EventQuery(database: database).setData(event).save());
         }
-      }
-      availableItemCount++;
-      event.synced = !syncFailed;
-      event.dirty = true;
-      event.syncFailed = syncFailed;
-      event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
-      queue.add(() => EventQuery(database: database).setData(event).save());
+      });
+    } else {
+      events.forEach((event) {
+        final importSummary = importSummaries.lastWhere((summary) =>
+            summary['reference'] != null && summary['reference'] == event.id);
+
+        if (importSummary != null) {
+          availableItemCount++;
+          final syncFailed = importSummary['status'] == 'ERROR';
+          event.synced = !syncFailed;
+          event.dirty = true;
+          event.syncFailed = syncFailed;
+          event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
+          event.lastUpdated = event.lastSyncDate;
+          event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
+
+          queue.add(() => EventQuery().setData(event).save());
+        }
+      });
     }
-
-    // ! START: IMPROVE APPROACH
-    // events.forEach((event) {
-    //   final importSummary = importSummaries.lastWhere((summary) =>
-    //       summary['reference'] != null && summary['reference'] == event.id);
-
-    //   if (importSummary != null) {
-    //     availableItemCount++;
-    //     final syncFailed = importSummary['status'] == 'ERROR';
-    //     event.synced = !syncFailed;
-    //     event.dirty = true;
-    //     event.syncFailed = syncFailed;
-    //     event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
-    //     event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
-    //     queue.add(() => EventQuery().setData(event).save());
-    //   }
-    // });
-    // ! END: IMPROVE APPROACH
 
     if (availableItemCount == 0) {
       queue.cancel();

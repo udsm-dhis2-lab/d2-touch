@@ -10,7 +10,10 @@ import 'queries/tracked_entity_instance.query.dart';
 
 class TrackedEntityInstanceModule {
   Database? database;
-  TrackedEntityInstanceModule({this.database, String? locale, String? instanceVersion});
+  int? instanceVersion;
+  TrackedEntityInstanceModule(
+      {this.database, String? locale, this.instanceVersion});
+
   static createTables({required Database database}) async {
     await TrackedEntityInstanceQuery(database: database).createTable();
     await TrackedEntityAttributeValueQuery(database: database).createTable();
@@ -28,7 +31,7 @@ class TrackedEntityInstanceModule {
   TrackedEntityAttributeValueQuery get trackedEntityAttributeValue =>
       TrackedEntityAttributeValueQuery(database: database);
 
-  EventQuery get event => EventQuery(database: database);
+  EventQuery get event => EventQuery(database: database, instanceVersion: instanceVersion);
 
   EnrollmentQuery get enrollment => EnrollmentQuery(database: database);
 

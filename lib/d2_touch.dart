@@ -31,6 +31,7 @@ import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
 
 class D2Touch implements D2TouchModel {
+  int? instanceVersion ;
   String locale = 'en';
   Database? _database;
   bool? inMemory;
@@ -50,8 +51,8 @@ class D2Touch implements D2TouchModel {
 
   DataSetModule get dataSetModule => DataSetModule(database: _database);
 
-  TrackedEntityInstanceModule get trackerModule =>
-      TrackedEntityInstanceModule(database: _database);
+  TrackedEntityInstanceModule get trackerModule => TrackedEntityInstanceModule(
+      database: _database, instanceVersion: instanceVersion);
 
   OrganisationUnitModule get organisationUnitModule =>
       OrganisationUnitModule(database: _database);
@@ -72,21 +73,29 @@ class D2Touch implements D2TouchModel {
 
   EngineModule get engine => EngineModule(database: _database as Database);
 
-  DataStoreModule get dataStore => DataStoreModule(database: _database as Database);
+  DataStoreModule get dataStore =>
+      DataStoreModule(database: _database as Database);
 
   static Future<D2Touch> init({
+    int? instanceVersion,
     String? locale,
     String? databaseName,
     bool? inMemory,
     DatabaseFactory? databaseFactory,
     SharedPreferences? sharedPreferenceInstance,
   }) async {
+
     if (_d2Instance == null) {
       _d2Instance = D2Touch._internal();
 
       if (locale != null) {
         _d2Instance?.locale = locale;
       }
+
+      if (instanceVersion != null) {
+        _d2Instance?.instanceVersion = instanceVersion;
+      }
+
       _d2Instance?.inMemory = inMemory;
       _d2Instance?.databaseFactory = databaseFactory;
       _d2Instance?.sharedPreferenceInstance =
