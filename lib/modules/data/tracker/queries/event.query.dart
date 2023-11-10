@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
@@ -226,7 +223,7 @@ class EventQuery extends BaseQuery<Event> {
           event.lastUpdated = event.lastSyncDate;
           event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
 
-          queue.add(() => EventQuery().setData(event).save());
+          queue.add(() => EventQuery(database: database).setData(event).save());
         }
       });
     }

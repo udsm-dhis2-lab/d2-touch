@@ -10,8 +10,8 @@ class DataValueObject {
 
 class DataValueEntities {
   static fromAttributeValues(List<TrackedEntityAttributeValue> attributeValues,
-      {Map<String, DataValueObject>? inputEntities = null}) {
-    Map<String, DataValueObject> entities = inputEntities ?? {};
+      {Map<String, DataValueObject>? initialEntities = null}) {
+    Map<String, DataValueObject> entities = initialEntities ?? {};
 
     attributeValues.forEach((attributeValue) {
       entities[attributeValue.attribute] = DataValueObject(
@@ -22,8 +22,8 @@ class DataValueEntities {
   }
 
   static fromEventDataValues(List<EventDataValue> eventDataValues,
-      {Map<String, DataValueObject>? inputEntities = null}) {
-    Map<String, DataValueObject> entities = inputEntities ?? {};
+      {Map<String, DataValueObject>? initialEntities = null}) {
+    Map<String, DataValueObject> entities = initialEntities ?? {};
 
     eventDataValues.forEach((eventDataValue) {
       entities[eventDataValue.dataElement] = DataValueObject(

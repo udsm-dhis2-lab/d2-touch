@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_action.entity.dart';
@@ -7,13 +10,13 @@ import 'package:expressions/expressions.dart';
 class ProgramRuleEngine {
   static _getEvaluationContext(
       {required Map<String, DataValueObject> dataValueEntities,
-        required List<ProgramRuleVariable> programRuleVariables}) {
+      required List<ProgramRuleVariable> programRuleVariables}) {
     Map<String, dynamic> evaluationContext = {};
 
     programRuleVariables.forEach((programRuleVariable) {
       final value = dataValueEntities[
-      programRuleVariable.trackedEntityAttribute ??
-          programRuleVariable.dataElement]
+              programRuleVariable.trackedEntityAttribute ??
+                  programRuleVariable.dataElement]
           ?.value;
 
       evaluationContext = {
@@ -56,14 +59,14 @@ class ProgramRuleEngine {
 
   static List<ProgramRuleAction> execute(
       {required Map<String, DataValueObject> dataValueEntities,
-        required List<ProgramRule> programRules,
-        required List<ProgramRuleVariable> programRuleVariables}) {
+      required List<ProgramRule> programRules,
+      required List<ProgramRuleVariable> programRuleVariables}) {
     List<ProgramRuleAction> programRulesActions = [];
 
     Map<String, dynamic> evaluationContext =
-    ProgramRuleEngine._getEvaluationContext(
-        dataValueEntities: dataValueEntities,
-        programRuleVariables: programRuleVariables);
+        ProgramRuleEngine._getEvaluationContext(
+            dataValueEntities: dataValueEntities,
+            programRuleVariables: programRuleVariables);
 
     programRules.forEach((programRule) {
       String ruleConditionForEvaluation = programRule.condition;
@@ -79,19 +82,22 @@ class ProgramRuleEngine {
         ruleConditionForEvaluation = ruleConditionForEvaluation.replaceAll(
             "A{" + key + "}", ProgramRuleEngine._parseRuleValue(value));
       });
+        // d2 functions
+        
 
       try {
+
         Expression expression = Expression.parse(ruleConditionForEvaluation);
 
         final evaluator = const ExpressionEvaluator();
         var evaluationResult = evaluator.eval(expression, evaluationContext);
 
         final newProgramRuleActions =
-        programRule.programRuleActions?.map((ruleAction) {
+            programRule.programRuleActions?.map((ruleAction) {
           return ProgramRuleAction.fromJson({
             ...ruleAction.toJson(),
             'programRuleActionType':
-            evaluationResult == true ? ruleAction.programRuleActionType : ""
+                evaluationResult == true ? ruleAction.programRuleActionType : ""
           });
         }).toList();
 
@@ -101,7 +107,7 @@ class ProgramRuleEngine {
         ]);
       } catch (e) {
         final newProgramRuleActions =
-        programRule.programRuleActions?.map((ruleAction) {
+            programRule.programRuleActions?.map((ruleAction) {
           return ProgramRuleAction.fromJson(
               {...ruleAction.toJson(), 'programRuleActionType': ''});
         }).toList();
@@ -111,10 +117,8 @@ class ProgramRuleEngine {
           ...(newProgramRuleActions as List<ProgramRuleAction>)
         ]);
       }
-    }
-    );
+    });
 
-    return
-      programRulesActions;
+    return programRulesActions;
   }
 }

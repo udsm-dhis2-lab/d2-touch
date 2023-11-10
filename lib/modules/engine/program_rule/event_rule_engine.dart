@@ -53,7 +53,7 @@ class EventRuleEngine {
               .get();
 
       dataValueEntities = DataValueEntities.fromAttributeValues(attributes,
-          inputEntities: dataValueEntities);
+          initialEntities: dataValueEntities);
     }
 
     List<ProgramRuleAction> programRuleActions = ProgramRuleEngine.execute(
