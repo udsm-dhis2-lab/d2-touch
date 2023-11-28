@@ -84,10 +84,13 @@ class ProgramRuleEngine {
             "A{" + key + "}", ProgramRuleEngine._parseRuleValue(value));
       });
       // d2 functions
-      if (ruleConditionForEvaluation.contains('d2:')) {
-        ruleConditionForEvaluation =
-            dhisD2Functions(ruleConditionForEvaluation, {});
-      }
+      // log("outside");
+      // if (ruleConditionForEvaluation.contains('d2:')) {
+      //   log('before ${ruleConditionForEvaluation}');
+      //   ruleConditionForEvaluation =
+      //       dhisD2Functions(ruleConditionForEvaluation, {});
+      //   log('after ${ruleConditionForEvaluation}');
+      // }
 
       try {
         Expression expression = Expression.parse(ruleConditionForEvaluation);
