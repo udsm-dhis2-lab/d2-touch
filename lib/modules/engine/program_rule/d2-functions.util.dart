@@ -39,7 +39,6 @@ Map<String, Function> d2FunctionsEval = {
     regexFunct,
   ) {
     final variableName = parameters[0];
-    final rest = parameters.sublist(1);
     final variableObject = variableHash[variableName];
 
     var valueFound = false;
@@ -140,7 +139,6 @@ Map<String, Function> d2FunctionsEval = {
     regexFunct,
   ) {
     final date1 = parameters[0];
-    final rest = parameters.sublist(1);
     final floored = date1.floor();
     // Replace the end evaluation of the dhis function:
     final newExpression = expression.replaceAll(regexFunct, floored.toString());
@@ -241,7 +239,6 @@ Map<String, Function> d2FunctionsEval = {
     regexFunct,
   ) {
     final variableName = parameters[0];
-    final rest = parameters.sublist(1);
     final variableObject = variableHash[variableName];
     final count = variableObject != null &&
             variableObject['hasValue'] &&

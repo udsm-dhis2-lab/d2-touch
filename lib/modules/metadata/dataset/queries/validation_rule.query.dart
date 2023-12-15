@@ -72,9 +72,9 @@ class ValidationRuleQuery extends BaseQuery<ValidationRule> {
             percentage: 51),
         false);
 
-    List data = response.body[this.apiResourceName]?.toList();
+    List? data = response.body[this.apiResourceName]?.toList();
 
-    this.data = data.map((dataItem) {
+    this.data = (data ?? []).map((dataItem) {
       dataItem['dirty'] = false;
       dataItem['dataSet'] = dataSet.id;
       return ValidationRule.fromJson(dataItem);
