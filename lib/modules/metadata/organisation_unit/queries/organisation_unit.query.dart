@@ -106,7 +106,7 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} successifully saved into the database',
+                '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database',
             status: '',
             percentage: 100),
         true);

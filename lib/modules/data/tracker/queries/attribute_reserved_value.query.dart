@@ -72,7 +72,7 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
-            message: 'Reserved values successifully saved into the database',
+            message: 'Reserved values successfully saved into the database',
             status: '',
             percentage: 100),
         true);

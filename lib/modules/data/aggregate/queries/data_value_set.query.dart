@@ -130,7 +130,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) successifully saved into the database',
+                '${this.apiResourceName?.toLowerCase()}(${this.dataSet}-${this.orgUnit}-${this.period}) successfully saved into the database',
             status: '',
             percentage: 100),
         true);

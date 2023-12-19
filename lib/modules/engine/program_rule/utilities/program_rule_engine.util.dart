@@ -1,7 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
-import 'package:d2_touch/modules/engine/program_rule/run-d2-expression.util.dart';
 import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_action.entity.dart';
@@ -83,6 +79,7 @@ class ProgramRuleEngine {
         ruleConditionForEvaluation = ruleConditionForEvaluation.replaceAll(
             "A{" + key + "}", ProgramRuleEngine._parseRuleValue(value));
       });
+      
       // d2 functions
       // log("outside");
       // if (ruleConditionForEvaluation.contains('d2:')) {

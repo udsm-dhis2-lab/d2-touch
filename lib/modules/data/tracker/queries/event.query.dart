@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
@@ -166,8 +164,6 @@ class EventQuery extends BaseQuery<Event> {
         database: this.database,
         dioTestClient: dioTestClient);
 
-    log(json.encode(response.body));
-
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -184,6 +180,8 @@ class EventQuery extends BaseQuery<Event> {
             status: '',
             percentage: 76),
         true);
+
+    print(response.body.toString());
 
     final List<dynamic> importSummaries =
         (response.body?['response']?['importSummaries'] ?? []).toList();
@@ -209,7 +207,6 @@ class EventQuery extends BaseQuery<Event> {
           event.dirty = true;
           event.syncFailed = syncFailed;
           event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
-          event.lastUpdated = event.lastSyncDate;
           queue.add(() => EventQuery(database: database).setData(event).save());
         }
       });

@@ -85,7 +85,7 @@ class ValidationRuleQuery extends BaseQuery<ValidationRule> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${this.apiResourceName?.toLowerCase()} for ${dataSet.name} successifully saved into the database',
+                '${this.apiResourceName?.toLowerCase()} for ${dataSet.name} successfully saved into the database',
             status: '',
             percentage: 100),
         true);
