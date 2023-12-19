@@ -1,4 +1,3 @@
-
 import 'package:d2_touch/modules/engine/program_rule/d2-functions.util.dart';
 import 'package:d2_touch/modules/engine/program_rule/d2.util.dart';
 import 'package:expressions/expressions.dart';
@@ -31,7 +30,7 @@ String dhisD2Functions(String expression, Map<String, Variable> variableHash) {
             List<String?>? parameters = fnParameters.split(',');
 
             if (isDefined(d2FnVar['parameters'])) {
-              int numOfParameters = parameters.length ?? 0;
+              int numOfParameters = parameters.length;
               if (numOfParameters != d2FnVar['parameters']) {
                 brokenExecution = true;
               }
