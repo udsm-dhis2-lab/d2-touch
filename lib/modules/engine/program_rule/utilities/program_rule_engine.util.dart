@@ -84,11 +84,12 @@ class ProgramRuleEngine {
       });
       
       // d2 functions
+        log('d2 functions: before');
       if (ruleConditionForEvaluation.contains('d2:')) {
-
+        log('d2 functions: ${ruleConditionForEvaluation}');
         ruleConditionForEvaluation =
             dhisD2Functions(ruleConditionForEvaluation, {});
-
+      log(ruleConditionForEvaluation);
       }
 
       try {
@@ -110,6 +111,8 @@ class ProgramRuleEngine {
           ...programRulesActions,
           ...(newProgramRuleActions as List<ProgramRuleAction>)
         ]);
+
+        log(programRulesActions.first.toJson().toString());
       } catch (e) {
         final newProgramRuleActions =
             programRule.programRuleActions?.map((ruleAction) {
