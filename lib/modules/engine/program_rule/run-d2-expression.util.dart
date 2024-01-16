@@ -1,7 +1,6 @@
 import 'package:d2_touch/modules/engine/program_rule/d2-functions.util.dart';
 
 String dhisD2Functions(String expression, Map<String, dynamic> variableHash) {
-
   // 1. Remove whitespace
   String evalExpression = expression.replaceAll(RegExp(r'\s+'), '');
 
@@ -15,8 +14,9 @@ String dhisD2Functions(String expression, Map<String, dynamic> variableHash) {
       d2FunctionsVariables.forEach((d2FnVar) {
         String name = d2FnVar.name;
 
-        Iterable<Match> fnRegexCallArr = getMatches(evalExpression, name).toList();
-      
+        Iterable<Match> fnRegexCallArr =
+            getMatches(evalExpression, name).toList();
+
         if (fnRegexCallArr is List<Match> && fnRegexCallArr.isNotEmpty) {
           fnRegexCallArr.forEach((fnRegexCall) {
             String fnParameters = fnRegexCall
@@ -24,9 +24,7 @@ String dhisD2Functions(String expression, Map<String, dynamic> variableHash) {
                 .replaceAll(RegExp('(^[^\\(]+\\()|\\)\$'), '')
                 .trim();
 
-
             List<String?>? parameters = fnParameters.split(',');
-             
 
             if (d2FnVar.parameters != null) {
               int numOfParameters = parameters.length;
@@ -35,7 +33,7 @@ String dhisD2Functions(String expression, Map<String, dynamic> variableHash) {
               }
             }
 
-            // if (!brokenExecution ) { 
+            // if (!brokenExecution ) {
             //   for (int i = 0; i < parameters.length; i++) {
             //     parameters[i] = runRuleExpression(
             //       parameters[i] ?? '',
@@ -73,16 +71,15 @@ String dhisD2Functions(String expression, Map<String, dynamic> variableHash) {
     }
   }
 
-  return evalExpression;
+  return evalExpression.contains("d2:") ? "" : evalExpression;
 }
 
 // d2:daysBetween(2020-01-01, 2020-01-10)
 Iterable<Match> getMatches(String inputString, String name) {
-  RegExp regex = RegExp(
-     name + r"\(((\d[\d/*+%-.\s]*)|(\'[^\']*\')) *, *((\d[\d/*+%-.\s]*)|(\'[^\']*\'))\)");
+  RegExp regex = RegExp(name +
+      r"\(((\d[\d/*+%-.\s]*)|(\'[^\']*\')) *, *((\d[\d/*+%-.\s]*)|(\'[^\']*\'))\)");
   return regex.allMatches(inputString);
 }
-
 
 bool runRuleExpression(String expression, String beforeReplacement,
     String identifier, Map<String, dynamic> variablesHash) {
@@ -93,6 +90,3 @@ bool runRuleExpression(String expression, String beforeReplacement,
     return false;
   }
 }
-
-
-

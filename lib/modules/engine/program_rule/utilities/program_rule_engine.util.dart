@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:d2_touch/modules/engine/program_rule/run-d2-expression.util.dart';
 import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
@@ -82,14 +81,11 @@ class ProgramRuleEngine {
         ruleConditionForEvaluation = ruleConditionForEvaluation.replaceAll(
             "A{" + key + "}", ProgramRuleEngine._parseRuleValue(value));
       });
-      
+
       // d2 functions
-        log('d2 functions: before');
       if (ruleConditionForEvaluation.contains('d2:')) {
-        log('d2 functions: ${ruleConditionForEvaluation}');
         ruleConditionForEvaluation =
             dhisD2Functions(ruleConditionForEvaluation, {});
-      log(ruleConditionForEvaluation);
       }
 
       try {
@@ -111,8 +107,6 @@ class ProgramRuleEngine {
           ...programRulesActions,
           ...(newProgramRuleActions as List<ProgramRuleAction>)
         ]);
-
-        log(programRulesActions.first.toJson().toString());
       } catch (e) {
         final newProgramRuleActions =
             programRule.programRuleActions?.map((ruleAction) {
