@@ -584,7 +584,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           "conflicts": [
             {
               "object": "Server.ERROR",
-              "value": "Server Error code:" + response.statusCode.toString()
+              "value": response.body['message'] ??
+                  "Server Error code:" + response.statusCode.toString()
             }
           ]
         });
@@ -624,7 +625,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             "conflicts": [
               {
                 "object": "ImportSummary.DOES_NOT_EXIST",
-                "value": "Invalid Import Summary"
+                "value": response.body['message'] ?? "Invalid Import Summary"
               }
             ]
           });
