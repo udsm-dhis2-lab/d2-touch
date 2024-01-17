@@ -176,13 +176,17 @@ class TrackedEntityInstance extends IdentifiableEntity {
       "attributes": (trackedEntityInstance.attributes ?? [])
           .map((attribute) => TrackedEntityAttributeValue.toUpload(attribute))
           .toList(),
-      "enrollments": (trackedEntityInstance.enrollments ?? [])
-          .map((enrollment) => Enrollment.toUpload(enrollment, events))
-          .toList(),
       "relationships": (trackedEntityInstance.relationships ?? [])
           .map((relationship) =>
               TrackedEntityInstanceRelationship.toUpload(relationship))
           .toList(),
     };
+  }
+
+  static toUploadEnrollment(
+      TrackedEntityInstance trackedEntityInstance, List<Event>? events) {
+    return (trackedEntityInstance.enrollments ?? [])
+        .map((enrollment) => Enrollment.toUpload(enrollment, events))
+        .toList();
   }
 }

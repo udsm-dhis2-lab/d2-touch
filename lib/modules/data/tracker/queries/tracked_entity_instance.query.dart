@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:core';
+import 'dart:developer';
 
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
@@ -515,9 +517,25 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       return TrackedEntityInstance.toUpload(trackedEntityInstance, events);
     }).toList();
 
+    log(this.apiResourceName as String);
+    log(json.encode(trackedEntityInstanceUploadPayload));
+
+    // trackedEntityInstanceUploadPayload["enrollments"] = ]
+
     final response = await HttpClient.post(this.apiResourceName as String,
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
+
+    await HttpClient.post(
+        "enrollments",
+        {
+          'enrollments': trackedEntityInstances.map((trackedEntityInstance) {
+            return TrackedEntityInstance.toUploadEnrollment(
+                trackedEntityInstance, events);
+          }).toList()
+        },
+        database: this.database,
+        dioTestClient: dioTestClient);
 
     final List<Future<HttpResponse>> transferApis = trackedEntityInstances
         .where((tei) => tei.transfer == true)
