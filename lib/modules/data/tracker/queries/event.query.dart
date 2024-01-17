@@ -1,4 +1,3 @@
-
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
@@ -207,6 +206,7 @@ class EventQuery extends BaseQuery<Event> {
           event.dirty = true;
           event.syncFailed = syncFailed;
           event.lastSyncDate = DateTime.now().toIso8601String().split('.')[0];
+          event.lastUpdated = event.lastSyncDate;
           queue.add(() => EventQuery(database: database).setData(event).save());
         }
       });
