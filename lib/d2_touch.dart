@@ -117,7 +117,6 @@ class D2Touch implements D2TouchModel {
     return _d2Instance as D2Touch;
   }
 
-// TODO: Need to understand more on how to dispose and singleton
   Future<void> dispose() async {
     // locale = 'en';
     _database = null;
