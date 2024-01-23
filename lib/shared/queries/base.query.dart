@@ -264,6 +264,25 @@ class BaseQuery<T extends BaseEntity> {
     }).toList();
   }
 
+  Future<Map<String, dynamic>> deleteOnline({Dio? dioTestClient}) async {
+    final dhisUrl = await this.dhisUrl();
+
+    if (this.id != null) {
+
+    final response = await HttpClient.delete(this.id, dhisUrl,
+        database: this.database, dioTestClient: dioTestClient);
+this
+          .repository
+          .deleteById(id: this.id as String, database: this.database);
+        return response.body;
+ }
+
+    return {
+      'message': 'Something is wrong'
+    };
+  }
+
+
   Future<List<T>?> download(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
     callback(
