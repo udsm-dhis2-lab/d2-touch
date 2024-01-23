@@ -176,17 +176,48 @@ class HttpClient {
     }
   }
 
-  // static Future<http.Response> delete(String id, String url) async {
-  //   final http.Response response = await http.delete(
-  //     Uri.parse('$url/$id'),
-  //     headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //       'Authorization': 'Basic'
-  //     },
-  //   );
+  static Future<HttpResponse> delete(String? id, String? resourceUrl, {String? baseUrl,
+      String? username,
+      String? password,
+      Database? database,
+      Dio? dioTestClient}) async {
 
-  //   return response;
-  // }
+        try {
+    HttpDetails httpDetails = await HttpDetails(
+            baseUrl: baseUrl,
+            username: username,
+            password: password,
+            database: database)
+        .get();
+
+
+ final dioClient = dioTestClient ??
+        Dio(BaseOptions(
+            connectTimeout: Duration(milliseconds: 100000),
+            receiveTimeout: Duration(milliseconds: 100000),
+            headers: {
+              HttpHeaders.authorizationHeader:
+                  '${httpDetails.authTokenType} ${httpDetails.authToken}',
+            }));
+
+          
+    final response = await dioClient.delete('${httpDetails.baseUrl}/api/${resourceUrl!.split('.').first}/$id');
+
+
+
+
+    return  HttpResponse(
+          statusCode: response.statusCode ?? 500, body: response.data);
+
+          } catch (e) {
+          print(e);
+          return HttpResponse(
+            statusCode: 404, body: {
+            "status": "error",
+            "message": e,
+          },);
+        }
+  }
 
   static Future<String> getHttpDetails(
       {String? baseUrl,
