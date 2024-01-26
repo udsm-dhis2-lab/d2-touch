@@ -20,14 +20,15 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
         .where(attribute: 'dirty', value: true)
         .get();
 
-    final List<String> enrollmentIds = enrollments
-        .map((trackedEntityInstance) => trackedEntityInstance.id as String)
-        .toList();
+    final List<String> enrollmentIds =
+        enrollments.map((enrollment) => enrollment.id as String).toList();
 
     final List<Event> events = await EventQuery(database: database)
-        .whereIn(attribute: 'enrollment', values: enrollmentIds, merge: false);
+        .whereIn(attribute: 'enrollment', values: enrollmentIds, merge: false)
+        .get();
 
     final enrollmentUploadPayload = enrollments.map((enrollment) {
+      print(enrollment.status);
       return Enrollment.toUpload(enrollment, events);
     }).toList();
 
@@ -36,8 +37,10 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
         database: this.database, dioTestClient: dioTestClient);
 
     final List<dynamic> importSummaries =
-        (response.body?['response']?['importSummaries'] ?? []).toList();
-
+        (response.body != null && response.body?['response'] != null
+                ? response.body?['response']?['importSummaries'] ?? []
+                : [])
+            .toList();
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 
