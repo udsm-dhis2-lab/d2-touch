@@ -207,7 +207,6 @@ class BaseQuery<T extends BaseEntity> {
   }
 
   Future<int> save({SaveOptions? saveOptions}) async {
-
     if (this.data is List) {
       return this.repository.saveMany(
           entities: this.data as List<T>,
@@ -250,7 +249,7 @@ class BaseQuery<T extends BaseEntity> {
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
-    List data = response.body[this.apiResourceName]?.toList();
+    List data = response.body[this.apiResourceName]?.toList() ?? [];
 
     return data.map((dataItem) {
       dataItem['dirty'] = false;

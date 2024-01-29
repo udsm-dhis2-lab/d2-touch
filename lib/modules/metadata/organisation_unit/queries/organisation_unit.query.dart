@@ -54,9 +54,10 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
     this.ilike(
         attribute: 'path',
         value: userOrgUnits
-            .map((orgUnit) => includeOtherParentChildren == true
-                ? orgUnit.parent as String
-                : orgUnit.orgUnit)
+            .map((orgUnit) =>
+                includeOtherParentChildren == true && orgUnit.parent != null
+                    ? orgUnit.parent as String
+                    : orgUnit.orgUnit)
             // ignore: unnecessary_null_comparison
             .where((orgUnit) => orgUnit != null)
             .toList());
