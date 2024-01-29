@@ -108,6 +108,7 @@ class EventQuery extends BaseQuery<Event> {
 
   Future<List<Event>?> upload(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient, String? resource}) async {
+  
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -179,8 +180,6 @@ class EventQuery extends BaseQuery<Event> {
             status: '',
             percentage: 76),
         true);
-
-    print(response.body.toString());
 
     final List<dynamic> importSummaries =
         (response.body?['response']?['importSummaries'] ?? []).toList();
