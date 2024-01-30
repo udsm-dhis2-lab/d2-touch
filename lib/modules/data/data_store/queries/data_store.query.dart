@@ -26,7 +26,7 @@ class DataStoreQuery extends BaseQuery<DataStore> {
   }
 
   @override
-  Future<String> dhisUrl() {
+  Future<String> dhisUrl({List<String>? fields}) {
     return Future.value('dataStore/$namespace/$key');
   }
 
@@ -82,8 +82,9 @@ class DataStoreQuery extends BaseQuery<DataStore> {
   }
 
   @override
-  Future<List<DataStore>> fetchOnline({Dio? dioTestClient}) async {
-    final dhisUrl = await this.dhisUrl();
+  Future<List<DataStore>> fetchOnline(
+      {Dio? dioTestClient, List<String>? fields}) async {
+    final dhisUrl = await this.dhisUrl(fields: fields);
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 

@@ -38,9 +38,13 @@ class DataSetQuery extends BaseQuery<DataSet> {
   }
 
   @override
-  Future<String> dhisUrl() {
+  Future<String> dhisUrl({List<String>? fields}) {
     final apiFilter =
         QueryFilter.getApiFilters(this.repository.columns, this.query.filters);
+    if ((fields ?? []).isNotEmpty) {
+      return Future.value(
+          'dataSets.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=${fields?.join(',')}&paging=false');
+    }
     return Future.value(
         'dataSets.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,timelyDays,formType,description,periodType,openFuturePeriods,expiryDays,renderHorizontally,renderAsTabs,fieldCombinationRequired,dataSetElements[dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,categoryCombo[id,name,displayName,categoryOptionCombos[id,code,name,displayName,displayFormName,ignoreApproval,created,lastUpdated]],optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]],sections[id,name,displayName,sortOrder,showRowTotals,greyedFields,created,lastUpdated,dataElements[id~rename(dataElement)]]&paging=false');
   }

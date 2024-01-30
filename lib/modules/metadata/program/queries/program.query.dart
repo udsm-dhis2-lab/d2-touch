@@ -112,9 +112,14 @@ class ProgramQuery extends BaseQuery<Program> {
   }
 
   @override
-  Future<String> dhisUrl() {
+  Future<String> dhisUrl({List<String>? fields}) {
     final apiFilter =
         QueryFilter.getApiFilters(this.repository.columns, this.filters);
+
+    if ((fields ?? []).isNotEmpty) {
+      return Future.value(
+          'programs.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=${fields?.join(',')}&paging=false');
+    }
 
     return Future.value(
         'programs.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=id,name,displayName,shortName,lastUpdated,created,code,dirty,programType,displayIncidentDate,description,withoutRegistration,ignoreOverdueEvents,captureCoordinates,featureType,enrollmentDateLabel,onlyEnrollOnce,selectIncidentDatesInFuture,selectEnrollmentDatesInFuture,useFirstStageDuringRegistration,incidentDateLabel,completeEventsExpiryDays,displayFrontPageList,trackedEntity,trackedEntityType,organisationUnits,programRuleVariables[id,name,displayName,created,lastUpdated,programRuleVariableSourceType,useCodeForOptionSet,program,dataElement,trackedEntityAttribute,progamStage],programTrackedEntityAttributes[id,displayInList,name,displayName,attributeValues,mandatory,renderOptionsAsRadio,sortOrder,valueType,trackedEntityAttribute[id,code,name,displayName,formName,shortName,aggregationType,unique,generated,optionSetValue,optionSet[id,name,options[code,name,id]]]],programSections[id,name,created,lastUpdated,displayName,renderType,displayFormName,sortOrder,trackedEntityAttributes[id~rename(attribute)]],programStages[id,name,code,created,lastUpdated,formType,generatedByEnrollmentDate,displayFormName,sortOrder,hideDueDate,enableUserAssignment,minDaysFromStart,executionDateLabel,preGenerateUID,displayName,description,displayExecutionDateLabel,openAfterEnrollment,repeatable,featureType,remindCompleted,displayGenerateEventBox,validationStrategy,autoGenerateEvent,blockEntryForm,programStageSections[id,name,displayName,displayFormName,created,lastUpdated,renderType,sortOrder,dataElements[id~rename(dataElement)]],programStageDataElements[id,created,lastUpdated,displayInReports,skipSynchronization,renderOptionsAsRadio,allowFutureDate,compulsory,allowProvidedElseWhere,sortOrder,dataElement[id,code,name,shortName,aggregationType,domainType,displayName,description,displayShortName,periodOffset,valueType,formName,displayDescription,displayFormName,zeroIsSignificant,optionSetValue,optionSet[id,name,displayName,valueType,options[id,name,displayName,code,sortOrder,displayFormName]]]]]&paging=false');

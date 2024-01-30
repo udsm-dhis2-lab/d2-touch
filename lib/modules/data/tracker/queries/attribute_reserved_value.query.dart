@@ -15,7 +15,7 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
   AttributeReservedValueQuery({Database? database}) : super(database: database);
 
   @override
-  Future<String> dhisUrl() {
+  Future<String> dhisUrl({List<String>? fields}) {
     return Future.value(
         'trackedEntityAttributes/attributeID/generateAndReserve?numberToReserve=3');
   }
@@ -107,7 +107,6 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
           'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve&ORG_UNIT_CODE=$code',
           database: database,
           dioTestClient: dioTestClient);
-
     } else {
       response = await HttpClient.get(
           'trackedEntityAttributes/${reservedAttribute.attribute}/generateAndReserve?numberToReserve=$numberToReserve',

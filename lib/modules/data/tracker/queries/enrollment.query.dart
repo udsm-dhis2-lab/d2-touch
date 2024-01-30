@@ -28,7 +28,6 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
         .get();
 
     final enrollmentUploadPayload = enrollments.map((enrollment) {
-      print(enrollment.status);
       return Enrollment.toUpload(enrollment, events);
     }).toList();
 

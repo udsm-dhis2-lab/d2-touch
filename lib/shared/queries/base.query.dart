@@ -244,8 +244,9 @@ class BaseQuery<T extends BaseEntity> {
     return this.repository.create(database: database);
   }
 
-  Future<List<T>> fetchOnline({Dio? dioTestClient}) async {
-    final dhisUrl = await this.dhisUrl();
+  Future<List<T>> fetchOnline(
+      {Dio? dioTestClient, List<String>? fields}) async {
+    final dhisUrl = await this.dhisUrl(fields: fields);
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
@@ -267,20 +268,16 @@ class BaseQuery<T extends BaseEntity> {
     final dhisUrl = await this.dhisUrl();
 
     if (this.id != null) {
-
-    final response = await HttpClient.delete(this.id, dhisUrl,
-        database: this.database, dioTestClient: dioTestClient);
-this
+      final response = await HttpClient.delete(this.id, dhisUrl,
+          database: this.database, dioTestClient: dioTestClient);
+      this
           .repository
           .deleteById(id: this.id as String, database: this.database);
-        return response.body;
- }
+      return response.body;
+    }
 
-    return {
-      'message': 'Something is wrong'
-    };
+    return {'message': 'Something is wrong'};
   }
-
 
   Future<List<T>?> download(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
@@ -293,7 +290,8 @@ this
             percentage: 0),
         false);
 
-    this.data = await this.fetchOnline(dioTestClient: dioTestClient);
+    this.data =
+        await this.fetchOnline(dioTestClient: dioTestClient, fields: fields);
 
     callback(
         RequestProgress(
@@ -327,7 +325,7 @@ this
     return this.data;
   }
 
-  Future<String> dhisUrl() {
-    return Future.value(DhisUrlGenerator.generate(this.query));
+  Future<String> dhisUrl({List<String>? fields}) {
+    return Future.value(DhisUrlGenerator.generate(this.query, fields: fields));
   }
 }

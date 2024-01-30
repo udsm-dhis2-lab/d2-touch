@@ -285,7 +285,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return trackedEntityInstance;
   }
 
-  Future<String> dhisUrl() async {
+  Future<String> dhisUrl({List<String>? fields}) async {
     if (this.useUserOrgUnit == true) {
       final userOrgUnits =
           await UserOrganisationUnitQuery(database: database).get();

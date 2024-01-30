@@ -3,7 +3,7 @@ import 'package:d2_touch/shared/utilities/query_filter.util.dart';
 import 'package:d2_touch/shared/utilities/query_model.util.dart';
 
 class DhisUrlGenerator {
-  static String generate(QueryModel? query) {
+  static String generate(QueryModel? query, {List<String>? fields}) {
     if (query == null) {
       return '';
     }
@@ -14,7 +14,7 @@ class DhisUrlGenerator {
 
     final apiFields = DhisUrlGenerator.getApiFields(query.columns);
 
-    return '${query.resourceName}.json${apiFilter != null ? '?$apiFilter&${query.junctionOperator != null ? 'rootJunction=${query.junctionOperator}&' : ''}' : '?'}fields=${apiFields.join(',')}&paging=false';
+    return '${query.resourceName}.json${apiFilter != null ? '?$apiFilter&${query.junctionOperator != null ? 'rootJunction=${query.junctionOperator}&' : ''}' : '?'}fields=${(fields ?? apiFields).join(',')}&paging=false';
   }
 
   static List<String> getApiFields(List<Column> columns) {

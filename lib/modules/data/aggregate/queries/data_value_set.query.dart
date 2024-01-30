@@ -79,7 +79,7 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
   }
 
   @override
-  Future<String> dhisUrl() {
+  Future<String> dhisUrl({List<String>? fields}) {
     return Future.value(
         'dataValueSets.json?dataSet=${this.dataSet}&period=${this.period}&orgUnit=${this.orgUnit}');
   }
