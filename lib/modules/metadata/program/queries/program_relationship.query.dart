@@ -20,8 +20,8 @@ class ProgramRelationshipQuery extends BaseQuery<ProgramRelationship> {
 
   @override
   Future<String> dhisUrl() {
-    String fields = (this.fields ?? []).isNotEmpty
-        ? (this.fields ?? []).join(',')
+    String fields = (this.selected).isNotEmpty
+        ? (this.selected).join(',')
         : 'id,name,toConstraint[program[id,code,name]],fromConstraint[program[id,name,code]]';
     if (this.fromProgram != null) {
       return Future.value(

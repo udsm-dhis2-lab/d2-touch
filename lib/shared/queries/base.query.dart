@@ -20,6 +20,19 @@ class BaseQuery<T extends BaseEntity> {
   late Repository repository;
   dynamic data;
   List<String>? fields;
+
+  /// A list of strings as an argument for the [select] method.
+  /// It can contain various fields as accepted by the DHIS2 API.
+  ///
+  /// Example:
+  /// ```dart
+  /// List<String> fields = ['id', 'name', 'path'];
+  /// select(fields);
+  /// ```
+  ///
+  /// Ensure that [select] is not null before calling this method.
+  ///
+  List<String> selected;
   Column? primaryKey;
   String? tableName;
   String? apiResourceName;
@@ -31,7 +44,7 @@ class BaseQuery<T extends BaseEntity> {
   List<ColumnRelation> relations = [];
   MergeMode _mergeMode = MergeMode.Replace;
 
-  BaseQuery({this.database, this.junctionOperator}) {
+  BaseQuery({this.database, this.junctionOperator, this.selected = const []}) {
     this.repository = Repository<T>(database: database as Database);
     this.tableName = repository.entity.tableName;
     this.apiResourceName = repository.entity.apiResourceName;
@@ -48,8 +61,17 @@ class BaseQuery<T extends BaseEntity> {
     this._mergeMode = mergeMode;
   }
 
+  /// A method that accepted a list of user selected fields as an argument .
+  /// Fields as accepted by the DHIS2 API.
+  ///
+  /// Example:
+  /// ```dart
+  /// List<String> fields = ['id', 'name', 'path'];
+  /// select(fields);
+  /// ```
   select(List<String> fields) {
     this.fields = fields;
+    this.selected = fields;
     return this;
   }
 
@@ -324,8 +346,7 @@ class BaseQuery<T extends BaseEntity> {
   }
 
   Future<String> dhisUrl() {
-    print(this.fields);
     return Future.value(
-        DhisUrlGenerator.generate(this.query, fields: this.fields));
+        DhisUrlGenerator.generate(this.query, fields: this.selected));
   }
 }

@@ -200,7 +200,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       return this.repository.findAll(
           database: this.database,
           filters: this.filters,
-          fields: this.fields as List<String>,
+          fields: this.fields,
           sortOrder: this.sortOrder,
           relations: this.relations) as Future<List<TrackedEntityInstance>>;
     }
@@ -208,7 +208,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     if (this.id != null) {
       return this.repository.find(
           id: this.id,
-          fields: this.fields as List<String>,
+          fields: this.fields,
           database: this.database,
           relations: this.relations) as Future<List<TrackedEntityInstance>>;
     }
@@ -315,7 +315,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     }
 
     String url =
-        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=${(this.fields ?? []).isNotEmpty ? this.fields?.join(',') : '*'}${this.attributeFilters?.length == 0 ? "" : "&" + (this.attributeFilters?.map((queryFilterItem) {
+        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=${(this.selected).isNotEmpty ? this.selected.join(',') : '*'}${this.attributeFilters?.length == 0 ? "" : "&" + (this.attributeFilters?.map((queryFilterItem) {
               return "filter=" +
                   queryFilterItem.attribute +
                   (queryFilterItem.condition == QueryCondition.In
@@ -435,7 +435,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       required List<String> trackedEntityInstances,
       Dio? dioTestClient}) async {
     final dhisUrl =
-        'trackedEntityInstances.json?program=${program}&fields=${(this.fields??[]).isNotEmpty?this.fields?.join(','):'*'}&trackedEntityInstance=${trackedEntityInstances.join(";")}';
+        'trackedEntityInstances.json?program=${program}&fields=${(this.selected).isNotEmpty ? this.selected.join(',') : '*'}&trackedEntityInstance=${trackedEntityInstances.join(";")}';
 
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);

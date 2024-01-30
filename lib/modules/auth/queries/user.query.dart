@@ -194,6 +194,6 @@ class UserQuery extends BaseQuery<User> {
       apiFilter = 'filter=userGroups.$filterMode:in:$userGroupsId';
 
     return Future.value(
-        '${this.query.resourceName}.json${apiFilter != "" ? '?$apiFilter&' : '?'}fields=${(this.fields ?? apiFields).join(',')}&userOrgUnits=${this.userOrgUnits}&includeChildren=${this.includeChildren}&paging=false');
+        '${this.query.resourceName}.json${apiFilter != "" ? '?$apiFilter&' : '?'}fields=${(this.selected.isNotEmpty ? this.selected : apiFields).join(',')}&userOrgUnits=${this.userOrgUnits}&includeChildren=${this.includeChildren}&paging=false');
   }
 }

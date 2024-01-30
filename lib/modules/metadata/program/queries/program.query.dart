@@ -116,9 +116,9 @@ class ProgramQuery extends BaseQuery<Program> {
     final apiFilter =
         QueryFilter.getApiFilters(this.repository.columns, this.filters);
 
-    if ((this.fields ?? []).isNotEmpty) {
+    if ((this.selected).isNotEmpty) {
       return Future.value(
-          'programs.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=${this.fields?.join(',')}&paging=false');
+          'programs.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=${this.selected.join(',')}&paging=false');
     }
 
     return Future.value(

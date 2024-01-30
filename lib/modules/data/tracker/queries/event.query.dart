@@ -84,9 +84,9 @@ class EventQuery extends BaseQuery<Event> {
 
   @override
   Future<String> dhisUrl() {
-    if ((this.fields ?? []).isNotEmpty) {
+    if ((this.selected).isNotEmpty) {
       return Future.value(
-          'events.json?fields=${this.fields?.join(',')}&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
+          'events.json?fields=${this.selected.join(',')}&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
     }
     return Future.value(
         'events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
@@ -112,7 +112,6 @@ class EventQuery extends BaseQuery<Event> {
 
   Future<List<Event>?> upload(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient, String? resource}) async {
-  
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
