@@ -64,7 +64,7 @@ class HttpClient {
 
       return HttpResponse(
           statusCode: response.statusCode ?? 500, body: response.data);
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       if (error.response != null) {
         return HttpResponse(
             statusCode: error.response?.statusCode ?? 500,
@@ -107,7 +107,7 @@ class HttpClient {
 
       return HttpResponse(
           statusCode: response.statusCode ?? 500, body: response.data);
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       if (error.response != null) {
         return HttpResponse(
             statusCode: error.response?.statusCode ?? 500,
@@ -146,7 +146,7 @@ class HttpClient {
           await dioClient.get('${httpDetails.baseUrl}/api/$resourceUrl');
       return HttpResponse(
           statusCode: response.statusCode ?? 500, body: response.data);
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       if (error.response != null) {
         dynamic errorBody = error.response?.data;
         if (error.response?.data is String) {
