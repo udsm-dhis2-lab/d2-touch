@@ -82,9 +82,8 @@ class DataStoreQuery extends BaseQuery<DataStore> {
   }
 
   @override
-  Future<List<DataStore>> fetchOnline(
-      {Dio? dioTestClient, List<String>? fields}) async {
-    final dhisUrl = await this.dhisUrl(fields: fields);
+  Future<List<DataStore>> fetchOnline({Dio? dioTestClient}) async {
+    final dhisUrl = await this.dhisUrl();
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 

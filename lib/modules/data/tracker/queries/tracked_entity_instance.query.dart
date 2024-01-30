@@ -285,7 +285,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     return trackedEntityInstance;
   }
 
-  Future<String> dhisUrl({List<String>? fields}) async {
+  Future<String> dhisUrl() async {
     if (this.useUserOrgUnit == true) {
       final userOrgUnits =
           await UserOrganisationUnitQuery(database: database).get();
@@ -315,7 +315,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
     }
 
     String url =
-        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=*${this.attributeFilters?.length == 0 ? "" : "&" + (this.attributeFilters?.map((queryFilterItem) {
+        'trackedEntityInstances.json?ou=${this.orgUnit}&$orgUnitMode&program=${this.program}&programStatus=ACTIVE&pageSize=50&order=created:desc&fields=${(this.fields ?? []).isNotEmpty ? this.fields?.join(',') : '*'}${this.attributeFilters?.length == 0 ? "" : "&" + (this.attributeFilters?.map((queryFilterItem) {
               return "filter=" +
                   queryFilterItem.attribute +
                   (queryFilterItem.condition == QueryCondition.In
@@ -435,7 +435,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       required List<String> trackedEntityInstances,
       Dio? dioTestClient}) async {
     final dhisUrl =
-        'trackedEntityInstances.json?program=${program}&fields=*&trackedEntityInstance=${trackedEntityInstances.join(";")}';
+        'trackedEntityInstances.json?program=${program}&fields=${(this.fields??[]).isNotEmpty?this.fields?.join(','):'*'}&trackedEntityInstance=${trackedEntityInstances.join(";")}';
 
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);

@@ -244,9 +244,8 @@ class BaseQuery<T extends BaseEntity> {
     return this.repository.create(database: database);
   }
 
-  Future<List<T>> fetchOnline(
-      {Dio? dioTestClient, List<String>? fields}) async {
-    final dhisUrl = await this.dhisUrl(fields: fields);
+  Future<List<T>> fetchOnline({Dio? dioTestClient}) async {
+    final dhisUrl = await this.dhisUrl();
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
@@ -290,8 +289,7 @@ class BaseQuery<T extends BaseEntity> {
             percentage: 0),
         false);
 
-    this.data =
-        await this.fetchOnline(dioTestClient: dioTestClient, fields: fields);
+    this.data = await this.fetchOnline(dioTestClient: dioTestClient);
 
     callback(
         RequestProgress(
@@ -325,7 +323,9 @@ class BaseQuery<T extends BaseEntity> {
     return this.data;
   }
 
-  Future<String> dhisUrl({List<String>? fields}) {
-    return Future.value(DhisUrlGenerator.generate(this.query, fields: fields));
+  Future<String> dhisUrl() {
+    print(this.fields);
+    return Future.value(
+        DhisUrlGenerator.generate(this.query, fields: this.fields));
   }
 }

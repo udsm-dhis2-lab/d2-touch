@@ -19,13 +19,16 @@ class ProgramRelationshipQuery extends BaseQuery<ProgramRelationship> {
   }
 
   @override
-  Future<String> dhisUrl({List<String>? fields}) {
+  Future<String> dhisUrl() {
+    String fields = (this.fields ?? []).isNotEmpty
+        ? (this.fields ?? []).join(',')
+        : 'id,name,toConstraint[program[id,code,name]],fromConstraint[program[id,name,code]]';
     if (this.fromProgram != null) {
       return Future.value(
-          'relationshipTypes.json?fields=${(fields ?? []).isNotEmpty ? (fields ?? []).join(',') : 'id,name,toConstraint[program[id,code,name]],fromConstraint[program[id,name,code]]'}&filter=fromConstraint.program.id:eq:${fromProgram}&paging=false');
+          'relationshipTypes.json?fields=$fields&filter=fromConstraint.program.id:eq:${fromProgram}&paging=false');
     } else {
       return Future.value(
-          'relationshipTypes.json?fields=id,name,toConstraint[program[id,code,name]],fromConstraint[program[id,name,code]]&filter=toConstraint.program.id:eq:${toProgram}&paging=false');
+          'relationshipTypes.json?fields=$fields&filter=toConstraint.program.id:eq:${toProgram}&paging=false');
     }
   }
 }

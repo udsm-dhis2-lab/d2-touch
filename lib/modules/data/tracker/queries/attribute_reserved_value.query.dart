@@ -15,7 +15,7 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
   AttributeReservedValueQuery({Database? database}) : super(database: database);
 
   @override
-  Future<String> dhisUrl({List<String>? fields}) {
+  Future<String> dhisUrl() {
     return Future.value(
         'trackedEntityAttributes/attributeID/generateAndReserve?numberToReserve=3');
   }

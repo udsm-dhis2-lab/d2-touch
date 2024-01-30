@@ -83,10 +83,10 @@ class EventQuery extends BaseQuery<Event> {
   }
 
   @override
-  Future<String> dhisUrl({List<String>? fields}) {
-    if ((fields ?? []).isNotEmpty) {
+  Future<String> dhisUrl() {
+    if ((this.fields ?? []).isNotEmpty) {
       return Future.value(
-          'events.json?fields=${fields?.join(',')}&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
+          'events.json?fields=${this.fields?.join(',')}&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
     }
     return Future.value(
         'events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');

@@ -29,8 +29,9 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
 
   @override
   Future<List<OrganisationUnit>?> download(
-      Function(RequestProgress, bool) callback,
-      {Dio? dioTestClient}) async {
+    Function(RequestProgress, bool) callback, {
+    Dio? dioTestClient,
+  }) async {
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -72,6 +73,8 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
         false);
 
     final dhisUrl = await this.dhisUrl();
+
+    print(dhisUrl);
 
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);

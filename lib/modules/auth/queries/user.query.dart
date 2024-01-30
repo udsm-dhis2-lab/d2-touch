@@ -185,7 +185,7 @@ class UserQuery extends BaseQuery<User> {
   }
 
   @override
-  Future<String> dhisUrl({List<String>? fields}) {
+  Future<String> dhisUrl() {
     final apiFields = DhisUrlGenerator.getApiFields(this.query.columns);
 
     String apiFilter = '';
@@ -194,6 +194,6 @@ class UserQuery extends BaseQuery<User> {
       apiFilter = 'filter=userGroups.$filterMode:in:$userGroupsId';
 
     return Future.value(
-        '${this.query.resourceName}.json${apiFilter != "" ? '?$apiFilter&' : '?'}fields=${(fields ?? apiFields).join(',')}&userOrgUnits=${this.userOrgUnits}&includeChildren=${this.includeChildren}&paging=false');
+        '${this.query.resourceName}.json${apiFilter != "" ? '?$apiFilter&' : '?'}fields=${(this.fields ?? apiFields).join(',')}&userOrgUnits=${this.userOrgUnits}&includeChildren=${this.includeChildren}&paging=false');
   }
 }

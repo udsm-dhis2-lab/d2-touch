@@ -112,13 +112,13 @@ class ProgramQuery extends BaseQuery<Program> {
   }
 
   @override
-  Future<String> dhisUrl({List<String>? fields}) {
+  Future<String> dhisUrl() {
     final apiFilter =
         QueryFilter.getApiFilters(this.repository.columns, this.filters);
 
-    if ((fields ?? []).isNotEmpty) {
+    if ((this.fields ?? []).isNotEmpty) {
       return Future.value(
-          'programs.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=${fields?.join(',')}&paging=false');
+          'programs.json${apiFilter != null ? '?$apiFilter&' : '?'}fields=${this.fields?.join(',')}&paging=false');
     }
 
     return Future.value(
