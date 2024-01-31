@@ -332,9 +332,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     int saveDataResponse = 0;
     try {
       saveDataResponse = await db.insert(this.entity.tableName, data);
-    } catch (e) {
-      print('FAILED:: ${e.toString()}');
-    }
+    } catch (e) {}
 
     if (this.oneToManyColumns.isEmpty) {
       return saveDataResponse;
@@ -382,8 +380,10 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
     dynamic saveDataResponse;
     if (result.length == 0) {
-      saveDataResponse = await db.insert(
-          columnRelation.referencedEntity?.tableName as String, data);
+      try {
+        saveDataResponse = await db.insert(
+            columnRelation.referencedEntity?.tableName as String, data);
+      } catch (e) {}
     } else {
       final lastUpdated = result[0]['lastUpdated'];
       if (lastUpdated != null) {
