@@ -175,8 +175,9 @@ class UserQuery extends BaseQuery<User> {
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
-            message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database',
+            message: data.isNotEmpty
+                ? '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database'
+                : 'No ${this.apiResourceName} found.',
             status: '',
             percentage: 100),
         true);

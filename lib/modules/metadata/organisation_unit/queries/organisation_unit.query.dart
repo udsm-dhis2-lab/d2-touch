@@ -79,38 +79,50 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
-    List data = response.body[this.apiResourceName]?.toList();
+    List data =
+        response.body != null ? response.body[this.apiResourceName] ?? [] : [];
 
+    if (data.isNotEmpty) {
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  '${data.length} ${this.apiResourceName?.toLowerCase()} downloaded successfully',
+              status: '',
+              percentage: 50),
+          false);
+
+      this.data = data.map((dataItem) {
+        dataItem['dirty'] = false;
+        return OrganisationUnit.fromJson(dataItem);
+      }).toList();
+
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  'Saving ${data.length} ${this.apiResourceName?.toLowerCase()} into phone database...',
+              status: '',
+              percentage: 51),
+          false);
+
+      await this.save();
+
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database',
+              status: '',
+              percentage: 100),
+          true);
+
+      return this.data;
+    }
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
-            message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} downloaded successfully',
-            status: '',
-            percentage: 50),
-        false);
-
-    this.data = data.map((dataItem) {
-      dataItem['dirty'] = false;
-      return OrganisationUnit.fromJson(dataItem);
-    }).toList();
-
-    callback(
-        RequestProgress(
-            resourceName: this.apiResourceName as String,
-            message:
-                'Saving ${data.length} ${this.apiResourceName?.toLowerCase()} into phone database...',
-            status: '',
-            percentage: 51),
-        false);
-
-    await this.save();
-
-    callback(
-        RequestProgress(
-            resourceName: this.apiResourceName as String,
-            message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database',
+            message: 'No ${this.apiResourceName?.toLowerCase()} found',
             status: '',
             percentage: 100),
         true);

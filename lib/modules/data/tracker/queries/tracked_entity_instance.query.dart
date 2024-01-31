@@ -342,45 +342,55 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
     this.data = await this.fetchOnline(dioTestClient: dioTestClient);
 
-    callback(
-        RequestProgress(
-            resourceName: this.apiResourceName as String,
-            message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} downloaded successfully',
-            status: '',
-            percentage: 50),
-        false);
+    if ((data ?? []).isNotEmpty) {
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  '${data.length} ${this.apiResourceName?.toLowerCase()} downloaded successfully',
+              status: '',
+              percentage: 50),
+          false);
 
-    callback(
-        RequestProgress(
-            resourceName: this.apiResourceName as String,
-            message:
-                'Saving ${data.length} ${this.apiResourceName?.toLowerCase()} into phone database...',
-            status: '',
-            percentage: 51),
-        false);
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  'Saving ${data.length} ${this.apiResourceName?.toLowerCase()} into phone database...',
+              status: '',
+              percentage: 51),
+          false);
 
-    await this.save();
+      await this.save();
 
-    List<TrackedEntityInstanceRelationship> relationships = [];
-    data.forEach((dataItem) {
-      relationships = [...relationships, ...dataItem.relationships];
-    });
+      List<TrackedEntityInstanceRelationship> relationships = [];
+      data.forEach((dataItem) {
+        relationships = [...relationships, ...dataItem.relationships];
+      });
 
-    if (relationships.length > 0) {
-      await downloadRelatedTrackedEntityInstances(
-          relationships: relationships, dioTestClient: dioTestClient);
+      if (relationships.length > 0) {
+        await downloadRelatedTrackedEntityInstances(
+            relationships: relationships, dioTestClient: dioTestClient);
+      }
+
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database',
+              status: '',
+              percentage: 100),
+          true);
+
+      return this.data;
     }
-
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
-            message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database',
+            message: 'No ${this.apiResourceName?.toLowerCase()} found',
             status: '',
             percentage: 100),
         true);
-
     return this.data;
   }
 

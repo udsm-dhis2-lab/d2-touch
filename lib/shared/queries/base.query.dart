@@ -271,7 +271,9 @@ class BaseQuery<T extends BaseEntity> {
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
-    List data = response.body[this.apiResourceName]?.toList() ?? [];
+    List data = response.body != null
+        ? response.body[this.apiResourceName]?.toList() ?? []
+        : [];
 
     return data.map((dataItem) {
       dataItem['dirty'] = false;
