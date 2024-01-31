@@ -329,7 +329,12 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
     final Database db = database != null ? database : this.database;
 
-    final saveDataResponse = await db.insert(this.entity.tableName, data);
+    int saveDataResponse = 0;
+    try {
+      saveDataResponse = await db.insert(this.entity.tableName, data);
+    } catch (e) {
+      print('FAILED:: ${e.toString()}');
+    }
 
     if (this.oneToManyColumns.isEmpty) {
       return saveDataResponse;
@@ -394,8 +399,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
           saveDataResponse = 1;
         } else {
           if (data['dirty'] == 1) {
-            data['lastUpdated'] =
-                DateTime.now().toIso8601String().split('.')[0];
+            data['lastUpdated'] = DateTime.now().toIso8601String();
           }
           saveDataResponse = await db.update(
             columnRelation.referencedEntity?.tableName as String,
@@ -523,9 +527,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
         return 0;
       }
 
-      
-
-
       T newEntity = entity;
 
       if (mergeMode == MergeMode.Merge) {
@@ -582,7 +583,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
   @override
   Future<int> updateOne({required T entity, Database? database}) async {
     if (entity.dirty == true) {
-      entity.lastUpdated = DateTime.now().toIso8601String().split('.')[0];
+      entity.lastUpdated = DateTime.now().toIso8601String();
     }
     Map<String, dynamic> data = this
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
