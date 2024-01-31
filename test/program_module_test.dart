@@ -28,6 +28,7 @@ import '../sample/program_stage.sample.dart';
 import '../sample/reserved_values.sample.dart';
 import '../sample/program_relationship_sample.dart';
 import 'program_module_test.reflectable.dart';
+import '../sample/database_sample.dart';
 
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +40,7 @@ void main() async {
 
   final d2 = await D2Touch.init(
     databaseFactory: databaseFactoryFfi,
-    databaseName: 'flutter_test',
+    databaseName: randomStrings(),
     sharedPreferenceInstance: sharedPreferenceInstance,
   );
 

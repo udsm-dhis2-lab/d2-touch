@@ -10,6 +10,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../sample/current_user.sample.dart';
 import '../sample/data_elements.sample.dart';
 import 'data_element_module_test.reflectable.dart';
+import '../sample/database_sample.dart';
 
 void main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,7 @@ void main() async {
 
   final d2 = await D2Touch.init(
     databaseFactory: databaseFactoryFfi,
-    databaseName: 'flutter_test',
+    databaseName: randomStrings(),
     sharedPreferenceInstance: sharedPreferenceInstance,
   );
 

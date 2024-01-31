@@ -17,6 +17,7 @@ import '../sample/data_value_set_import_summary.sample.dart';
 import '../sample/data_value_set_upload.sample.dart';
 import '../sample/validation_rule.sample.dart';
 import 'aggregate_module_test.reflectable.dart';
+import '../sample/database_sample.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ void main() async {
 
   final d2 = await D2Touch.init(
     databaseFactory: databaseFactoryFfi,
-    databaseName: 'flutter_test',
+    databaseName: randomStrings(),
     sharedPreferenceInstance: sharedPreferenceInstance,
   );
 

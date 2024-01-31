@@ -12,6 +12,7 @@ import '../sample/users.sample.dart';
 import '../sample/current_user.sample.dart';
 import 'package:d2_touch/modules/auth/entities/user.entity.dart';
 import '../lib/modules/auth/entities/user_group.entity.dart';
+import '../sample/database_sample.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,7 @@ void main() async {
 
   final d2 = await D2Touch.init(
     databaseFactory: databaseFactoryFfi,
-    databaseName: 'flutter_test',
+    databaseName: randomStrings(),
     sharedPreferenceInstance: sharedPreferenceInstance,
   );
 

@@ -28,6 +28,7 @@ import '../sample/tracked_entity_import_summary.sample.dart';
 import '../sample/tracked_entity_instance_upload.sample.dart';
 import '../sample/tracked_entity_instances.sample.dart';
 import 'tracked_entity_instance_module_test.reflectable.dart';
+import '../sample/database_sample.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +40,7 @@ void main() async {
 
   final d2 = await D2Touch.init(
     databaseFactory: databaseFactoryFfi,
-    databaseName: 'flutter_test',
+    databaseName: randomStrings(),
     sharedPreferenceInstance: sharedPreferenceInstance,
   );
 
