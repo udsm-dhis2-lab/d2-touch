@@ -62,7 +62,7 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
               "conflicts": [
                 {
                   "object": "Server.ERROR",
-                  "value": '${response.body}: ${response.statusCode}'
+                  "value": '${response.body.toString()}: ${response.statusCode}'
                 }
               ]
             }

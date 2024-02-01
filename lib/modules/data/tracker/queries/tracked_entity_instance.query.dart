@@ -449,7 +449,9 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
-    data = response.body[this.apiResourceName]?.toList();
+    data = response.body != null && response.body[this.apiResourceName] != null
+        ? response.body[this.apiResourceName]?.toList()
+        : [];
 
     List<TrackedEntityInstance> trackedEntityInstanceData =
         data.map<TrackedEntityInstance>((dataItem) {
@@ -609,7 +611,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
               "conflicts": [
                 {
                   "object": "Server.ERROR",
-                  "value": '${response.body}: ${response.statusCode}'
+                  "value": '${response.body.toString()}: ${response.statusCode}'
                 }
               ]
             }
@@ -650,8 +652,10 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
           "conflicts": [
             {
               "object": "Server.ERROR",
-              "value": response.body['message'] ??
-                  "Server Error code:" + response.statusCode.toString()
+              "value": response.body.runtimeType == String
+                  ? response.body.toString()
+                  : response.body['message'] ??
+                      "Server Error code:" + response.statusCode.toString()
             }
           ]
         });

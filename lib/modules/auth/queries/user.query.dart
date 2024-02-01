@@ -128,59 +128,86 @@ class UserQuery extends BaseQuery<User> {
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
-    List data = response.body[this.apiResourceName]?.toList();
-
-    this.data = data.map((dataItem) {
-      dataItem['dirty'] = false;
-      dataItem['synced'] = true;
-      return User.fromApi(dataItem);
-    }).toList();
-
-    callback(
-        RequestProgress(
-            resourceName: this.apiResourceName as String,
-            message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} downloaded successfully',
-            status: '',
-            percentage: 50),
-        false);
-
-    callback(
-        RequestProgress(
-            resourceName: this.apiResourceName as String,
-            message:
-                'Saving ${data.length} ${this.apiResourceName?.toLowerCase()} into phone database...',
-            status: '',
-            percentage: 51),
-        false);
-
-    await this.save();
-
-    final List<UserGroupUser> userGroupsList = [];
-
-    for (var user in data) {
-      for (var userGroup in user['userGroups']) {
-        final group = {
-          'id': '${user['id']}_${userGroup['id']}',
-          'userId': user['id'],
-          'groupId': userGroup['id']
-        };
-
-        userGroupsList.add(UserGroupUser.fromJson(group));
-      }
+    List data =
+        response.body != null && response.body[this.apiResourceName] != null
+            ? response.body[this.apiResourceName]?.toList()
+            : [];
+    if (response.body == null || response.body[this.apiResourceName] == null) {
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  'Downloading ${this.apiResourceName} failed with status code ${response.statusCode}',
+              status: '',
+              percentage: 0),
+          false);
     }
 
-    await UserGroupUserQuery(database: database).setData(userGroupsList).save();
+    if (data.isEmpty) {
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message: 'No ${this.apiResourceName} found.',
+              status: '',
+              percentage: 0),
+          true);
+    }
 
-    callback(
-        RequestProgress(
-            resourceName: this.apiResourceName as String,
-            message: data.isNotEmpty
-                ? '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database'
-                : 'No ${this.apiResourceName} found.',
-            status: '',
-            percentage: 100),
-        true);
+    if (data.isNotEmpty) {
+      this.data = data.map((dataItem) {
+        dataItem['dirty'] = false;
+        dataItem['synced'] = true;
+        return User.fromApi(dataItem);
+      }).toList();
+
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  '${data.length} ${this.apiResourceName?.toLowerCase()} downloaded successfully',
+              status: '',
+              percentage: 50),
+          false);
+
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  'Saving ${data.length} ${this.apiResourceName?.toLowerCase()} into phone database...',
+              status: '',
+              percentage: 51),
+          false);
+
+      await this.save();
+
+      final List<UserGroupUser> userGroupsList = [];
+
+      for (var user in data) {
+        for (var userGroup in user['userGroups']) {
+          final group = {
+            'id': '${user['id']}_${userGroup['id']}',
+            'userId': user['id'],
+            'groupId': userGroup['id']
+          };
+
+          userGroupsList.add(UserGroupUser.fromJson(group));
+        }
+      }
+
+      await UserGroupUserQuery(database: database)
+          .setData(userGroupsList)
+          .save();
+
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message: data.isNotEmpty
+                  ? '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database'
+                  : 'No ${this.apiResourceName} found.',
+              status: '',
+              percentage: 100),
+          true);
+    }
 
     return this.data;
   }

@@ -211,7 +211,7 @@ class EventQuery extends BaseQuery<Event> {
               "conflicts": [
                 {
                   "object": "Server.ERROR",
-                  "value": '${response.body}: ${response.statusCode}'
+                  "value": '${response.body.toString()}: ${response.statusCode}'
                 }
               ]
             }
