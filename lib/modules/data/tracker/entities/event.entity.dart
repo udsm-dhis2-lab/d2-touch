@@ -56,6 +56,11 @@ class Event extends IdentifiableEntity {
   @Column(nullable: true)
   String? notes;
 
+  /// A value that detects whether the user has marked the entity has saved or not.
+  /// This is useful for when you want to sync specific data to remote server and leave others.
+  @Column()
+  bool? saved;
+
   @Column(nullable: true)
   String? eventType;
 
@@ -94,6 +99,7 @@ class Event extends IdentifiableEntity {
       this.attributeCategoryOptions,
       this.attributeOptionCombo,
       this.notes,
+      this.saved,
       this.eventType,
       required this.programStage,
       this.enrollment,
@@ -106,6 +112,7 @@ class Event extends IdentifiableEntity {
             dirty: dirty) {
     this.event = this.event ?? this.id;
     this.name = this.name ?? this.event;
+    this.saved = this.saved ?? false;
   }
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -122,6 +129,7 @@ class Event extends IdentifiableEntity {
         dueDate: json['dueDate'],
         deleted: json['deleted'],
         synced: json['synced'],
+        saved: json['saved'],
         syncFailed: json['syncFailed'],
         lastSyncSummary: lastSyncSummary,
         lastSyncDate: json['lastSyncDate'],
@@ -156,6 +164,7 @@ class Event extends IdentifiableEntity {
     data['dueDate'] = this.dueDate;
     data['deleted'] = this.deleted;
     data['synced'] = this.synced;
+    data['saved'] = this.saved;
     data['syncFailed'] = this.syncFailed;
     data['lastSyncSummary'] = this.lastSyncSummary != null
         ? jsonEncode(

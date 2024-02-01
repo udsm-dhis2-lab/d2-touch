@@ -74,8 +74,6 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
 
     final dhisUrl = await this.dhisUrl();
 
-    print(dhisUrl);
-
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 

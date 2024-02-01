@@ -90,6 +90,7 @@ void main() async {
 
   List<TrackedEntityInstance> trackedEntityInstances =
       await d2.trackerModule.trackedEntityInstance.get();
+
   test('should store all incoming tracked entity instances', () {
     expect(trackedEntityInstances.length, 32);
   });

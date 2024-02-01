@@ -44,6 +44,11 @@ class TrackedEntityInstance extends IdentifiableEntity {
   @Column(nullable: true)
   String? lastSyncDate;
 
+  /// A value that detects whether the user has marked the entity has saved or not.
+  /// This is useful for when you want to sync specific data to remote server and leave others.
+  @Column()
+  bool? saved;
+
   @OneToMany(table: TrackedEntityAttributeValue)
   List<TrackedEntityAttributeValue>? attributes;
 
@@ -71,6 +76,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
       this.enrollments,
       this.attributes,
       this.transfer,
+      this.saved,
       this.relationships,
       bool? skipDateUpdate})
       : super(
@@ -81,6 +87,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
             skipDateUpdate: skipDateUpdate,
             dirty: dirty) {
     this.trackedEntityInstance = this.trackedEntityInstance ?? this.id;
+    this.saved = this.saved ?? false;
   }
 
   transferOrgUnit(String orgUnit) {
@@ -106,6 +113,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
         trackedEntityType: json['trackedEntityType'],
         deleted: json['deleted'],
         synced: json['synced'],
+        saved: json['saved'],
         transfer: json['transfer'],
         syncFailed: json['syncFailed'],
         lastSyncSummary: lastSyncSummary,
@@ -160,6 +168,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
     data['enrollments'] = this.enrollments;
     data['attributes'] = this.attributes;
     data['dirty'] = this.dirty;
+    data['saved'] = this.saved;
     data['created'] = this.created;
     data['lastUpdated'] = this.lastUpdated;
     data['transfer'] = this.transfer;

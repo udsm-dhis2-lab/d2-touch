@@ -581,7 +581,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             status: '',
             percentage: 76),
         true);
-
+    print(response.statusCode);
     final List<dynamic> importSummaries =
         (response.body?['response']?['importSummaries'] ?? []).toList();
 
