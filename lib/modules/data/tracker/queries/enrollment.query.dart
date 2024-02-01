@@ -35,8 +35,39 @@ class EnrollmentQuery extends BaseQuery<Enrollment> {
         {'enrollments': enrollmentUploadPayload},
         database: this.database, dioTestClient: dioTestClient);
 
-    final List<dynamic> importSummaries =
-        (response.body != null && response.body?['response'] != null
+    final List<dynamic> importSummaries = response.body.runtimeType == String
+        ? [
+            {
+              "responseType": "ImportSummary",
+              "status": "ERROR",
+              "reference": "",
+              "enrollments": {
+                "responseType": "ImportSummary",
+                "status": "ERROR",
+                "imported": 0,
+                "updated": 0,
+                "ignored": 1,
+                "deleted": 0,
+                "importSummaries:": [],
+                "total": 0
+              },
+              "importCount": {
+                "imported": 0,
+                "updated": 0,
+                "ignored": 1,
+                "deleted": 0
+              },
+              "total": 0,
+              "importSummaries:": [],
+              "conflicts": [
+                {
+                  "object": "Server.ERROR",
+                  "value": '${response.body}: ${response.statusCode}'
+                }
+              ]
+            }
+          ]
+        : (response.body != null && response.body?['response'] != null
                 ? response.body?['response']?['importSummaries'] ?? []
                 : [])
             .toList();

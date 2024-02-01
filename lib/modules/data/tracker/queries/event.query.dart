@@ -184,8 +184,39 @@ class EventQuery extends BaseQuery<Event> {
             percentage: 76),
         true);
 
-    final List<dynamic> importSummaries =
-        (response.body?['response']?['importSummaries'] ?? []).toList();
+    final List<dynamic> importSummaries = response.body.runtimeType == String
+        ? [
+            {
+              "responseType": "ImportSummary",
+              "status": "ERROR",
+              "reference": "",
+              "enrollments": {
+                "responseType": "ImportSummary",
+                "status": "ERROR",
+                "imported": 0,
+                "updated": 0,
+                "ignored": 1,
+                "deleted": 0,
+                "importSummaries:": [],
+                "total": 0
+              },
+              "importCount": {
+                "imported": 0,
+                "updated": 0,
+                "ignored": 1,
+                "deleted": 0
+              },
+              "total": 0,
+              "importSummaries:": [],
+              "conflicts": [
+                {
+                  "object": "Server.ERROR",
+                  "value": '${response.body}: ${response.statusCode}'
+                }
+              ]
+            }
+          ]
+        : (response.body?['response']?['importSummaries'] ?? []).toList();
 
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
