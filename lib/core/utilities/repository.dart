@@ -522,7 +522,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
           DateTime.parse(result.lastUpdated as String);
       final newLastUpdatedDate = DateTime.parse(entity.lastUpdated as String);
 
-      if (currentLastUpdatedDate.difference(newLastUpdatedDate).inMilliseconds >
+      if (newLastUpdatedDate.difference(currentLastUpdatedDate).inMilliseconds >
           0) {
         return 0;
       }
@@ -587,6 +587,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     }
     Map<String, dynamic> data = this
         .sanitizeIncomingData(entity: entity.toJson(), columns: this.columns);
+
     final Database db = database != null ? database : this.database;
     final saveDataResponse = await db.update(
       this.entity.tableName,
