@@ -116,10 +116,13 @@ class AttributeReservedValueQuery extends BaseQuery<AttributeReservedValue> {
 
     List<AttributeReservedValue> reservedValues = [];
 
-    (response.body ?? []).forEach((reservedResult) {
-      reservedValues.add(
-          AttributeReservedValue.fromJson({...reservedResult, 'dirty': false}));
-    });
+    for (dynamic reservedResult in response.body ?? []) {
+      // ignore: unnecessary_null_comparison
+      if (reservedAttribute != null) {
+        reservedValues.add(AttributeReservedValue.fromJson(
+            {...reservedResult, 'dirty': false}));
+      }
+    }
 
     return AttributeReservedValueQuery(database: database)
         .setData(reservedValues)
