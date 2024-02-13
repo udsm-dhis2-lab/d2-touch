@@ -1,3 +1,5 @@
+## [1.1.2] - 13/02/2024
+
 ## [1.1.1] - 07/08/2023
 
 - Add support to upload relationships when uploading tracker entity instances
