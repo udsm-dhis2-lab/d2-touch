@@ -582,7 +582,7 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
   @override
   Future<int> updateOne({required T entity, Database? database}) async {
-    if (entity.dirty == true) {
+    if (entity.dirty == true && entity.lastUpdated == null) {
       entity.lastUpdated = DateTime.now().toIso8601String();
     }
     Map<String, dynamic> data = this

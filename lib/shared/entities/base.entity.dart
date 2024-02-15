@@ -27,7 +27,9 @@ class BaseEntity {
     this.created = this.created ?? DateTime.now().toIso8601String();
     this.lastUpdated = this.lastUpdated ?? this.created;
 
-    if (dirty && (skipDateUpdate == null || skipDateUpdate == false)) {
+    if (dirty &&
+        (skipDateUpdate == null || skipDateUpdate == false) &&
+        lastUpdated == null) {
       this.lastUpdated = DateTime.now().toIso8601String();
     }
   }
