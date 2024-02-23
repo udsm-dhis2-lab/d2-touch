@@ -389,8 +389,8 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
       if (lastUpdated != null) {
         final currentLastUpdatedDate = DateTime.parse(lastUpdated as String);
 
-        final newLastUpdatedDate =
-            DateTime.parse(data['lastUpdated'] as String);
+        final newLastUpdatedDate = DateTime.parse(
+            data['lastUpdated'] ?? DateTime.now().toIso8601String());
 
         if (currentLastUpdatedDate
                 .difference(newLastUpdatedDate)

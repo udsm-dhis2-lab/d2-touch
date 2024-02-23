@@ -216,7 +216,49 @@ class EventQuery extends BaseQuery<Event> {
               ]
             }
           ]
-        : (response.body?['response']?['importSummaries'] ?? []).toList();
+        : response.body['status'] != null &&
+                response.body['status'] == 'OK' &&
+                response.body['validationReport'] != null
+            ? [
+                {
+                  "responseType": "ImportSummary",
+                  "status": "SUCCESS",
+                  "reference": eventIds[0],
+                  "enrollments": {
+                    "responseType": "ImportSummary",
+                    "status": "ERROR",
+                    "imported": 0,
+                    "updated": 1,
+                    "ignored": 0,
+                    "deleted": 0,
+                    "importSummaries:": [
+                      {
+                        "responseType": "ImportSummary",
+                        "status": "SUCCESS",
+                        "importCount": {
+                          "imported": 0,
+                          "updated": 1,
+                          "ignored": 0,
+                          "deleted": 0
+                        },
+                        "conflicts": [],
+                        "reference": "a6vUjBH0UUj"
+                      }
+                    ],
+                    "total": 0
+                  },
+                  "importCount": {
+                    "imported": 1,
+                    "updated": 1,
+                    "ignored": 0,
+                    "deleted": 0
+                  },
+                  "total": 1,
+                  "importSummaries:": [],
+                  "conflicts": []
+                }
+              ]
+            : (response.body?['response']?['importSummaries'] ?? []).toList();
 
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
@@ -231,7 +273,6 @@ class EventQuery extends BaseQuery<Event> {
       events.forEach((event) {
         final importSummary =
             objectReport?.lastWhere((summary) => summary.uid == event.id);
-
         if (importSummary != null) {
           availableItemCount++;
           final syncFailed = lastestVersionResponse.status == 'ERROR';
@@ -239,7 +280,7 @@ class EventQuery extends BaseQuery<Event> {
           event.dirty = true;
           event.syncFailed = syncFailed;
           event.lastSyncDate = DateTime.now().toIso8601String();
-          event.lastUpdated = event.lastSyncDate;
+          event.lastUpdated = DateTime.now().toIso8601String();
           queue.add(() => EventQuery(database: database).setData(event).save());
         }
       });
@@ -255,7 +296,7 @@ class EventQuery extends BaseQuery<Event> {
           event.dirty = true;
           event.syncFailed = syncFailed;
           event.lastSyncDate = DateTime.now().toIso8601String();
-          event.lastUpdated = event.lastSyncDate;
+          event.lastUpdated = DateTime.now().toIso8601String();
           event.lastSyncSummary = EventImportSummary.fromJson(importSummary);
 
           queue.add(() => EventQuery(database: database).setData(event).save());
