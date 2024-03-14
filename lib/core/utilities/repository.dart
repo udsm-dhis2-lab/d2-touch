@@ -271,7 +271,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
     final dataResults = (await db.query(this.entity.tableName,
         where: whereParameters, orderBy: orderParameters, columns: fields));
-
     final List<String> dataIds =
         dataResults.map((dataResult) => dataResult['id'].toString()).toList();
 
@@ -557,7 +556,6 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
 
         newEntity = classMirror.newInstance('fromJson', [entityMap]) as T;
       }
-
       return this.updateOne(entity: newEntity, database: db);
     }
 

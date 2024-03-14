@@ -102,6 +102,10 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
 
     final data = response.body;
 
+    if (data != null && data['status'] != null && data['status'] == 'ERROR') {
+      return [];
+    }
+
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -110,7 +114,6 @@ class DataValueSetQuery extends BaseQuery<DataValueSet> {
             status: '',
             percentage: 50),
         false);
-
     data['dirty'] = false;
     data['synced'] = true;
     this.data = DataValueSet.fromJson(data);
