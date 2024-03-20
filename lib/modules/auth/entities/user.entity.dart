@@ -190,14 +190,7 @@ class User extends IdentifiableEntity {
                 type: 'DATA_VIEW',
                 dirty: jsonData['dirty'] ?? false))
             .toList(),
-        authorities: (jsonData['authorities'] ?? [])
-            .map<UserAuthority>((authority) => UserAuthority(
-                id: '${jsonData['id']}_$authority',
-                name: '${jsonData['id']}_$authority',
-                authority: authority,
-                user: jsonData['id'],
-                dirty: jsonData['dirty'] ?? false))
-            .toList(),
+        authorities: getAuthorities(jsonData),
         roles: (jsonData['userCredentials']?['userRoles'] ?? [])
             .map<UserRole>((role) => UserRole(
                 id: '${jsonData['id']}_${role['id']}',
@@ -214,6 +207,34 @@ class User extends IdentifiableEntity {
             : null,
         isLoggedIn: jsonData['isLoggedIn'] ?? false,
         dirty: jsonData['dirty'] ?? false);
+  }
+
+  static List<UserAuthority> getAuthorities(Map<String, dynamic> jsonData) {
+    List<UserAuthority> authorities = (jsonData['authorities'] ?? [])
+        .map<UserAuthority>((authority) => UserAuthority(
+            id: '${jsonData['id']}_$authority',
+            name: '${jsonData['id']}_$authority',
+            authority: authority,
+            user: jsonData['id'],
+            dirty: jsonData['dirty'] ?? false))
+        .toList();
+
+    if (jsonData['userCredentials']?['userRoles'] != null) {
+      for (Map<String, dynamic> role in jsonData['userCredentials']
+          ?['userRoles']) {
+        List<UserAuthority> roleAuthorities = (role['authorities'] ?? [])
+            .map<UserAuthority>((authority) => UserAuthority(
+                id: '${jsonData['id']}_$authority',
+                name: '${jsonData['id']}_$authority',
+                authority: authority,
+                user: jsonData['id'],
+                dirty: jsonData['dirty'] ?? false))
+            .toList();
+        authorities = [...authorities, ...roleAuthorities];
+      }
+    }
+
+    return authorities;
   }
 
   Map<String, dynamic> toJson() {
