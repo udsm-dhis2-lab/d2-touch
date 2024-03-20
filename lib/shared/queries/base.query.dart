@@ -20,18 +20,32 @@ class BaseQuery<T extends BaseEntity> {
   late Repository repository;
   dynamic data;
   List<String>? fields;
+
+  /// A list of strings as an argument for the [select] method.
+  /// It can contain various fields as accepted by the DHIS2 API.
+  ///
+  /// Example:
+  /// ```dart
+  /// List<String> fields = ['id', 'name', 'path'];
+  /// select(fields);
+  /// ```
+  ///
+  /// Ensure that [select] is not null before calling this method.
+  ///
+  List<String> selected;
   Column? primaryKey;
   String? tableName;
   String? apiResourceName;
   String? singularResourceName;
   String? id;
+  String? junctionOperator;
   List<QueryFilter>? filters = [];
   Map<String, SortOrder> sortOrder = {};
   List<ColumnRelation> relations = [];
   MergeMode _mergeMode = MergeMode.Replace;
 
-  BaseQuery({this.database}) {
-    this.repository = Repository<T>();
+  BaseQuery({this.database, this.junctionOperator, this.selected = const []}) {
+    this.repository = Repository<T>(database: database as Database);
     this.tableName = repository.entity.tableName;
     this.apiResourceName = repository.entity.apiResourceName;
 
@@ -47,15 +61,24 @@ class BaseQuery<T extends BaseEntity> {
     this._mergeMode = mergeMode;
   }
 
+  /// A method that accepted a list of user selected fields as an argument .
+  /// Fields as accepted by the DHIS2 API.
+  ///
+  /// Example:
+  /// ```dart
+  /// List<String> fields = ['id', 'name', 'path'];
+  /// select(fields);
+  /// ```
   select(List<String> fields) {
     this.fields = fields;
+    this.selected = fields;
     return this;
   }
 
   byId(String id) {
     this.id = id;
-    this.filters = null;
-    return this;
+    this.filters = [];
+    return this.where(attribute: 'id', value: id);
   }
 
   byIds(List<String> ids) {
@@ -156,7 +179,10 @@ class BaseQuery<T extends BaseEntity> {
     if (this.id != null) {
       filters = [
         QueryFilter(
-            attribute: 'id', condition: QueryCondition.Equal, value: this.id)
+          attribute: 'id',
+          condition: QueryCondition.Equal,
+          value: this.id,
+        )
       ];
     }
 
@@ -167,12 +193,13 @@ class BaseQuery<T extends BaseEntity> {
         fields: this.fields as List<String>,
         filters: filters,
         relations: this.relations,
-        columns: this.repository.columns);
+        columns: this.repository.columns,
+        junctionOperator: this.junctionOperator);
   }
 
   Future<List<T>> get({Dio? dioTestClient, bool? online}) async {
     if (online == true) {
-      return this._fetchOnline(dioTestClient: dioTestClient);
+      return this.fetchOnline(dioTestClient: dioTestClient);
     }
 
     if (this.id != null) {
@@ -193,7 +220,7 @@ class BaseQuery<T extends BaseEntity> {
 
   Future<T?> getOne({Dio? dioTestClient, bool? online}) async {
     if (online == true) {
-      return (await this._fetchOnline(dioTestClient: dioTestClient))[0];
+      return (await this.fetchOnline(dioTestClient: dioTestClient))[0];
     }
 
     List<T> results = await this.get();
@@ -208,6 +235,9 @@ class BaseQuery<T extends BaseEntity> {
           database: this.database,
           mergeMode: this._mergeMode,
           saveOptions: saveOptions);
+    }
+    if (this.data != null && this.data.lastUpdated == null) {
+      this.data.lastUpdated = DateTime.now().toIso8601String();
     }
 
     return this.repository.saveOne(
@@ -239,12 +269,14 @@ class BaseQuery<T extends BaseEntity> {
     return this.repository.create(database: database);
   }
 
-  Future<List<T>> _fetchOnline({Dio? dioTestClient}) async {
+  Future<List<T>> fetchOnline({Dio? dioTestClient}) async {
     final dhisUrl = await this.dhisUrl();
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
 
-    List data = response.body[this.apiResourceName]?.toList();
+    List data = response.body != null
+        ? response.body[this.apiResourceName]?.toList() ?? []
+        : [];
 
     return data.map((dataItem) {
       dataItem['dirty'] = false;
@@ -258,6 +290,21 @@ class BaseQuery<T extends BaseEntity> {
     }).toList();
   }
 
+  Future<Map<String, dynamic>> deleteOnline({Dio? dioTestClient}) async {
+    final dhisUrl = await this.dhisUrl();
+
+    if (this.id != null) {
+      final response = await HttpClient.delete(this.id, dhisUrl,
+          database: this.database, dioTestClient: dioTestClient);
+      this
+          .repository
+          .deleteById(id: this.id as String, database: this.database);
+      return response.body;
+    }
+
+    return {'message': 'Something is wrong'};
+  }
+
   Future<List<T>?> download(Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
     callback(
@@ -269,7 +316,7 @@ class BaseQuery<T extends BaseEntity> {
             percentage: 0),
         false);
 
-    this.data = await this._fetchOnline(dioTestClient: dioTestClient);
+    this.data = await this.fetchOnline(dioTestClient: dioTestClient);
 
     callback(
         RequestProgress(
@@ -295,7 +342,7 @@ class BaseQuery<T extends BaseEntity> {
         RequestProgress(
             resourceName: this.apiResourceName as String,
             message:
-                '${data.length} ${this.apiResourceName?.toLowerCase()} successifully saved into the database',
+                '${data.length} ${this.apiResourceName?.toLowerCase()} successfully saved into the database',
             status: '',
             percentage: 100),
         true);
@@ -304,6 +351,7 @@ class BaseQuery<T extends BaseEntity> {
   }
 
   Future<String> dhisUrl() {
-    return Future.value(DhisUrlGenerator.generate(this.query));
+    return Future.value(
+        DhisUrlGenerator.generate(this.query, fields: this.selected));
   }
 }

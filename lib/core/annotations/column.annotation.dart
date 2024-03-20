@@ -95,6 +95,10 @@ class Column {
 
   static Column? getColumn(VariableMirror variableMirror, String columnName,
       bool ignoreRelationColumns) {
+    if (variableMirror.metadata.isEmpty) {
+      return null;
+    }
+
     dynamic variableElement = variableMirror.metadata[0];
 
     if (variableElement is Column || variableElement is PrimaryColumn) {
