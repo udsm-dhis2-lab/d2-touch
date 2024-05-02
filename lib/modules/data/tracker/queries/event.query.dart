@@ -286,8 +286,11 @@ class EventQuery extends BaseQuery<Event> {
       });
     } else {
       events.forEach((event) {
-        final importSummary = importSummaries.lastWhere((summary) =>
-            summary['reference'] != null && summary['reference'] == event.id);
+        final importSummary = importSummaries.lastWhere(
+          (summary) =>
+              summary['reference'] != null && summary['reference'] == event.id,
+          orElse: () => null,
+        );
 
         if (importSummary != null) {
           availableItemCount++;

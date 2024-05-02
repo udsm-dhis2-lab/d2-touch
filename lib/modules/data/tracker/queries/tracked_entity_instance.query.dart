@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:core';
 
 import 'package:d2_touch/core/annotations/index.dart';
@@ -28,6 +29,7 @@ import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/mirrors.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:developer';
 
 class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   String? orgUnit;
@@ -527,11 +529,23 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       return TrackedEntityInstance.toUpload(trackedEntityInstance, events);
     }).toList();
 
+    if (trackedEntityInstanceUploadPayload[0]['enrollments'][0]['events']
+            .length !=
+        0) {
+      trackedEntityInstanceUploadPayload[0]['enrollments'][0]['events'][0]
+          ['eventDate'] = trackedEntityInstanceUploadPayload[0]['enrollments']
+              [0]['events'][0]['eventDate']
+          .toString()
+          .split('T')[0];
+    }
+
     HttpResponse response = await HttpClient.post(
         this.apiResourceName as String,
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
         database: this.database,
         dioTestClient: dioTestClient);
+        
+    log('response: ${response.body}');
 
     if (response.statusCode == 500) {
       trackedEntityInstanceUploadPayload =
