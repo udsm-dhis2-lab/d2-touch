@@ -529,14 +529,14 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       return TrackedEntityInstance.toUpload(trackedEntityInstance, events);
     }).toList();
 
+
     if (trackedEntityInstanceUploadPayload[0]['enrollments'][0]['events']
             .length !=
         0) {
-      trackedEntityInstanceUploadPayload[0]['enrollments'][0]['events'][0]
-          ['eventDate'] = trackedEntityInstanceUploadPayload[0]['enrollments']
-              [0]['events'][0]['eventDate']
-          .toString()
-          .split('T')[0];
+      trackedEntityInstanceUploadPayload[0]['enrollments'][0]['events']
+          .forEach((event) {
+        event['eventDate'] = event['eventDate'].toString().split('T')[0];
+      });
     }
 
     HttpResponse response = await HttpClient.post(
@@ -544,8 +544,6 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         {'trackedEntityInstances': trackedEntityInstanceUploadPayload},
         database: this.database,
         dioTestClient: dioTestClient);
-        
-    log('response: ${response.body}');
 
     if (response.statusCode == 500) {
       trackedEntityInstanceUploadPayload =
