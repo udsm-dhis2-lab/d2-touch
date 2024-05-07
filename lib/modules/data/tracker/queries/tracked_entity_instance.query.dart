@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:core';
 
 import 'package:d2_touch/core/annotations/index.dart';
@@ -29,7 +28,6 @@ import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/mirrors.dart';
 import 'package:sqflite/sqflite.dart';
-import 'dart:developer';
 
 class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   String? orgUnit;
@@ -529,7 +527,6 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         trackedEntityInstances.map((trackedEntityInstance) {
       return TrackedEntityInstance.toUpload(trackedEntityInstance, events);
     }).toList();
-
 
     if (trackedEntityInstanceUploadPayload[0]['enrollments'][0]['events']
             .length !=
