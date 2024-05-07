@@ -106,13 +106,13 @@ class TrackedEntityInstance extends IdentifiableEntity {
     return TrackedEntityInstance(
         id: json['id'] ?? json['trackedEntityInstance'],
         name: json['trackedEntityInstance'],
-        created: json['created'],
-        lastUpdated: json['lastUpdated'],
+        created: json['created'] ?? json['createdAt'],
+        lastUpdated: json['lastUpdated'] ?? json['updatedAt'],
         orgUnit: json['orgUnit'],
         trackedEntityInstance: json['trackedEntityInstance'],
         trackedEntityType: json['trackedEntityType'],
         deleted: json['deleted'],
-        synced: json['synced'],
+        synced: json['synced'] ?? true,
         saved: json['saved'],
         transfer: json['transfer'],
         syncFailed: json['syncFailed'],
@@ -123,8 +123,10 @@ class TrackedEntityInstance extends IdentifiableEntity {
             ? List<dynamic>.from(json['enrollments'])
                 .map((enrollment) => Enrollment.fromJson({
                       ...enrollment,
+                      'trackedEntityType': enrollment['trackedEntityType'] ??
+                          json['trackedEntityType'],
                       'dirty': enrollment['dirty'] ?? json['dirty'] ?? false,
-                      'synced': json['synced']
+                      'synced': json['synced'] ?? true
                     }))
                 .toList()
             : null,
@@ -133,7 +135,8 @@ class TrackedEntityInstance extends IdentifiableEntity {
                   ...attribute,
                   'id': attribute['id'] ??
                       '${json['trackedEntityInstance']}_${attribute['attribute']}',
-                  'trackedEntityInstance': json['trackedEntityInstance'],
+                  'trackedEntityInstance':
+                      json['trackedEntityInstance'] ?? json['trackedEntity'],
                   'dirty': attribute['dirty'] ?? false
                 }))
             .toList(),
@@ -141,11 +144,11 @@ class TrackedEntityInstance extends IdentifiableEntity {
             .map((relationship) => TrackedEntityInstanceRelationship.fromJson({
                   ...relationship,
                   'dirty': relationship['dirty'] ?? json['dirty'] ?? false,
-                  'synced': json['synced']
+                  'synced': json['synced'] ?? true
                 }))
             .toList(),
         skipDateUpdate: json['skipDateUpdate'],
-        dirty: json['dirty']);
+        dirty: json['dirty'] ?? false);
   }
 
   Map<String, dynamic> toJson() {

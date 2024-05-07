@@ -451,6 +451,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);
+    // if (response.body != null && response.body.runtimeType){}
     data = response.body != null && response.body[this.apiResourceName] != null
         ? response.body[this.apiResourceName]?.toList()
         : [];

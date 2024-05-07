@@ -46,7 +46,7 @@ class TrackedEntityAttributeValue extends IdentifiableEntity {
         lastUpdated: json['lastUpdated'],
         trackedEntityInstance: json['trackedEntityInstance'],
         value: json['value'],
-        dirty: json['dirty']);
+        dirty: json['dirty'] ?? false);
   }
 
   Map<String, dynamic> toJson() {
