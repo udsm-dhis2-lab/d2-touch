@@ -19,7 +19,7 @@ jobs:
         with:
           ref: ${{ github.event.push.head.sha }}
 
-      - uses: BaharaJr/clickup@0.0.4
+      - uses: BaharaJr/clickup@0.0.9
         with:
           CLICKUP_TOKEN: ${{secrets.CLICKTOKEN}}
           LIST_ID: ${{secrets.LIST_ID}}

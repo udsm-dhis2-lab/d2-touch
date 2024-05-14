@@ -48,10 +48,16 @@ class TrackerRuleEngine {
     num availableItemCount = 0;
 
     programRuleActions.forEach((programRuleAction) {
-      if (programRuleAction.programRuleActionType == 'ASSIGN') {
+      if (programRuleAction.programRuleActionType == 'ASSIGN' &&
+          programRuleAction.trackedEntityAttribute != null &&
+          programRuleAction.data != null) {
         availableItemCount++;
         queue.add(() => TrackedEntityAttributeValueQuery(database: database)
             .setData(TrackedEntityAttributeValue(
+                synced: false,
+                lastUpdated: DateTime.now().toIso8601String(),
+                id:
+                    "${trackedEntityInstance.trackedEntityInstance}_${programRuleAction.trackedEntityAttribute}",
                 dirty: true,
                 attribute: programRuleAction.trackedEntityAttribute as String,
                 trackedEntityInstance:
@@ -67,7 +73,7 @@ class TrackerRuleEngine {
       await queue.onComplete;
     }
 
-    TrackedEntityInstance updatedTrackedEntityInstance =
+    TrackedEntityInstance? updatedTrackedEntityInstance =
         await TrackedEntityInstanceQuery(database: database)
             .withAttributes()
             .withEnrollments()
@@ -76,7 +82,8 @@ class TrackerRuleEngine {
 
     return TrackerRuleResult(
         programRuleActions: programRuleActions,
-        trackedEntityInstance: updatedTrackedEntityInstance);
+        trackedEntityInstance:
+            updatedTrackedEntityInstance ?? trackedEntityInstance);
   }
 
   List<ProgramRuleAction> forEvent(

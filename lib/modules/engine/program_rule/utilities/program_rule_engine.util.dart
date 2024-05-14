@@ -1,4 +1,4 @@
-
+import 'package:d2_touch/modules/engine/program_rule/models/math_expressions.dart';
 import 'package:d2_touch/modules/engine/program_rule/run-d2-expression.util.dart';
 import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule.entity.dart';
@@ -94,19 +94,22 @@ class ProgramRuleEngine {
         final evaluator = const ExpressionEvaluator();
         var evaluationResult = evaluator.eval(expression, evaluationContext);
 
-        final newProgramRuleActions =
-            programRule.programRuleActions?.map((ruleAction) {
+        List<ProgramRuleAction> newProgramRuleActions =
+            (programRule.programRuleActions ?? []).map((ruleAction) {
+          String data = ruleAction.data ?? '';
           return ProgramRuleAction.fromJson({
             ...ruleAction.toJson(),
+            'data':
+                data != '' && evaluationResult == true && data.contains('#{')
+                    ? MathExpressions.evaluate(data, evaluationContext)
+                    : ruleAction.data,
             'programRuleActionType':
                 evaluationResult == true ? ruleAction.programRuleActionType : ""
           });
         }).toList();
 
-        programRulesActions = List.from([
-          ...programRulesActions,
-          ...(newProgramRuleActions as List<ProgramRuleAction>)
-        ]);
+        programRulesActions =
+            List.from([...programRulesActions, ...(newProgramRuleActions)]);
       } catch (e) {
         final newProgramRuleActions =
             programRule.programRuleActions?.map((ruleAction) {

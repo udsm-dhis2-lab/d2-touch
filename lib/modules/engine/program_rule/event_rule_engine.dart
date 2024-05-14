@@ -64,10 +64,16 @@ class EventRuleEngine {
 
     programRuleActions.forEach((programRuleAction) async {
       if (programRuleAction.programRuleActionType == 'ASSIGN' &&
-          programRuleAction.dataElement != null) {
+          programRuleAction.dataElement != null &&
+          programRuleAction.data != null &&
+          programRuleAction.data != '') {
         availableItemCount++;
         queue.add(() => EventDataValueQuery(database: database)
             .setData(EventDataValue(
+                lastUpdated: DateTime.now().toIso8601String(),
+                created: DateTime.now().toIso8601String(),
+                id: '${event.id}_${programRuleAction.dataElement}',
+                name: '${event.event}_${programRuleAction.dataElement}',
                 dirty: true,
                 dataElement: programRuleAction.dataElement as String,
                 event: event.id,
