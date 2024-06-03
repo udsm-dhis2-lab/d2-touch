@@ -92,10 +92,11 @@ class ProgramRuleEngine {
         Expression expression = Expression.parse(ruleConditionForEvaluation);
 
         final evaluator = const ExpressionEvaluator();
-        var evaluationResult = evaluator.eval(expression, evaluationContext);
+        dynamic evaluationResult =
+            evaluator.eval(expression, evaluationContext);
 
-        List<ProgramRuleAction> newProgramRuleActions =
-            (programRule.programRuleActions ?? []).map((ruleAction) {
+        final newProgramRuleActions =
+            programRule.programRuleActions?.map((ruleAction) {
           String data = ruleAction.data ?? '';
           return ProgramRuleAction.fromJson({
             ...ruleAction.toJson(),
@@ -108,8 +109,10 @@ class ProgramRuleEngine {
           });
         }).toList();
 
-        programRulesActions =
-            List.from([...programRulesActions, ...(newProgramRuleActions)]);
+        programRulesActions = List.from([
+          ...programRulesActions,
+          ...(newProgramRuleActions as List<ProgramRuleAction>)
+        ]);
       } catch (e) {
         final newProgramRuleActions =
             programRule.programRuleActions?.map((ruleAction) {
