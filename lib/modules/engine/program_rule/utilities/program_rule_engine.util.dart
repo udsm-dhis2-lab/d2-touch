@@ -69,9 +69,6 @@ class ProgramRuleEngine {
 
     programRules.forEach((programRule) {
       String ruleConditionForEvaluation = programRule.condition;
-      // .replaceAll("#{", "")
-      // .replaceAll("A{", "")
-      // .replaceAll("}", "");
 
       evaluationContext.keys.forEach((key) {
         final value = evaluationContext[key];
