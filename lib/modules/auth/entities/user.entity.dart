@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/auth/entities/user_authority.entity.dart';
 import 'package:d2_touch/modules/auth/entities/user_group.entity.dart';
@@ -150,7 +152,8 @@ class User extends IdentifiableEntity {
                 user: role['user'],
                 dirty: role['dirty'] ?? false))
             .toList(),
-        dataViewOrganisationUnits: jsonData['dataViewOrganisationUnits'],
+        dataViewOrganisationUnits:
+            jsonEncode(jsonData['dataViewOrganisationUnits']),
         programs: jsonData['programs'].toString(),
         dataSets: jsonData['datasets'].toString(),
         isLoggedIn: jsonData['isLoggedIn'],
@@ -198,7 +201,8 @@ class User extends IdentifiableEntity {
                 user: jsonData['id'],
                 dirty: jsonData['dirty'] ?? true))
             .toList(),
-        dataViewOrganisationUnits: jsonData['dataViewOrganisationUnits'],
+        dataViewOrganisationUnits:
+            jsonEncode(jsonData['dataViewOrganisationUnits']),
         programs: jsonData['programs'] != null
             ? jsonData['programs'].toString()
             : null,
