@@ -72,7 +72,7 @@ class OrganisationUnitQuery extends BaseQuery<OrganisationUnit> {
             percentage: 26),
         false);
 
-    final dhisUrl = await this.dhisUrl();
+    String dhisUrl = await this.dhisUrl();
 
     final response = await HttpClient.get(dhisUrl,
         database: this.database, dioTestClient: dioTestClient);

@@ -14,7 +14,9 @@ class DhisUrlGenerator {
 
     final apiFields = DhisUrlGenerator.getApiFields(query.columns);
 
-    return '${query.resourceName}.json${apiFilter != null ? '?$apiFilter&${query.junctionOperator != null ? 'rootJunction=${query.junctionOperator}&' : ''}' : '?'}fields=${(fields.isNotEmpty ? fields : apiFields).join(',')}&paging=false';
+    return '${query.resourceName}.json${apiFilter != null ? '?$apiFilter&${query.junctionOperator != null ? 'rootJunction=${query.junctionOperator}&' : ''}' : '?'}fields=${(fields.isNotEmpty ? fields : apiFields).join(',')}&paging=false'
+        .replaceAll('AND', '&')
+        .replaceAll(' ', '');
   }
 
   static List<String> getApiFields(List<Column> columns) {
