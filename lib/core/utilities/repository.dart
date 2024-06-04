@@ -340,18 +340,47 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final reltionQueue = Queue(parallel: 1);
     num availableItemCount = 0;
 
-    this.oneToManyColumns.forEach((Column column) {
-      final List data = entity.toJson()[column.relation?.attributeName] ?? [];
-      if (data.isNotEmpty) {
-        availableItemCount++;
-        data.forEach((dataItem) {
-          reltionQueue.add(() => saveRelationData(
-              columnRelation: column.relation as ColumnRelation,
-              entity: dataItem,
-              database: db));
-        });
-      }
-    });
+    try {
+      this.oneToManyColumns.forEach((Column column) {
+        final List data = entity.toJson()[column.relation?.attributeName] ?? [];
+        if (data.isNotEmpty) {
+          availableItemCount++;
+          data.forEach((dataItem) {
+            try {
+              reltionQueue.add(() => saveRelationData(
+                  columnRelation: column.relation as ColumnRelation,
+                  entity: dataItem,
+                  database: db));
+            } catch (e) {
+              ClassMirror classMirror =
+                  AnnotationReflectable.reflectType(T) as ClassMirror;
+
+              reltionQueue.add(() => saveRelationData(
+                  columnRelation: column.relation as ColumnRelation,
+                  entity: classMirror.newInstance('fromJson', [dataItem]) as T,
+                  database: db));
+            }
+          });
+        }
+      });
+    } catch (e) {
+      this.oneToManyColumns.forEach((Column column) {
+        final List data = entity.toJson()[column.relation?.attributeName] ?? [];
+
+        ClassMirror classMirror =
+            AnnotationReflectable.reflectType(T) as ClassMirror;
+
+        if (data.isNotEmpty) {
+          availableItemCount++;
+          data.forEach((dataItem) {
+            reltionQueue.add(() => saveRelationData(
+                columnRelation: column.relation as ColumnRelation,
+                entity: classMirror.newInstance('fromJson', [dataItem]) as T,
+                database: db));
+          });
+        }
+      });
+    }
 
     if (availableItemCount == 0) {
       reltionQueue.cancel();
@@ -601,19 +630,45 @@ class Repository<T extends BaseEntity> extends BaseRepository<T> {
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;
 
-    this.oneToManyColumns.forEach((Column column) {
-      final List data = entity.toJson()[column.relation?.attributeName] ?? [];
+    try {
+      this.oneToManyColumns.forEach((Column column) {
+        final List data = entity.toJson()[column.relation?.attributeName] ?? [];
+        ClassMirror classMirror =
+            AnnotationReflectable.reflectType(T) as ClassMirror;
+        if (data.isNotEmpty) {
+          availableItemCount++;
+          data.forEach((dataItem) {
+            try {
+              queue.add(() => saveRelationData(
+                  columnRelation: column.relation as ColumnRelation,
+                  entity: dataItem,
+                  database: db));
+            } catch (e) {
+              queue.add(() => saveRelationData(
+                  columnRelation: column.relation as ColumnRelation,
+                  entity: classMirror.newInstance('fromJson', [dataItem]) as T,
+                  database: db));
+            }
+          });
+        }
+      });
+    } catch (e) {
+      this.oneToManyColumns.forEach((Column column) {
+        final List data = entity.toJson()[column.relation?.attributeName] ?? [];
+        ClassMirror classMirror =
+            AnnotationReflectable.reflectType(T) as ClassMirror;
 
-      if (data.isNotEmpty) {
-        availableItemCount++;
-        data.forEach((dataItem) {
-          queue.add(() => saveRelationData(
-              columnRelation: column.relation as ColumnRelation,
-              entity: dataItem,
-              database: db));
-        });
-      }
-    });
+        if (data.isNotEmpty) {
+          availableItemCount++;
+          data.forEach((dataItem) {
+            queue.add(() => saveRelationData(
+                columnRelation: column.relation as ColumnRelation,
+                entity: classMirror.newInstance('fromJson', [dataItem]) as T,
+                database: db));
+          });
+        }
+      });
+    }
 
     if (availableItemCount == 0) {
       queue.cancel();
