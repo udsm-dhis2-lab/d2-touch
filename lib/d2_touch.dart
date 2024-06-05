@@ -11,6 +11,7 @@ import 'package:d2_touch/modules/engine/engine.module.dart';
 import 'package:d2_touch/modules/engine/http/http.module.dart';
 import 'package:d2_touch/modules/file_resource/file_resource.module.dart';
 import 'package:d2_touch/modules/metadata/dataset/data_set.module.dart';
+import 'package:d2_touch/modules/metadata/option_group/option_group.module.dart';
 import 'package:d2_touch/modules/metadata/option_set/option_set.module.dart';
 import 'package:d2_touch/modules/metadata/organisation_unit/organisation_unit.module.dart';
 import 'package:d2_touch/modules/metadata/program/program.module.dart';
@@ -31,7 +32,7 @@ import 'modules/metadata/dashboard/dashboard.module.dart';
 import 'modules/metadata/data_element/data_element.module.dart';
 
 class D2Touch implements D2TouchModel {
-  int? instanceVersion ;
+  int? instanceVersion;
   String locale = 'en';
   Database? _database;
   bool? inMemory;
@@ -48,6 +49,8 @@ class D2Touch implements D2TouchModel {
       DataElementModule(database: _database);
 
   ProgramModule get programModule => ProgramModule(database: _database);
+  OptionGroupModule get optionGroupModule =>
+      OptionGroupModule(database: _database);
 
   DataSetModule get dataSetModule => DataSetModule(database: _database);
 
@@ -84,7 +87,6 @@ class D2Touch implements D2TouchModel {
     DatabaseFactory? databaseFactory,
     SharedPreferences? sharedPreferenceInstance,
   }) async {
-
     if (_d2Instance == null) {
       _d2Instance = D2Touch._internal();
 
@@ -151,6 +153,7 @@ class D2Touch implements D2TouchModel {
     await DataElementModule.createTables(database: database);
     await DataSetModule.createTables(database: database);
     await ProgramModule.createTables(database: database);
+    await OptionGroupModule.createTables(database: database);
     await DashboardModule.createTables(database: database);
     await TrackedEntityInstanceModule.createTables(database: database);
     await AggregateModule.createTables(database: database);
@@ -184,6 +187,7 @@ class D2Touch implements D2TouchModel {
       await DataElementModule.createTables(database: database);
       await DataSetModule.createTables(database: database);
       await ProgramModule.createTables(database: database);
+      await OptionGroupModule.createTables(database: database);
       await DashboardModule.createTables(database: database);
       await TrackedEntityInstanceModule.createTables(database: database);
       await AggregateModule.createTables(database: database);
