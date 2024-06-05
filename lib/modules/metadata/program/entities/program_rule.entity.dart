@@ -52,9 +52,7 @@ class ProgramRule extends IdentifiableEntity {
     data['description'] = this.description;
     data['condition'] = this.condition;
     data['program'] = this.program;
-    data['programRuleActions'] = (this.programRuleActions ?? [])
-        .map((programRuleAction) => programRuleAction.toJson())
-        .toList();
+    data['programRuleActions'] = this.programRuleActions;
     data['dirty'] = this.dirty;
     return data;
   }
