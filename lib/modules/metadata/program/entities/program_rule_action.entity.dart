@@ -33,6 +33,9 @@ class ProgramRuleAction extends IdentifiableEntity {
   String? option;
 
   @Column(nullable: true)
+  String? optionGroup;
+
+  @Column(nullable: true)
   String? trackedEntityAttribute;
 
   @ManyToOne(table: ProgramRule, joinColumnName: 'programRule')
@@ -52,6 +55,7 @@ class ProgramRuleAction extends IdentifiableEntity {
       this.data,
       this.section,
       this.option,
+      this.optionGroup,
       required bool dirty})
       : super(id: id, name: name, dirty: dirty);
 
@@ -79,6 +83,11 @@ class ProgramRuleAction extends IdentifiableEntity {
                 ? json['section']
                 : json['section']['id']
             : null,
+        optionGroup: json['optionGroup'] != null
+            ? json['optionGroup'] is String
+                ? json['optionGroup']
+                : json['optionGroup']['id']
+            : null,
         trackedEntityAttribute: json['trackedEntityAttribute'] != null
             ? json['trackedEntityAttribute'] is String
                 ? json['trackedEntityAttribute']
@@ -101,6 +110,7 @@ class ProgramRuleAction extends IdentifiableEntity {
     data['evaluationTime'] = this.evaluationTime;
     data['dataElement'] = this.dataElement;
     data['option'] = this.option;
+    data['optionGroup'] = this.optionGroup;
     data['section'] = this.section;
     data['trackedEntityAttribute'] = this.trackedEntityAttribute;
     data['dirty'] = this.dirty;
