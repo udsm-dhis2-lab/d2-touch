@@ -1,3 +1,4 @@
+import 'package:d2_touch/modules/data/tracker/entities/enrollment.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked-entity.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_attribute_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_attribute_value.query.dart';
@@ -39,12 +40,35 @@ class TrackerRuleEngine {
                   value: trackedEntityInstance.trackedEntityInstance)
               .get();
 
+      trackedEntityInstance =
+          await TrackedEntityInstanceQuery(database: database)
+                  .withEnrollments()
+                  .byId(trackedEntityInstance.trackedEntityInstance ?? '')
+                  .getOne() ??
+              trackedEntityInstance;
+
       final dataValueEntities =
           DataValueEntities.fromAttributeValues(attributes);
+
+      List<Enrollment> enrollments = (trackedEntityInstance.enrollments ?? []);
 
       List<ProgramRuleAction> programRuleActions = ProgramRuleEngine.execute(
           dataValueEntities: dataValueEntities,
           programRules: programRules,
+          additionalValues: {
+            'incident_date':
+                enrollments.isNotEmpty ? enrollments[0].incidentDate : null,
+            'enrollment_date':
+                enrollments.isNotEmpty ? enrollments[0].enrollmentDate : null,
+            'enrollment_id':
+                enrollments.isNotEmpty ? enrollments[0].enrollment : null,
+            'current_date': DateTime.now().toIso8601String(),
+            'event_date': enrollments.isNotEmpty
+                ? (enrollments[0].events ?? []).isNotEmpty
+                    ? enrollments[0].events![0].eventDate
+                    : DateTime.now().toIso8601String()
+                : DateTime.now().toIso8601String(),
+          },
           programRuleVariables: programRuleVariables);
 
       final queue = Queue(parallel: 50);

@@ -13,6 +13,7 @@ final Map<String, Function> d2FunctionsEval = {
   ) {
     final date1 = removeQuotes(parameters[0]);
     final date2 = removeQuotes(parameters[1]);
+
     final daysBetween = DateUtils.daysBetween(date1, date2);
     final newExpression = expression.replaceFirst(regexFunct, '$daysBetween');
     return {'expression': newExpression, 'expressionUpdated': true};

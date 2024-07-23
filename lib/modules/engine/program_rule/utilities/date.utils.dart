@@ -1,49 +1,29 @@
-import 'package:intl/intl.dart';
-
 class DateUtils {
-  static final DateFormat _dateFormat = DateFormat('yyyy-MM-dd');
-
-  static String getToday() {
-    final todayMoment = DateTime.now();
-    return _dateFormat.format(todayMoment);
-  }
-
-  static int daysBetween(String firstRulesDate, String secondRulesDate) {
-    final firstDate = _parseDate(firstRulesDate);
-    final secondDate = _parseDate(secondRulesDate);
-    return secondDate.difference(firstDate).inDays;
-  }
-
-  static int weeksBetween(String firstRulesDate, String secondRulesDate) {
-    final firstDate = _parseDate(firstRulesDate);
-    final secondDate = _parseDate(secondRulesDate);
-    return secondDate.difference(firstDate).inDays ~/ 7;
-  }
-
-  static int monthsBetween(String firstRulesDate, String secondRulesDate) {
-    final firstDate = _parseDate(firstRulesDate);
-    final secondDate = _parseDate(secondRulesDate);
-    return _differenceInMonths(secondDate, firstDate);
+  static Duration difference(String firstRulesDate, String secondRulesDate) {
+    try {
+      final firstDate =
+          DateTime.parse(firstRulesDate.replaceAll("'", "").trim());
+      final secondDate =
+          DateTime.parse(secondRulesDate.replaceAll("'", "").trim());
+      return secondDate.difference(firstDate);
+    } catch (e) {
+      return Duration(days: 0, hours: 0, minutes: 0, seconds: 0);
+    }
   }
 
   static int yearsBetween(String firstRulesDate, String secondRulesDate) {
-    final firstDate = _parseDate(firstRulesDate);
-    final secondDate = _parseDate(secondRulesDate);
-    return secondDate.year - firstDate.year;
+    return (difference(firstRulesDate, secondRulesDate).inDays / 365).round();
   }
 
-  static String addDays(String rulesDate, String daysToAdd) {
-    final dateMoment = _parseDate(rulesDate);
-    final newDateMoment = dateMoment.add(Duration(days: int.parse(daysToAdd)));
-    final newRulesDate = _dateFormat.format(newDateMoment);
-    return "'$newRulesDate'";
+  static weeksBetween(String firstRulesDate, String secondRulesDate) {
+    return (difference(firstRulesDate, secondRulesDate).inDays / 7).round();
   }
 
-  static DateTime _parseDate(String date) {
-    return _dateFormat.parse(date);
+  static int daysBetween(String firstRulesDate, String secondRulesDate) {
+    return difference(firstRulesDate, secondRulesDate).inDays;
   }
 
-  static int _differenceInMonths(DateTime later, DateTime earlier) {
-    return (later.year - earlier.year) * 12 + later.month - earlier.month;
+  static int monthsBetween(String firstRulesDate, String secondRulesDate) {
+    return (difference(firstRulesDate, secondRulesDate).inDays / 30).round();
   }
 }

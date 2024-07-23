@@ -27,6 +27,7 @@ dependencies:
   http_parser: ^4.0.1
   intl: ^0.18.1
   math_expressions: ^2.5.0
+  petitparser: ^6.0.2
 
 dev_dependencies:
   flutter_test:
