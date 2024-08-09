@@ -200,7 +200,7 @@ class HttpClient {
               }));
 
       final response = await dioClient.delete(
-          '${httpDetails.baseUrl}/api/${resourceUrl!.split('.').first}/$id');
+          '${httpDetails.baseUrl}/api/${resourceUrl!.split('.').first}/$id');\
 
       return HttpResponse(
           statusCode: response.statusCode ?? 500, body: response.data);
