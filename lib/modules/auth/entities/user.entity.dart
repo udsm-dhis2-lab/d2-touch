@@ -136,7 +136,9 @@ class User extends IdentifiableEntity {
         lastUpdated: jsonData['lastUpdated'],
         teiSearchOrganisationUnits:
             jsonData['teiSearchOrganisationUnits'].toString(),
-        organisationUnits: jsonData['organisationUnits'],
+        organisationUnits: (jsonData['organisationUnits'] ?? [])
+            .map((ou) => UserOrganisationUnit.fromJson(ou))
+            .toList(),
         authorities: (jsonData['authorities'] ?? [])
             .map<UserAuthority>((authority) => UserAuthority(
                 id: authority['id'],
