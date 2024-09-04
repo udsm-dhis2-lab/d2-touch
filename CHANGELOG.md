@@ -1,4 +1,28 @@
+## [1.1.4] 04/09/2024
+
+- Fix error on type of user organisations in user entity
+
+## [1.1.3] - 09/08/2024
+
+- Add delete function in httpClien
+- Add d2 evaluation and parsing date objects
+- Add option group module
+- Add option group column to program rule action
+- Fix error saving relationships
+- Add functionality to re-evaluate math expressions for not operators
+- Add program rule expression execution for arithmetics
+- Fix error saving dataValueSets for missing filters
+
 ## [1.1.2] - 13/02/2024
+
+- Add checks on dynamic data to check for possible null values
+- Add checks for availability of response body before getting resource
+- Add saved attribute to tracked entity and event data
+- Add default import summaries for uknown network errors
+- Improve insert performance by wrapping in try catch
+- Remove hardcoded program status
+- Use a different field for user selected fields to avoid conflicts
+- Add functionality for user fields selection on download
 
 ## [1.1.1] - 07/08/2023
 
