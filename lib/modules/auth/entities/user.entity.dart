@@ -137,8 +137,9 @@ class User extends IdentifiableEntity {
         teiSearchOrganisationUnits:
             jsonData['teiSearchOrganisationUnits'].toString(),
         organisationUnits: (jsonData['organisationUnits'] ?? [])
-            .map((ou) => UserOrganisationUnit.fromJson(ou))
-            .toList(),
+            .map<UserOrganisationUnit>(
+                (ou) => UserOrganisationUnit.fromJson(ou))
+            .toList() as List<UserOrganisationUnit>,
         authorities: (jsonData['authorities'] ?? [])
             .map<UserAuthority>((authority) => UserAuthority(
                 id: authority['id'],
@@ -158,8 +159,10 @@ class User extends IdentifiableEntity {
             jsonEncode(jsonData['dataViewOrganisationUnits']),
         programs: jsonData['programs'].toString(),
         dataSets: jsonData['datasets'].toString(),
-        isLoggedIn: jsonData['isLoggedIn'],
-        userGroups: jsonData['userGroups'],
+        isLoggedIn: jsonData['isLoggedIn'] ?? false,
+        userGroups: (jsonData['userGroups'] ?? [])
+            .map<UserGroup>((group) => UserGroup.fromJson(group))
+            .toList(),
         dirty: jsonData['dirty']);
   }
 

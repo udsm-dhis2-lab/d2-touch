@@ -13,8 +13,8 @@ class UserOrganisationUnit extends IdentifiableEntity {
   @Column(nullable: true)
   final String? parent;
 
-  @Column()
-  final String type;
+  @Column(nullable: true)
+  final String? type;
 
   @ManyToOne(joinColumnName: 'user', table: User)
   dynamic user;
@@ -25,7 +25,7 @@ class UserOrganisationUnit extends IdentifiableEntity {
       required this.orgUnit,
       this.parent,
       required this.user,
-      required this.type,
+      this.type,
       required bool dirty})
       : super(id: id, name: name, dirty: dirty);
 
@@ -33,15 +33,19 @@ class UserOrganisationUnit extends IdentifiableEntity {
     return UserOrganisationUnit(
         id: json['id'],
         name: json['id'],
-        orgUnit: json['orgUnit'],
-        parent: json['parent'],
+        orgUnit: json['orgUnit'] ?? json['id'],
+        parent: json['parent'] != null && json['parent'].runtimeType == List
+            ? json['parent']['id']
+            : json['parent'].runtimeType == String
+                ? json['parent']
+                : null,
         user: json['user'],
         type: json['type'],
         dirty: json['dirty'].runtimeType == "String"
             ? json["dirty"] == "true"
                 ? true
                 : false
-            : json['dirty']);
+            : json['dirty'] ?? false);
   }
 
   Map<String, dynamic> toJson() {

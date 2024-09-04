@@ -22,7 +22,7 @@ class UserGroup extends IdentifiableEntity {
       code: json['code'] ?? '',
       name: json['name'],
       userGroupUsers: json['userGroupUsers'],
-      dirty: json['dirty'],
+      dirty: json['dirty'] ?? false,
     );
   }
 
