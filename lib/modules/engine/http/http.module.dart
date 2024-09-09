@@ -33,6 +33,21 @@ class HttpClientModule {
         dioTestClient: dioTestClient,
       );
 
+  Future<HttpResponse> put(String resourceUrl, dynamic data,
+          {String? baseUrl,
+          String? username,
+          String? password,
+          Dio? dioTestClient}) =>
+      HttpClient.put(
+        resourceUrl,
+        data,
+        baseUrl: baseUrl,
+        username: username,
+        password: password,
+        database: database,
+        dioTestClient: dioTestClient,
+      );
+
   Future<HttpResponse> delete(String resourceUrl, String id,
           {String? baseUrl,
           String? username,
