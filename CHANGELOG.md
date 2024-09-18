@@ -1,10 +1,14 @@
+## [1.1.6] - 09/09/2024
+
+- Add put method in httpClient
+
 ## [1.1.4] 04/09/2024
 
 - Fix error on type of user organisations in user entity
 
 ## [1.1.3] - 09/08/2024
 
-- Add delete function in httpClien
+- Add delete function in httpClient
 - Add d2 evaluation and parsing date objects
 - Add option group module
 - Add option group column to program rule action
