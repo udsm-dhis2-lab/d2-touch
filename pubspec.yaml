@@ -1,6 +1,10 @@
 name: d2_touch
 description: DHIS2 Flutter SDK
+<<<<<<< HEAD
 version: 1.1.6
+=======
+version: 1.1.5
+>>>>>>> 7d0b21d (Add timestamp to check token expiry time)
 homepage:
 repository: https://github.com/udsm-dhis2-lab/d2-touch
 

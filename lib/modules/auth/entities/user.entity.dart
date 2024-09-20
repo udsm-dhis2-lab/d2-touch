@@ -36,6 +36,9 @@ class User extends IdentifiableEntity {
   final String? refreshToken;
 
   @Column(nullable: true)
+  final String? tokenCreatedAt;
+
+  @Column(nullable: true)
   final int? tokenExpiry;
 
   @Column(nullable: true)
@@ -106,6 +109,7 @@ class User extends IdentifiableEntity {
       this.authType,
       this.phoneNumber,
       this.userGroups,
+      this.tokenCreatedAt,
       required this.isLoggedIn,
       required bool dirty})
       : super(
@@ -163,6 +167,8 @@ class User extends IdentifiableEntity {
         userGroups: (jsonData['userGroups'] ?? [])
             .map<UserGroup>((group) => UserGroup.fromJson(group))
             .toList(),
+        tokenCreatedAt:
+            jsonData['tokenCreatedAt'] ?? DateTime.now().toIso8601String(),
         dirty: jsonData['dirty']);
   }
 
@@ -215,6 +221,8 @@ class User extends IdentifiableEntity {
             ? jsonData['datasets'].toString()
             : null,
         isLoggedIn: jsonData['isLoggedIn'] ?? false,
+        tokenCreatedAt:
+            jsonData['tokenCreatedAt'] ?? DateTime.now().toIso8601String(),
         dirty: jsonData['dirty'] ?? false);
   }
 
@@ -276,6 +284,7 @@ class User extends IdentifiableEntity {
     data['baseUrl'] = this.baseUrl;
     data['dirty'] = this.dirty;
     data['userGroups'] = this.userGroups;
+    data['tokenCreatedAt'] = this.tokenCreatedAt;
 
     return data;
   }

@@ -1,6 +1,16 @@
+## [1.1.7] 20/09/2024
+
+- Add timestamp to check token expiry time
+- Add implementation to renew tokens on expiry
+
 ## [1.1.6] - 09/09/2024
 
 - Add put method in httpClient
+
+## [1.1.5] 04/09/2024
+
+- Improve runtime type checking for values in user orgunit model
+- Add fallback for dirty value
 
 ## [1.1.4] 04/09/2024
 
