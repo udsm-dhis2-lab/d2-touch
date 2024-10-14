@@ -1,3 +1,7 @@
+## [1.1.8] 14/10/2024 - Happy Nyerere Day
+
+- Add APiToken grant type to HTTP requests for personal access tokens
+
 ## [1.1.7] 20/09/2024
 
 - Add timestamp to check token expiry time
