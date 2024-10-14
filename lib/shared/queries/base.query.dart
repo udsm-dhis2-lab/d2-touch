@@ -270,24 +270,29 @@ class BaseQuery<T extends BaseEntity> {
   }
 
   Future<List<T>> fetchOnline({Dio? dioTestClient}) async {
-    final dhisUrl = await this.dhisUrl();
-    final response = await HttpClient.get(dhisUrl,
-        database: this.database, dioTestClient: dioTestClient);
+    try {
+      final dhisUrl = await this.dhisUrl();
+      final response = await HttpClient.get(dhisUrl,
+          database: this.database, dioTestClient: dioTestClient);
 
-    List data = response.body != null
-        ? response.body[this.apiResourceName]?.toList() ?? []
-        : [];
+      List data = response.body != null
+          ? response.body[this.apiResourceName]?.toList() ?? []
+          : [];
 
-    return data.map((dataItem) {
-      dataItem['dirty'] = false;
-      dataItem['synced'] = true;
-      ClassMirror classMirror =
-          AnnotationReflectable.reflectType(T) as ClassMirror;
+      return data.map((dataItem) {
+        dataItem['dirty'] = false;
+        dataItem['synced'] = true;
+        ClassMirror classMirror =
+            AnnotationReflectable.reflectType(T) as ClassMirror;
 
-      var x = classMirror.newInstance('fromJson', [dataItem]) as T;
+        var x = classMirror.newInstance('fromJson', [dataItem]) as T;
 
-      return x;
-    }).toList();
+        return x;
+      }).toList();
+    } catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   Future<Map<String, dynamic>> deleteOnline({Dio? dioTestClient}) async {

@@ -9,20 +9,19 @@ import 'package:sqflite/sqflite.dart';
 class OAuthToken {
   String token;
   int expiresIn;
-  DateTime tokenCreatedAt;
+  DateTime tokenExpiresAt;
   String refreshToken;
   String url;
 
   OAuthToken(
       {required this.token,
       required this.expiresIn,
-      required this.tokenCreatedAt,
+      required this.tokenExpiresAt,
       required this.url,
       required this.refreshToken});
 
   bool isTokenExpired() {
-    final expirationTime = tokenCreatedAt.add(Duration(seconds: expiresIn));
-    return DateTime.now().isAfter(expirationTime);
+    return DateTime.now().isAfter(tokenExpiresAt);
   }
 
   Future<dynamic> renew() async {
@@ -37,12 +36,10 @@ class OAuthToken {
       final dio = Dio(options);
 
       final response = await dio.get(
-        '/oauth/token/refresh?token=${this.refreshToken}',
+        '/oauth/token/refresh?token=${this.refreshToken}&isNew=true',
       );
       return response.data;
     } on DioException catch (e) {
-      print(e.toString());
-      print(e.response?.data);
       return e.response?.data ?? {};
     }
   }
@@ -81,22 +78,20 @@ class HttpDetails {
 
 //!TODO: Improve token refresh implementation not to use the SDK core
 //!TODO!: Improve token refresh implementation not to use the SDK core
-    if (this.token != null && this.tokenType == 'bearer') {
+    if (this.token != null &&
+        (this.tokenType == 'bearer' || this.tokenType == 'ApiToken')) {
       final OAuthToken token = OAuthToken(
         token: this.token as String,
         expiresIn: user?.tokenExpiry as int,
         refreshToken: user?.refreshToken as String,
         url: user?.baseUrl as String,
-        tokenCreatedAt: DateTime.parse(user?.tokenCreatedAt as String),
+        tokenExpiresAt: DateTime.parse(user?.tokenExpiresAt as String),
       );
-
       if (token.isTokenExpired() && user != null) {
         dynamic tokenObject = await token.renew();
         if (tokenObject != null && tokenObject['access_token'] != null) {
           dynamic userObject = user.toJson();
           AuthToken authToken = AuthToken.fromJson(tokenObject);
-          DateTime now = DateTime.now();
-          DateTime tokenCreatedAt = now.subtract(Duration(minutes: 2));
           userObject['token'] = authToken.accessToken;
           userObject['tokenType'] = authToken.tokenType;
           userObject['tokenExpiry'] = token.expiresIn;
@@ -104,7 +99,9 @@ class HttpDetails {
           userObject['isLoggedIn'] = true;
           userObject['dirty'] = true;
           userObject['authType'] = "token";
-          userObject['tokenCreatedAt'] = tokenCreatedAt.toIso8601String();
+          userObject['tokenExpiresAt'] = DateTime.now()
+              .add(Duration(seconds: token.expiresIn))
+              .toIso8601String();
           User userData = User.fromApi(userObject);
           await UserQuery(database: database).setData(userData).save();
           this.token = authToken.accessToken;
@@ -125,6 +122,8 @@ class HttpDetails {
     switch (this.tokenType) {
       case 'bearer':
         return 'Bearer';
+      case 'ApiToken':
+        return 'ApiToken';
       default:
         return 'Basic';
     }

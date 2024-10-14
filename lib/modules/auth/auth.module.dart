@@ -102,10 +102,6 @@ class AuthModule {
 
     AuthToken token = AuthToken.fromJson(tokenObject);
 
-    DateTime now = DateTime.now();
-
-    DateTime tokenCreatedAt = now.subtract(Duration(minutes: 2));
-
     userObject['token'] = token.accessToken;
     userObject['tokenType'] = token.tokenType;
     userObject['tokenExpiry'] = token.expiresIn;
@@ -114,8 +110,9 @@ class AuthModule {
     userObject['dirty'] = true;
     userObject['baseUrl'] = instanceUrl;
     userObject['authType'] = "token";
-    userObject['tokenCreatedAt'] = tokenCreatedAt.toIso8601String();
-
+    userObject['tokenExpiresAt'] = DateTime.now()
+        .add(Duration(seconds: token.expiresIn))
+        .toIso8601String();
     User user = User.fromApi(userObject);
 
     await d2Instance.userModule.user.setData(user).save();
