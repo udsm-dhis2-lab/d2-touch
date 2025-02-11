@@ -63,7 +63,7 @@ class User extends IdentifiableEntity {
   final dynamic dataViewOrganisationUnits;
 
   @Column(nullable: true)
-  final String? programs;
+  final List<String>? programs;
 
   @Column(nullable: true)
   final String? dataSets;
@@ -120,6 +120,8 @@ class User extends IdentifiableEntity {
             lastUpdated: lastUpdated);
 
   factory User.fromJson(Map<String, dynamic> jsonData) {
+    print(
+        "************************* PROGRAMS: ${jsonData['programs']}*******************************");
     return User(
         id: jsonData['id'],
         gender: jsonData['gender'] ?? '',
@@ -161,7 +163,7 @@ class User extends IdentifiableEntity {
             .toList(),
         dataViewOrganisationUnits:
             jsonEncode(jsonData['dataViewOrganisationUnits']),
-        programs: jsonData['programs'].toString(),
+        programs: jsonData['programs'],
         dataSets: jsonData['datasets'].toString(),
         isLoggedIn: jsonData['isLoggedIn'] ?? false,
         userGroups: (jsonData['userGroups'] ?? [])
@@ -216,9 +218,7 @@ class User extends IdentifiableEntity {
             .toList(),
         dataViewOrganisationUnits:
             jsonEncode(jsonData['dataViewOrganisationUnits']),
-        programs: jsonData['programs'] != null
-            ? jsonData['programs'].toString()
-            : null,
+        programs: jsonData['programs'] != null ? jsonData['programs'] : null,
         dataSets: jsonData['datasets'] != null
             ? jsonData['datasets'].toString()
             : null,
