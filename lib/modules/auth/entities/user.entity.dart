@@ -120,8 +120,8 @@ class User extends IdentifiableEntity {
             lastUpdated: lastUpdated);
 
   factory User.fromJson(Map<String, dynamic> jsonData) {
-    print(
-        "************************* PROGRAMS: ${jsonData['programs']}*******************************");
+    var str = jsonData['programs'];
+    var programs = str.replaceAll(RegExp(r'[\[\]\"]'), '').split(',').toList();
     return User(
         id: jsonData['id'],
         gender: jsonData['gender'] ?? '',
@@ -163,7 +163,7 @@ class User extends IdentifiableEntity {
             .toList(),
         dataViewOrganisationUnits:
             jsonEncode(jsonData['dataViewOrganisationUnits']),
-        programs: jsonData['programs'],
+        programs: programs,
         dataSets: jsonData['datasets'].toString(),
         isLoggedIn: jsonData['isLoggedIn'] ?? false,
         userGroups: (jsonData['userGroups'] ?? [])
@@ -218,7 +218,9 @@ class User extends IdentifiableEntity {
             .toList(),
         dataViewOrganisationUnits:
             jsonEncode(jsonData['dataViewOrganisationUnits']),
-        programs: jsonData['programs'] != null ? jsonData['programs'] : null,
+        programs: (jsonData['programs'] as List<dynamic>?)
+            ?.map((item) => item.toString())
+            .toList(),
         dataSets: jsonData['datasets'] != null
             ? jsonData['datasets'].toString()
             : null,
