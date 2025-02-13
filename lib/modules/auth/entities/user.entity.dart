@@ -121,7 +121,11 @@ class User extends IdentifiableEntity {
 
   factory User.fromJson(Map<String, dynamic> jsonData) {
     var str = jsonData['programs'];
-    var programs = str.replaceAll(RegExp(r'[\[\]\"]'), '').split(',').toList();
+    var programs = str
+        .replaceAll(RegExp(r'[\[\]\"]'), '')
+        .split(',')
+        // .map((e) => e.trim())
+        .toList();
     return User(
         id: jsonData['id'],
         gender: jsonData['gender'] ?? '',

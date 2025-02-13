@@ -279,18 +279,22 @@ class BaseQuery<T extends BaseEntity> {
           ? response.body[this.apiResourceName]?.toList() ?? []
           : [];
 
+      var da;
       return data.map((dataItem) {
         dataItem['dirty'] = false;
         dataItem['synced'] = true;
         ClassMirror classMirror =
             AnnotationReflectable.reflectType(T) as ClassMirror;
-
-        var x = classMirror.newInstance('fromJson', [dataItem]) as T;
-
-        return x;
+        try {
+          var classfied = classMirror.newInstance('fromJson', [dataItem]) as T;
+          da = dataItem;
+          return classfied;
+        } catch (e) {
+          print(e.toString());
+        }
+        return classMirror.newInstance('fromJson', [da]) as T;
       }).toList();
     } catch (e) {
-      print(e);
       return [];
     }
   }
