@@ -9,6 +9,7 @@ import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.da
 import 'package:d2_touch/shared/models/request_progress.model.dart';
 import 'package:d2_touch/shared/queries/base.query.dart';
 import 'package:d2_touch/shared/utilities/http_client.util.dart';
+import 'package:d2_touch/shared/utilities/orgunit_mode.util.dart';
 import 'package:dio/dio.dart';
 import 'package:queue/queue.dart';
 import 'package:reflectable/reflectable.dart';
@@ -20,6 +21,7 @@ class EventQuery extends BaseQuery<Event> {
   String? program;
   String? programStage;
   String? enrollment;
+  OrgUnitMode? ouMode;
 
   EventQuery({Database? database, this.instanceVersion})
       : super(database: database);
@@ -62,6 +64,11 @@ class EventQuery extends BaseQuery<Event> {
     return this;
   }
 
+  EventQuery withOuMode(OrgUnitMode ouMode) {
+    this.ouMode = ouMode;
+    return this;
+  }
+
   EventQuery byOrgUnit(String orgUnit) {
     this.orgUnit = orgUnit;
     return this.where(attribute: 'orgUnit', value: orgUnit);
@@ -84,12 +91,32 @@ class EventQuery extends BaseQuery<Event> {
 
   @override
   Future<String> dhisUrl() {
+    String orgUnitMode = 'ouMode=';
+
+    switch (this.ouMode) {
+      case OrgUnitMode.DESCENDANTS:
+        orgUnitMode += 'DESCENDANTS';
+        break;
+      case OrgUnitMode.CHILDREN:
+        orgUnitMode += 'CHILDREN';
+        break;
+      case OrgUnitMode.SELECTED:
+        orgUnitMode += 'SELECTED';
+        break;
+      case OrgUnitMode.ACCESSIBLE:
+        orgUnitMode += 'ACCESSIBLE';
+        break;
+      default:
+        orgUnitMode += 'SELECTED';
+        break;
+    }
+
     if ((this.selected).isNotEmpty) {
       return Future.value(
-          'events.json?fields=${this.selected.join(',')}&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
+          'events.json?fields=${this.selected.join(',')}&orgUnit=${this.orgUnit}&$orgUnitMode&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
     }
     return Future.value(
-        'events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
+        'events.json?fields=event,eventDate,dueDate,program,programStage,orgUnit,trackedEntityInstance,enrollment,enrollmentStatus,status,attributeCategoryOptions,lastUpdated,created,followup,deleted,attributeOptionCombo,dataValues[dataElement,value,lastUpdated,created,storedBy,providedElseWhere]&orgUnit=${this.orgUnit}&$orgUnitMode&program=${this.program}${this.programStage != null ? '&programStage=${this.programStage}' : ''}&order=eventDate:desc&pageSize=100&page=1');
   }
 
   @override

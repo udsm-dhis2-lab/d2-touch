@@ -244,7 +244,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
     trackedEntityInstance.enrollments = [enrollment];
 
-    final List<ProgramTrackedEntityAttribute> reservedAttributes =
+    List<ProgramTrackedEntityAttribute> reservedAttributes =
         (program.programTrackedEntityAttributes ?? [])
             .where((attribute) => attribute.generated == true)
             .toList();
