@@ -136,9 +136,10 @@ class ProgramStageDataElement extends IdentifiableEntity {
         optionSetName: json['optionSetName'],
         options: List<dynamic>.from(
                 json['options'] ?? json['optionSet']?['options'] ?? [])
+            .where((option) => option != null && option['id'] != null)
             .map((option) => ProgramStageDataElementOption.fromJson({
                   ...option,
-                  'id': '${option['id']}_${json['id']}}',
+                  'id': '${option['id']}_${json['id']}',
                   'programStageDataElement': json['id'],
                   'dirty': false
                 }))

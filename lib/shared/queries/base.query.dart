@@ -286,11 +286,13 @@ class BaseQuery<T extends BaseEntity> {
         ClassMirror classMirror =
             AnnotationReflectable.reflectType(T) as ClassMirror;
         try {
-          var classfied = classMirror.newInstance('fromJson', [dataItem]) as T;
-          da = dataItem;
-          return classfied;
-        } catch (e) {
-          print(e.toString());
+          var classified = classMirror.newInstance('fromJson', [dataItem]) as T;
+          return classified;
+        } catch (e, stackTrace) {
+          print(
+              '🔴 Error occurred while creating instance of ${T.toString()}: $e');
+          print('🟠 Stack Trace: $stackTrace');
+          print('⚠️ Data Item: $dataItem');
         }
         return classMirror.newInstance('fromJson', [da]) as T;
       }).toList();
