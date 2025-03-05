@@ -123,9 +123,9 @@ class ProgramTrackedEntityAttribute extends IdentifiableEntity {
             jsonData['trackedEntityAttribute']?['optionSet']?['name'],
         options: List<dynamic>.from(jsonData['options'] ??
                 jsonData['trackedEntityAttribute']?['optionSet']?['options'] ??
-                [])
+                []).where((option) => option != null)
             .map((option) => AttributeOption.fromJson({
-                  ...option,
+                  ...(option ?? {}),
                   'id': '${option['id']}_${jsonData['id']}_$attribute',
                   'programTrackedEntityAttribute': jsonData['id'],
                   'attribute': attribute,

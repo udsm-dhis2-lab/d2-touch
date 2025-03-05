@@ -27,7 +27,7 @@ class ProgramRuleAction extends IdentifiableEntity {
   String? dataElement;
 
   @Column(nullable: true)
-  String? section;
+  String? programStageSection;
 
   @Column(nullable: true)
   String? option;
@@ -53,13 +53,15 @@ class ProgramRuleAction extends IdentifiableEntity {
       this.dataElement,
       this.trackedEntityAttribute,
       this.data,
-      this.section,
+      this.programStageSection,
       this.option,
       this.optionGroup,
       required bool dirty})
       : super(id: id, name: name, dirty: dirty);
 
   factory ProgramRuleAction.fromJson(Map<String, dynamic> json) {
+    // print('SECTION:::: ${json['section']}');
+    print('programStageSection:::: ${json['programStageSection']}');
     return ProgramRuleAction(
         id: json['id'],
         name: json['name'] ?? json['id'],
@@ -78,10 +80,10 @@ class ProgramRuleAction extends IdentifiableEntity {
                 ? json['option']
                 : json['option']['id']
             : null,
-        section: json['section'] != null
-            ? json['section'] is String
-                ? json['section']
-                : json['section']['id']
+        programStageSection: json['programStageSection'] != null
+            ? json['programStageSection'] is String
+                ? json['programStageSection']
+                : json['programStageSection']['id']
             : null,
         optionGroup: json['optionGroup'] != null
             ? json['optionGroup'] is String
@@ -111,7 +113,7 @@ class ProgramRuleAction extends IdentifiableEntity {
     data['dataElement'] = this.dataElement;
     data['option'] = this.option;
     data['optionGroup'] = this.optionGroup;
-    data['section'] = this.section;
+    data['programStageSection'] = this.programStageSection;
     data['trackedEntityAttribute'] = this.trackedEntityAttribute;
     data['dirty'] = this.dirty;
     data['data'] = this.data;
