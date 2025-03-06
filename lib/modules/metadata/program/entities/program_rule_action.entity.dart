@@ -60,8 +60,6 @@ class ProgramRuleAction extends IdentifiableEntity {
       : super(id: id, name: name, dirty: dirty);
 
   factory ProgramRuleAction.fromJson(Map<String, dynamic> json) {
-    // print('SECTION:::: ${json['section']}');
-    print('programStageSection:::: ${json['programStageSection']}');
     return ProgramRuleAction(
         id: json['id'],
         name: json['name'] ?? json['id'],

@@ -7,6 +7,8 @@ import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_attribute_v
 import 'package:d2_touch/modules/engine/program_rule/models/event_rule_result.model.dart';
 import 'package:d2_touch/modules/engine/program_rule/utilities/program_rule_engine.util.dart';
 import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
+import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
+import 'package:d2_touch/modules/metadata/organisation_unit/queries/organisation_unit.query.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_action.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_rule_variable.entity.dart';
@@ -40,7 +42,10 @@ class EventRuleEngine {
 
     Map<String, DataValueObject> dataValueEntities =
         DataValueEntities.fromEventDataValues(eventDataValues);
-
+    OrganisationUnit? organisationUnit =
+        await OrganisationUnitQuery(database: database)
+            .byId(event.orgUnit)
+            .getOne();
     if (trackedEntityInstance != null) {
       List<TrackedEntityAttributeValue> attributes =
           await TrackedEntityAttributeValueQuery(database: database)
@@ -54,10 +59,10 @@ class EventRuleEngine {
     }
 
     List<ProgramRuleAction> programRuleActions = ProgramRuleEngine.execute(
-      dataValueEntities: dataValueEntities,
-      programRules: programRules,
-      programRuleVariables: programRuleVariables,
-    );
+        dataValueEntities: dataValueEntities,
+        programRules: programRules,
+        programRuleVariables: programRuleVariables,
+        additionalValues: {'orgunit_code': organisationUnit?.code ?? ''});
 
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;

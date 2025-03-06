@@ -60,6 +60,9 @@ class ProgramRuleEngine {
 
   static addDataToExpression(
       String expression, Map<String, dynamic> evaluationContext) {
+    if (expression.contains("V")) {
+      print("expression:::::::::::::::: $expression");
+    }
     evaluationContext.keys.forEach((key) {
       final value = evaluationContext[key];
       expression = expression.replaceAll(
@@ -118,6 +121,7 @@ class ProgramRuleEngine {
               ruleConditionForEvaluation.replaceAll("''", '0');
 
           dynamic evaluationResult;
+
           try {
             Expression expression =
                 Expression.parse(ruleConditionForEvaluation);
@@ -139,7 +143,12 @@ class ProgramRuleEngine {
 
             return ProgramRuleAction.fromJson({
               ...ruleAction.toJson(),
-              'data': result,
+              'data': evaluationResult == true
+                  ? result
+                      ?.replaceAll('"', '')
+                      ?.replaceAll("'", '')
+                      .replaceAll(",", '')
+                  : result,
               'programRuleActionType': evaluationResult == true
                   ? ruleAction.programRuleActionType
                   : ""
