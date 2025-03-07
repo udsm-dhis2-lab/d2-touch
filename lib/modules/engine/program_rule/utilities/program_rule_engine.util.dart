@@ -29,6 +29,26 @@ class ProgramRuleEngine {
     return evaluationContext;
   }
 
+  static getResult(String data, Map<String, dynamic> evaluationContext,
+      dynamic evaluationResult) {
+    try {
+      if (data != '' && evaluationResult == true && data.contains('#{')) {
+        return MathExpressions.evaluate(data, evaluationContext);
+      }
+
+      if (data.contains('d2:') && evaluationResult == true) {
+        return evaluateD2Data(data, evaluationContext);
+      }
+
+      if (data != '' && evaluationResult == true && RegExp(r'V\{|A\{').hasMatch(data)) {
+        return addDataToExpression(data, evaluationContext);
+      }
+      return evaluationResult == true ? data : '';
+    } catch (e) {
+      return data;
+    }
+  }
+
   static _parseRuleValue(value) {
     if (value == null) {
       return "'" + "'";
@@ -105,23 +125,14 @@ class ProgramRuleEngine {
             .replaceAll(r"!''", '1 == 1');
 
         if (ruleConditionForEvaluation.contains('d2:')) {
-          if (programRule.condition.contains('!d2:validatePattern')) {
-           print('RULE:::CONDITION:::: $ruleConditionForEvaluation');
-          }
           ruleConditionForEvaluation =
               dhisD2Functions(ruleConditionForEvaluation);
-          if (programRule.condition.contains('!d2:validatePattern')) {
-            print(
-                '::::::::::::::::::::::ruleConditionForEvaluation:::::::::::::::::::: $ruleConditionForEvaluation :::::::::::: PREVIOUS :::::::::: ${programRule.condition}');
-          }
         }
 
         try {
           if (ruleConditionForEvaluation.contains('d2:')) {
             ruleConditionForEvaluation =
                 dhisD2Functions(ruleConditionForEvaluation);
-
-            print('ruleConditionForEvaluation: $ruleConditionForEvaluation');
           }
           ruleConditionForEvaluation =
               ruleConditionForEvaluation.replaceAll("''", '0');
@@ -139,13 +150,7 @@ class ProgramRuleEngine {
               programRule.programRuleActions?.map((ruleAction) {
             String data = ruleAction.data ?? '';
             dynamic result =
-                data != '' && evaluationResult == true && data.contains('#{')
-                    ? MathExpressions.evaluate(data, evaluationContext)
-                    : data.contains('d2:') && evaluationResult == true
-                        ? evaluateD2Data(data, evaluationContext)
-                        : evaluationResult == true
-                            ? data
-                            : '';
+                getResult(data, evaluationContext, evaluationResult);
 
             return ProgramRuleAction.fromJson({
               ...ruleAction.toJson(),
@@ -175,7 +180,8 @@ class ProgramRuleEngine {
           ]);
         }
       });
-    } catch (e) {}
+    } catch (e) {
+    }
     return programRulesActions;
   }
 }

@@ -40,14 +40,12 @@ String d2Length(String expression) {
 String validatePattern(String regex, String value) {
   try {
     if (regex.contains('^[0-9]{3}')) {
-      print('HERE:: WE GOT THE REGEX');
       return value.length >= 3 ? '1 == 0' : '1 == 1';
     } else {
       regex = regex.trim();
 
       print(regex);
       RegExp pattern = RegExp(regex);
-      print('VALUE::::${pattern.hasMatch(value)}');
       return pattern.hasMatch(value) ? '1 == 1' : '1 == 0';
     }
   } catch (e) {
