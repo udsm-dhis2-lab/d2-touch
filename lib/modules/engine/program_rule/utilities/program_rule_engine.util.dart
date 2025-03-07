@@ -60,9 +60,6 @@ class ProgramRuleEngine {
 
   static addDataToExpression(
       String expression, Map<String, dynamic> evaluationContext) {
-    if (expression.contains("V")) {
-      print("expression:::::::::::::::: $expression");
-    }
     evaluationContext.keys.forEach((key) {
       final value = evaluationContext[key];
       expression = expression.replaceAll(
@@ -108,14 +105,23 @@ class ProgramRuleEngine {
             .replaceAll(r"!''", '1 == 1');
 
         if (ruleConditionForEvaluation.contains('d2:')) {
+          if (programRule.condition.contains('!d2:validatePattern')) {
+           print('RULE:::CONDITION:::: $ruleConditionForEvaluation');
+          }
           ruleConditionForEvaluation =
               dhisD2Functions(ruleConditionForEvaluation);
+          if (programRule.condition.contains('!d2:validatePattern')) {
+            print(
+                '::::::::::::::::::::::ruleConditionForEvaluation:::::::::::::::::::: $ruleConditionForEvaluation :::::::::::: PREVIOUS :::::::::: ${programRule.condition}');
+          }
         }
 
         try {
           if (ruleConditionForEvaluation.contains('d2:')) {
             ruleConditionForEvaluation =
                 dhisD2Functions(ruleConditionForEvaluation);
+
+            print('ruleConditionForEvaluation: $ruleConditionForEvaluation');
           }
           ruleConditionForEvaluation =
               ruleConditionForEvaluation.replaceAll("''", '0');
@@ -144,10 +150,7 @@ class ProgramRuleEngine {
             return ProgramRuleAction.fromJson({
               ...ruleAction.toJson(),
               'data': evaluationResult == true
-                  ? result
-                      ?.replaceAll('"', '')
-                      ?.replaceAll("'", '')
-                      .replaceAll(",", '')
+                  ? result?.replaceAll('"', '')?.replaceAll("'", '')
                   : result,
               'programRuleActionType': evaluationResult == true
                   ? ruleAction.programRuleActionType

@@ -37,6 +37,24 @@ String d2Length(String expression) {
   return value;
 }
 
+String validatePattern(String regex, String value) {
+  try {
+    if (regex.contains('^[0-9]{3}')) {
+      print('HERE:: WE GOT THE REGEX');
+      return value.length >= 3 ? '1 == 0' : '1 == 1';
+    } else {
+      regex = regex.trim();
+
+      print(regex);
+      RegExp pattern = RegExp(regex);
+      print('VALUE::::${pattern.hasMatch(value)}');
+      return pattern.hasMatch(value) ? '1 == 1' : '1 == 0';
+    }
+  } catch (e) {
+    return '1 == 1';
+  }
+}
+
 String dhisD2Functions(String expression) {
   String updatedExpression = expression;
 
@@ -45,7 +63,6 @@ String dhisD2Functions(String expression) {
   String replaceMatch(Match match) {
     String d2Argument = match.group(1) ?? '';
     String d2Value = match.group(2) ?? '';
-
     switch (d2Argument) {
       case 'hasValue':
         return d2hasValue(expression);
@@ -60,6 +77,9 @@ String dhisD2Functions(String expression) {
       case 'monthsBetween':
         List<String> dates = d2Value.split(',');
         return DateUtils.monthsBetween(dates[0], dates[1]).toString();
+      case 'validatePattern':
+        List<String> values = d2Value.split(',');
+        return validatePattern(values[1], values[0]).toString();
       default:
         return d2Value;
     }
@@ -80,12 +100,13 @@ String dhisD2Functions(String expression) {
       updatedExpression.replaceAllMapped(notValueRegex, (match) {
     String content = match.group(1)?.trim() ?? '';
     if (content.isNotEmpty) {
-      return '1 == 0';
+      return expression.contains('d2:validatePattern')
+          ? dhisD2Functions(content)
+          : '1 == 0';
     } else {
       return match.group(0) ?? '';
     }
   });
-
   return updatedExpression;
 }
 
