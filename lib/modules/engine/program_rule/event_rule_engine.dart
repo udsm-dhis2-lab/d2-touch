@@ -20,11 +20,13 @@ import 'package:sqflite/sqflite.dart';
 class EventRuleEngine {
   late Database database;
   EventRuleEngine({required this.database});
-  Future<EventRuleResult> execute(
-      {required Event event,
-      required String program,
-      EventDataValue? changedEventDataValue,
-      String? trackedEntityInstance}) async {
+  Future<EventRuleResult> execute({
+    required Event event,
+    required String program,
+    EventDataValue? changedEventDataValue,
+    String? trackedEntityInstance,
+    List<ProgramRuleAction>? additionalRules,
+  }) async {
     List<ProgramRule> programRules = await ProgramRuleQuery(database: database)
         .withActions()
         .where(attribute: 'program', value: program)
@@ -63,6 +65,8 @@ class EventRuleEngine {
         programRules: programRules,
         programRuleVariables: programRuleVariables,
         additionalValues: {'orgunit_code': organisationUnit?.code ?? ''});
+
+    programRuleActions.addAll(additionalRules ?? []);
 
     final queue = Queue(parallel: 50);
     num availableItemCount = 0;

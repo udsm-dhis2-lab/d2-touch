@@ -40,7 +40,9 @@ class ProgramRuleEngine {
         return evaluateD2Data(data, evaluationContext);
       }
 
-      if (data != '' && evaluationResult == true && RegExp(r'V\{|A\{').hasMatch(data)) {
+      if (data != '' &&
+          evaluationResult == true &&
+          RegExp(r'V\{|A\{').hasMatch(data)) {
         return addDataToExpression(data, evaluationContext);
       }
       return evaluationResult == true ? data : '';
@@ -80,7 +82,6 @@ class ProgramRuleEngine {
 
   static addDataToExpression(
       String expression, Map<String, dynamic> evaluationContext) {
-        
     evaluationContext.keys.forEach((key) {
       final value = evaluationContext[key];
       expression = expression.replaceAll(
@@ -139,10 +140,8 @@ class ProgramRuleEngine {
               ruleConditionForEvaluation.replaceAll("''", '0');
 
           dynamic evaluationResult;
-
+          Expression expression = Expression.parse(ruleConditionForEvaluation);
           try {
-            Expression expression =
-                Expression.parse(ruleConditionForEvaluation);
             final evaluator = const ExpressionEvaluator();
             evaluationResult = evaluator.eval(expression, evaluationContext);
           } catch (e) {}
@@ -153,10 +152,19 @@ class ProgramRuleEngine {
             dynamic result =
                 getResult(data, evaluationContext, evaluationResult);
 
+            if (ruleAction.trackedEntityAttribute == 'vTh1hdOYl6R') {
+              print(
+                  "************* ::::::: rule conditio: $ruleConditionForEvaluation : Expression: $expression EVResult: $evaluationResult Result: $result TYPEEEEE:  ${ruleAction.programRuleActionType}");
+            }
+
+//TODO: Do not replace commas with empty string
             return ProgramRuleAction.fromJson({
               ...ruleAction.toJson(),
               'data': evaluationResult == true
-                  ? result?.replaceAll('"', '')?.replaceAll("'", '')
+                  ? result
+                      ?.replaceAll('"', '')
+                      ?.replaceAll("'", '')
+                      ?.replaceAll(",", '')
                   : result,
               'programRuleActionType': evaluationResult == true
                   ? ruleAction.programRuleActionType
@@ -181,8 +189,7 @@ class ProgramRuleEngine {
           ]);
         }
       });
-    } catch (e) {
-    }
+    } catch (e) {}
     return programRulesActions;
   }
 }
