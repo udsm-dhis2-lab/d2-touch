@@ -39,15 +39,8 @@ String d2Length(String expression) {
 
 String validatePattern(String regex, String value) {
   try {
-    if (regex.contains('^[0-9]{3}')) {
-      return value.length >= 3 ? '1 == 0' : '1 == 1';
-    } else {
-      regex = regex.trim();
-
-      print(regex);
-      RegExp pattern = RegExp(regex);
-      return pattern.hasMatch(value) ? '1 == 1' : '1 == 0';
-    }
+    RegExp pattern = RegExp(regex);
+    return pattern.hasMatch(value).toString();
   } catch (e) {
     return '1 == 1';
   }

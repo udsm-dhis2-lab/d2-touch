@@ -1,3 +1,4 @@
+import 'package:d2_touch/modules/engine/program_rule/d2-functions.dart';
 import 'package:d2_touch/modules/engine/program_rule/models/math_expressions.dart';
 import 'package:d2_touch/modules/engine/program_rule/run-d2-expression.util.dart';
 import 'package:d2_touch/modules/engine/shared/utilities/data_value_entities.util.dart';
@@ -120,21 +121,16 @@ class ProgramRuleEngine {
         ruleConditionForEvaluation =
             addDataToExpression(ruleConditionForEvaluation, evaluationContext);
 
-        ruleConditionForEvaluation = ruleConditionForEvaluation
-            .replaceAll(RegExp(r'[A|V|#]\{.*?\}'), "''")
-            .replaceAll('d2:length( ' ' )', '0')
-            .replaceAll('d2:length(' ')', '0')
-            .replaceAll(r"!''", '1 == 1');
-
-        if (ruleConditionForEvaluation.contains('d2:')) {
-          ruleConditionForEvaluation =
-              dhisD2Functions(ruleConditionForEvaluation);
-        }
+        // ruleConditionForEvaluation = ruleConditionForEvaluation
+        //     .replaceAll(RegExp(r'[A|V|#]\{.*?\}'), "''")
+        //     .replaceAll('d2:length( ' ' )', '0')
+        //     .replaceAll('d2:length(' ')', '0')
+        //     .replaceAll(r"!''", '1 == 1');
 
         try {
           if (ruleConditionForEvaluation.contains('d2:')) {
             ruleConditionForEvaluation =
-                dhisD2Functions(ruleConditionForEvaluation);
+                d2Functions(ruleConditionForEvaluation);
           }
           ruleConditionForEvaluation =
               ruleConditionForEvaluation.replaceAll("''", '0');
@@ -152,12 +148,7 @@ class ProgramRuleEngine {
             dynamic result =
                 getResult(data, evaluationContext, evaluationResult);
 
-            if (ruleAction.trackedEntityAttribute == 'vTh1hdOYl6R') {
-              print(
-                  "************* ::::::: rule conditio: $ruleConditionForEvaluation : Expression: $expression EVResult: $evaluationResult Result: $result TYPEEEEE:  ${ruleAction.programRuleActionType}");
-            }
-
-//TODO: Do not replace commas with empty string
+            //TODO: Do not replace commas with empty string
             return ProgramRuleAction.fromJson({
               ...ruleAction.toJson(),
               'data': evaluationResult == true
