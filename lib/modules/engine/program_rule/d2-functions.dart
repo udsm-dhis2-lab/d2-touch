@@ -11,8 +11,6 @@ String d2Functions(String expression) {
     bool continueLooping = true;
 
     for (int i = 0; i < 1 && continueLooping; i++) {
-      bool brokenExecution = false;
-
       for (var d2FnVar in d2FunctionsVariables) {
         RegExp d2FnRegex = RegExp(
           '${d2FnVar['name']}\\( *(([\\d/\\*\\+\\-%. ]+)|( *\'[^\']*\'))*( *, *(([\\d/\\*\\+\\-%. ]+)|\'[^\']*\'))* *\\)',
@@ -26,33 +24,52 @@ String d2Functions(String expression) {
           String fnRegexCall = match.group(0) ?? '';
           String fnParameters =
               fnRegexCall.replaceAll(RegExp(r'(^[^\(]+\()|\)$'), '').trim();
+
           List<String> parameters =
               RegExp(r"(?<=^|,)\s*(?:'([^']*)'|(\d+\.?\d*)\b|(true|false))\s*")
                   .allMatches(fnParameters)
-                  .map((m) => m.group(0) ?? '')
-                  .toList();
+                  .map((m) {
+            final params = m.group(0) ?? '';
+            return params.trim().replaceAll(RegExp(r"^'+|'+$"), '');
+          }).toList();
 
-          /**
-           * Check if parameters provided match what is expected in the function to run
-           */
-          int numOfParameters = parameters.length;
-          if (numOfParameters != d2FnVar['parameters']) {
-            brokenExecution = true;
-          }
+          var results = runD2Function(d2FnVar['name'], parameters);
 
-          if (brokenExecution) {
-            evalExpression = evalExpression.replaceAll(fnRegexCall, '1 == 0');
-          } else {
-            var results = runD2Function(d2FnVar['name'], parameters);
-
-            if (results.isNotEmpty) {
-              evalExpression = evalExpression.replaceAll(fnRegexCall, results);
-            }
+          if (results.isNotEmpty) {
+            evalExpression = evalExpression.replaceAll(fnRegexCall, results);
           }
         }
       }
 
       continueLooping = evalExpression.contains('d2:');
+    }
+  }
+
+  // TODO: Find best way to deal with d2:concatenate
+  while (evalExpression.contains('d2:concatenate')) {
+    RegExp regex = RegExp(r"(\w+:\w+)\(([^)]*)\)");
+
+    Iterable<RegExpMatch> matches = regex.allMatches(evalExpression);
+
+    for (var match in matches) {
+      String fnRegexCall = match.group(0) ?? '';
+
+      // String functionName = match.group(1)!;
+      String fnParameters = match.group(2)!;
+
+      List<String> parameters =
+          RegExp(r"(?<=^|,)\s*(?:'([^']*)'|(\d+\.?\d*)\b|(true|false))\s*")
+              .allMatches(fnParameters)
+              .map((m) {
+        final params = m.group(0) ?? '';
+        return params.trim().replaceAll(RegExp(r"^'+|'+$"), '');
+      }).toList();
+
+      var results = parameters.join('');
+
+      if (results.isNotEmpty) {
+        evalExpression = evalExpression.replaceAll(fnRegexCall, results);
+      }
     }
   }
 
@@ -73,6 +90,12 @@ String runD2Function(String functionName, List<String> parameters) {
       return DateUtils.monthsBetween(parameters[0], parameters[1]).toString();
     case 'd2:length':
       return D2FunctionUtil.length(parameters[0]);
+    case 'd2:left':
+      return D2FunctionUtil.left(parameters[0], int.parse(parameters[1]));
+    case 'd2:right':
+      return D2FunctionUtil.right(parameters[0], int.parse(parameters[1]));
+    case 'd2:concatenate':
+      return D2FunctionUtil.concatenate(parameters);
 
     default:
       return '';

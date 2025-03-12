@@ -7,7 +7,7 @@ final List<Map<String, dynamic>> d2FunctionsVariables = [
   {'name': 'd2:yearsBetween', 'parameters': 2},
   {'name': 'd2:floor', 'parameters': 1},
   {'name': 'd2:modulus', 'parameters': 2},
-  {'name': 'd2:concatenate'},
+  {'name': 'd2:concatenate', 'parameters': 0},
   {'name': 'd2:addDays', 'parameters': 2},
   {'name': 'd2:zing', 'parameters': 1},
   {'name': 'd2:oizp', 'parameters': 1},
@@ -38,7 +38,7 @@ bool toBoolean(String str, [bool strict = false]) {
 
 class D2FunctionUtil {
   static String hasValue(dynamic value) {
-    if (value == null || value.trim().contains("''")) {
+    if (value == null || value.toString().isEmpty) {
       return '0 == 1';
     }
 
@@ -61,6 +61,30 @@ class D2FunctionUtil {
     }
 
     return value.length.toString();
+  }
+
+  static String left(dynamic value, int numberOfCharacters) {
+    if (value == null) {
+      return '';
+    }
+
+    return value.toString().substring(0, numberOfCharacters);
+  }
+
+  static String right(dynamic value, int numberOfCharacters) {
+    if (value == null) {
+      return '';
+    }
+
+    final int valueLength = value.toString().length;
+
+    return value
+        .toString()
+        .substring(valueLength - numberOfCharacters - 1, valueLength - 1);
+  }
+
+  static String concatenate(List<String> parametes) {
+    return parametes.join(',');
   }
 }
 

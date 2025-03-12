@@ -30,6 +30,24 @@ class ProgramRuleEngine {
     return evaluationContext;
   }
 
+  static getEvaluatedRuleData(
+      String data, Map<String, dynamic> evaluationContext) {
+    String dataForEvaluation = addDataToExpression(data, evaluationContext);
+
+    try {
+      if (dataForEvaluation.contains('d2:')) {
+        dataForEvaluation = d2Functions(dataForEvaluation);
+      }
+
+      Expression expression = Expression.parse(dataForEvaluation);
+
+      final evaluator = const ExpressionEvaluator();
+      dataForEvaluation = evaluator.eval(expression, evaluationContext);
+    } catch (e) {}
+
+    return dataForEvaluation;
+  }
+
   static getResult(String data, Map<String, dynamic> evaluationContext,
       dynamic evaluationResult) {
     try {
@@ -121,22 +139,24 @@ class ProgramRuleEngine {
         ruleConditionForEvaluation =
             addDataToExpression(ruleConditionForEvaluation, evaluationContext);
 
-        // ruleConditionForEvaluation = ruleConditionForEvaluation
-        //     .replaceAll(RegExp(r'[A|V|#]\{.*?\}'), "''")
-        //     .replaceAll('d2:length( ' ' )', '0')
-        //     .replaceAll('d2:length(' ')', '0')
-        //     .replaceAll(r"!''", '1 == 1');
+        ruleConditionForEvaluation = ruleConditionForEvaluation
+            .replaceAll(RegExp(r'[A|V|#]\{.*?\}'), "''")
+            .replaceAll('d2:length( ' ' )', '0')
+            .replaceAll('d2:length(' ')', '0')
+            .replaceAll(r"!''", '1 == 1');
 
         try {
           if (ruleConditionForEvaluation.contains('d2:')) {
             ruleConditionForEvaluation =
                 d2Functions(ruleConditionForEvaluation);
           }
+
           ruleConditionForEvaluation =
               ruleConditionForEvaluation.replaceAll("''", '0');
 
           dynamic evaluationResult;
           Expression expression = Expression.parse(ruleConditionForEvaluation);
+
           try {
             final evaluator = const ExpressionEvaluator();
             evaluationResult = evaluator.eval(expression, evaluationContext);
@@ -144,19 +164,16 @@ class ProgramRuleEngine {
 
           final newProgramRuleActions =
               programRule.programRuleActions?.map((ruleAction) {
-            String data = ruleAction.data ?? '';
-            dynamic result =
-                getResult(data, evaluationContext, evaluationResult);
+            String? ruleActionData;
 
-            //TODO: Do not replace commas with empty string
+            if (ruleAction.data != null) {
+              ruleActionData = getEvaluatedRuleData(
+                  ruleAction.data as String, evaluationContext);
+            }
+
             return ProgramRuleAction.fromJson({
               ...ruleAction.toJson(),
-              'data': evaluationResult == true
-                  ? result
-                      ?.replaceAll('"', '')
-                      ?.replaceAll("'", '')
-                      ?.replaceAll(",", '')
-                  : result,
+              'data': ruleActionData,
               'programRuleActionType': evaluationResult == true
                   ? ruleAction.programRuleActionType
                   : ""
