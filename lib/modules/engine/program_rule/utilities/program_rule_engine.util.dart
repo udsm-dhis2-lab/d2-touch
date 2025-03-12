@@ -30,20 +30,17 @@ class ProgramRuleEngine {
     return evaluationContext;
   }
 
-  static getEvaluatedRuleData(
+  static String getEvaluatedRuleData(
       String data, Map<String, dynamic> evaluationContext) {
     String dataForEvaluation = addDataToExpression(data, evaluationContext);
 
-    try {
-      if (dataForEvaluation.contains('d2:')) {
+    if (dataForEvaluation.contains('d2:')) {
+      try {
         dataForEvaluation = d2Functions(dataForEvaluation);
+      } catch (e) {
+        dataForEvaluation = '';
       }
-
-      Expression expression = Expression.parse(dataForEvaluation);
-
-      final evaluator = const ExpressionEvaluator();
-      dataForEvaluation = evaluator.eval(expression, evaluationContext);
-    } catch (e) {}
+    }
 
     return dataForEvaluation;
   }
@@ -166,9 +163,11 @@ class ProgramRuleEngine {
               programRule.programRuleActions?.map((ruleAction) {
             String? ruleActionData;
 
-            if (ruleAction.data != null) {
+            if (ruleAction.data != null && evaluationResult == true) {
               ruleActionData = getEvaluatedRuleData(
                   ruleAction.data as String, evaluationContext);
+
+              print('ASSIGN DATA ${ruleAction.data} $ruleActionData');
             }
 
             return ProgramRuleAction.fromJson({

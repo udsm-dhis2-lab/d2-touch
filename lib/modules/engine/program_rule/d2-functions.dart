@@ -54,15 +54,15 @@ String d2Functions(String expression) {
     for (var match in matches) {
       String fnRegexCall = match.group(0) ?? '';
 
-      // String functionName = match.group(1)!;
       String fnParameters = match.group(2)!;
 
-      List<String> parameters =
-          RegExp(r"(?<=^|,)\s*(?:'([^']*)'|(\d+\.?\d*)\b|(true|false))\s*")
-              .allMatches(fnParameters)
-              .map((m) {
+      List<String> parameters = RegExp('"[^"]*"|\'' + "[^\']*\'|[^,]+")
+          .allMatches(fnParameters)
+          .map((m) {
         final params = m.group(0) ?? '';
-        return params.trim().replaceAll(RegExp(r"^'+|'+$"), '');
+        return params
+            .trim()
+            .replaceAll(RegExp("^['" + '"]+|[' + "'\"]+\$"), '');
       }).toList();
 
       var results = parameters.join('');
