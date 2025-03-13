@@ -46,7 +46,6 @@ class D2FunctionUtil {
   }
 
   static String validatePattern(String regex, String value) {
-    print('ASSIGN DATA $regex $value');
     try {
       RegExp pattern = RegExp(regex);
       final isValid = pattern.hasMatch(value);

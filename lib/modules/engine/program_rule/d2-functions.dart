@@ -26,11 +26,14 @@ String d2Functions(String expression) {
               fnRegexCall.replaceAll(RegExp(r'(^[^\(]+\()|\)$'), '').trim();
 
           List<String> parameters =
-              RegExp(r"(?<=^|,)\s*(?:'([^']*)'|(\d+\.?\d*)\b|(true|false))\s*")
+              // RegExp(r"(?<=^|,)\s*(?:'([^']*)'|(\d+\.?\d*)\b|(true|false))\s*")
+              RegExp('"[^"]*"|\'' + "[^\']*\'|[^,]+")
                   .allMatches(fnParameters)
                   .map((m) {
             final params = m.group(0) ?? '';
-            return params.trim().replaceAll(RegExp(r"^'+|'+$"), '');
+            return params
+                .trim()
+                .replaceAll(RegExp("^['" + '"]+|[' + "'\"]+\$"), '');
           }).toList();
 
           var results = runD2Function(d2FnVar['name'], parameters);

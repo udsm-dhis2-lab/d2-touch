@@ -30,19 +30,23 @@ class ProgramRuleEngine {
     return evaluationContext;
   }
 
-  static String getEvaluatedRuleData(
+  static dynamic getEvaluatedRuleData(
       String data, Map<String, dynamic> evaluationContext) {
-    String dataForEvaluation = addDataToExpression(data, evaluationContext);
+    dynamic dataForEvaluation = addDataToExpression(data, evaluationContext);
 
     if (dataForEvaluation.contains('d2:')) {
       try {
         dataForEvaluation = d2Functions(dataForEvaluation);
       } catch (e) {
-        dataForEvaluation = '';
+        dataForEvaluation = null;
       }
+    } else {
+      dataForEvaluation = dataForEvaluation
+          .trim()
+          .replaceAll(RegExp("^['" + '"]+|[' + "'\"]+\$"), '');
     }
 
-    return dataForEvaluation;
+    return !dataForEvaluation.contains('d2:') ? dataForEvaluation : null;
   }
 
   static getResult(String data, Map<String, dynamic> evaluationContext,
@@ -136,20 +140,11 @@ class ProgramRuleEngine {
         ruleConditionForEvaluation =
             addDataToExpression(ruleConditionForEvaluation, evaluationContext);
 
-        ruleConditionForEvaluation = ruleConditionForEvaluation
-            .replaceAll(RegExp(r'[A|V|#]\{.*?\}'), "''")
-            .replaceAll('d2:length( ' ' )', '0')
-            .replaceAll('d2:length(' ')', '0')
-            .replaceAll(r"!''", '1 == 1');
-
         try {
           if (ruleConditionForEvaluation.contains('d2:')) {
             ruleConditionForEvaluation =
                 d2Functions(ruleConditionForEvaluation);
           }
-
-          ruleConditionForEvaluation =
-              ruleConditionForEvaluation.replaceAll("''", '0');
 
           dynamic evaluationResult;
           Expression expression = Expression.parse(ruleConditionForEvaluation);
@@ -161,13 +156,11 @@ class ProgramRuleEngine {
 
           final newProgramRuleActions =
               programRule.programRuleActions?.map((ruleAction) {
-            String? ruleActionData;
+            dynamic ruleActionData;
 
             if (ruleAction.data != null && evaluationResult == true) {
               ruleActionData = getEvaluatedRuleData(
                   ruleAction.data as String, evaluationContext);
-
-              print('ASSIGN DATA ${ruleAction.data} $ruleActionData');
             }
 
             return ProgramRuleAction.fromJson({
