@@ -78,9 +78,7 @@ class D2FunctionUtil {
 
     final int valueLength = value.toString().length;
 
-    return value
-        .toString()
-        .substring(valueLength - numberOfCharacters - 1, valueLength - 1);
+    return value.toString().substring(valueLength - numberOfCharacters);
   }
 
   static String concatenate(List<String> parametes) {
