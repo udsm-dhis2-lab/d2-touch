@@ -470,7 +470,8 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
 
   Future<List<TrackedEntityInstance>?> upload(
       Function(RequestProgress, bool) callback,
-      {Dio? dioTestClient}) async {
+      {Dio? dioTestClient,
+      bool? completedOnly}) async {
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -479,6 +480,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
             status: '',
             percentage: 0),
         false);
+
     List<TrackedEntityInstance> trackedEntityInstances = await this
         .withAttributes()
         .withEnrollments()
@@ -486,6 +488,48 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         .where(attribute: 'synced', value: false)
         .where(attribute: 'dirty', value: true)
         .get();
+
+    if (trackedEntityInstances.isEmpty) {
+      callback(
+          RequestProgress(
+              resourceName: this.apiResourceName as String,
+              message:
+                  'No ${this.apiResourceName?.toLowerCase()} was retrieved!',
+              status: '',
+              percentage: 100),
+          false);
+
+      return Future.value([]);
+    }
+
+    if (completedOnly == true) {
+      List<TrackedEntityInstance> trackedEntityInstancesNotCompleted = [];
+      trackedEntityInstances =
+          trackedEntityInstances.where((trackedEntityInstance) {
+        final bool isCompleted = (trackedEntityInstance.enrollments ?? [])
+            .where((enrollment) => enrollment.status == 'COMPLETED')
+            .isNotEmpty;
+
+        if (!isCompleted) {
+          trackedEntityInstancesNotCompleted.add(trackedEntityInstance);
+        }
+
+        return isCompleted;
+      }).toList();
+
+      if (trackedEntityInstances.isEmpty) {
+        callback(
+            RequestProgress(
+                resourceName: this.apiResourceName as String,
+                message:
+                    'There are no ${this.apiResourceName?.toLowerCase()} with completed enrollments!',
+                status: '',
+                percentage: 100),
+            false);
+
+        return Future.value([]);
+      }
+    }
 
     callback(
         RequestProgress(
