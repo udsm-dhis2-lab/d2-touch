@@ -4,6 +4,7 @@ import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
 import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
+import 'package:d2_touch/shared/entities/geometry.entity.dart';
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'event_data_value.entity.dart';
@@ -52,6 +53,9 @@ class Event extends IdentifiableEntity {
 
   @Column(nullable: true)
   String? attributeOptionCombo;
+
+  @Column(nullable: true, type: ColumnType.TEXT)
+  Geometry? geometry;
 
   @Column(nullable: true)
   String? notes;
