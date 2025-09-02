@@ -1,11 +1,10 @@
 import 'package:isar/isar.dart';
 
-/// Base Isar Collection
+/// Base Isar Entity
 /// 
-/// Replaces the SQLite-based BaseEntity with Isar collection
-/// All DHIS2 entities should extend this base collection
+/// Replaces the SQLite-based BaseEntity with Isar entity
+/// All DHIS2 entities should extend this base entity
 /// Provides common fields like id, dirty status, and timestamps
-@collection
 abstract class BaseIsarEntity {
   /// Unique identifier - uses DHIS2 UID format when possible
   /// Falls back to auto-increment for local-only entities
@@ -124,14 +123,13 @@ abstract class BaseIsarEntity {
 /// 
 /// Extended base class for entities that have name and display properties
 /// Equivalent to IdentifiableEntity in the original codebase
-@collection
 abstract class IdentifiableIsarEntity extends BaseIsarEntity {
   /// Entity name
   @Index(type: IndexType.value)
   late String name;
 
   /// Display name (optional, falls back to name)
-  String? displayName;
+  String? displayNameValue;
 
   /// Short name (optional)
   String? shortName;
@@ -146,7 +144,7 @@ abstract class IdentifiableIsarEntity extends BaseIsarEntity {
   IdentifiableIsarEntity() : super();
 
   /// Get effective display name
-  String get effectiveDisplayName => displayName ?? name;
+  String get effectiveDisplayName => displayNameValue ?? name;
 
   /// Get effective short name  
   String get effectiveShortName => shortName ?? name;
@@ -158,7 +156,7 @@ abstract class IdentifiableIsarEntity extends BaseIsarEntity {
   String get searchableText {
     final parts = <String>[
       name,
-      if (displayName != null) displayName!,
+      if (displayNameValue != null) displayNameValue!,
       if (shortName != null) shortName!,
       if (code != null) code!,
       if (description != null) description!,
@@ -181,6 +179,7 @@ mixin GeographyMixin {
   double? longitude;
 
   /// Get coordinates as a map
+  @ignore
   Map<String, double>? get coordinates {
     if (latitude != null && longitude != null) {
       return {'latitude': latitude!, 'longitude': longitude!};

@@ -7,6 +7,14 @@ import 'package:d2_touch/modules/auth/entities/user_isar.entity.dart';
 import 'package:d2_touch/modules/auth/queries/user_isar.query.dart';
 import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit_isar.entity.dart';
 import 'package:d2_touch/modules/metadata/organisation_unit/queries/organisation_unit_isar.query.dart';
+import 'package:d2_touch/modules/data/tracker/entities/tracked_entity_isar.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/enrollment_isar.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/event_isar.entity.dart';
+import 'package:d2_touch/modules/data/tracker/entities/program_isar.entity.dart';
+import 'package:d2_touch/modules/data/tracker/queries/tracked_entity_isar.query.dart';
+import 'package:d2_touch/modules/data/tracker/queries/enrollment_isar.query.dart';
+import 'package:d2_touch/modules/data/tracker/queries/event_isar.query.dart';
+import 'package:d2_touch/modules/data/tracker/queries/program_isar.query.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,10 +94,10 @@ class D2TouchIsar {
     final schemas = <CollectionSchema<dynamic>>[
       UserIsarSchema,
       OrganisationUnitIsarSchema,
-      // Add more schemas as they are converted
-      // TrackedEntityIsarSchema,
-      // ProgramIsarSchema,
-      // etc.
+      TrackedEntityIsarSchema,
+      EnrollmentIsarSchema,
+      EventIsarSchema,
+      ProgramIsarSchema,
     ];
 
     _isarManager = IsarManager(
@@ -134,9 +142,37 @@ class D2TouchIsar {
     return OrganisationUnitIsarQuery(isarManager: isarManager);
   }
 
-  // TODO: Add more Isar module getters as entities are converted
-  // TrackedEntityIsarQuery get trackedEntityIsarQuery => ...
-  // ProgramIsarQuery get programIsarQuery => ...
+  /// Get TrackedEntityIsar query module
+  TrackedEntityIsarQuery get trackedEntityIsarQuery {
+    if (!useIsar) {
+      throw StateError('Isar not enabled. Set useIsar: true in D2TouchIsar.init()');
+    }
+    return TrackedEntityIsarQuery(isar: isarManager.database);
+  }
+
+  /// Get EnrollmentIsar query module
+  EnrollmentIsarQuery get enrollmentIsarQuery {
+    if (!useIsar) {
+      throw StateError('Isar not enabled. Set useIsar: true in D2TouchIsar.init()');
+    }
+    return EnrollmentIsarQuery(isar: isarManager.database);
+  }
+
+  /// Get EventIsar query module
+  EventIsarQuery get eventIsarQuery {
+    if (!useIsar) {
+      throw StateError('Isar not enabled. Set useIsar: true in D2TouchIsar.init()');
+    }
+    return EventIsarQuery(isar: isarManager.database);
+  }
+
+  /// Get ProgramIsar query module
+  ProgramIsarQuery get programIsarQuery {
+    if (!useIsar) {
+      throw StateError('Isar not enabled. Set useIsar: true in D2TouchIsar.init()');
+    }
+    return ProgramIsarQuery(isar: isarManager.database);
+  }
 
   // ========== DATABASE MANAGEMENT ==========
 

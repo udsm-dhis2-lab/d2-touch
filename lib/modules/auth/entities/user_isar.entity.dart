@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:isar/isar.dart';
 import 'package:d2_touch/shared/entities/base_isar.entity.dart';
 
+part 'user_isar.entity.g.dart';
+
 /// User Isar Collection
 /// 
 /// Replaces the SQLite-based User entity with Isar collection
@@ -118,6 +120,7 @@ class UserIsar extends IdentifiableIsarEntity {
   }
 
   /// Get organisation units from JSON
+  @ignore
   List<Map<String, dynamic>> get organisationUnits {
     if (organisationUnitsJson == null || organisationUnitsJson!.isEmpty) {
       return [];
@@ -136,6 +139,7 @@ class UserIsar extends IdentifiableIsarEntity {
   }
 
   /// Get authorities from JSON
+  @ignore
   List<String> get authorities {
     if (authoritiesJson == null || authoritiesJson!.isEmpty) {
       return [];
@@ -154,6 +158,7 @@ class UserIsar extends IdentifiableIsarEntity {
   }
 
   /// Get user roles from JSON
+  @ignore
   List<Map<String, dynamic>> get roles {
     if (rolesJson == null || rolesJson!.isEmpty) {
       return [];
@@ -172,6 +177,7 @@ class UserIsar extends IdentifiableIsarEntity {
   }
 
   /// Get data view organisation units from JSON
+  @ignore
   List<Map<String, dynamic>> get dataViewOrganisationUnits {
     if (dataViewOrganisationUnitsJson == null || dataViewOrganisationUnitsJson!.isEmpty) {
       return [];
@@ -190,6 +196,7 @@ class UserIsar extends IdentifiableIsarEntity {
   }
 
   /// Get programs from JSON
+  @ignore
   List<Map<String, dynamic>> get programs {
     if (programsJson == null || programsJson!.isEmpty) {
       return [];
@@ -208,6 +215,7 @@ class UserIsar extends IdentifiableIsarEntity {
   }
 
   /// Get data sets from JSON
+  @ignore
   List<Map<String, dynamic>> get dataSets {
     if (dataSetsJson == null || dataSetsJson!.isEmpty) {
       return [];
@@ -226,6 +234,7 @@ class UserIsar extends IdentifiableIsarEntity {
   }
 
   /// Get user groups from JSON
+  @ignore
   List<Map<String, dynamic>> get userGroups {
     if (userGroupsJson == null || userGroupsJson!.isEmpty) {
       return [];
@@ -244,6 +253,7 @@ class UserIsar extends IdentifiableIsarEntity {
   }
 
   /// Get full name
+  @ignore
   String get fullName {
     if (surname != null && surname!.isNotEmpty) {
       return '$firstName $surname';
@@ -281,7 +291,7 @@ class UserIsar extends IdentifiableIsarEntity {
     user.token = json['token'];
     user.tokenType = json['tokenType'];
     user.refreshToken = json['refreshToken'];
-    user.tokenExpiry = json['tokenExpiry'];
+    user.tokenExpiryTimestamp = json['tokenExpiry'];
     user.authType = json['authType'];
     
     // Handle timestamps

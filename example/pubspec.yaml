@@ -1,0 +1,58 @@
+name: d2_touch_isar_sample
+description: A sample Flutter app demonstrating D2Touch Isar implementation with DHIS2 metadata sync
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.17.0 <4.0.0'
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # D2Touch Isar entities (local reference)
+  d2_touch:
+    path: ../
+
+  # Isar database
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  
+  # Path provider for database location
+  path_provider: ^2.1.1
+  
+  # HTTP client for DHIS2 API calls
+  http: ^0.13.6
+  
+  # Material design icons
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Isar code generation
+  isar_generator: ^3.1.0+1
+  build_runner: ^2.4.7
+
+  # Lints
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+
+  # Assets
+  assets:
+    - assets/images/
+    - assets/icons/
+
+  # Fonts (optional - using system fonts for now)
+  # fonts:
+  #   - family: Roboto
+  #     fonts:
+  #       - asset: fonts/Roboto-Regular.ttf
+  #       - asset: fonts/Roboto-Bold.ttf
+  #         weight: 700

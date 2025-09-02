@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:isar/isar.dart';
 import 'package:d2_touch/shared/entities/base_isar.entity.dart';
 
+part 'organisation_unit_isar.entity.g.dart';
+
 /// OrganisationUnit Isar Collection
 /// 
 /// Replaces the SQLite-based OrganisationUnit entity with Isar collection
@@ -45,7 +47,7 @@ class OrganisationUnitIsar extends IdentifiableIsarEntity with HierarchicalMixin
 
   /// Is this a leaf node (has no children)
   @Index()
-  bool isLeaf;
+  late bool isLeaf;
 
   /// Is this a root node (has no parent)
   @Index()
@@ -81,6 +83,7 @@ class OrganisationUnitIsar extends IdentifiableIsarEntity with HierarchicalMixin
   }
 
   /// Get geometry from JSON
+  @ignore
   Map<String, dynamic>? get geometry {
     if (geometryJson == null || geometryJson!.isEmpty) {
       return null;
@@ -99,9 +102,26 @@ class OrganisationUnitIsar extends IdentifiableIsarEntity with HierarchicalMixin
       // Extract coordinates if available
       if (geom['coordinates'] != null && geom['coordinates'] is List) {
         final coords = geom['coordinates'] as List;
-        if (coords.length >= 2) {
-          longitude = coords[0]?.toDouble();
-          latitude = coords[1]?.toDouble();
+        
+        // Handle different geometry types
+        if (geom['type'] == 'Point' && coords.length >= 2) {
+          // Point coordinates: [longitude, latitude]
+          final lon = coords[0];
+          final lat = coords[1];
+          if (lon is num) longitude = lon.toDouble();
+          if (lat is num) latitude = lat.toDouble();
+        } else if ((geom['type'] == 'Polygon' || geom['type'] == 'MultiPolygon') && coords.isNotEmpty) {
+          // For polygons, get first coordinate of first ring
+          var firstCoord = coords[0];
+          if (firstCoord is List && firstCoord.isNotEmpty) {
+            var point = firstCoord[0];
+            if (point is List && point.length >= 2) {
+              final lon = point[0];
+              final lat = point[1];
+              if (lon is num) longitude = lon.toDouble();
+              if (lat is num) latitude = lat.toDouble();
+            }
+          }
         }
       }
     } else {
@@ -112,6 +132,7 @@ class OrganisationUnitIsar extends IdentifiableIsarEntity with HierarchicalMixin
   }
 
   /// Get translations from JSON
+  @ignore
   Map<String, dynamic>? get translations {
     if (translationsJson == null || translationsJson!.isEmpty) {
       return null;
@@ -187,7 +208,7 @@ class OrganisationUnitIsar extends IdentifiableIsarEntity with HierarchicalMixin
     orgUnit.dhis2Id = json['id'] ?? '';
     orgUnit.name = json['name'] ?? '';
     orgUnit.shortName = json['shortName'];
-    orgUnit.displayName = json['displayName'];
+    orgUnit.displayNameValue = json['displayName'];
     orgUnit.code = json['code'];
     orgUnit.description = json['description'];
     
@@ -261,7 +282,7 @@ class OrganisationUnitIsar extends IdentifiableIsarEntity with HierarchicalMixin
     orgUnit.dhis2Id = json['dhis2Id'] ?? json['id'] ?? '';
     orgUnit.name = json['name'] ?? '';
     orgUnit.shortName = json['shortName'];
-    orgUnit.displayName = json['displayName'];
+    orgUnit.displayNameValue = json['displayName'];
     orgUnit.code = json['code'];
     orgUnit.description = json['description'];
     
