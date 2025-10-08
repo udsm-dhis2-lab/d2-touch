@@ -126,6 +126,8 @@ class Event extends IdentifiableEntity {
     return Event(
         id: json['event'],
         name: json['event'],
+        created: json['created'],
+        lastUpdated: json['lastUpdated'],
         event: json['event'],
         orgUnit: json['orgUnit'],
         status: json['status'],
