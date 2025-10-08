@@ -186,6 +186,8 @@ class Event extends IdentifiableEntity {
     data['programStage'] = this.programStage;
     data['enrollment'] = this.enrollment;
     data['dataValues'] = this.dataValues;
+    data['created'] = this.created;
+    data['lastUpdated'] = this.lastUpdated;
     data['dirty'] = this.dirty;
     return data;
   }
