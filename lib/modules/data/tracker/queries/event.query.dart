@@ -90,6 +90,28 @@ class EventQuery extends BaseQuery<Event> {
   }
 
   @override
+  Future delete() async {
+    if (this.id != null) {
+      return this
+          .repository
+          .deleteById(id: this.id as String, database: this.database);
+    }
+
+    if (enrollment != null) {
+      final List<Event> events = await this.get();
+
+      List<String> eventIds =
+          events.map((event) => event.id as String).toList();
+
+      return this
+          .repository
+          .deleteByIds(ids: eventIds, database: this.database);
+    }
+
+    return this.repository.deleteAll();
+  }
+
+  @override
   Future<String> dhisUrl() {
     String orgUnitMode = 'ouMode=';
 
