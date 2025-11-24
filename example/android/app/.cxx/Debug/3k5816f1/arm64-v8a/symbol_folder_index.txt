@@ -1,0 +1,1 @@
+/Users/goodluckwile/Documents/UDSM DHIS2 LAB/repos/d2-touch/example/build/app/intermediates/cxx/Debug/3k5816f1/obj/arm64-v8a
