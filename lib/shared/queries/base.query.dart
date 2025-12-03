@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/shared/entities/base.entity.dart';
@@ -42,7 +44,7 @@ class BaseQuery<T extends BaseEntity> {
   List<QueryFilter>? filters = [];
   Map<String, SortOrder> sortOrder = {};
   List<ColumnRelation> relations = [];
-  MergeMode _mergeMode = MergeMode.Replace;
+  MergeMode _mergeMode = MergeMode.Merge;
 
   BaseQuery({this.database, this.junctionOperator, this.selected = const []}) {
     this.repository = Repository<T>(database: database as Database);
@@ -236,6 +238,8 @@ class BaseQuery<T extends BaseEntity> {
           mergeMode: this._mergeMode,
           saveOptions: saveOptions);
     }
+
+    
     if (this.data != null && this.data.lastUpdated == null) {
       this.data.lastUpdated = DateTime.now().toIso8601String();
     }

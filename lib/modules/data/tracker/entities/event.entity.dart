@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
 import 'package:d2_touch/modules/metadata/organisation_unit/entities/organisation_unit.entity.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
+import 'package:d2_touch/modules/data/tracker/models/geometry.dart';
+
 import 'package:d2_touch/shared/entities/identifiable.entity.dart';
 
 import 'event_data_value.entity.dart';
@@ -43,6 +46,9 @@ class Event extends IdentifiableEntity {
 
   @Column(nullable: true)
   String? coordinate;
+
+  @Column(nullable: true, type: ColumnType.TEXT)
+  Geometry? geometry;
 
   @Column(nullable: true)
   String? trackedEntityInstance;
@@ -95,6 +101,7 @@ class Event extends IdentifiableEntity {
       this.lastSyncDate,
       this.storedBy,
       this.coordinate,
+      this.geometry,
       this.trackedEntityInstance,
       this.attributeCategoryOptions,
       this.attributeOptionCombo,
@@ -119,12 +126,23 @@ class Event extends IdentifiableEntity {
     final dynamic lastSyncSummary = json['lastSyncSummary'] != null
         ? EventImportSummary.fromJson(jsonDecode(json['lastSyncSummary']))
         : null;
+
+        final decodedGeometry = json["geometry"] != null && json["geometry"] != 'null'
+            ? (json["geometry"].runtimeType == String
+                ? jsonDecode(json["geometry"])
+                : json["geometry"])
+            : null;
+        final Geometry? geometry = decodedGeometry != null && decodedGeometry is Map
+            ? Geometry.fromJson(decodedGeometry as Map<String, dynamic>)
+            : null;
     return Event(
         id: json['event'],
         name: json['event'],
         event: json['event'],
         orgUnit: json['orgUnit'],
         status: json['status'],
+        created: json['created'],
+        lastUpdated: json['lastUpdated'],
         eventDate: json['eventDate'],
         dueDate: json['dueDate'],
         deleted: json['deleted'],
@@ -135,6 +153,7 @@ class Event extends IdentifiableEntity {
         lastSyncDate: json['lastSyncDate'],
         storedBy: json['storedBy'],
         coordinate: json['coordinate'],
+        geometry: geometry,
         trackedEntityInstance: json['trackedEntityInstance'],
         attributeCategoryOptions: json['attributeCategoryOptions'],
         attributeOptionCombo: json['attributeOptionCombo'],
@@ -171,9 +190,12 @@ class Event extends IdentifiableEntity {
             (this.lastSyncSummary as EventImportSummary).responseSummary)
         : null;
     ;
+    data['created'] = this.created;
+    data['lastUpdated'] = this.lastUpdated;
     data['lastSyncDate'] = this.lastSyncDate;
     data['storedBy'] = this.storedBy;
     data['coordinate'] = this.coordinate;
+    data['geometry'] = this.geometry != null ? jsonEncode(this.geometry?.toJson()) : null;
     data['trackedEntityInstance'] = this.trackedEntityInstance;
     data['attributeCategoryOptions'] = this.attributeCategoryOptions;
     data['attributeOptionCombo'] = this.attributeOptionCombo;
@@ -187,7 +209,12 @@ class Event extends IdentifiableEntity {
   }
 
   static toUpload(Event event) {
+
+    // log recieved event location
+    log('Event Geometry to upload: ${event.geometry?.geometryData}');
     Map<String, dynamic> eventToUpload = {
+
+
       "event": event.event,
       "programStage": event.programStage,
       "trackedEntityInstance": event.trackedEntityInstance,
@@ -197,6 +224,8 @@ class Event extends IdentifiableEntity {
       "status": event.status,
       "storedBy": event.storedBy,
       "coordinate": event.coordinate,
+      "geometry":
+          event.geometry != null ? event.geometry?.geometryData : null,
       "enrollment": event.enrollment,
       "dataValues": (event.dataValues ?? [])
           .map((event) => EventDataValue.toUpload(event))
@@ -207,6 +236,8 @@ class Event extends IdentifiableEntity {
         event.programStage.runtimeType != String) {
       eventToUpload['programStage'] = event.programStage['id'];
     }
+
+    log('Event to upload: $eventToUpload');
 
     return eventToUpload;
   }

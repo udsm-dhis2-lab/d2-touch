@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event_data_value.entity.dart';
 import 'package:d2_touch/modules/data/tracker/models/event_import_summary.dart';
+import 'package:d2_touch/modules/data/tracker/models/geometry.dart';
 import 'package:d2_touch/modules/data/tracker/models/response.dart';
 import 'package:d2_touch/modules/metadata/program/entities/program_stage.entity.dart';
 import 'package:d2_touch/modules/metadata/program/queries/program_stage.query.dart';
@@ -93,6 +96,21 @@ class EventQuery extends BaseQuery<Event> {
   }
 
   @override
+  setData(dynamic data) {
+    log('Setting data in BaseQuery: ${data.toJson()}');
+    
+    this.data = data;
+    return this;
+  }
+
+  setLocation(Geometry geometry) {
+    if (this.data != null && this.data is Event) {
+      (this.data as Event).geometry = geometry;
+    }
+    return this;
+  }
+
+  @override
   Future create() async {
     Event event = Event(
         orgUnit: this.orgUnit as String,
@@ -152,6 +170,9 @@ class EventQuery extends BaseQuery<Event> {
         ProgramStage programStage = await ProgramStageQuery(database: database)
             .byId(event.programStage)
             .getOne();
+
+        log('Uploading Event: ${event.id} under Program Stage: ${programStage.id} of Program: ${programStage.program}');
+        log('geometry data: ${event.geometry?.toJson()}');
         dynamic eventPayload = Event.toUpload(event);
         eventPayload['program'] = programStage.program;
         eventUploadPayload.add(eventPayload);
@@ -197,7 +218,7 @@ class EventQuery extends BaseQuery<Event> {
                 "updated": 0,
                 "ignored": 1,
                 "deleted": 0,
-                "importSummaries:": [],
+                "importSummaries": [],
                 "total": 0
               },
               "importCount": {
@@ -207,7 +228,7 @@ class EventQuery extends BaseQuery<Event> {
                 "deleted": 0
               },
               "total": 0,
-              "importSummaries:": [],
+              "importSummaries": [],
               "conflicts": [
                 {
                   "object": "Server.ERROR",
@@ -231,7 +252,7 @@ class EventQuery extends BaseQuery<Event> {
                     "updated": 1,
                     "ignored": 0,
                     "deleted": 0,
-                    "importSummaries:": [
+                    "importSummaries": [
                       {
                         "responseType": "ImportSummary",
                         "status": "SUCCESS",
@@ -254,7 +275,7 @@ class EventQuery extends BaseQuery<Event> {
                     "deleted": 0
                   },
                   "total": 1,
-                  "importSummaries:": [],
+                  "importSummaries": [],
                   "conflicts": []
                 }
               ]
@@ -316,7 +337,7 @@ class EventQuery extends BaseQuery<Event> {
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
-            message: 'Import summaries saved succussfully',
+            message: 'Import summaries saved successfully',
             status: '',
             percentage: 100),
         true);
