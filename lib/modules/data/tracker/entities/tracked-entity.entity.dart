@@ -55,9 +55,6 @@ class TrackedEntityInstance extends IdentifiableEntity {
   @OneToMany(table: Enrollment)
   List<Enrollment>? enrollments;
 
-  @OneToMany(table: TrackedEntityInstanceRelationship)
-  List<TrackedEntityInstanceRelationship>? relationships;
-
   TrackedEntityInstance(
       {String? id,
       String? name,
@@ -77,7 +74,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
       this.attributes,
       this.transfer,
       this.saved,
-      this.relationships,
+
       bool? skipDateUpdate})
       : super(
             id: id,
@@ -96,6 +93,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
   }
 
   factory TrackedEntityInstance.fromJson(Map<String, dynamic> json) {
+    print('Converting TEI JSON to Dart model: ${json['trackedEntityInstance'] ?? json['id']}');
     final attributes = json['attributes'];
 
     final dynamic lastSyncSummary = json['lastSyncSummary'] != null
@@ -103,7 +101,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
             jsonDecode(json['lastSyncSummary']))
         : null;
 
-    return TrackedEntityInstance(
+    final result = TrackedEntityInstance(
         id: json['id'] ?? json['trackedEntityInstance'],
         name: json['trackedEntityInstance'],
         created: json['created'] ?? json['createdAt'],
@@ -121,34 +119,43 @@ class TrackedEntityInstance extends IdentifiableEntity {
         inactive: json['inactive'],
         enrollments: json['enrollments'] != null
             ? List<dynamic>.from(json['enrollments'])
-                .map((enrollment) => Enrollment.fromJson({
+                .map((enrollment) {
+                  if (enrollment is Map<String, dynamic>) {
+                    return Enrollment.fromJson({
                       ...enrollment,
                       'trackedEntityType': enrollment['trackedEntityType'] ??
                           json['trackedEntityType'],
+                      'trackedEntityInstance': json['trackedEntityInstance'],
                       'dirty': enrollment['dirty'] ?? json['dirty'] ?? false,
                       'synced': json['synced'] ?? true
-                    }))
+                    });
+                  } else {
+                    return enrollment as Enrollment;
+                  }
+                })
                 .toList()
             : null,
-        attributes: List<Map<String, dynamic>>.from(attributes ?? [])
-            .map((attribute) => TrackedEntityAttributeValue.fromJson({
+        attributes: List<dynamic>.from(attributes ?? [])
+            .map((attribute) {
+              if (attribute is Map<String, dynamic>) {
+                return TrackedEntityAttributeValue.fromJson({
                   ...attribute,
                   'id': attribute['id'] ??
                       '${json['trackedEntityInstance']}_${attribute['attribute']}',
                   'trackedEntityInstance':
                       json['trackedEntityInstance'] ?? json['trackedEntity'],
                   'dirty': attribute['dirty'] ?? false
-                }))
+                });
+              } else {
+                return attribute as TrackedEntityAttributeValue;
+              }
+            })
             .toList(),
-        relationships: List<dynamic>.from(json['relationships'] ?? [])
-            .map((relationship) => TrackedEntityInstanceRelationship.fromJson({
-                  ...relationship,
-                  'dirty': relationship['dirty'] ?? json['dirty'] ?? false,
-                  'synced': json['synced'] ?? true
-                }))
-            .toList(),
+        
         skipDateUpdate: json['skipDateUpdate'],
         dirty: json['dirty'] ?? false);
+    print('TEI Dart model created: ${result.trackedEntityInstance}');
+    return result;
   }
 
   Map<String, dynamic> toJson() {
@@ -175,7 +182,6 @@ class TrackedEntityInstance extends IdentifiableEntity {
     data['created'] = this.created;
     data['lastUpdated'] = this.lastUpdated;
     data['transfer'] = this.transfer;
-    data['relationships'] = this.relationships;
     return data;
   }
 
@@ -189,10 +195,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
           .map((attribute) => TrackedEntityAttributeValue.toUpload(attribute))
           .toList(),
       "enrollments": toUploadEnrollment(trackedEntityInstance, events),
-      "relationships": (trackedEntityInstance.relationships ?? [])
-          .map((relationship) =>
-              TrackedEntityInstanceRelationship.toUpload(relationship))
-          .toList(),
+  
     };
   }
 
@@ -204,11 +207,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
       "trackedEntityInstance": trackedEntityInstance.trackedEntityInstance,
       "attributes": (trackedEntityInstance.attributes ?? [])
           .map((attribute) => TrackedEntityAttributeValue.toUpload(attribute))
-          .toList(),
-      "relationships": (trackedEntityInstance.relationships ?? [])
-          .map((relationship) =>
-              TrackedEntityInstanceRelationship.toUpload(relationship))
-          .toList(),
+          .toList()
     };
   }
 

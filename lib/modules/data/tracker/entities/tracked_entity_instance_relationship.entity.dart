@@ -11,20 +11,20 @@ class TrackedEntityInstanceRelationship extends BaseEntity {
       table: TrackedEntityInstance, joinColumnName: 'fromTrackedInstance')
   String fromTrackedInstance;
 
-  @Column()
-  String toTrackedInstance;
+  @Column(nullable: true)
+  String? toTrackedInstance;
 
   @Column()
   String relationshipType;
 
   TrackedEntityInstanceRelationship(
       {String? id,
-      String? created,
-      String? lastUpdated,
-      required this.fromTrackedInstance,
-      required this.toTrackedInstance,
-      required this.relationshipType,
-      required bool dirty})
+       String? created,
+       String? lastUpdated,
+       required this.fromTrackedInstance,
+       this.toTrackedInstance,
+       required this.relationshipType,
+       required bool dirty})
       : super(id: id, dirty: dirty, created: created, lastUpdated: lastUpdated);
 
   factory TrackedEntityInstanceRelationship.fromJson(
@@ -34,7 +34,8 @@ class TrackedEntityInstanceRelationship extends BaseEntity {
         fromTrackedInstance: json['fromTrackedInstance'] ??
             json['from']?['trackedEntityInstance']?['trackedEntityInstance'],
         toTrackedInstance: json['toTrackedInstance'] ??
-            json['to']?['trackedEntityInstance']?['trackedEntityInstance'],
+            json['to']?['trackedEntityInstance']?['trackedEntityInstance'] ??
+            json['to']?['event']?['event'],
         relationshipType: json['relationshipType'],
         created: json['created'],
         lastUpdated: json['lastUpdated'],

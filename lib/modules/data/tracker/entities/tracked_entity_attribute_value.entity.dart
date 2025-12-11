@@ -8,8 +8,8 @@ import 'tracked-entity.entity.dart';
 class TrackedEntityAttributeValue extends IdentifiableEntity {
   @Column()
   String attribute;
-  @Column()
-  String value;
+  @Column(nullable: true)
+  String? value;
   @Column()
   bool? synced;
 
@@ -19,14 +19,14 @@ class TrackedEntityAttributeValue extends IdentifiableEntity {
 
   TrackedEntityAttributeValue(
       {String? id,
-      String? name,
-      String? created,
-      String? lastUpdated,
-      required bool dirty,
-      required this.attribute,
-      required this.trackedEntityInstance,
-      required this.value,
-      this.synced})
+       String? name,
+       String? created,
+       String? lastUpdated,
+       required bool dirty,
+       required this.attribute,
+       required this.trackedEntityInstance,
+       this.value,
+       this.synced})
       : super(
             id: id,
             name: name,
@@ -67,7 +67,7 @@ class TrackedEntityAttributeValue extends IdentifiableEntity {
       "attribute": attribute.attribute,
 
       //Replace all helps to sanitize with double quoted strings i.e '"value"' from program rules if any
-      "value": attribute.value.replaceAll("\"", '')
+      "value": attribute.value?.replaceAll("\"", '') ?? ''
     };
   }
 }

@@ -15,7 +15,7 @@ class DataValueEntities {
 
     attributeValues.forEach((attributeValue) {
       entities[attributeValue.attribute] = DataValueObject(
-          id: attributeValue.attribute, value: attributeValue.value);
+          id: attributeValue.attribute, value: attributeValue.value ?? '');
     });
 
     return entities;

@@ -165,6 +165,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   @override
   get({Dio? dioTestClient, bool? online}) async {
     if (this.program != null) {
+      print('Querying TEIs by program: ${this.program}');
       EnrollmentQuery enrollmentQuery = EnrollmentQuery(database: database);
 
       enrollmentQuery.where(attribute: 'program', value: this.program);
@@ -174,8 +175,10 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
       }
 
       List<Enrollment> enrollments = await enrollmentQuery.get();
+      print('Found ${enrollments.length} enrollments for program ${this.program}');
 
       if (enrollments.isEmpty) {
+        print('No enrollments found, returning empty list');
         return [];
       }
 
@@ -195,14 +198,17 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         }
       });
 
+      print('Extracted ${trackedEntityAttributeIds.length} TEI IDs from enrollments');
       this.byIds(trackedEntityAttributeIds);
 
-      return this.repository.findAll(
+      final result = (await this.repository.findAll(
           database: this.database,
           filters: this.filters,
           fields: this.fields,
           sortOrder: this.sortOrder,
-          relations: this.relations) as Future<List<TrackedEntityInstance>>;
+          relations: this.relations)) as List<TrackedEntityInstance>;
+      print('Returning ${result.length} TrackedEntityInstances to app');
+      return result;
     }
 
     if (this.id != null) {
@@ -331,6 +337,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
   Future<List<TrackedEntityInstance>?> download(
       Function(RequestProgress, bool) callback,
       {Dio? dioTestClient}) async {
+    print('Starting download of TrackedEntityInstances');
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -341,6 +348,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
         false);
 
     this.data = await this.fetchOnline(dioTestClient: dioTestClient);
+    print('Fetched ${this.data?.length ?? 0} TrackedEntityInstances from server');
 
     if ((data ?? []).isNotEmpty) {
       callback(
@@ -382,6 +390,7 @@ class TrackedEntityInstanceQuery extends BaseQuery<TrackedEntityInstance> {
               percentage: 100),
           true);
 
+      print('Download completed, returning ${this.data?.length ?? 0} TrackedEntityInstances to app');
       return this.data;
     }
     callback(

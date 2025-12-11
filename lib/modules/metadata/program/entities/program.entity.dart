@@ -153,8 +153,14 @@ class Program extends IdentifiableEntity {
         onlyEnrollOnce: json['onlyEnrollOnce'],
         organisationUnits: json['organisationUnits']?.toString() ?? null,
         programRuleVariables: List<dynamic>.from(json['programRuleVariables'] ?? [])
-            .map((programRuleVariable) => ProgramRuleVariable.fromJson(
-                {...programRuleVariable, 'program': json['id'], 'dirty': false}))
+            .map((programRuleVariable) {
+              if (programRuleVariable is Map<String, dynamic>) {
+                return ProgramRuleVariable.fromJson(
+                    {...programRuleVariable, 'program': json['id'], 'dirty': false});
+              } else {
+                return programRuleVariable as ProgramRuleVariable;
+              }
+            })
             .toList(),
         programType: json['programType'],
         selectEnrollmentDatesInFuture: json['selectEnrollmentDatesInFuture'],
@@ -165,18 +171,35 @@ class Program extends IdentifiableEntity {
             json['useFirstStageDuringRegistration'],
         withoutRegistration: json['withoutRegistration'],
         programStages: List<dynamic>.from(json['programStages'] ?? [])
-            .map((programStage) => ProgramStage.fromJson(
-                {...programStage, 'program': json['id'], 'dirty': false}))
+            .map((programStage) {
+              if (programStage is Map<String, dynamic>) {
+                return ProgramStage.fromJson(
+                    {...programStage, 'program': json['id'], 'dirty': false});
+              } else {
+                return programStage as ProgramStage;
+              }
+            })
             .toList(),
         programSections: List<dynamic>.from(json['programSections'] ?? [])
-            .map((programSection) => ProgramSection.fromJson(
-                {...programSection, 'program': json['id'], 'dirty': false}))
+            .map((programSection) {
+              if (programSection is Map<String, dynamic>) {
+                return ProgramSection.fromJson(
+                    {...programSection, 'program': json['id'], 'dirty': false});
+              } else {
+                return programSection as ProgramSection;
+              }
+            })
             .toList(),
         programTrackedEntityAttributes:
             List<dynamic>.from(json['programTrackedEntityAttributes'] ?? [])
-                .map((programTrackedEntityAttribute) =>
-                    ProgramTrackedEntityAttribute.fromJson(
-                        {...programTrackedEntityAttribute, 'program': json['id'], 'dirty': false}))
+                .map((programTrackedEntityAttribute) {
+                  if (programTrackedEntityAttribute is Map<String, dynamic>) {
+                    return ProgramTrackedEntityAttribute.fromJson(
+                        {...programTrackedEntityAttribute, 'program': json['id'], 'dirty': false});
+                  } else {
+                    return programTrackedEntityAttribute as ProgramTrackedEntityAttribute;
+                  }
+                })
                 .toList());
   }
 
@@ -203,8 +226,7 @@ class Program extends IdentifiableEntity {
     data['organisationUnits'] = this.organisationUnits;
     data['programStages'] = this.programStages;
     data['programSections'] = this.programSections;
-    data['programTrackedEntityAttributes'] =
-        this.programTrackedEntityAttributes;
+    data['programTrackedEntityAttributes'] = this.programTrackedEntityAttributes;
     data['programRuleVariables'] = this.programRuleVariables;
     data['programType'] = this.programType;
     data['selectEnrollmentDatesInFuture'] = this.selectEnrollmentDatesInFuture;

@@ -115,11 +115,19 @@ class Enrollment extends IdentifiableEntity {
         geometry: geometry,
         lastSyncDate: json['lastSyncDate'],
         events: List<dynamic>.from(json['events'] ?? [])
-            .map((event) => Event.fromJson({
+            .map((event) {
+              if (event is Map<String, dynamic>) {
+                return Event.fromJson({
                   ...event,
+                  'enrollment': json['enrollment'],
+                  'trackedEntityInstance': json['trackedEntityInstance'],
                   'dirty': json['dirty'] ?? false,
                   'synced': json['synced'] ?? false
-                }))
+                });
+              } else {
+                return event as Event;
+              }
+            })
             .toList(),
         trackedEntityInstance: json['trackedEntityInstance'],
         dirty: json['dirty'] ?? false);

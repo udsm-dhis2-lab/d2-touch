@@ -162,12 +162,18 @@ class Event extends IdentifiableEntity {
         programStage: json['programStage'],
         enrollment: json['enrollment'],
         dataValues: List<dynamic>.from(json['dataValues'] ?? [])
-            .map((event) => EventDataValue.fromJson({
+            .map((event) {
+              if (event is Map<String, dynamic>) {
+                return EventDataValue.fromJson({
                   ...event,
                   "id": '${json['event']}_${event['dataElement']}',
                   "event": json['event'],
                   "dirty": json['dirty']
-                }))
+                });
+              } else {
+                return event as EventDataValue;
+              }
+            })
             .toList(),
         dirty: json['dirty']);
   }
