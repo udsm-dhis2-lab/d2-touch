@@ -55,6 +55,9 @@ class TrackedEntityInstance extends IdentifiableEntity {
   @OneToMany(table: Enrollment)
   List<Enrollment>? enrollments;
 
+  @OneToMany(table: TrackedEntityInstanceRelationship)
+  List<TrackedEntityInstanceRelationship>? relationships;
+
   TrackedEntityInstance(
       {String? id,
       String? name,
@@ -74,7 +77,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
       this.attributes,
       this.transfer,
       this.saved,
-
+      this.relationships,
       bool? skipDateUpdate})
       : super(
             id: id,
@@ -151,7 +154,19 @@ class TrackedEntityInstance extends IdentifiableEntity {
               }
             })
             .toList(),
-        
+        relationships: List<dynamic>.from(json['relationships'] ?? [])
+            .map((relationship) {
+              if (relationship is Map<String, dynamic>) {
+                return TrackedEntityInstanceRelationship.fromJson({
+                  ...relationship,
+                  'dirty': relationship['dirty'] ?? json['dirty'] ?? false,
+                  'synced': json['synced'] ?? true
+                });
+              } else {
+                return relationship as TrackedEntityInstanceRelationship;
+              }
+            })
+            .toList(),
         skipDateUpdate: json['skipDateUpdate'],
         dirty: json['dirty'] ?? false);
     print('TEI Dart model created: ${result.trackedEntityInstance}');
@@ -177,6 +192,7 @@ class TrackedEntityInstance extends IdentifiableEntity {
     data['inactive'] = this.inactive;
     data['enrollments'] = this.enrollments;
     data['attributes'] = this.attributes;
+    data['relationships'] = this.relationships;
     data['dirty'] = this.dirty;
     data['saved'] = this.saved;
     data['created'] = this.created;
@@ -195,7 +211,10 @@ class TrackedEntityInstance extends IdentifiableEntity {
           .map((attribute) => TrackedEntityAttributeValue.toUpload(attribute))
           .toList(),
       "enrollments": toUploadEnrollment(trackedEntityInstance, events),
-  
+      "relationships": (trackedEntityInstance.relationships ?? [])
+          .map((relationship) =>
+              TrackedEntityInstanceRelationship.toUpload(relationship))
+          .toList(),
     };
   }
 
@@ -207,7 +226,11 @@ class TrackedEntityInstance extends IdentifiableEntity {
       "trackedEntityInstance": trackedEntityInstance.trackedEntityInstance,
       "attributes": (trackedEntityInstance.attributes ?? [])
           .map((attribute) => TrackedEntityAttributeValue.toUpload(attribute))
-          .toList()
+          .toList(),
+      "relationships": (trackedEntityInstance.relationships ?? [])
+          .map((relationship) =>
+              TrackedEntityInstanceRelationship.toUpload(relationship))
+          .toList(),
     };
   }
 

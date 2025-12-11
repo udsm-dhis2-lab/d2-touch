@@ -30,16 +30,16 @@ class TrackedEntityInstanceRelationship extends BaseEntity {
   factory TrackedEntityInstanceRelationship.fromJson(
       Map<String, dynamic> json) {
     return TrackedEntityInstanceRelationship(
-        id: json['id'],
+        id: json['id'] ?? json['relationship'],
         fromTrackedInstance: json['fromTrackedInstance'] ??
             json['from']?['trackedEntityInstance']?['trackedEntityInstance'],
         toTrackedInstance: json['toTrackedInstance'] ??
             json['to']?['trackedEntityInstance']?['trackedEntityInstance'] ??
             json['to']?['event']?['event'],
-        relationshipType: json['relationshipType'],
+        relationshipType: json['relationshipType'] ?? '',
         created: json['created'],
         lastUpdated: json['lastUpdated'],
-        dirty: json['dirty']);
+        dirty: json['dirty'] ?? false);
   }
 
   Map<String, dynamic> toJson() {
