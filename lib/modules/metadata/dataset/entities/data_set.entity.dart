@@ -89,7 +89,12 @@ class DataSet extends IdentifiableEntity {
         periodType: json['periodType'],
         translations: json['translations'],
         dataSetElements: List<dynamic>.from(json['dataSetElements'] ?? [])
-            .map((dataSetElement) => DataSetElement.fromJson({
+            .map((item) {
+              if (item is DataSetElement) {
+                return item;
+              } else {
+                final dataSetElement = item as Map<String, dynamic>;
+                return DataSetElement.fromJson({
                   ...dataSetElement,
                   ...(dataSetElement['dataElement'] ?? {}),
                   'id': dataSetElement['id'] ??
@@ -98,15 +103,24 @@ class DataSet extends IdentifiableEntity {
                       dataSetElement['dataElement']?['id'],
                   'dataSet': json['id'],
                   'dirty': false
-                }))
+                });
+              }
+            })
             .toList(),
         sections: List<dynamic>.from(json['sections'] ?? [])
-            .map((section) => DataSetSection.fromJson({
+            .map((item) {
+              if (item is DataSetSection) {
+                return item;
+              } else {
+                final section = item as Map<String, dynamic>;
+                return DataSetSection.fromJson({
                   ...section,
                   'id': '${json['id']}_${section['id']}',
                   'dataSet': json['id'],
                   'dirty': false
-                }))
+                });
+              }
+            })
             .toList());
   }
 
