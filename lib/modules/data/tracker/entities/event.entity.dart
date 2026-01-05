@@ -217,7 +217,7 @@ class Event extends IdentifiableEntity {
   static toUpload(Event event) {
 
     // log recieved event location
-    log('Event Geometry to upload: ${event.geometry?.geometryData}');
+    // log('Event Geometry to upload: ${event.geometry?.geometryData}');
     Map<String, dynamic> eventToUpload = {
 
 
@@ -243,7 +243,7 @@ class Event extends IdentifiableEntity {
       eventToUpload['programStage'] = event.programStage['id'];
     }
 
-    log('Event to upload: $eventToUpload');
+    // log('Event to upload: $eventToUpload');
 
     return eventToUpload;
   }

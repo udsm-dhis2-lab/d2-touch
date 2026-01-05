@@ -97,8 +97,6 @@ class EventQuery extends BaseQuery<Event> {
 
   @override
   setData(dynamic data) {
-    log('Setting data in BaseQuery: ${data.toJson()}');
-    
     this.data = data;
     return this;
   }
@@ -129,7 +127,7 @@ class EventQuery extends BaseQuery<Event> {
   }
 
   Future<List<Event>?> upload(Function(RequestProgress, bool) callback,
-      {Dio? dioTestClient, String? resource}) async {
+      {Dio? dioTestClient, String? resource, Event? event}) async {
     callback(
         RequestProgress(
             resourceName: this.apiResourceName as String,
@@ -138,11 +136,22 @@ class EventQuery extends BaseQuery<Event> {
             status: '',
             percentage: 0),
         false);
+
     List<Event> events = await this
         .where(attribute: 'synced', value: false)
         .where(attribute: 'dirty', value: true)
         .withDataValues()
         .get();
+
+    await Future.delayed(const Duration(seconds: 6));
+
+    if (events.length == 0 && event != null) {
+      log('Uploading single event since no dirty events found');
+      events.add(event);
+    }
+
+    log('Events to upload: ${events.length}');
+    log('Events to upload: ${events.map((event) => event.toJson())}');
 
     callback(
         RequestProgress(
@@ -166,16 +175,19 @@ class EventQuery extends BaseQuery<Event> {
 
     final eventUploadPayload = [];
     for (Event event in events) {
-      if (event.programStage != null) {
+      log("event before upload: ${event.toJson()}");
+      if (event.programStage != null ||
+          event.programStage != '' ||
+          event.programStage != 'null') {
         ProgramStage programStage = await ProgramStageQuery(database: database)
             .byId(event.programStage)
             .getOne();
 
-        log('Uploading Event: ${event.id} under Program Stage: ${programStage.id} of Program: ${programStage.program}');
-        log('geometry data: ${event.geometry?.toJson()}');
         dynamic eventPayload = Event.toUpload(event);
+        // log('Event Payload before adding program: $eventPayload');
         eventPayload['program'] = programStage.program;
         eventUploadPayload.add(eventPayload);
+        // log('Event Payload after adding program: $eventPayload');
       } else {
         dynamic eventPayload = Event.toUpload(event);
         eventUploadPayload.add(eventPayload);

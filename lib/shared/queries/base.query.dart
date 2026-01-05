@@ -44,7 +44,7 @@ class BaseQuery<T extends BaseEntity> {
   List<QueryFilter>? filters = [];
   Map<String, SortOrder> sortOrder = {};
   List<ColumnRelation> relations = [];
-  MergeMode _mergeMode = MergeMode.Merge;
+  MergeMode _mergeMode = MergeMode.Replace;
 
   BaseQuery({this.database, this.junctionOperator, this.selected = const []}) {
     this.repository = Repository<T>(database: database as Database);
