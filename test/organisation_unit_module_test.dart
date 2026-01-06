@@ -82,7 +82,6 @@ void main() async {
 
   await d2.organisationUnitModule.organisationUnit.download(
       (progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<OrganisationUnit> orgUnits =

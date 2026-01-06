@@ -78,7 +78,6 @@ void main() async {
       .byProgram('IpHINAT79UW')
       .byProgramStage('ZzYYXq4fJie')
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<Event> events = await d2.trackerModule.event.get();
@@ -108,7 +107,6 @@ void main() async {
 
   List<Event>? eventUpload =
       await d2.trackerModule.event.upload((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   test('should correctly set sync status to true for successfull import', () {
@@ -137,7 +135,6 @@ void main() async {
       .byId(eventWithoutEnrollment.id as String)
       .getOne();
 
-  print(createdEventWithoutEnrollment?.orgUnit);
 
   test('should return created event without enrollment', () {
     expect(createdEventWithoutEnrollment?.id, eventWithoutEnrollment.id);

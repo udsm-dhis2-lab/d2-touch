@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:d2_touch/core/annotations/index.dart';
 import 'package:d2_touch/core/utilities/repository.dart';
 import 'package:d2_touch/modules/data/tracker/entities/event.entity.dart';
@@ -146,12 +144,8 @@ class EventQuery extends BaseQuery<Event> {
     await Future.delayed(const Duration(seconds: 6));
 
     if (events.length == 0 && event != null) {
-      log('Uploading single event since no dirty events found');
       events.add(event);
     }
-
-    log('Events to upload: ${events.length}');
-    log('Events to upload: ${events.map((event) => event.toJson())}');
 
     callback(
         RequestProgress(
@@ -175,7 +169,6 @@ class EventQuery extends BaseQuery<Event> {
 
     final eventUploadPayload = [];
     for (Event event in events) {
-      log("event before upload: ${event.toJson()}");
       if (event.programStage != null ||
           event.programStage != '' ||
           event.programStage != 'null') {
@@ -184,10 +177,8 @@ class EventQuery extends BaseQuery<Event> {
             .getOne();
 
         dynamic eventPayload = Event.toUpload(event);
-        // log('Event Payload before adding program: $eventPayload');
         eventPayload['program'] = programStage.program;
         eventUploadPayload.add(eventPayload);
-        // log('Event Payload after adding program: $eventPayload');
       } else {
         dynamic eventPayload = Event.toUpload(event);
         eventUploadPayload.add(eventPayload);
@@ -357,8 +348,4 @@ class EventQuery extends BaseQuery<Event> {
     return await EventQuery(database: database).byIds(eventIds).get();
   }
 
-  void printWrapped(String text) {
-    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
-    pattern.allMatches(text).forEach((match) => print(match.group(0)));
-  }
 }

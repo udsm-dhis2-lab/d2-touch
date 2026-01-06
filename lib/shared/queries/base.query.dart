@@ -283,7 +283,6 @@ class BaseQuery<T extends BaseEntity> {
           ? response.body[this.apiResourceName]?.toList() ?? []
           : [];
 
-      print('Converting ${data.length} raw JSON items to Dart models for ${this.apiResourceName}');
       return data.map((dataItem) {
         dataItem['dirty'] = false;
         dataItem['synced'] = true;
@@ -291,12 +290,10 @@ class BaseQuery<T extends BaseEntity> {
             AnnotationReflectable.reflectType(T) as ClassMirror;
 
         var x = classMirror.newInstance('fromJson', [dataItem]) as T;
-        print('Converted item ${dataItem['id'] ?? dataItem['trackedEntityInstance'] ?? 'unknown'} to Dart model');
 
         return x;
       }).toList();
     } catch (e) {
-      print(e);
       return [];
     }
   }

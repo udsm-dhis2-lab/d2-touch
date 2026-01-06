@@ -85,7 +85,6 @@ void main() async {
       .byOrgUnit('DiszpKrYNg8')
       .byProgram('IpHINAT79UW')
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<TrackedEntityInstance> trackedEntityInstances =
@@ -124,7 +123,6 @@ void main() async {
       .byOrgUnit('DiszpKrYNg8')
       .byProgram('IpHINAT79UW')
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<TrackedEntityInstance> secondTrackedEntityInstances =
@@ -187,7 +185,6 @@ void main() async {
       .byOrgUnit('DiszpKrYNg8')
       .byProgram('IpHINAT79UW')
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   final finalAttributeValue = await d2.trackerModule.trackedEntityAttributeValue
@@ -213,7 +210,6 @@ void main() async {
       .byUserOrgUnit()
       .byProgram('IpHINAT79UW')
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   test(
@@ -244,7 +240,6 @@ void main() async {
       .byProgram('IpHINAT79UW')
       .withOuMode(OrgUnitMode.DESCENDANTS)
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   test(
@@ -285,7 +280,6 @@ void main() async {
 
   List<TrackedEntityInstance>? trackedEntityInstanceUpload =
       await d2.trackerModule.trackedEntityInstance.upload((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   test('should correctly set sync status to true for successfull import', () {
@@ -348,7 +342,6 @@ void main() async {
   );
 
   await d2.trackerModule.attributeReservedValue.download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<AttributeReservedValue> downloadedAttributeReservedValues =

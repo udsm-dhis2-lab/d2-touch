@@ -67,7 +67,6 @@ void main() async {
   );
 
   await d2.dataElementModule.dataElement.download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<DataElement> dataElements = await d2.dataElementModule.dataElement.get();

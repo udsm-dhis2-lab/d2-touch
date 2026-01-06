@@ -44,7 +44,6 @@ void main() async {
 
   await d2.notificationModule.messageConversation.download(
       (progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<MessageConversation> messageConversations =
@@ -72,7 +71,6 @@ void main() async {
   await d2.notificationModule.messageConversation
       .ilike(attribute: 'subject', value: 'Scheduler')
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   MessageConversation filteredMessageConversation = await d2

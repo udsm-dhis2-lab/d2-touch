@@ -76,7 +76,6 @@ void main() async {
   );
 
   await d2.dataSetModule.dataSet.download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<DataSet> dataSets = await d2.dataSetModule.dataSet.get();
@@ -144,7 +143,6 @@ void main() async {
 
   await d2.dataSetModule.dataSet.byIds(['BfMAe6Itzgt', 'VTdjfLXXmoi']).download(
       (progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<DataSet> newDataSets = await d2.dataSetModule.dataSet

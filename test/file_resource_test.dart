@@ -76,7 +76,6 @@ void main() async {
       .byOrgUnit('DiszpKrYNg8')
       .byProgram('IpHINAT79UW')
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   final List<FileResource> fileResources = sampleFileResources
@@ -104,7 +103,6 @@ void main() async {
 
   List<FileResource>? fileResourceUpload =
       await d2.fileResourceModule.fileResource.upload((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   test('should correctly set sync status to true for successfuly import', () {

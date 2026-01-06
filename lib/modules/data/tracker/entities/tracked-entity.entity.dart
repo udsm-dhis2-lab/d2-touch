@@ -96,7 +96,6 @@ class TrackedEntityInstance extends IdentifiableEntity {
   }
 
   factory TrackedEntityInstance.fromJson(Map<String, dynamic> json) {
-    print('Converting TEI JSON to Dart model: ${json['trackedEntityInstance'] ?? json['id']}');
     final attributes = json['attributes'];
 
     final dynamic lastSyncSummary = json['lastSyncSummary'] != null
@@ -169,7 +168,6 @@ class TrackedEntityInstance extends IdentifiableEntity {
             .toList(),
         skipDateUpdate: json['skipDateUpdate'],
         dirty: json['dirty'] ?? false);
-    print('TEI Dart model created: ${result.trackedEntityInstance}');
     return result;
   }
 

@@ -53,7 +53,6 @@ void main() async {
       .byOrgUnit('bG0PlyD0iP3')
       .byPeriod("202201")
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<DataValueSet> dataValueSets =
@@ -93,7 +92,6 @@ void main() async {
 
   List<DataValueSet>? dataValueSetUpload =
       await d2.aggregateModule.dataValueSet.upload((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   test('should correctly set sync status to true for successfull import', () {
@@ -126,7 +124,6 @@ void main() async {
   );
 
   await d2.dataSetModule.dataSet.download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   dioAdapter.onGet(
@@ -135,7 +132,6 @@ void main() async {
   );
 
   await d2.dataSetModule.validationRule.download(
-      (progress, complete) => {print(progress.message)},
       dioTestClient: dio);
 
   final DataValueSet dataValueSetForValidation = await d2

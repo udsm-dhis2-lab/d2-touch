@@ -152,7 +152,6 @@ void main() async {
   await d2.userModule.user.setData(user).save();
 
   await d2.programModule.program.download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<Program> programs = await d2.programModule.program.get();
@@ -172,7 +171,6 @@ void main() async {
 
   await d2.programModule.program.byIds(['IpHINAT79UX']).download(
       (progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   Program? filteredProgram =
@@ -222,7 +220,6 @@ void main() async {
   );
 
   await d2.programModule.programStage.download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<ProgramStage> updatedProgramStages =
@@ -240,7 +237,6 @@ void main() async {
   await d2.programModule.programRule
       .whereIn(attribute: 'program', values: ['IpHINAT79UW'], merge: false)
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   List<ProgramRule> programRules =
@@ -364,7 +360,6 @@ void main() async {
   await d2.programModule.programRelationship
       .byFromProgram('qDkgAbB5Jlk')
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   final relationships = await d2.programModule.programRelationship.get();

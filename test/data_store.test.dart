@@ -45,7 +45,6 @@ void main() async {
       .byNamespace('eidsr-configurations')
       .byKey('settings')
       .download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   final store = await d2.dataStore.dataStoreQuery.get();

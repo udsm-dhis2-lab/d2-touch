@@ -12,7 +12,6 @@ String processValue(value, String type) {
   var mapTypeToInterfaceFnName;
   final convertFnName = mapTypeToInterfaceFnName[type];
   if (convertFnName == null) {
-    // log.warn('Error in converting this value of type $type');
     return value.toString();
   }
 

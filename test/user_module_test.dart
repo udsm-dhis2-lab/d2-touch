@@ -43,7 +43,6 @@ void main() async {
   await d2.userModule.user.setData(user).save();
 
   await d2.userModule.userGroup.download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   final userGroup = await d2.userModule.userGroup.get();
@@ -57,7 +56,6 @@ void main() async {
       (server) => server.reply(200, usersSample));
 
   await d2.userModule.user.download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   final userGroupUser = await d2.userModule.userGroupUser.get();
@@ -72,7 +70,6 @@ void main() async {
   await d2.userModule.user.byGroups(
       userGroupsId: ["Kk12LkEWtXp"],
       filterMode: 'id').download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   final userGroupUsers = await d2.userModule.userGroupUser.get();
@@ -87,7 +84,6 @@ void main() async {
   await d2.userModule.user.byGroups(
       userGroupsId: ["78ghtZ"],
       filterMode: 'code').download((progress, complete) {
-    print(progress.message);
   }, dioTestClient: dio);
 
   final usersByGroupCode = await d2.userModule.userGroupUser.get();
@@ -103,7 +99,6 @@ void main() async {
       .byGroups(userGroupsId: ["78ghtZ"], filterMode: 'code')
       .byUserOrgUnits()
       .download((progress, complete) {
-        print(progress.message);
       }, dioTestClient: dio);
 
   final usersByOrgUnit = await d2.userModule.userGroupUser.get();
